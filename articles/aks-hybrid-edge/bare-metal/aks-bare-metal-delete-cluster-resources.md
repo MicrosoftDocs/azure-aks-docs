@@ -1,19 +1,19 @@
 ---
-title: Delete AKS on bare metal cluster resources (preview)
+title: Delete AKS on bare metal on Azure Linux cluster resources (preview)
 description: Learn how to delete Azure Kubernetes Service on bare metal cluster resources and edge machine resources from Azure in the correct order.
 ms.topic: how-to
-ms.date: 09/01/2026
+ms.date: 09/14/2026
+ai-usage: ai-assisted
 author: SummerSmith
 ms.author: sumsmith
 ms.custom: bare-metal
 ---
 
-# Delete AKS on bare metal cluster resources (preview)
+# Delete AKS on bare metal cluster resources on Azure Linux (preview)
 
-> [!IMPORTANT]
-> Azure Kubernetes Service on bare metal is currently in PREVIEW. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal previews are partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-This article shows you how to delete AKS on bare metal cluster and edge machine resources from Azure. You **must** follow the deletion order described in this article. Deleting resources out of order results in orphaned resources or failed deletions.
+This article shows you how to delete AKS on bare metal cluster and Azure Local resources for an Azure Linux deployment. You **must** follow the deletion order described in this article. Deleting resources out of order results in orphaned resources or failed deletions. For Ubuntu, see [Delete an AKS on bare metal cluster on Ubuntu](aks-bare-metal-delete-cluster-ubuntu.md).
 
 > [!WARNING]
 > Some steps require waiting for completion before proceeding. Don't skip ahead.
@@ -21,7 +21,7 @@ This article shows you how to delete AKS on bare metal cluster and edge machine 
 ## Deletion order
 
 | Step | Resource | Wait required | Notes |
-|------|----------|:---:|-------|
+| ------ | ---------- | :---: | ------- |
 | 1 | AKS cluster | ✅ **Yes** | Must fully complete before continuing. |
 | 1b (optional) | Data Collection Rule | No | Only if you created a data collection rule during cluster creation. |
 | 2 | Logical Network (LNET) | No | — |
@@ -60,17 +60,6 @@ If you created a data collection rule during cluster creation, delete it now.
 
 ```azurecli
 az resource delete --ids <data-collection-rule-resource-id>
-```
-
-## Step 2: Delete the Logical Network (LNET)
-
-1. In the resource group, select the Logical Network resource.
-1. Select **Delete** and confirm.
-
-**CLI alternative:**
-
-```azurecli
-az resource delete --ids <lnet-resource-id>
 ```
 
 ## Step 3: Delete the Device Pool

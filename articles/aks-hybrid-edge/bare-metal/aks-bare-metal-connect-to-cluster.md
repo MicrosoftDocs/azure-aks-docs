@@ -2,7 +2,8 @@
 title: Connect to an AKS on bare metal Cluster (preview)
 description: Learn how to connect to your Azure Kubernetes Service on bare metal cluster using the Azure Arc proxy and kubectl.
 ms.topic: how-to
-ms.date: 09/01/2026
+ms.date: 09/14/2026
+ai-usage: ai-assisted
 author: SummerSmith
 ms.author: sumsmith
 ms.custom: bare-metal
@@ -10,8 +11,8 @@ ms.custom: bare-metal
 
 # Connect to an AKS on bare metal Cluster (preview)
 
-> [!IMPORTANT]
-> Azure Kubernetes Service on bare metal is currently in preview. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal previews are partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
 
 This article shows you how to connect to your AKS on bare metal cluster to run `kubectl` commands. After you deploy your cluster, use the Azure Arc proxy to route `kubectl` commands from your local machine to the Kubernetes cluster running on your device.
 
@@ -28,7 +29,7 @@ This article shows you how to connect to your AKS on bare metal cluster to run `
 - `kubectl` installed. Open a terminal and run the following command, then close and reopen your terminal:
 
   ```azurecli
-  az aks install-cli
+  sudo az aks install-cli
   ```
 
 - Your user account must be a member of the Microsoft Entra ID admin group you specified during cluster deployment. This membership is required to view and manage workloads on the cluster.
@@ -43,6 +44,7 @@ Open a terminal window and sign in to Azure, and then select the subscription th
 
 ```azurecli
 az login
+az account set --subscription <subscription-id>
 ```
 
 ### Step 2: Start the proxy
@@ -80,10 +82,27 @@ NAME               STATUS   ROLES           AGE   VERSION
 <cluster-name>     Ready    control-plane   1d    v1.34.2
 ```
 
+## Download credentials for an Ubuntu cluster
+
+For Ubuntu, you can download a standalone kubeconfig file instead of running the Azure Arc proxy:
+
+```azurecli
+az aksarc get-credentials \
+  --resource-group <resource-group> \
+  --name <cluster-name> \
+  --file ./aks-ubuntu.kubeconfig
+```
+
+Use the downloaded file:
+
+```bash
+kubectl --kubeconfig ./aks-ubuntu.kubeconfig get nodes
+```
+
 ## Troubleshooting
 
 | Issue | Fix |
-|-------|-----|
+| ------- | ----- |
 | `context deadline exceeded` | The proxy isn't running. Restart `az connectedk8s proxy` in the first terminal. |
 | `kubectl: command not found` | Run `az aks install-cli`, then close and reopen your terminal. |
 | MSI token audience error | Don't use Azure Cloud Shell. Run `az connectedk8s proxy` from your local machine. |
