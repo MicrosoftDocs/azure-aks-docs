@@ -240,6 +240,12 @@ az aks update \
     --cluster-autoscaler-profile ""
 ```
 
+## Use ProvisioningRequest with the cluster autoscaler
+
+The Kueue `ProvisioningRequest` AdmissionCheck keeps a workload suspended until the requested capacity is available. With the `best-effort-atomic-scale-up` provisioning class, the cluster autoscaler attempts to add all the capacity required for the workload in a single scale-up operation before Kueue admits the workload.
+
+For an end-to-end example that integrates Kueue with the cluster autoscaler and `ProvisioningRequest`, see [Configure Kueue with the cluster autoscaler on AKS](./configure-kueue-with-cluster-autoscaler.md).
+
 ## Retrieve cluster autoscaler logs and status
 
 You can retrieve logs and status updates from the cluster autoscaler to help diagnose and debug autoscaler events. AKS manages the cluster autoscaler on your behalf and runs it in the managed control plane. To collect its control plane logs, create an Azure Monitor diagnostic setting for the AKS cluster in the Azure portal or use `az monitor diagnostic-settings create`, and enable the `cluster-autoscaler` log category.
