@@ -53,7 +53,7 @@ In this article, you:
     install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
     ```
 
-    The environment file supplies every value that this article reads from a variable, including `WORK_DIR`. If you haven't created it yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
+    The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory on your workstation where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you haven't created the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
 
     Stop if the file isn't found or the shell reports an error while loading it.
 
@@ -258,7 +258,7 @@ Use a dedicated kubeconfig for this deployment so that you don't overwrite the d
 1. Set the kubeconfig path and create a protected file.
 
    ```bash
-   export FLEXNODE_KUBECONFIG="${WORK_DIR:?Load the deployment environment first.}/kubeconfig-${CLUSTER_NAME}"
+   export FLEXNODE_KUBECONFIG="${WORK_DIR}/kubeconfig-${CLUSTER_NAME}"
    install -m 0600 /dev/null "${FLEXNODE_KUBECONFIG}"
    ```
 

@@ -53,7 +53,7 @@ export KUBECONFIG="${FLEXNODE_KUBECONFIG}"
 install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
 ```
 
-The environment file supplies every value that this article reads from a variable, including `WORK_DIR`. If you haven't created it yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first. Don't continue past this step if the shell reports an error.
+The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory on your workstation where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you haven't created the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first. Don't continue past this step if the shell reports an error.
 
 Set the active subscription and display the Azure, Kubernetes, and host targets:
 
@@ -107,7 +107,7 @@ Confirm that **ResourceId** matches `AKS_RESOURCE_ID`, the Kubernetes control-pl
         --proto '=https' \
         --tlsv1.2 \
         "https://github.com/Azure/AKSFlexNode/releases/download/${AKS_FLEX_NODE_VERSION}/${AGENT_ARCHIVE}" \
-        --output "${WORK_DIR:?Load the deployment environment first.}/${AGENT_ARCHIVE}"
+        --output "${WORK_DIR}/${AGENT_ARCHIVE}"
 
     curl --fail --location --silent --show-error \
         --proto '=https' \
@@ -148,7 +148,7 @@ Confirm that **ResourceId** matches `AKS_RESOURCE_ID`, the Kubernetes control-pl
         --proto '=https' \
         --tlsv1.2 \
         "https://raw.githubusercontent.com/Azure/AKSFlexNode/${AKS_FLEX_NODE_VERSION}/scripts/bootstrap.sh" \
-        --output "${WORK_DIR:?Load the deployment environment first.}/bootstrap.sh"
+        --output "${WORK_DIR}/bootstrap.sh"
 
     chmod 0700 "${WORK_DIR}/bootstrap.sh"
     bash -n "${WORK_DIR}/bootstrap.sh"
@@ -168,7 +168,7 @@ az aks nodepool get-bootstrap-data \
     --cluster-name "${CLUSTER_NAME}" \
     --name "${FLEX_POOL_NAME}" \
     --output json \
-    > "${WORK_DIR:?Load the deployment environment first.}/base-config.json"
+    > "${WORK_DIR}/base-config.json"
 
 chmod 0600 "${WORK_DIR}/base-config.json"
 test -s "${WORK_DIR}/base-config.json"
@@ -191,7 +191,7 @@ Continue when `${WORK_DIR}/base-config.json` exists and isn't empty. Complete th
         printf 'export HOST_IDENTITY_CLIENT_ID=%q\n' "${HOST_IDENTITY_CLIENT_ID:-}"
         printf 'export SP_TENANT_ID=%q\n' "${SP_TENANT_ID:-}"
         printf 'export SP_CLIENT_ID=%q\n' "${SP_CLIENT_ID:-}"
-    } > "${WORK_DIR:?Load the deployment environment first.}/host-bootstrap.env"
+    } > "${WORK_DIR}/host-bootstrap.env"
 
     chmod 0600 "${WORK_DIR}/host-bootstrap.env"
     ```
@@ -313,7 +313,7 @@ The service principal identifiers and certificate file are inputs to the bootstr
 | `/etc/aks-flex-node/config.json` | Rendered flex node configuration, including the target cluster and pool, node settings, artifact sources, and Azure authentication settings. | Root-owned with mode `0600`; don't print or share the complete file. |
 | `/etc/aks-flex-node/credentials/sp-client-certificate` | Combined PEM certificate and private key used by the running agent. | Root-owned with mode `0600` in the protected credentials directory; retain while attached. |
 
-In the `bootstrap.sh` script that this article downloads, `--sp-client-certificate-file` writes the certificate path to **`azure.servicePrincipal.clientSecretFile`**. Despite its name, this field references the certificate file in this workflow, not a client secret value. Don't rename it to `clientCertificateFile`. The script removes `azure.managedIdentity` and sets `azure.arc.enabled` to `false` when selecting service principal authentication.
+In the `bootstrap.sh` script for the agent version that this article pins in `AKS_FLEX_NODE_VERSION`, `--sp-client-certificate-file` writes the certificate path to **`azure.servicePrincipal.clientSecretFile`**. Despite its name, this field references the certificate file in this workflow, not a client secret value. Don't rename it to `clientCertificateFile`. The script removes `azure.managedIdentity` and sets `azure.arc.enabled` to `false` when selecting service principal authentication.
 
 The following redacted example shows the shape of a certificate-based service principal configuration. It isn't a complete configuration schema or a file to copy onto a host. Continue to generate the configuration with the version-matched bootstrap script.
 
@@ -472,7 +472,7 @@ Remove the copies in your Bash environment:
 
 ```bash
 rm -f \
-    "${WORK_DIR:?}/${AGENT_ARCHIVE}" \
+    "${WORK_DIR:?Load the deployment environment first.}/${AGENT_ARCHIVE}" \
     "${WORK_DIR}/bootstrap.sh" \
     "${WORK_DIR}/base-config.json" \
     "${WORK_DIR}/host-bootstrap.env" \

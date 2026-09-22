@@ -44,7 +44,7 @@ test -s "${FLEXNODE_ENV_FILE}"
 source "${FLEXNODE_ENV_FILE}"
 ```
 
-The environment file supplies every value that this article reads from a variable, including `WORK_DIR`. If you haven't created it yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
+The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory on your workstation where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you haven't created the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
 
 If the file isn't found or can't be loaded, stop and return to the planning article before you continue.
 
@@ -180,7 +180,7 @@ Run these commands in your Bash environment while signed in with your operator a
     ```bash
     export SP_DISPLAY_NAME="aks-flexnode-${FLEXNODE_DEPLOYMENT}-$(date -u +%Y%m%dT%H%M%SZ)"
     install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
-    SP_CREDENTIAL_DIR="$(mktemp -d "${WORK_DIR:?Load the deployment environment first.}/sp-credential.XXXXXXXX")"
+    SP_CREDENTIAL_DIR="$(mktemp -d "${WORK_DIR}/sp-credential.XXXXXXXX")"
     export SP_CREDENTIAL_DIR
     export SP_CLIENT_CERTIFICATE_FILE="${SP_CREDENTIAL_DIR:?Credential directory wasn't created.}/sp-client.pem"
     ```

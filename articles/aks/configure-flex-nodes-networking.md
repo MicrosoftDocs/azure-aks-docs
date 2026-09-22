@@ -63,7 +63,7 @@ export KUBECONFIG="${FLEXNODE_KUBECONFIG}"
 install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
 ```
 
-The environment file supplies every value that this article reads from a variable, including `WORK_DIR`. If you haven't created it yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first. Don't continue past this step if the shell reports an error.
+The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory on your workstation where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you haven't created the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first. Don't continue past this step if the shell reports an error.
 
 Set the active subscription and display the Azure and Kubernetes targets:
 
@@ -104,7 +104,7 @@ Download the CLI archive from the release selected in the environment file.
 1. Create a protected download directory and set the release file names.
 
     ```bash
-    export UNBOUNDED_INSTALL_DIR="${WORK_DIR:?Load the deployment environment first.}/unbounded-cli-${UNBOUNDED_VERSION}-${UNBOUNDED_ARCH}"
+    export UNBOUNDED_INSTALL_DIR="${WORK_DIR}/unbounded-cli-${UNBOUNDED_VERSION}-${UNBOUNDED_ARCH}"
     export UNBOUNDED_ARTIFACT="kubectl-unbounded-linux-${UNBOUNDED_ARCH}.tar.gz"
     export UNBOUNDED_ARCHIVE="${UNBOUNDED_INSTALL_DIR}/${UNBOUNDED_ARTIFACT}"
     install -d -m 0700 "${UNBOUNDED_INSTALL_DIR}"

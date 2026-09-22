@@ -202,7 +202,15 @@ Flex nodes require compatible versions of AKS, the Azure CLI extension, Unbounde
 
 ### Regional availability
 
-Before you create or select a cluster, check the **AKS releases** tab of the [AKS release tracker](https://releases.aks.azure.com/AKSRelease) and confirm that the latest release listed for your region is `v20260904` or later. Flex nodes aren't available in a region until that release reaches it. AKS applies these date-based releases automatically, and they're separate from the Kubernetes version that you set in `AKS_VERSION`.
+Flex nodes require AKS release `v20260904` or later in the region that hosts your cluster. AKS applies these date-based releases automatically, and they're separate from the Kubernetes version that you set in `AKS_VERSION`.
+
+Before you create or select a cluster, open the **AKS Release** tab of the [AKS release tracker](https://releases.aks.azure.com/AKSRelease), find your region, and check the version under **Currently in Operation**. AKS release versions use the `vYYYYMMDD` format. If your region shows an earlier version, wait for the release to reach the region or, if your deployment requirements allow, select a region where the required release is available.
+
+### Local workspace value
+
+| Variable | Description |
+| --- | --- |
+| `WORK_DIR` | Directory on your workstation where the remaining articles store downloads, generated files, and the cluster kubeconfig file. The default value is `~/.local/share/aksflexnode/<deployment-name>`. To keep these files somewhere else, such as a temporary directory that you remove after the deployment, set `WORK_DIR` to that path when you create the environment file. |
 
 ## Create the shared environment file
 
