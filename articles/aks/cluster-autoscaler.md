@@ -242,7 +242,7 @@ az aks update \
 
 ## Use ProvisioningRequest with the cluster autoscaler
 
-`ProvisioningRequest` is a namespaced custom resource that lets you ask the cluster autoscaler for capacity for a group of pods. It allows you to express that the pods are connected and should be treated as a single unit, so the cluster autoscaler treats the scale-up request as all-or-nothing rather than as independent unschedulable pods.
+`ProvisioningRequest` is a namespaced custom resource used to request capacity for a group of related pods. It tells the cluster autoscaler to treat the pods as one unit and process the scale-up as all-or-nothing rather than as individual unschedulable pods.
 
 | Provisioning class | Description |
 |--------------------|-------------|
