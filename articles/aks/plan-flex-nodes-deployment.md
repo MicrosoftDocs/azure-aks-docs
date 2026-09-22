@@ -210,7 +210,7 @@ Before you create or select a cluster, open the **AKS Release** tab of the [AKS 
 
 | Variable | Description |
 | --- | --- |
-| `WORK_DIR` | Directory on your workstation where the remaining articles store downloads, generated files, and the cluster kubeconfig file. The default value is `~/.local/share/aksflexnode/<deployment-name>`. To keep these files somewhere else, such as a temporary directory that you remove after the deployment, set `WORK_DIR` to that path when you create the environment file. |
+| `WORK_DIR` | Directory in your Bash environment where the remaining articles store downloads, generated files, and the cluster kubeconfig file. The default value is `~/.local/share/aksflexnode/<deployment-name>`. To keep these files somewhere else, such as a temporary directory that you remove after the deployment, change the `WORK_DIR` value in the environment file. |
 
 ## Create the shared environment file
 
@@ -218,16 +218,14 @@ Create one environment file for each deployment. The file keeps the nonsecret va
 
 Don't store access tokens, bootstrap data, kubeconfig content, service principal credentials, certificates, certificate private keys, or SSH private keys in this file.
 
-1. Choose a short deployment label and create protected directories for the environment file and working files.
+1. Choose a short deployment label and create a protected directory for the environment file.
 
     ```bash
     export FLEXNODE_DEPLOYMENT="flexnode-demo"
     export FLEXNODE_ENV_DIR="${HOME}/.config/aks-flexnode"
     export FLEXNODE_ENV_FILE="${FLEXNODE_ENV_DIR}/${FLEXNODE_DEPLOYMENT}.env"
-    export WORK_DIR="${HOME}/.local/share/aksflexnode/${FLEXNODE_DEPLOYMENT}"
 
     install -d -m 0700 "${FLEXNODE_ENV_DIR}"
-    install -d -m 0700 "${WORK_DIR}"
     ```
 
 1. Create the environment file.
@@ -347,10 +345,11 @@ Don't store access tokens, bootstrap data, kubeconfig content, service principal
     fi
     ```
 
-1. Load the environment file and set the active Azure subscription.
+1. Load the environment file, create the working directory, and set the active Azure subscription.
 
     ```bash
     source "${FLEXNODE_ENV_FILE}"
+    install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
     az account set --subscription "${SUBSCRIPTION_ID}"
     az account show \
         --query "{Name:name,SubscriptionId:id}" \
@@ -378,8 +377,9 @@ Don't store access tokens, bootstrap data, kubeconfig content, service principal
     ```bash
     export FLEXNODE_DEPLOYMENT="flexnode-demo"
     export FLEXNODE_ENV_FILE="${HOME}/.config/aks-flexnode/${FLEXNODE_DEPLOYMENT}.env"
+    test -s "${FLEXNODE_ENV_FILE}"
     source "${FLEXNODE_ENV_FILE}"
-    install -d -m 0700 "${WORK_DIR}"
+    install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
     ```
 
 ## Validate the planning values
