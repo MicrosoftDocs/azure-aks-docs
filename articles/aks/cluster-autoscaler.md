@@ -7,6 +7,7 @@ ms.custom: devx-track-azurecli, biannual, aks-scaling
 ms.date: 07/30/2026
 author: schaffererin
 ms.author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: "As an AKS operator, I want to configure the cluster autoscaler for my Kubernetes workloads, so that I can automatically adjust the number of nodes based on application demand and optimize resource utilization."
 ---
 
@@ -242,12 +243,17 @@ az aks update \
 
 ## Use ProvisioningRequest with the cluster autoscaler
 
-`ProvisioningRequest` is a namespaced custom resource used to request capacity for a group of related pods. It tells the cluster autoscaler to treat the pods as one unit and process the scale-up as all-or-nothing rather than as individual unschedulable pods.
+`ProvisioningRequest` is a custom resource that lets you request capacity for a group of related pods and have the cluster autoscaler treat them as a single unit. Based on the provisioning class you specify, the cluster autoscaler can either reserve existing capacity for the pods or spin up new capacity to run them.
+
+> [!NOTE]
+>
+> * `ProvisioningRequest` support requires an AKS cluster running Kubernetes version 1.33 or later.
+> * Consider using an [aggressive scale-down profile](#configure-cluster-autoscaler-profile-for-aggressive-scale-down) when using `ProvisioningRequest` so unused nodes from partial or unfulfilled scale-ups are removed quickly.
 
 | Provisioning class | Description |
 |--------------------|-------------|
 | `check-capacity.autoscaling.x-k8s.io` | Checks whether the cluster has enough existing capacity for the specified pods without provisioning new capacity. If capacity is available, the cluster autoscaler reserves it for the `ProvisioningRequest` for 10 minutes to prevent other `ProvisioningRequests` from claiming the same capacity. |
-| `best-effort-atomic-scale-up.autoscaling.x-k8s.io` | Attempts to provision all the required capacity in a single scale-up operation. If it can't provision all the required capacity, the cluster autoscaler considers the entire scale-up operation a failure. |
+| `best-effort-atomic-scale-up.autoscaling.x-k8s.io` | The cluster autoscaler makes a best-effort attempt to provision the full requested capacity in a single scale-up operation. If it can't provision all of it, the `ProvisioningRequest` fails ,and the cluster autoscaler retries it after a back-off period. |
 
 For an end-to-end example that demonstrates Kueue integration with the cluster autoscaler and `ProvisioningRequest`, see [Configure Kueue with the cluster autoscaler on AKS](./configure-kueue-with-cluster-autoscaler.md).
 
