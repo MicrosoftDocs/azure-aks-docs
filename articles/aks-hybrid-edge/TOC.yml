@@ -19,28 +19,52 @@
     items:
     - name: What is AKS on bare metal?
       href: bare-metal/aks-bare-metal-overview.md
+    - name: Compare Azure Linux and Ubuntu
+      href: bare-metal/aks-bare-metal-compare-azure-linux-ubuntu.md
     - name: Public preview limitations
       href: bare-metal/aks-bare-metal-preview-limitations.md
-  - name: Get started
+  - name: Azure Linux
     items:
-    - name: System requirements and prerequisites
+    - name: System requirements
       href: bare-metal/aks-bare-metal-system-requirements.md
-    - name: Create a cluster - Azure portal
-      href: bare-metal/aks-bare-metal-create-cluster-portal.md
-    - name: Create a cluster - ARM template
-      href: bare-metal/aks-bare-metal-create-cluster-arm-template.md
-    - name: Create a cluster - Bicep
-      href: bare-metal/aks-bare-metal-create-cluster-bicep.md
-  - name: How-to
+    - name: Create a cluster
+      items:
+      - name: Azure portal
+        href: bare-metal/aks-bare-metal-create-cluster-portal.md
+      - name: ARM template
+        href: bare-metal/aks-bare-metal-create-cluster-arm-template.md
+      - name: Bicep
+        href: bare-metal/aks-bare-metal-create-cluster-bicep.md
+    - name: Upgrade a cluster
+      href: bare-metal/aks-bare-metal-upgrade-cluster.md
+    - name: Delete a cluster
+      href: bare-metal/aks-bare-metal-delete-cluster-resources.md
+  - name: Ubuntu
     items:
-    - name: Connect to your cluster
+    - name: System requirements and prepare your host
+      href: bare-metal/aks-bare-metal-ubuntu-system-requirements.md
+    - name: Create a cluster with Azure CLI
+      href: bare-metal/aks-bare-metal-create-cluster-ubuntu-cli.md
+    - name: Upgrade a cluster
+      href: bare-metal/aks-bare-metal-upgrade-cluster-ubuntu.md
+    - name: Delete a cluster
+      href: bare-metal/aks-bare-metal-delete-cluster-ubuntu.md
+  - name: How to
+    items:
+    - name: Connect to a cluster
       href: bare-metal/aks-bare-metal-connect-to-cluster.md
     - name: Deploy an application
       href: bare-metal/aks-bare-metal-deploy-application.md
-    - name: Upgrade Kubernetes clusters
-      href: bare-metal/aks-bare-metal-upgrade-cluster.md
-    - name: Delete cluster resources
-      href: bare-metal/aks-bare-metal-delete-cluster-resources.md
+  - name: Troubleshoot
+    items:
+    - name: Troubleshooting overview
+      href: bare-metal/aks-bare-metal-troubleshoot.md
+    - name: Azure Linux deployments
+      href: bare-metal/aks-bare-metal-troubleshoot-azure-linux-deployment.md
+    - name: Ubuntu deployments
+      href: bare-metal/aks-bare-metal-troubleshoot-ubuntu-deployment.md
+    - name: Cluster connectivity
+      href: bare-metal/aks-bare-metal-troubleshoot-connectivity.md
 - name: AKS on Azure Local
   items:
   - name: What is AKS on Azure Local?

@@ -321,8 +321,34 @@
           href: start-stop-nodepools.md
         - name: Create proximity placement groups
           href: reduce-latency-ppg.md
-        - name: Troubleshoot agent node pools
-          href: troubleshoot-agent-pool.md
+    - name: Flex nodes for AKS (preview)
+      items:
+        - name: Overview
+          href: flex-nodes-for-aks-overview.md
+        - name: Plan
+          items:
+            - name: Identity and access concepts
+              href: flex-nodes-identity-access-concepts.md
+            - name: Networking concepts
+              href: flex-nodes-networking-concepts.md
+            - name: Plan a deployment
+              href: plan-flex-nodes-deployment.md
+        - name: Deploy
+          items:
+            - name: Prepare an AKS cluster
+              href: prepare-aks-cluster-for-flex-nodes.md
+            - name: Configure networking and create a flex node pool
+              href: configure-flex-nodes-networking.md
+            - name: Prepare a host and identity
+              href: prepare-flex-node-host-identity.md
+            - name: Attach a flex node
+              href: attach-flex-node-to-aks.md
+        - name: Operate
+          items:
+            - name: Manage and remove flex nodes
+              href: manage-and-remove-flex-nodes.md
+            - name: Support policy
+              href: flex-nodes-support-policy.md
     - name: Virtual nodes
       items:
         - name: Use virtual nodes

@@ -65,59 +65,59 @@ This article describes how AKS extends features across multiple platforms and hi
 
 ## Networking capabilities
 
-|   Feature       | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
+| Feature | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
 | --- | --- | --- | --- | --- |
 | Network creation and management | By default, Azure creates a virtual network and subnet for you. You can also choose an existing virtual network in which to create your AKS clusters. | Setting up networking parameters is a required prerequisite to deploy AKS on Azure Local. Network must have connectivity and IP address availability for successful operation of the cluster. | You must provide the IP address range for node IPs and service IPs that are available and have the right connection. The network configuration needed for the cluster is handled by AKS. See [AKS Edge Essentials networking](edge-essentials/aks-edge-concept-networking.md). | You must create the network in Windows Server before creating an AKS cluster. Network must have connectivity and IP address availability for successful operation of the cluster. |
-| Supported networking option    | Bring your own Azure virtual network for AKS clusters. | Static IP networks with or without VLAN ID. | Static IP address or use reserved IPs when using DHCP. | - DHCP networks with or without VLAN ID.<br>- Static IP networks with or without VLAN ID. |
-| SDN support                   | Not applicable since the cluster runs on Azure. | No                    | No                                              | Yes                  |
-| Support for Arc Gateway        | N/A (works with Azure Application Gateway) | Yes                        | Yes – support for Azure IoT Operations only                    | No                   |
-| Supported CNIs                | - Azure CNI<br>- Calico<br>- Azure CNI overlay (Cillium)<br>- Bring your own CNI | Calico                     | - Calico (K8s)<br>- Flannel (K3s)                   | Calico               |
-| Service Mesh                  | Istio add-on      | Open Service Mesh, via Arc extensions. | Open Service Mesh, via Arc extensions.           | Open Service Mesh, via Arc extensions. |
-| Load Balancer                 | - Azure load balancer – Basic SKU or Standard SKU<br>- Internal load balancer<br>- Bring your own load balancer (BYOLB) | - Bring your own load balancer (BYOLB)<br>- MetalLB Arc Extension | - KubeVIP<br>- Bring your own load balancer (BYOLB) | - HAProxy<br>- SDN load balancer<br>- Bring your own load balancer (BYOLB) |
+| Supported networking option | Bring your own Azure virtual network for AKS clusters. | Static IP networks with or without VLAN ID. | Static IP address or use reserved IPs when using DHCP. | - DHCP networks with or without VLAN ID.<br>- Static IP networks with or without VLAN ID. |
+| SDN support | Not applicable since the cluster runs on Azure. | No | No | Yes |
+| Support for Arc Gateway | N/A (works with Azure Application Gateway) | Yes | Yes – support for Azure IoT Operations only | No |
+| Supported CNIs | - Azure CNI<br>- Calico<br>- Azure CNI overlay (Cillium)<br>- Bring your own CNI | Calico | - Calico (K8s)<br>- Flannel (K3s) | Calico |
+| Service Mesh | Istio add-on | Open Service Mesh, via Arc extensions. | Open Service Mesh, via Arc extensions. | Open Service Mesh, via Arc extensions. |
+| Load Balancer | - Azure load balancer – Basic SKU or Standard SKU<br>- Internal load balancer<br>- Bring your own load balancer (BYOLB) | - Bring your own load balancer (BYOLB)<br>- MetalLB Arc Extension | - KubeVIP<br>- Bring your own load balancer (BYOLB) | - HAProxy<br>- SDN load balancer<br>- Bring your own load balancer (BYOLB) |
 
 ## Storage features
 
-|   Feature       | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
+| Feature | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
 | --- | --- | --- | --- | --- |
-| Types of supported persistent volumes | - Read Write Once<br>- Read Write Many                                         | - VHDX – Read Write Once<br>- SMB or NFS – Read Write Many<br>- ACSA - Read Write Many                             | - PVC using local storage<br>- ACSA                 | - VHDX – Read Write Once<br>- SMB or NFS - Read Write Many |
-| Container storage interface (CSI) support | Yes                                                                      | Yes                                                                                                    | Yes                                             | Yes                                         |
-| CSI drivers                       | - Azure Storage<br>- Azure Files and Azure Disk<br>- Premium CSI drivers deployed by default. | Disk and file (SMB and NFS) drivers installed by default.                                             | Support for SMB and NFS storage drivers.        | Support for SMB and NFS storage drivers.     |
-| Dynamic provisioning support      | Yes                                                                      | Yes                                                                                                    | Yes                                             | Yes                                         |
-| Volume resizing support           | Yes                                                                      | Yes                                                                                                    | Yes                                             | Yes                                         |
-| Volume snapshots support          | Yes                                                                      | No                                                                                                     | No                                              | No                                          |
+| Types of supported persistent volumes | - Read Write Once<br>- Read Write Many | - VHDX – Read Write Once<br>- SMB or NFS – Read Write Many<br>- ACSA - Read Write Many | - PVC using local storage<br>- ACSA | - VHDX – Read Write Once<br>- SMB or NFS - Read Write Many |
+| Container storage interface (CSI) support | Yes | Yes | Yes | Yes |
+| CSI drivers | - Azure Storage<br>- Azure Files and Azure Disk<br>- Premium CSI drivers deployed by default. | Disk and file (SMB and NFS) drivers installed by default. | Support for SMB and NFS storage drivers. | Support for SMB and NFS storage drivers. |
+| Dynamic provisioning support | Yes | Yes | Yes | Yes |
+| Volume resizing support | Yes | Yes | Yes | Yes |
+| Volume snapshots support | Yes | No | No | No |
 
 ## Security and authentication options
 
-|   Feature       | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
+| Feature | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
 | --- | --- | --- | --- | --- |
-| Access to Kubernetes cluster             | Kubectl         | Kubectl                   | Kubectl                                         | Kubectl              |
-| Kubernetes cluster authorization (RBAC)  | - Kubernetes RBAC<br>- Azure RBAC | - Kubernetes RBAC<br>- Azure RBAC | Kubernetes RBAC                                 | Kubernetes RBAC      |
-| Kubernetes cluster authentication        | - Certificate-based Kubeconfig<br>- Microsoft Entra ID | - Certificate-based Kubeconfig<br>- Microsoft Entra ID | Certificate-based Kubeconfig<br>- Microsoft Entra ID | - Certificate-based Kubeconfig<br>- Microsoft Entra ID |
-| Support for network policies      | Yes             | No                        | No                                              | Yes – only for Linux containers |
-| Support for workload identity     | Yes             | Yes                       | Yes - (Support for AIO only)                    | Yes                  |
+| Access to Kubernetes cluster | Kubectl | Kubectl | Kubectl | Kubectl |
+| Kubernetes cluster authorization (RBAC) | - Kubernetes RBAC<br>- Azure RBAC | - Kubernetes RBAC<br>- Azure RBAC | Kubernetes RBAC | Kubernetes RBAC |
+| Kubernetes cluster authentication | - Certificate-based Kubeconfig<br>- Microsoft Entra ID | - Certificate-based Kubeconfig<br>- Microsoft Entra ID | Certificate-based Kubeconfig<br>- Microsoft Entra ID | - Certificate-based Kubeconfig<br>- Microsoft Entra ID |
+| Support for network policies | Yes | No | No | Yes – only for Linux containers |
+| Support for workload identity | Yes | Yes | Yes - (Support for AIO only) | Yes |
 | Limit source networks that can access API server | Yes | Yes | Yes | Yes |
-| Encrypt etcd secrets              | Yes             | Yes                       | Yes                                             | Yes                  |
-| Certificate rotation and encryption | Yes           | Yes                       | Yes                                             | Yes                  |
-| Secrets store CSI driver          | Yes             | Yes                       | Yes                                             | Yes                  |
-| gMSA support                      | Yes             | No                        | Yes                                             | Yes                  |
-| Azure Policy                      | Yes             | Yes, via Arc extensions   | Yes, via Arc extensions                         | Yes, via Arc extensions |
-| Azure Defender                    | Yes             | Yes, via Arc extensions (preview) | Yes, via Arc extensions (preview)         | Yes, via Arc extensions (preview) |
+| Encrypt etcd secrets | Yes | Yes | Yes | Yes |
+| Certificate rotation and encryption | Yes | Yes | Yes | Yes |
+| Secrets store CSI driver | Yes | Yes | Yes | Yes |
+| gMSA support | Yes | No | Yes | Yes |
+| Azure Policy | Yes | Yes, via Arc extensions | Yes, via Arc extensions | Yes, via Arc extensions |
+| Azure Defender | Yes | Yes, via Arc extensions (preview) | Yes, via Arc extensions (preview) | Yes, via Arc extensions (preview) |
 
 ## Pricing and SLA details
 
-|   Feature       | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
+| Feature | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
 | --- | --- | --- | --- | --- |
-| Pricing                           | - Unlimited free clusters, pay for on-demand compute of worker node VMs.<br>- Paid tier available with uptime SLA, support for 5k nodes. | Included in Azure Local at no extra cost.  | Cost is per device per month.                        | Pricing is based on the number of workload cluster vCPUs. Control plane nodes and load balancer VMs are free. |
-| Azure Hybrid Benefit support       | Not applicable                                                                            | Not applicable - AKS already included at no extra cost. | No                                              | Yes                                                               |
-| SLA                               | Paid uptime SLA clusters for production with fixed cost on the API + worker node compute, storage and networking costs. | No SLA offered as the Kubernetes cluster is running on premises. | No SLA offered as the Kubernetes cluster is running on premises. | No SLA offered as the Kubernetes cluster is running on premises.           |
+| Pricing | - Unlimited free clusters, pay for on-demand compute of worker node VMs.<br>- Paid tier available with uptime SLA, support for 5k nodes. | Included in Azure Local at no extra cost. | Cost is per device per month. | Pricing is based on the number of workload cluster vCPUs. Control plane nodes and load balancer VMs are free. |
+| Azure Hybrid Benefit support | Not applicable | Not applicable - AKS already included at no extra cost. | No | Yes |
+| SLA | Paid uptime SLA clusters for production with fixed cost on the API + worker node compute, storage and networking costs. | No SLA offered as the Kubernetes cluster is running on premises. | No SLA offered as the Kubernetes cluster is running on premises. | No SLA offered as the Kubernetes cluster is running on premises. |
 
 ### AI and machine learning capabilities offered in each platform
 
-|   Feature       | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
+| Feature | Azure (Cloud) | Azure Local (Edge/On-premises) | Edge Essentials (Edge/On-premises, Windows IoT client/server) | Windows Server (Edge/On-premises) |
 | --- | --- | --- | --- | --- |
-| GPU support                       | Yes             | Yes                       | Yes                                             | Yes                  |
-| KAITO (Kubernetes AI toolchain operator) | Yes             | Yes, via Arc extensions   | No                                              | No                   |
-| Edge RAG                          | Yes             | Yes                       | No                                              | No                   |
+| GPU support | Yes | Yes | Yes | Yes |
+| KAITO (Kubernetes AI toolchain operator) | Yes | Yes, via Arc extensions | No | No |
+| Edge RAG | Yes | Yes | No | No |
 
 ## Next steps
 

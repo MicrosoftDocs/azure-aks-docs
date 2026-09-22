@@ -2,7 +2,8 @@
 title: Deploy a sample application on AKS on bare metal (preview)
 description: Learn how to deploy a containerized application to your Azure Kubernetes Service on bare metal cluster.
 ms.topic: how-to
-ms.date: 09/01/2026
+ms.date: 09/14/2026
+ai-usage: ai-assisted
 author: SummerSmith
 ms.author: sumsmith
 ms.custom: bare-metal
@@ -10,8 +11,7 @@ ms.custom: bare-metal
 
 # Deploy a sample application on AKS on bare metal (preview)
 
-> [!IMPORTANT]
-> Azure Kubernetes Service on bare metal is currently in preview. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal preview is partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 This article walks you through deploying a sample application to your AKS on bare metal cluster and accessing it.
 
@@ -125,7 +125,7 @@ Apply the manifest:
 kubectl apply -f hello-app.yaml
 ```
 
-## Best practices for single-node clusters
+## Best practices for preview clusters
 
 Since AKS on bare metal runs a single-node cluster during public preview:
 
@@ -137,7 +137,7 @@ Since AKS on bare metal runs a single-node cluster during public preview:
 ## Troubleshooting
 
 | Issue | Fix |
-|-------|-----|
+| ------- | ----- |
 | Pod stuck in `ErrImagePull` | Verify the host can reach `mcr.microsoft.com`. Check DNS and firewall rules |
 | Pod stuck in `Pending` | Check node resources: `kubectl describe node`. Look for CPU or memory pressure |
 | Service not accessible | Verify you're using the correct NodePort and host IP. Check firewall allows the port |

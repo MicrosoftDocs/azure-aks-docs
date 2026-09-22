@@ -1,19 +1,19 @@
 ---
-title: Upgrade Kubernetes on AKS on bare metal (preview)
-description: Learn how to upgrade the Kubernetes version on your Azure Kubernetes Service on bare metal cluster using the Azure portal.
+title: Upgrade AKS on bare metal on Azure Linux (Preview)
+description: Upgrade the Kubernetes version for an AKS on bare metal cluster on Azure Linux by using the Azure portal.
 ms.topic: how-to
-ms.date: 09/01/2026
+ms.date: 09/14/2026
+ai-usage: ai-assisted
 author: SummerSmith
 ms.author: sumsmith
 ms.custom: bare-metal
 ---
 
-# Upgrade Kubernetes clusters (preview)
+# Upgrade an AKS on bare metal cluster on Azure Linux (preview)
 
-> [!IMPORTANT]
-> Azure Kubernetes Service on bare metal is currently in preview. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal previews are partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-This article shows you how to upgrade the Kubernetes version on your AKS on bare metal cluster using the Azure portal.
+This article shows you how to upgrade the Kubernetes patch version for an AKS on bare metal cluster on Azure Linux by using the Azure portal. For Ubuntu, see [Upgrade an AKS on bare metal cluster on Ubuntu](aks-bare-metal-upgrade-cluster-ubuntu.md).
 
 ## Overview
 
@@ -46,29 +46,29 @@ The upgrade begins immediately. You can monitor the provisioning state on the cl
 During public preview, the following Kubernetes versions are available:
 
 | Version | Status |
-|---------|--------|
-| 1.34.2 | Supported |
-| 1.34.3 | Supported (latest) |
+| --- | --- |
+| 1.34.2 | Supported. |
+| 1.34.3 | Supported (latest). |
 
 > [!NOTE]
 > You can only upgrade to a newer version. Downgrade isn't supported.
 
 ## Best practices
 
-- **Schedule upgrades during maintenance windows** — The single-node topology means workloads are temporarily unavailable.
-- **Back up critical workloads** — Use persistent storage backups before upgrading.
-- **Test in a non-production cluster first** — If you have multiple clusters, upgrade the development cluster first.
-- **Verify after upgrade** — Connect to the cluster and confirm the node version: `kubectl get nodes`.
+- **Schedule upgrades during maintenance windows**: The single-node topology means workloads are temporarily unavailable.
+- **Back up critical workloads**: Use persistent storage backups before upgrading.
+- **Test in a non-production cluster first**: If you have multiple clusters, upgrade the development cluster first.
+- **Verify after upgrade**: Connect to the cluster and confirm the node version: `kubectl get nodes`.
 
 ## Troubleshooting
 
 | Issue | Fix |
-|-------|-----|
+| --- | --- |
 | Upgrade stuck in `Upgrading` state | Wait up to 30 minutes. If it doesn't complete, check Arc agent connectivity. |
 | Pods not rescheduling after upgrade | Verify node is in `Ready` state: `kubectl get nodes`. |
 | Target version not available | Check the [supported upgrade paths](#supported-upgrade-paths) table for available versions. |
 
 ## Next steps
 
-- [Public preview limitations](aks-bare-metal-preview-limitations.md)
-- [Connect to your cluster](aks-bare-metal-connect-to-cluster.md)
+- [Public preview limitations](aks-bare-metal-preview-limitations.md).
+- [Connect to your cluster](aks-bare-metal-connect-to-cluster.md).

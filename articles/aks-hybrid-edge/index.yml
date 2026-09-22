@@ -31,14 +31,20 @@ landingContent:
         links:
           - text: What is AKS on bare metal?
             url: bare-metal/aks-bare-metal-overview.md
+          - text: Compare Azure Linux and Ubuntu
+            url: bare-metal/aks-bare-metal-compare-azure-linux-ubuntu.md
       - linkListType: concept
         links:
-          - text: Check system requirements
+          - text: Check Azure Linux system requirements
             url: bare-metal/aks-bare-metal-system-requirements.md
+          - text: Prepare an Ubuntu host
+            url: bare-metal/aks-bare-metal-ubuntu-system-requirements.md
       - linkListType: deploy
         links:
-          - text: Deploy an AKS on bare metal cluster
+          - text: Create an Azure Linux cluster in the portal
             url: bare-metal/aks-bare-metal-create-cluster-portal.md
+          - text: Create an Ubuntu cluster with Azure CLI
+            url: bare-metal/aks-bare-metal-create-cluster-ubuntu-cli.md
 
   - title: Get started with AKS on Azure Local
     linkLists:
