@@ -2,7 +2,7 @@
 title: Configure networking and create a flex node pool in AKS (preview)
 description: Learn how to install Unbounded-Net, connect AKS-managed and flex node network locations, and create a flex node pool.
 ms.topic: how-to
-ms.date: 09/21/2026
+ms.date: 09/22/2026
 author: leslielin-5
 ms.author: leslielin
 ms.subservice: aks-nodes
@@ -60,8 +60,10 @@ export FLEXNODE_ENV_FILE="${HOME}/.config/aks-flexnode/${FLEXNODE_DEPLOYMENT}.en
 test -s "${FLEXNODE_ENV_FILE}"
 source "${FLEXNODE_ENV_FILE}"
 export KUBECONFIG="${FLEXNODE_KUBECONFIG}"
-install -d -m 0700 "${WORK_DIR}"
+install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
 ```
+
+The environment file supplies every value that this article reads from a variable, including `WORK_DIR`. If you haven't created it yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first. Don't continue past this step if the shell reports an error.
 
 Set the active subscription and display the Azure and Kubernetes targets:
 
@@ -102,7 +104,7 @@ Download the CLI archive from the release selected in the environment file.
 1. Create a protected download directory and set the release file names.
 
     ```bash
-    export UNBOUNDED_INSTALL_DIR="${WORK_DIR}/unbounded-cli-${UNBOUNDED_VERSION}-${UNBOUNDED_ARCH}"
+    export UNBOUNDED_INSTALL_DIR="${WORK_DIR:?Load the deployment environment first.}/unbounded-cli-${UNBOUNDED_VERSION}-${UNBOUNDED_ARCH}"
     export UNBOUNDED_ARTIFACT="kubectl-unbounded-linux-${UNBOUNDED_ARCH}.tar.gz"
     export UNBOUNDED_ARCHIVE="${UNBOUNDED_INSTALL_DIR}/${UNBOUNDED_ARTIFACT}"
     install -d -m 0700 "${UNBOUNDED_INSTALL_DIR}"

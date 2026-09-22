@@ -4,7 +4,7 @@ description: Learn how to download the flex node release, bootstrap and attach a
 author: leslielin-5
 ms.author: leslielin
 ms.topic: how-to
-ms.date: 09/08/2026
+ms.date: 09/22/2026
 ms.subservice: aks-nodes
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -50,8 +50,10 @@ export FLEXNODE_ENV_FILE="${HOME}/.config/aks-flexnode/${FLEXNODE_DEPLOYMENT}.en
 test -s "${FLEXNODE_ENV_FILE}"
 source "${FLEXNODE_ENV_FILE}"
 export KUBECONFIG="${FLEXNODE_KUBECONFIG}"
-install -d -m 0700 "${WORK_DIR}"
+install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
 ```
+
+The environment file supplies every value that this article reads from a variable, including `WORK_DIR`. If you haven't created it yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first. Don't continue past this step if the shell reports an error.
 
 Set the active subscription and display the Azure, Kubernetes, and host targets:
 
@@ -105,7 +107,7 @@ Confirm that **ResourceId** matches `AKS_RESOURCE_ID`, the Kubernetes control-pl
         --proto '=https' \
         --tlsv1.2 \
         "https://github.com/Azure/AKSFlexNode/releases/download/${AKS_FLEX_NODE_VERSION}/${AGENT_ARCHIVE}" \
-        --output "${WORK_DIR}/${AGENT_ARCHIVE}"
+        --output "${WORK_DIR:?Load the deployment environment first.}/${AGENT_ARCHIVE}"
 
     curl --fail --location --silent --show-error \
         --proto '=https' \
@@ -128,7 +130,7 @@ Confirm that **ResourceId** matches `AKS_RESOURCE_ID`, the Kubernetes control-pl
         wc -l)" -eq 1
 
     (
-        cd "${WORK_DIR}"
+        cd "${WORK_DIR:?Load the deployment environment first.}"
         printf '%s\n' "${AGENT_CHECKSUM_ENTRY}" |
             sha256sum --check --strict -
     )
@@ -146,7 +148,7 @@ Confirm that **ResourceId** matches `AKS_RESOURCE_ID`, the Kubernetes control-pl
         --proto '=https' \
         --tlsv1.2 \
         "https://raw.githubusercontent.com/Azure/AKSFlexNode/${AKS_FLEX_NODE_VERSION}/scripts/bootstrap.sh" \
-        --output "${WORK_DIR}/bootstrap.sh"
+        --output "${WORK_DIR:?Load the deployment environment first.}/bootstrap.sh"
 
     chmod 0700 "${WORK_DIR}/bootstrap.sh"
     bash -n "${WORK_DIR}/bootstrap.sh"
@@ -166,7 +168,7 @@ az aks nodepool get-bootstrap-data \
     --cluster-name "${CLUSTER_NAME}" \
     --name "${FLEX_POOL_NAME}" \
     --output json \
-    > "${WORK_DIR}/base-config.json"
+    > "${WORK_DIR:?Load the deployment environment first.}/base-config.json"
 
 chmod 0600 "${WORK_DIR}/base-config.json"
 test -s "${WORK_DIR}/base-config.json"
@@ -189,7 +191,7 @@ Continue when `${WORK_DIR}/base-config.json` exists and isn't empty. Complete th
         printf 'export HOST_IDENTITY_CLIENT_ID=%q\n' "${HOST_IDENTITY_CLIENT_ID:-}"
         printf 'export SP_TENANT_ID=%q\n' "${SP_TENANT_ID:-}"
         printf 'export SP_CLIENT_ID=%q\n' "${SP_CLIENT_ID:-}"
-    } > "${WORK_DIR}/host-bootstrap.env"
+    } > "${WORK_DIR:?Load the deployment environment first.}/host-bootstrap.env"
 
     chmod 0600 "${WORK_DIR}/host-bootstrap.env"
     ```

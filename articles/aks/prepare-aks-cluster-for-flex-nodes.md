@@ -2,7 +2,7 @@
 title: Prepare an AKS cluster for flex nodes (preview)
 description: Learn how to prepare a public or private AKS cluster, save its resource ID, and verify API server access for flex nodes.
 ms.topic: how-to
-ms.date: 09/07/2026
+ms.date: 09/22/2026
 author: leslielin-5
 ms.author: leslielin
 ms.subservice: aks-nodes
@@ -50,8 +50,10 @@ In this article, you:
     ```bash
     test -s "${FLEXNODE_ENV_FILE}"
     source "${FLEXNODE_ENV_FILE}"
-    install -d -m 0700 "${WORK_DIR}"
+    install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
     ```
+
+    The environment file supplies every value that this article reads from a variable, including `WORK_DIR`. If you haven't created it yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
 
     Stop if the file isn't found or the shell reports an error while loading it.
 
@@ -256,7 +258,7 @@ Use a dedicated kubeconfig for this deployment so that you don't overwrite the d
 1. Set the kubeconfig path and create a protected file.
 
    ```bash
-   export FLEXNODE_KUBECONFIG="${WORK_DIR}/kubeconfig-${CLUSTER_NAME}"
+   export FLEXNODE_KUBECONFIG="${WORK_DIR:?Load the deployment environment first.}/kubeconfig-${CLUSTER_NAME}"
    install -m 0600 /dev/null "${FLEXNODE_KUBECONFIG}"
    ```
 
