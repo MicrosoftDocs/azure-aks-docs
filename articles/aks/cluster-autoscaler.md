@@ -243,7 +243,7 @@ az aks update \
 
 ## Use ProvisioningRequest with the cluster autoscaler
 
-`ProvisioningRequest` is a custom resource that lets you request capacity for a group of related pods and have the cluster autoscaler treat them as a single unit. Based on the provisioning class you specify, the cluster autoscaler can either reserve existing capacity for the pods or spin up new capacity to run them.
+`ProvisioningRequest` is a custom resource that lets you request resources for a group of related pods and have the cluster autoscaler treat them as a single unit. Based on the provisioning class you specify, the cluster autoscaler can either reserve existing resources for the pods or scale up the cluster.
 
 > [!NOTE]
 >
@@ -252,8 +252,8 @@ az aks update \
 
 | Provisioning class | Description |
 |--------------------|-------------|
-| `check-capacity.autoscaling.x-k8s.io` | Checks whether the cluster has enough existing capacity for the specified pods without provisioning new capacity. If capacity is available, the cluster autoscaler reserves it for the `ProvisioningRequest` for 10 minutes to prevent other `ProvisioningRequests` from claiming the same capacity. |
-| `best-effort-atomic-scale-up.autoscaling.x-k8s.io` | The cluster autoscaler makes a best-effort attempt to provision the full requested capacity in a single scale-up operation. If it can't provision all of it, the `ProvisioningRequest` fails ,and the cluster autoscaler retries it after a back-off period. |
+| `check-capacity.autoscaling.x-k8s.io` | Checks whether the cluster has enough existing resources for the specified pods. If the resources are available, the cluster autoscaler reserves them for the `ProvisioningRequest` for 10 minutes to prevent other `ProvisioningRequests` from claiming the same resources. |
+| `best-effort-atomic-scale-up.autoscaling.x-k8s.io` | The cluster autoscaler makes a best-effort attempt to provision the full requested resources in a single scale-up operation. If it can't provision all of it, the `ProvisioningRequest` fails, and the cluster autoscaler retries it after a back-off period. |
 
 For an end-to-end example that demonstrates Kueue integration with the cluster autoscaler and `ProvisioningRequest`, see [Configure Kueue with the cluster autoscaler on AKS](./configure-kueue-with-cluster-autoscaler.md).
 
