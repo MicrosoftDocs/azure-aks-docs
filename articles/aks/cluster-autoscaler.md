@@ -242,9 +242,14 @@ az aks update \
 
 ## Use ProvisioningRequest with the cluster autoscaler
 
-`ProvisioningRequest` allows the cluster autoscaler to treat a group of pods as a single scheduling unit. With the `best-effort-atomic-scale-up` provisioning class, the cluster autoscaler attempts to add all the required capacity in a single scale-up operation. If the operation fails, the cluster autoscaler removes any partially provisioned nodes and retries. Workload queueing systems can use an admission check to wait until the request reports that capacity is provisioned before admitting the workload.
+`ProvisioningRequest` is a namespaced custom resource that lets you ask the cluster autoscaler for capacity for a group of pods. It allows you to express that the pods are connected and should be treated as a single unit, so the cluster autoscaler treats the scale-up request as all-or-nothing rather than as independent unschedulable pods.
 
-For an end-to-end example of using `ProvisioningRequest` with the cluster autoscaler and Kueue admission control, see [Configure Kueue with the cluster autoscaler on AKS](./configure-kueue-with-cluster-autoscaler.md).
+| Provisioning class | Description |
+|--------------------|-------------|
+| `check-capacity.autoscaling.x-k8s.io` | Checks whether the cluster has enough existing capacity for the specified pods without provisioning new capacity. If capacity is available, the cluster autoscaler reserves it for the `ProvisioningRequest` for 10 minutes to prevent other `ProvisioningRequests` from claiming the same capacity. |
+| `best-effort-atomic-scale-up.autoscaling.x-k8s.io` | Attempts to provision all the required capacity in a single scale-up operation. If it can't provision all the required capacity, the cluster autoscaler considers the entire scale-up operation a failure. |
+
+For an end-to-end example that demonstrates Kueue integration with the cluster autoscaler and `ProvisioningRequest`, see [Configure Kueue with the cluster autoscaler on AKS](./configure-kueue-with-cluster-autoscaler.md).
 
 ## Retrieve cluster autoscaler logs and status
 
