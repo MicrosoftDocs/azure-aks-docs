@@ -2,7 +2,7 @@
 title: Plan flex nodes for AKS (preview)
 description: Learn how to plan identity, API access, network connectivity, address ranges, and shared configuration before you add flex nodes to an AKS cluster.
 ms.topic: how-to
-ms.date: 09/06/2026
+ms.date: 09/22/2026
 author: leslielin-5
 ms.author: leslielin
 ms.subservice: aks-nodes
@@ -119,7 +119,7 @@ The remaining articles reuse the following values.
 
 | Variable | Description | When it's used |
 | --- | --- | --- |
-| `LOCATION` | Azure region for the AKS cluster. | Creating the AKS cluster |
+| `LOCATION` | Azure region for the AKS cluster. Confirm that this region meets the [regional availability](#regional-availability) requirement. | Creating the AKS cluster |
 | `AKS_VNET_NAME` | Name of the virtual network that contains the AKS subnet. | Finding and validating the AKS subnet |
 | `AKS_VNET_RESOURCE_GROUP` | Resource group that contains the AKS virtual network. It can differ from `RESOURCE_GROUP`. | Finding and validating the AKS subnet |
 | `AKS_SUBNET_NAME` | Name of the subnet used by the Azure-managed AKS nodes. | Finding and validating the AKS subnet |
@@ -199,6 +199,10 @@ Flex nodes require compatible versions of AKS, the Azure CLI extension, Unbounde
 | `AKS_PREVIEW_VERSION` | `aks-preview` Azure CLI extension version `22.0.0b8` or later. |
 | `UNBOUNDED_VERSION` | Supported Unbounded-Net version. |
 | `AKS_FLEX_NODE_VERSION` | Supported flex node agent version. |
+
+### Regional availability
+
+Before you create or select a cluster, check the **AKS releases** tab of the [AKS release tracker](https://releases.aks.azure.com/AKSRelease) and confirm that the latest release listed for your region is `v20260904` or later. Flex nodes aren't available in a region until that release reaches it. AKS applies these date-based releases automatically, and they're separate from the Kubernetes version that you set in `AKS_VERSION`.
 
 ## Create the shared environment file
 
@@ -290,7 +294,7 @@ Don't store access tokens, bootstrap data, kubeconfig content, service principal
     export AKS_VERSION='1.36.2'
     export AKS_PREVIEW_VERSION='22.0.0b8'
     export UNBOUNDED_VERSION='v0.8.0'
-    export AKS_FLEX_NODE_VERSION='v0.1.11'
+    export AKS_FLEX_NODE_VERSION='v0.2.0'
 
     # Local paths
     export WORK_DIR="${HOME}/.local/share/aksflexnode/${FLEXNODE_DEPLOYMENT}"

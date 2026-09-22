@@ -4,7 +4,7 @@ description: Understand Microsoft and customer responsibilities, the documented 
 author: leslielin-5
 ms.author: leslielin
 ms.topic: concept-article
-ms.date: 09/08/2026
+ms.date: 09/22/2026
 ms.subservice: aks-nodes
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -31,6 +31,7 @@ The deployment series documents the following configuration:
 - A Linux host prepared according to the published flex node prerequisites.
 - Azure VM managed identity, Azure Arc managed identity, or service principal authentication.
 - Component versions and lifecycle operations documented in the flex nodes article series.
+- An AKS region where the required AKS release is available. See [regional availability](plan-flex-nodes-deployment.md#regional-availability).
 
 Other AKSFlexNode repository labs demonstrate additional configurations. A configuration appearing in a lab doesn't by itself change the Microsoft Learn support boundary.
 
