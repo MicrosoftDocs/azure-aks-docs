@@ -2,7 +2,7 @@
 title: Configure networking and create a flex node pool in AKS (preview)
 description: Learn how to install Unbounded-Net, connect AKS-managed and flex node network locations, and create a flex node pool.
 ms.topic: how-to
-ms.date: 09/21/2026
+ms.date: 09/22/2026
 author: leslielin-5
 ms.author: leslielin
 ms.subservice: aks-nodes
@@ -60,8 +60,10 @@ export FLEXNODE_ENV_FILE="${HOME}/.config/aks-flexnode/${FLEXNODE_DEPLOYMENT}.en
 test -s "${FLEXNODE_ENV_FILE}"
 source "${FLEXNODE_ENV_FILE}"
 export KUBECONFIG="${FLEXNODE_KUBECONFIG}"
-install -d -m 0700 "${WORK_DIR}"
+install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
 ```
+
+The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory in your Bash environment where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you didn't create the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first. Don't continue past this step if the shell reports an error.
 
 Set the active subscription and display the Azure and Kubernetes targets:
 
