@@ -2,7 +2,7 @@
 title: Prepare an AKS cluster for flex nodes (preview)
 description: Learn how to prepare a public or private AKS cluster, save its resource ID, and verify API server access for flex nodes.
 ms.topic: how-to
-ms.date: 09/07/2026
+ms.date: 09/22/2026
 author: leslielin-5
 ms.author: leslielin
 ms.subservice: aks-nodes
@@ -50,8 +50,10 @@ In this article, you:
     ```bash
     test -s "${FLEXNODE_ENV_FILE}"
     source "${FLEXNODE_ENV_FILE}"
-    install -d -m 0700 "${WORK_DIR}"
+    install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
     ```
+
+    The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory in your Bash environment where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you didn't create the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
 
     Stop if the file isn't found or the shell reports an error while loading it.
 

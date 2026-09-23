@@ -2,7 +2,7 @@
 title: Prepare a flex node host and identity (preview)
 description: Learn how to prepare a Linux host, configure its Azure identity, and grant access to an AKS cluster before attachment.
 ms.topic: how-to
-ms.date: 09/08/2026
+ms.date: 09/22/2026
 author: leslielin-5
 ms.author: leslielin
 ms.subservice: aks-nodes
@@ -40,8 +40,11 @@ Start a new Bash session, identify the environment file from the planning articl
 ```bash
 export FLEXNODE_DEPLOYMENT="<deployment-name>"
 export FLEXNODE_ENV_FILE="${HOME}/.config/aks-flexnode/${FLEXNODE_DEPLOYMENT}.env"
+test -s "${FLEXNODE_ENV_FILE}"
 source "${FLEXNODE_ENV_FILE}"
 ```
+
+The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory in your Bash environment where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you didn't create the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
 
 If the file isn't found or can't be loaded, stop and return to the planning article before you continue.
 
@@ -176,10 +179,10 @@ Run these commands in your Bash environment while signed in with your operator a
 
     ```bash
     export SP_DISPLAY_NAME="aks-flexnode-${FLEXNODE_DEPLOYMENT}-$(date -u +%Y%m%dT%H%M%SZ)"
-    install -d -m 0700 "${WORK_DIR}"
+    install -d -m 0700 "${WORK_DIR:?Load the deployment environment first.}"
     SP_CREDENTIAL_DIR="$(mktemp -d "${WORK_DIR}/sp-credential.XXXXXXXX")"
     export SP_CREDENTIAL_DIR
-    export SP_CLIENT_CERTIFICATE_FILE="${SP_CREDENTIAL_DIR}/sp-client.pem"
+    export SP_CLIENT_CERTIFICATE_FILE="${SP_CREDENTIAL_DIR:?Credential directory wasn't created.}/sp-client.pem"
     ```
 
 1. Create a 30-day certificate and a combined PEM file that contains the certificate and private key.
