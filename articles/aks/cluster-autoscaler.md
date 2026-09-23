@@ -243,7 +243,7 @@ az aks update \
 
 ## Use ProvisioningRequest with the cluster autoscaler
 
-`ProvisioningRequest` is a custom resource that lets you request resources for a group of related pods and have the cluster autoscaler treat them as a single unit. Based on the provisioning class you specify, the cluster autoscaler can either reserve existing resources for the pods or scale up the cluster.
+`ProvisioningRequest` is a custom resource that you can use to request resources for a group of related pods. The cluster autoscaler treats these pods as a single unit. Based on the provisioning class you specify, the cluster autoscaler can either reserve existing resources for the pods or scale up the cluster.
 
 > [!NOTE]
 >
