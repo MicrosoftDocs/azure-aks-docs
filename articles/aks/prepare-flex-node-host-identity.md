@@ -44,7 +44,7 @@ test -s "${FLEXNODE_ENV_FILE}"
 source "${FLEXNODE_ENV_FILE}"
 ```
 
-The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory in your Bash environment where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you haven't created the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
+The environment file supplies the shared deployment values that this article reads, including `WORK_DIR`, the directory in your Bash environment where this article stores downloads and generated files. By default, `WORK_DIR` is `~/.local/share/aksflexnode/<deployment-name>`. The article derives any other variables that it needs. If you didn't create the environment file yet, complete [Plan your flex nodes deployment](./plan-flex-nodes-deployment.md) first.
 
 If the file isn't found or can't be loaded, stop and return to the planning article before you continue.
 
