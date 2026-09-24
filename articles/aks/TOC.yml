@@ -357,6 +357,8 @@
           href: virtual-nodes-cli.md
         - name: Use the Azure portal
           href: virtual-nodes-portal.md
+    - name: Virtual Nodes v2 (preview)
+      href: virtual-nodes-v2.md
     - name: Use Windows Server
       items:
         - name: Windows container considerations
