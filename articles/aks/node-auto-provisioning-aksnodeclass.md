@@ -21,7 +21,7 @@ This article explains how to configure `AKSNodeClass` resources to define Azure-
 `AKSNodeClass` resources enable you to configure Azure-specific settings for NAP. Each [`NodePool` resource](./node-auto-provisioning-node-pools.md) must reference an `AKSNodeClass` using `spec.template.spec.nodeClassRef`. You can have multiple `NodePools` that point to the same `AKSNodeClass`, allowing you to share common Azure configurations across different node pools.
 
 > [!IMPORTANT]
-> Changing a setting on an existing `AKSNodeClass` doesn't reconfigure running nodes in place. NAP marks the nodes provisioned from the previous configuration as _drifted_ and replaces them, subject to the disruption controls on the referencing `NodePool` resources. The `tags` field is the only exception, because tag changes apply to existing Azure resources without replacing the node. Review [Drift](./node-auto-provisioning-disruption.md#drift) and [Disruption budgets](./node-auto-provisioning-disruption.md#disruption-budgets) before you modify an `AKSNodeClass` that production workloads use.
+> Changing a setting on an existing `AKSNodeClass` doesn't reconfigure running nodes in place. NAP marks the nodes provisioned from the previous configuration as _drifted_ and replaces them, subject to the disruption controls on the referencing `NodePool` resources. The `tags` field is the only exception, because tag changes apply to existing Azure resources without replacing the node. To learn more, see [Drift](./node-auto-provisioning-disruption.md#drift) and [Disruption budgets](./node-auto-provisioning-disruption.md#disruption-budgets). Before you modify an `AKSNodeClass` that production workloads use, review this guidance.
 
 ## Image family configuration
 
