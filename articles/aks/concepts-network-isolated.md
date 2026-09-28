@@ -75,10 +75,8 @@ For network isolated clusters with BYO ACR:
 * If you are using [Azure Container Storage Interface (CSI) driver][csi-driver] for Azure Files and Blob storage, you must create a custom storage class with "networkEndpointType: privateEndpoint", see examples in [Azure Files storage classes][custom-storage-class-file] and [Azure Blob storage classes][custom-storage-class-blob].
 * The following AKS cluster extensions aren't supported yet on network isolated clusters:
     * [Dapr][dapr-overview]
-    * [Azure App Configuration][app-config-overview]
     * [Azure Machine Learning][azure-ml-overview]
     * [Flux (GitOps)][gitops-overview]
-    * [Azure Backup for AKS][azure-backup-aks]
 
 ## Frequently asked questions
 
