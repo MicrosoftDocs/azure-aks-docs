@@ -249,16 +249,16 @@ The following table outlines pros and cons of this method:
 
 ### Method 2: Simulate an AZ failure using Azure Chaos Studio
 
-Another way to test your AKS cluster for AZ resiliency is to simulate a zone outage with [Azure Chaos Studio Workspaces](/azure/chaos-studio/chaos-studio-workspaces-overview). Run the **Compute Zone Down** Scenario in a workspace scoped to the cluster's infrastructure resource group (named beginning with `MC_` by default). The Scenario shuts down the node virtual machine scale set instances in one availability zone, so you can observe pods reschedule to the remaining zones and measure the availability, latency, and error rate of your application using metrics and logs. For step-by-step guidance, see [Test AKS resilience with Chaos Studio Workspaces](/azure/chaos-studio/chaos-studio-aks-guidance).
+Another way to test your AKS cluster for AZ resiliency is to simulate a zone outage by using [Azure Chaos Studio Workspaces](/azure/chaos-studio/chaos-studio-workspaces-overview). Run the **Compute Zone Down** scenario in a workspace scoped to the cluster's infrastructure resource group (named beginning with `MC_` by default). The scenario shuts down the node virtual machine scale set instances in one availability zone, so you can observe pods reschedule to the remaining zones and measure the availability, latency, and error rate of your application by using metrics and logs. For step-by-step guidance, see [Test AKS resilience with Chaos Studio Workspaces](/azure/chaos-studio/chaos-studio-aks-guidance).
 
 > [!NOTE]
-> The Compute Zone Down Scenario targets node pool virtual machine scale sets. It doesn't apply to node pools created by node autoprovisioning (NAP), and it doesn't inject faults inside the cluster. For in-cluster faults, such as pod failures or network faults, use [AKS Chaos Mesh faults with Experiments (classic)](/azure/chaos-studio/chaos-studio-tutorial-aks-portal).
+> The Compute Zone Down scenario targets node pool virtual machine scale sets. It doesn't apply to node pools created by node autoprovisioning (NAP), and it doesn't inject faults inside the cluster. For in-cluster faults, such as pod failures or network faults, use [AKS Chaos Mesh faults with Experiments (classic)](/azure/chaos-studio/chaos-studio-tutorial-aks-portal).
 
 The following table outlines pros and cons of this method:
 
 | Pros | Cons |
 | ---- | ---- |
-| • Provides a controlled, repeatable way to take down an entire zone's nodes and monitor the results <br> • Uses a built-in Scenario template, so you don't need to build the fault sequence yourself <br> • Integrates with Azure Monitor and other tools to collect and analyze data | • Requires a workspace scoped to the cluster's infrastructure resource group and role assignments for the workspace's managed identity <br> • Might not cover all possible failure modes and edge zones that could occur during a real outage <br> • Tests node infrastructure only, not faults inside the cluster |
+| • Provides a controlled, repeatable way to take down an entire zone's nodes and monitor the results <br> • Uses a built-in scenario template, so you don't need to build the fault sequence yourself <br> • Integrates with Azure Monitor and other tools to collect and analyze data | • Requires a workspace scoped to the cluster's infrastructure resource group and role assignments for the workspace's managed identity <br> • Might not cover all possible failure modes and edge zones that could occur during a real outage <br> • Tests node infrastructure only, not faults inside the cluster |
 
 For more information, see [What is Azure Chaos Studio?](/azure/chaos-studio/chaos-studio-overview).
 
