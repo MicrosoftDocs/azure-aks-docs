@@ -75,7 +75,7 @@ In a complete regional failure, Azure Front Door routes traffic to the remaining
 
 ## Failover testing strategy
 
-While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](/azure/chaos-studio/chaos-studio-overview) offers the ability to create a chaos experiment on your cluster.
+While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, you can use [Azure Chaos Studio Workspaces](/azure/chaos-studio/chaos-studio-aks-guidance) to simulate an availability zone outage for your cluster's node pools.
 
 ## Next steps
 
