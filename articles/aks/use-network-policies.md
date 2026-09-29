@@ -46,7 +46,7 @@ Azure provides three network policy engines for enforcing network policies:
 
 We recommend using Cilium, which provides robust support for Kubernetes-native policies, extended features such as [Layer 7 policy](./container-network-security-l7-policy-concepts.md) and [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md), and an eBPF-based dataplane that offers better performance, scalability, and security compared to _IPTables_-based solutions.
 
-To enforce the specified policies, Azure NPM uses _IPTables_ for Linux nodes. Policies are translated into sets of allowed and disallowed IP pairs. These pairs are then programmed as `IPTable` filter rules.
+To enforce the specified policies, Azure NPM uses _IPTables_ for Linux nodes. Policies are translated into sets of allowed and disallowed IP pairs. The system programs these pairs as `IPTable` filter rules.
 
 ## Differences between network policy engines: Cilium, Azure NPM, and Calico
 
@@ -135,7 +135,11 @@ Instead of using a system-assigned identity, you can also use a user-assigned id
 
 Create an AKS cluster using the [`az aks create`][az-aks-create] command and specify `--network-plugin azure` and `--network-policy calico`. Specifying `--network-policy calico` enables Calico on both Linux and Windows node pools.
 
-If you plan on adding Windows node pools to your cluster, include the `windows-admin-username` and `windows-admin-password` parameters that meet the [Windows Server password requirements][windows-server-password]. To create administrator credentials for Windows Server containers on your cluster, see [Create administrator credentials for Windows Server containers](#create-administrator-credentials-for-windows-server-containers).
+If you plan on adding Windows node pools to your cluster, include the `windows-admin-username` and `windows-admin-password` parameters that meet the [Windows Server password requirements][windows-server-password]. To create a username to use as administrator credentials for your Windows Server containers on your cluster. The following command prompts you for a username. Set it to WINDOWS_USERNAME
+
+```bash
+echo "Please enter the username to use as administrator credentials for Windows Server containers on your cluster: " && read WINDOWS_USERNAME
+```
 
 > [!IMPORTANT]
 > At this time, using Calico network policies with Windows nodes is available on new clusters using Kubernetes version 1.20 or later with Calico 3.17.2 and requires that you use Azure CNI networking. Windows nodes on AKS clusters with Calico enabled also have Floating IP enabled by default.
