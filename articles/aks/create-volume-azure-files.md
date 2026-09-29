@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2
-ms.date: 08/25/2026
+ms.date: 08/18/2026
 author: schaffererin
 ms.author: schaffererin
 ai-usage: ai-assisted
@@ -732,6 +732,9 @@ This option is optimized for random access workloads with in-place data updates 
 - NFS requires SSD file shares (such as `PremiumV2_LRS`, `PremiumV2_ZRS`, `Premium_LRS`, or `Premium_ZRS`) and a virtual network-enabled storage account.
 - Your AKS cluster _control plane_ identity (that is, your AKS cluster name) is added to the [Contributor](/azure/role-based-access-control/built-in-roles#contributor) role on the VNet and NetworkSecurityGroup.
 - Your AKS cluster's service principal or managed identity must be added to the Contributor role on the storage account.
+
+> [!NOTE]
+> To properly use the NFS protocol natively in Azure Kubernetes Serivce, the Storage Account must have the "**Secure transfer required**" parameter **disabled**. Otherwise, the volume mount operation will fail.
 
 > [!NOTE]
 > You can use a private endpoint instead of allowing access to the selected VNet.
