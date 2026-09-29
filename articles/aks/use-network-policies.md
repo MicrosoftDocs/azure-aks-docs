@@ -18,8 +18,6 @@ zone_pivot_groups: azure-cli-or-terraform
 
 # Secure traffic between pods with network policies in Azure Kubernetes Service (AKS)
 
-[!INCLUDE [azure-network-policy-manager-windows-retirement](./includes/azure-network-policy-manager-windows-retirement.md)]
-
 [!INCLUDE [azure-network-policy-manager-linux-retirement](./includes/azure-network-policy-manager-linux-retirement.md)]
 
 ## Identify impacted clusters
@@ -48,31 +46,24 @@ Azure provides three network policy engines for enforcing network policies:
 
 We recommend using Cilium, which provides robust support for Kubernetes-native policies, extended features such as [Layer 7 policy](./container-network-security-l7-policy-concepts.md) and [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md), and an eBPF-based dataplane that offers better performance, scalability, and security compared to _IPTables_-based solutions.
 
-To enforce the specified policies, Azure NPM uses _IPTables_ for Linux and _Host Network Service (HNS) ACLPolicies_ for Windows. Policies are translated into sets of allowed and disallowed IP pairs. These pairs are then programmed as `IPTable` or `HNS ACLPolicy` filter rules.
+To enforce the specified policies, Azure NPM uses _IPTables_ for Linux nodes. Policies are translated into sets of allowed and disallowed IP pairs. The system programs these pairs as `IPTable` filter rules.
 
 ## Differences between network policy engines: Cilium, Azure NPM, and Calico
 
 | Network policy engine | Supported platforms | Supported networking options | Kubernetes specification compliance | Other features | Support |
 | --------------------- | ------------------- | ---------------------------- | ----------------------------------- | -------------- | ------- |
 | Cilium | Linux | Azure CNI | Supports all policy types | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md) | Azure support and engineering team |
-| Azure NPM | Linux, Windows Server 2022 | Azure CNI | Supports all policy types | N/A | Azure support and engineering team |
+| Azure NPM | Linux | Azure CNI | Supports all policy types | N/A | Azure support and engineering team |
 | Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | While Calico has many features that AKS doesn't block, AKS doesn't test or support them. For more information, see [Calico Guidance](https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate). | Azure support and engineering team |
 
-## Azure Network Policy Manager limitations (Linux)
+## Azure Network Policy Manager limitations 
 
-Azure NPM for Linux has the following limitations:
+Azure NPM has the following limitations:
 
 - Scaling beyond _250 nodes_ and _20,000 pods_ isn't supported. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, we recommend using or upgrading to [Azure CNI Powered by Cilium](./update-azure-cni.md) for your network policy engine.
 - IPv6 isn't supported. Otherwise, it fully supports the network policy specifications in Linux.
+- Starting on September 30, 2026, Azure Kubernetes Service (AKS) no longer supports Azure Network Policy Manager (NPM) on Windows nodes.
 
-## Azure Network Policy Manager limitations (Windows)
-
-Azure NPM for Windows doesn't support the following features of the network policy specifications:
-
-- Named ports.
-- Stream Control Transmission Protocol (SCTP).
-- Negative match label or namespace selectors. For example, all labels except `debug=true`.
-- `except` classless interdomain routing (CIDR) blocks (CIDR with exceptions).
 
 ## Known issues with Azure Network Policy Manager
 
@@ -139,82 +130,16 @@ Instead of using a system-assigned identity, you can also use a user-assigned id
     > [!CAUTION]
     > Azure Network Policy Manager (NPM) for Linux nodes will be retired on September 30, 2028. For new deployments, we recommend using [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md) with Cilium Network Policy. To migrate existing clusters, see [Migrate from NPM to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md).
 
-## Create an AKS cluster with Azure Network Policy Manager (Windows Server 2022 (preview))
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+## Create an AKS cluster with Calico
 
-### Install the `aks-preview` Azure CLI extension
+Create an AKS cluster by using the [`az aks create`][az-aks-create] command. Specify `--network-plugin azure` and `--network-policy calico`. When you specify `--network-policy calico`, you enable Calico on both Linux and Windows node pools.
 
-1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `WindowsNetworkPolicyPreview` feature flag
-
-1. Register the `WindowsNetworkPolicyPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "WindowsNetworkPolicyPreview"
-    ```
-
-    It takes a few minutes for the status to show _Registered_.
-
-1. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "WindowsNetworkPolicyPreview"
-    ```
-
-1. When the status reflects _Registered_, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
-
-### Create administrator credentials for Windows Server containers
-
-Create a username to use as administrator credentials for your Windows Server containers on your cluster. The following command prompts you for a username. Set it to `WINDOWS_USERNAME`.
+If you plan to add Windows node pools to your cluster, include the `windows-admin-username` and `windows-admin-password` parameters that meet the [Windows Server password requirements][windows-server-password]. To create a username to use as administrator credentials for your Windows Server containers on your cluster, the following command prompts you for a username. Set it to WINDOWS_USERNAME.
 
 ```bash
 echo "Please enter the username to use as administrator credentials for Windows Server containers on your cluster: " && read WINDOWS_USERNAME
 ```
-
-### Create the AKS cluster
-
-1. Set environment variables for the resource group name, cluster name, and location. Replace the values as needed.
-
-    ```bash
-    export RESOURCE_GROUP=myResourceGroup
-    export CLUSTER_NAME=myAKSCluster
-    export LOCATION=eastus
-    ```
-
-1. Create an AKS cluster using the [`az aks create`][az-aks-create] and specify `azure` for the `network-plugin` and `network-policy`.
-
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --node-count 1 \
-        --windows-admin-username $WINDOWS_USERNAME \
-        --network-plugin azure \
-        --network-policy azure \
-        --generate-ssh-keys
-    ```
-
-## Create an AKS cluster with Calico
-
-Create an AKS cluster using the [`az aks create`][az-aks-create] command and specify `--network-plugin azure` and `--network-policy calico`. Specifying `--network-policy calico` enables Calico on both Linux and Windows node pools.
-
-If you plan on adding Windows node pools to your cluster, include the `windows-admin-username` and `windows-admin-password` parameters that meet the [Windows Server password requirements][windows-server-password]. To create administrator credentials for Windows Server containers on your cluster, see [Create administrator credentials for Windows Server containers](#create-administrator-credentials-for-windows-server-containers).
 
 > [!IMPORTANT]
 > At this time, using Calico network policies with Windows nodes is available on new clusters using Kubernetes version 1.20 or later with Calico 3.17.2 and requires that you use Azure CNI networking. Windows nodes on AKS clusters with Calico enabled also have Floating IP enabled by default.

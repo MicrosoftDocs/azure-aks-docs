@@ -25,8 +25,8 @@ This article describes OS versions available for Azure Kubernetes Service (AKS) 
 
 Each [node image][node-images] corresponds to an OS version, which you can specify using OS SKU. You can specify the following parameters when creating clusters and node pools:
 
-- **--os-type**: OS type, including Linux or Windows. *You can't specify the Windows OS type during cluster creation or update.*
-- **--os-sku**: Used to specify OS version or OS variant. *You can't specify the Windows OS SKU during cluster creation or update.* For more information for supported OS SKU options, see [Azure AKS CLI][az-aks-create] or [API][agent-pools-create-or-update].
+- **--os-type**: OS type, including Linux or Windows. *You can't specify the Windows OS type during cluster-level creation or update.*
+- **--os-sku**: Used to specify OS version or OS variant. *You can't specify the Windows OS SKU during cluster-level creation or update.* For Windows node pools, specify the OS SKU when you add a node pool. For more information about supported OS SKU options, see [Azure AKS CLI][az-aks-create] or [API][agent-pools-create-or-update].
 - **--kubernetes-version**: Version of Kubernetes to use for creating the node pool or cluster.
 
 > **Best practice guidance**
@@ -61,17 +61,16 @@ We recommend testing your nonproduction workloads with the new OS version when i
 There are two ways to migrate to a new OS version:
 
 - **Default OS SKU**: If you're using a default OS SKU such as `Ubuntu` or `AzureLinux`, you automatically get the latest GA version when you [upgrade your Kubernetes version][manage-node-pools]. There are no manual changes required to migrate to a new OS version. Clusters and node pools using the `Ubuntu` OS SKU automatically migrate to Ubuntu 24.04 when upgrading the Kubernetes version to 1.35 or higher. 
-- **Versioned OS SKU**: If you're using a versioned OS SKU such as `Ubuntu2604`, `Ubuntu2404`, `AzureLinux3`, or `Windows2025`, you need to manually migrate to a new OS version to avoid blocked Kubernetes upgrades. If you're using a Linux OS, you can update the OS SKU on an existing node pool to migrate in place.
+- **Versioned OS SKU**: If you're using a versioned OS SKU such as `Ubuntu2604`, `Ubuntu2404`, `AzureLinux3`, or `Windows2025`, you need to manually migrate to a new OS version to avoid blocked Kubernetes upgrades. If you're using a Linux OS, you can update the OS SKU on an existing node pool to migrate in place. For Windows, in-place migration is supported only from Windows Server 2022 to Windows Server 2025.
 
 ### Update OS SKU on an existing node pool
 
 Update the `os-sku` on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command. In cases where there's a new OS version available in preview, this functionality allows you to migrate your node pool to the new OS version without needing to upgrade your Kubernetes version.
 
 > [!NOTE]
-> The following values aren't supported for node pool update command:
+> The following Windows values aren't supported for the node pool update command. Migrations from Windows Server 2022 to Windows Server 2025 are supported.
 >
 > - `--os-sku Windows2022`
-> - `--os-sku Windows2025`
 >
 > Instead, you need to add node pools to your cluster with the corresponding `--os-sku` you intend to use.
 
