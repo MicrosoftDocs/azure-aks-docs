@@ -90,12 +90,14 @@
           href: update-create-update-strategy.md
         - name: Add approvals to update groups and stages
           href: update-strategies-gates-approvals.md
-        - name: Automate approvals using events
-          href: howto-configure-events-for-gates.md
         - name: Start a group or stage at a scheduled day and time
           href: update-strategies-gates-scheduled-start.md
+        - name: Automate approvals using events
+          href: howto-configure-events-for-gates.md
+        - name: Send notification emails for pending update run gates
+          href: howto-send-email-pending-gate.md
         - name: Configure monitoring and alerting of update runs
-          href: howto-monitor-update-runs.md       
+          href: howto-monitor-update-runs.md
     - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
       href: howto-migrate-updates-from-terraform.md
     - name: Manage Kubernetes resources on multiple clusters

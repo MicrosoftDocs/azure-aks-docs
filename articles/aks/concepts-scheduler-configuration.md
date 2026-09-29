@@ -20,15 +20,15 @@ In AKS, the default mechanism of workload placement across nodes within a cluste
 When a pod is created without a specified node, the scheduler selects an optimal node based on several criteria, including (but not limited to):
 
 - Available resources (CPU, memory)
-- [Node affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#node-affinity)
-- [Pod affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#inter-pod-affinity-and-anti-affinity)
-- [Taints and tolerations](./operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations)
+- [Node affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#what-is-node-affinity)
+- [Pod affinity/anti-affinity](./operator-best-practices-advanced-scheduler.md#what-is-inter-pod-affinity-and-anti-affinity)
+- [Taints and tolerations](./operator-best-practices-advanced-scheduler.md#what-are-taints-and-tolerations)
 
 ### AKS scheduler configuration and scheduling strategies
 
 By default, the AKS scheduler comes with a set of built-in rules that work well for general-purpose workloads. However, advanced use cases might require custom scheduling strategies. For example:
 
-- Batch jobs might prefer collocating in a few nodes (for better performance) over topology-aware spreading (for reliability).
+- Batch jobs might prefer colocating in a few nodes (for better performance) over topology-aware spreading (for reliability).
 - Cost-sensitive workloads might benefit from node binpacking to consolidate jobs and minimize idle compute node costs.
 
 To support these use cases, AKS allows you to set one or more in-tree scheduling plugins through a Kubernetes custom resource (CRD) to configure the scheduling behavior on your AKS cluster.

@@ -39,17 +39,7 @@ The following limitations apply during preview:
 
 ## Install the `aks-preview` CLI extension
 
-Install the `aks-preview` CLI extension if you don't already have it using the [`az extension add`][az-extension-add] command.
-
-```azurecli-interactive
-az extension add --name aks-preview
-```
-
-If you already have the extension installed, update it to the latest version using the [`az extension update`][az-extension-update] command.
-
-```azurecli-interactive
-az extension update --name aks-preview
-```
+[!INCLUDE [aks-preview-cli-extension](includes/aks-preview-cli-extension.md)]
 
 ## Register the `AKSPreparedImageSpecificationPreview` feature flag
 
@@ -152,7 +142,7 @@ After you create a PIS, you can reference it when you create or update a cluster
     RESOURCE_GROUP=<your-resource-group>
     PIS_NAME=<your-pis-name>
     PIS_VERSION=v1
-    
+
     # Get the PIS version resource ID
     PIS_VERSION_ID=$(az aks prepared-image-specification version show \
         --resource-group $RESOURCE_GROUP \
@@ -166,7 +156,7 @@ After you create a PIS, you can reference it when you create or update a cluster
     ```azurecli-interactive
     # Set environment variables
     CLUSTER_NAME=<your-aks-cluster-name>
-    
+
     # Create a new AKS cluster using the prepared image
     az aks create \
         --resource-group $RESOURCE_GROUP \
@@ -184,7 +174,7 @@ After you create a PIS, you can reference it when you create or update a cluster
     RESOURCE_GROUP=<your-resource-group>
     PIS_NAME=<your-pis-name>
     PIS_VERSION=v1
-    
+
     # Get the PIS version resource ID
     PIS_VERSION_ID=$(az aks prepared-image-specification version show \
         --resource-group $RESOURCE_GROUP \
@@ -248,7 +238,7 @@ az aks prepared-image-specification show \
 
 ### Update Prepared Image Specification metadata
 
-There are two resource concepts: the **PIS resource** and **PIS versions**. Updating PIS metadata, such as tags, updates the PIS resource and doesn't change the referenced version’s image/scripts. To change container images or scripts, you should create a new PIS version and update the node pool to reference that PIS version ID.
+There are two resource concepts: the **PIS resource** and **PIS versions**. Updating PIS metadata, such as tags, updates the PIS resource and doesn't change the referenced version's image or scripts. To change container images or scripts, create a new PIS version and update the node pool to reference that PIS version ID.
 
 You can update metadata, such as tags, on an existing Prepared Image Specification using the [`az aks prepared-image-specification update`][az-aks-prepared-image-specification-update] command. To change the container images or scripts, create a new version instead.
 
@@ -325,7 +315,7 @@ When your base images, dependencies, or customizations change, create a new vers
     RESOURCE_GROUP=<your-resource-group>
     CLUSTER_NAME=<your-aks-cluster-name>
     NEW_PIS_VERSION_ID=<new-pis-version-resource-id>
-    
+
     # Update a node pool to reference a new PIS version using the `az aks nodepool update` command
     az aks nodepool update \
         --resource-group $RESOURCE_GROUP \
@@ -346,7 +336,7 @@ Check for available upgrades using the [`az aks get-upgrades`][az-aks-get-upgrad
 # Set environment variables
 RESOURCE_GROUP=<your-resource-group>
 CLUSTER_NAME=<your-aks-cluster-name>
-    
+
 # Check for available upgrades
 az aks get-upgrades \
     --resource-group $RESOURCE_GROUP \
@@ -360,7 +350,7 @@ Upgrade the cluster using the [`az aks upgrade`][az-aks-upgrade] command.
 RESOURCE_GROUP=<your-resource-group>
 CLUSTER_NAME=<your-aks-cluster-name>
 KUBERNETES_VERSION=<new-kubernetes-version>
-    
+
 # Upgrade the cluster to the new Kubernetes version
 az aks upgrade \
     --resource-group $RESOURCE_GROUP \

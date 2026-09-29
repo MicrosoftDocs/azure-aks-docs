@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 07/17/2026
+ms.date: 08/21/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -49,7 +49,7 @@ az fleet member create \
 
 ### Relationship to Azure Arc-enabled Kubernetes
 
-Fleet Manager supports both Azure-hosted AKS clusters and Arc-enabled Kubernetes clusters as member clusters.
+Fleet Manager supports both Azure-hosted AKS clusters and Azure Arc-enabled Kubernetes clusters as member clusters.
 
 ### Relationship to Azure Kubernetes Service clusters
 
@@ -97,10 +97,10 @@ Fleet Manager supports the following AKS update channels:
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: Node image VHD patched (bug and security) with a weekly release schedule.
 * **TargetKubernetesVersion (Kubernetes Patch)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that are available only via AKS Long-Term Support (LTS).
+* **SecurityPatch (Linux node images)**: Node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 
 Currently unsupported AKS channels:
 
-* **NodeSecurityPatch**: Node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 * **Unmanaged**: Node image OS updates applied directly through OS in-built patching (Linux nodes only). There are currently no plans for Fleet Manager to support this option.
 
 ### The target Kubernetes minor version in my auto-upgrade profile is out of community support. What can I do?
@@ -229,11 +229,11 @@ If you want to skip the member cluster upgrades together with the gating approva
 
 As in the previous question, if you want to proceed with an upgrade, you must grant the approval. If you're trying to clean up the underlying gate resource, you must delete the associated update run, which deletes all gates linked to the update run.
 
-### Can I configure an after stage approval together with an after stage wait?
+### Can I configure an after-stage approval together with an after-stage wait?
 
-Yes. The after stage wait begins at the same time as the approval. Both must be completed before the update run continues.
+Yes. The after-stage wait begins at the same time as the approval. Both must be completed before the update run continues.
 
-### Can approvals be added to existing update strategies?
+### Can I add approvals to existing update strategies?
 
 Yes. You can edit the existing strategy to include approvals. However, existing update runs that you created by using the strategy aren't updated.
 
@@ -262,21 +262,9 @@ Yes. Fleet Manager supports both cluster-scoped and namespace-scoped resource pl
 * **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters. For more information, see [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-placement.md).
 * **ResourcePlacement**: Provides fine-grained control to select and propagate specific namespace-scoped resources (such as ConfigMaps, Secrets, Deployments) within a namespace. For more information, see [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespace-scoped-resource-propagation.md).
 
-## Automated Deployments FAQs
-
-### How does this compare to AKS Automated Deployments?
-
-AKS Automated Deployments supports only a single AKS cluster where the deployed workload runs. Fleet Manager's Automated Deployments stages the workload definitions on the Fleet Manager hub cluster, making them available for propagation to member clusters via [cluster resource placement](./concepts-resource-placement.md). 
-
-Fleet Manager Automated Deployments also requires the use of an existing Azure Container Registry (ACR) and Fleet Manager hub cluster namespace.
-
-### Can I connect to the same Git repository multiple times?
-
-Yes, you can connect to the same repository multiple times to deploy different resources or branches from the same repository.
-
 ## Roadmap
 
-The roadmap for Azure Kubernetes Fleet Manager resource is available [on GitHub](https://aka.ms/kubernetes-fleet/roadmap).
+The Azure Kubernetes Fleet Manager roadmap is available [on GitHub](https://aka.ms/kubernetes-fleet/roadmap). The team welcomes feature requests, questions, and bug reports.
 
 ## Next steps
 

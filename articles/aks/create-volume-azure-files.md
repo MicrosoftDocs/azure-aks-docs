@@ -8,6 +8,7 @@ ms.custom: aeo-round-2
 ms.date: 08/18/2026
 author: schaffererin
 ms.author: schaffererin
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to learn how to create and manage persistent volumes using Azure Files CSI drivers in Azure Kubernetes Service (AKS) so that I can provide scalable and reliable storage solutions for my containerized applications."
 ---
 
@@ -35,6 +36,96 @@ Azure Files enables multiple pods to share persistent storage in AKS using SMB o
 - The [Azure Files CSI driver](./csi-storage-drivers.md) enabled on your AKS cluster.
 - An Azure [storage account][azure-storage-account].
 - When choosing between SSD (Premium) and HDD (Standard) file shares, it's important you understand the provisioning model and requirements of the expected usage pattern you plan to run on Azure Files. Azure Files has three billing models: [provisioned v2](/azure/storage/files/understanding-billing#provisioned-v2-model) (recommended), [pay-as-you-go](/azure/storage/files/understanding-billing#pay-as-you-go-model), and the legacy [provisioned v1](/azure/storage/files/understanding-billing#provisioned-v1-model). For more information, see [Choosing an Azure Files performance tier based on usage patterns][azure-files-usage].
+
+## Create a complete dynamically provisioned volume
+
+The following example creates a general-purpose Azure Files storage class, a PVC that dynamically provisions a file share, and a pod that mounts the file share. The example uses the `Standard_LRS` SKU and SMB protocol. For production workloads, choose the [Azure Files performance tier and redundancy option][azure-files-usage] that meets your performance and availability requirements.
+
+1. Create a file named `azure-file-dynamic.yaml` and paste in the following manifest:
+
+    ```yaml
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: azurefile-csi-standard
+    provisioner: file.csi.azure.com
+    allowVolumeExpansion: true
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    parameters:
+      skuName: Standard_LRS
+      protocol: smb
+    ---
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: azurefile-pvc
+    spec:
+      accessModes:
+        - ReadWriteMany
+      storageClassName: azurefile-csi-standard
+      resources:
+        requests:
+          storage: 5Gi
+    ---
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: azurefile-app
+    spec:
+      containers:
+        - name: nginx
+          image: mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: azurefile-volume
+              mountPath: /mnt/azure
+      volumes:
+        - name: azurefile-volume
+          persistentVolumeClaim:
+            claimName: azurefile-pvc
+    ```
+
+1. Apply the manifest using the [`kubectl apply`][kubectl-apply] command:
+
+    ```bash
+    kubectl apply -f azure-file-dynamic.yaml
+    ```
+
+1. Confirm that the PVC is in the `Bound` state and the pod is in the `Running` state:
+
+    ```bash
+    kubectl get storageclass azurefile-csi-standard
+    kubectl get pvc azurefile-pvc
+    kubectl get pod azurefile-app
+    ```
+
+1. Verify that the pod can write to and read from the dynamically provisioned file share:
+
+    ```bash
+    kubectl exec azurefile-app -- sh -c "echo 'Azure Files is mounted' > /mnt/azure/test.txt"
+    kubectl exec azurefile-app -- cat /mnt/azure/test.txt
+    ```
+
+    Your output should resemble the following example output:
+
+    ```output
+    Azure Files is mounted
+    ```
+
+1. When you no longer need the example resources, delete them:
+
+    ```bash
+    kubectl delete -f azure-file-dynamic.yaml
+    ```
+
+    Because the storage class uses the `Delete` reclaim policy, deleting the PVC also deletes the dynamically provisioned Azure file share.
 
 ## Use built-in storage classes to create dynamic PVs with Azure Files
 

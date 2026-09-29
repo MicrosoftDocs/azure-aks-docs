@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-arm-template, devx-track-azurecli
 author: allyford
 ms.topic: how-to
-ms.date: 02/18/2026
+ms.date: 08/26/2026
 ms.author: allyford
 zone_pivot_groups: arm-azure-cli
 # Customer intent: "As a DevOps engineer, I want to configure an HTTP proxy for AKS nodes, so that I can ensure secure outbound internet access in environments requiring proxy routing."
@@ -26,7 +26,7 @@ The following scenarios are **not** supported:
 * Different proxy configurations per node pool
 * User/Password authentication
 * Custom certificate authorities (CAs) for API server communication
-* No more than 20 Trusted CA certificates can be specified
+* Specifying more than 20 trusted CA certificates. For new clusters, the CA certificate content can't exceed 35 KB.
 * AKS clusters with Windows node pools
 * Node pools using Virtual Machine Availability Sets (VMAS)
 * Using * as wildcard attached to a domain suffix for noProxy
@@ -74,7 +74,7 @@ Review requirements for each parameter:
 * `httpProxy`: A proxy URL to use for creating HTTP connections outside the cluster. The URL scheme must be `http`.
 * `httpsProxy`: A proxy URL to use for creating HTTPS connections outside the cluster. If not specified, then `httpProxy` is used for both HTTP and HTTPS connections.
 * `noProxy`: A list of destination domain names, domains, IP addresses, or other network CIDRs to exclude proxying. 
-* `trustedCa`: A string containing the `base64 encoded` alternative CA certificate content. Currently only the `PEM` format is supported. Limit of 20 certificates.
+* `trustedCa`: A string containing the base64 encoded alternative CA certificate content. Currently, only the `PEM` format is supported. You can include up to 20 certificates. For new clusters, the CA certificate content can't exceed 35 KB.
 
 > [!IMPORTANT]
 > For compatibility with Go-based components that are part of the Kubernetes system, the certificate **must** support `Subject Alternative Names(SANs)` instead of the deprecated Common Name certs.
@@ -222,7 +222,7 @@ You can deploy an AKS cluster with an HTTP proxy using an ARM template.
    * `httpProxy`: A proxy URL to use for creating HTTP connections outside the cluster. The URL scheme must be `http`.
    * `httpsProxy`: A proxy URL to use for creating HTTPS connections outside the cluster. If not specified, then `httpProxy` is used for both HTTP and HTTPS connections.
    * `noProxy`: A list of destination domain names, domains, IP addresses, or other network CIDRs to exclude proxying.
-   * `trustedCa`: A string containing the `base64 encoded` alternative CA certificate content. Currently only the `PEM` format is supported.
+   * `trustedCa`: A string containing the base64 encoded alternative CA certificate content. Currently, only the `PEM` format is supported. For new clusters, the CA certificate content can't exceed 35 KB.
 
     > [!IMPORTANT]
     > For compatibility with Go-based components that are part of the Kubernetes system, the certificate **must** support `Subject Alternative Names (SANs)` instead of the deprecated Common Name certs.
@@ -399,4 +399,3 @@ For more information regarding the network requirements of AKS clusters, see [Co
 [install-azure-cli]: /cli/azure/install-azure-cli
 [istio-add-on-docs]: ./istio-about.md
 [operator-best-practices-scheduler]: ./operator-best-practices-scheduler.md
-

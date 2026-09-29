@@ -36,17 +36,7 @@ In this article, you learn how to:
 
 ### Install the `aks-preview` CLI extension
 
-1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
+[!INCLUDE [aks-preview-cli-extension](includes/aks-preview-cli-extension.md)]
 
 ### Set environment variables
 
@@ -66,9 +56,9 @@ List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-ak
 LOCATION=eastus
 
 az aks list-vm-skus \
-	--location $LOCATION \
-	--query "[].name" \
-	--output table
+  --location $LOCATION \
+  --query "[].name" \
+  --output table
 ```
 
 Example output:
@@ -91,10 +81,10 @@ List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-ak
 
 ```azurecli-interactive
 az aks list-vm-skus \
-	--location $LOCATION \
-	--size d4ds \
-	--query "[].name" \
-	--output table
+  --location $LOCATION \
+  --size d4ds \
+  --query "[].name" \
+  --output table
 ```
 
 Example output:
@@ -112,10 +102,10 @@ List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-ak
 
 ```azurecli-interactive
 az aks list-vm-skus \
-	--location $LOCATION \
-	--zone \
-	--query "[].{name:name,zones:join(', ', locationInfo[0].zones)}" \
-	--output table
+  --location $LOCATION \
+  --zone \
+  --query "[].{name:name,zones:join(', ', locationInfo[0].zones)}" \
+  --output table
 ```
 
 Example output:
@@ -133,10 +123,10 @@ List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-ak
 
 ```azurecli-interactive
 az aks list-vm-skus \
-	--location $LOCATION \
-	--all \
-	--query "[].name" \
-	--output table
+  --location $LOCATION \
+  --all \
+  --query "[].name" \
+  --output table
 ```
 
 > [!NOTE]
@@ -148,41 +138,41 @@ List supported VM SKUs on an AKS cluster using the [`az aks list-vm-skus`][az-ak
 
 ```azurecli-interactive
 az aks list-vm-skus \
-	--location $LOCATION \
-	--zone \
-	--output jsonc
+  --location $LOCATION \
+  --zone \
+  --output jsonc
 ```
 
 Example output:
 
 ```json
 [
-	{
-		"name": "Standard_D4ds_v5",
-		"locationInfo": [
-			{
-				"location": "eastus",
-				"zones": [
-					"1",
-					"2",
-					"3"
-				]
-			}
-		]
-	},
-	{
-		"name": "Standard_E8ds_v5",
-		"locationInfo": [
-			{
-				"location": "eastus",
-				"zones": [
-					"1",
-					"2",
-					"3"
-				]
-			}
-		]
-	}
+  {
+    "name": "Standard_D4ds_v5",
+    "locationInfo": [
+      {
+        "location": "eastus",
+        "zones": [
+          "1",
+          "2",
+          "3"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Standard_E8ds_v5",
+    "locationInfo": [
+      {
+        "location": "eastus",
+        "zones": [
+          "1",
+          "2",
+          "3"
+        ]
+      }
+    ]
+  }
 ]
 ```
 
@@ -198,17 +188,17 @@ CLUSTER_NAME=myAKSCluster
 VM_SIZE=Standard_D4ds_v5
 
 az aks create \
-	--resource-group $RESOURCE_GROUP \
-	--name $CLUSTER_NAME \
-	--node-count 3 \
-	--node-vm-size $VM_SIZE \
-	--generate-ssh-keys
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --node-count 3 \
+  --node-vm-size $VM_SIZE \
+  --generate-ssh-keys
 
 az aks nodepool add \
-	--resource-group $RESOURCE_GROUP \
-	--name $CLUSTER_NAME \
-	--node-count 1 \
-	--node-vm-size $VM_SIZE \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --node-count 1 \
+  --node-vm-size $VM_SIZE \
 ```
 
 ## Troubleshooting

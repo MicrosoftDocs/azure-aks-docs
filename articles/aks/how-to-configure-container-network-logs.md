@@ -286,7 +286,7 @@ spec:
         labelSelector:
           matchLabels:
             app: frontend
-            k8s.io/namespace: sample-namespace
+            k8s:io.kubernetes.pod.namespace: sample-namespace
           matchExpressions:
             - key: environment
               operator: In
@@ -302,7 +302,7 @@ spec:
         labelSelector:
           matchLabels:
             app: backend
-            k8s.io/namespace: sample-namespace2
+            k8s:io.kubernetes.pod.namespace: sample-namespace2
           matchExpressions:
             - key: tier
               operator: NotIn

@@ -9,3 +9,6 @@ items:
   - name: Kubernetes Fleet Manager
     tocHref: /azure/kubernetes-fleet/
     topicHref: /azure/kubernetes-fleet/
+  - name: AKS Hybrid and Edge
+    tocHref: /azure/aks-hybrid-edge/
+    topicHref: /azure/aks-hybrid-edge/index

@@ -147,7 +147,8 @@
         ]
       },
       "ms.service": {
-        "articles/aks/**/*.md": "azure-kubernetes-service"
+        "articles/aks/**/*.md": "azure-kubernetes-service",
+        "articles/aks-hybrid-edge/**/*.md": "azure-kubernetes-service-hybrid"
       },
       "searchScope": {
         "articles/aks/**/*.md": [
@@ -174,7 +175,8 @@
       },
       "sensitive-language-sl": {
         "exclude": [
-            "articles/aks/deploy-valkey-cluster.md"
+            "articles/aks/deploy-valkey-cluster.md",
+            "articles/aks/stateful-workload-upgrades.md"
         ]
       }
     }

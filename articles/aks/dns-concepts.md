@@ -19,7 +19,9 @@ Domain Name System (DNS) resolution is a critical component in Azure Kubernetes 
 
 AKS Automatic is the recommended production-ready default for most AKS workloads. AKS Automatic clusters come preconfigured with LocalDNS to improve DNS performance, reduce conntrack pressure, and increase resiliency without requiring extra setup.
 
-On AKS Standard, LocalDNS is optional and you can enable and configure it separately.
+> [!NOTE] 
+> Starting with Kubernetes 1.37, AKS Standard applies the `Preferred` LocalDNS mode by default to eligible node pools that don't have an explicitly configured LocalDNS profile. In `Preferred` mode, AKS enables LocalDNS only if the node pool and cluster pass the required compatibility checks. If the checks fail, LocalDNS remains disabled. Explicitly configured profiles take precedence over this default, so a node pool explicitly set to `Disabled` remains disabled.
+> To prevent LocalDNS from being enabled, explicitly set the LocalDNS mode to Disabled. For instructions, see [Disable LocalDNS on a Node Pool](./localdns-custom.md#disable-localdns-on-a-node-pool).
 
 For more information about AKS Automatic, see [What is AKS Automatic?](./intro-aks-automatic.md)
 
@@ -30,6 +32,14 @@ For more information about AKS Automatic, see [What is AKS Automatic?](./intro-a
 When a pod in AKS issues a DNS query, such as resolving the name of another service, the request goes to the CoreDNS pods. These pods process the query and return the appropriate IP address or forward the request to an upstream DNS server for external domains.
 
 This architecture ensures a balance between flexibility and operational safety in a managed environment. For details on how to customize CoreDNS in AKS, refer to the [CoreDNS customization guide](./coredns-custom.md).
+
+When LocalDNS is active, the resolution path depends on the pod's `dnsPolicy` (`Default` or `ClusterFirst`) and on the LocalDNS server block configuration. For example, when a pod uses `dnsPolicy: Default`, external DNS queries take the following path:
+
+`Workload -> LocalDNS -> upstream DNS server`
+
+LocalDNS runs as a `systemd` unit on the node, so it receives the query before CoreDNS does. `cluster.local` queries are forwarded to CoreDNS, and external queries are forwarded either to CoreDNS or directly to the virtual network (VNet) DNS server. For the exact forwarding behavior for each DNS policy and the default configuration, see [Server blocks for LocalDNS](./localdns-custom.md#server-blocks-for-localdns).
+
+Custom VNet DNS servers [must accept both UDP and TCP DNS queries](https://datatracker.ietf.org/doc/html/rfc7766#section-5) from AKS nodes. With `PreferUDP`, LocalDNS retries over TCP when a UDP response is truncated.
 
 For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
 
@@ -63,7 +73,7 @@ Use this article to understand how LocalDNS works and why it improves DNS behavi
 - **Avoid conntrack races and conntrack table exhaustion**: Pods send DNS queries to the LocalDNS service on the same node without creating new `conntrack` table entries. Skipping the connection tracking helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and avoids User Datagram Protocol (UDP) DNS entries from filling up `conntrack` tables. This optimization prevents dropped and rejected connections caused by `conntrack` table exhaustion and race conditions.
 - **Connection upgraded to TCP**: The connection from the `localdns` cache to the cluster’s CoreDNS service uses Transmission Control Protocol (TCP). TCP allows for connection rebalancing and removes `conntrack` table entries when the server closes the connection (in contrast to UDP connections, which have a default 30-second timeout). Applications don't need changes, because the `localdns` service still listens for UDP traffic.
 - **Caching**: You can configure the LocalDNS cache plugin with `serveStale` and Time to Live (TTL) settings. Set the `serveStale`, `serveStaleDurationInSeconds`, and `cacheDurationInSeconds` parameters to achieve DNS resiliency, even during an upstream DNS outage.
-- **Protocol control**: Set the DNS query protocol (such as `PreferUDP` or `ForceTCP`) for each domain. This flexibility lets you optimize DNS traffic for specific domains or meet network requirements.
+- **Protocol control**: Set the preferred DNS query protocol, such as `PreferUDP` or `ForceTCP`, for each domain. `PreferUDP` isn't an instruction to use UDP exclusively. The resolver can retry or fall back over TCP, so upstream custom DNS servers and network controls must support both UDP and TCP port 53.
 
 ### Other benefits and considerations
 
@@ -76,9 +86,10 @@ Use this article to understand how LocalDNS works and why it improves DNS behavi
 ### AKS Automatic and AKS Standard behavior
 
 | Cluster mode | LocalDNS behavior |
-| ------------ | ----------------- |
+| --- | --- |
 | AKS Automatic | Preconfigured |
-| AKS Standard | Optional |
+| AKS Standard, Kubernetes 1.31 through 1.36 | Explicitly configured per node pool |
+| AKS Standard, Kubernetes 1.37 and later | Defaults eligible node pools to `Preferred` when no explicit LocalDNS profile exists. LocalDNS is enabled only when compatibility checks pass. Explicit profiles, including `Disabled`, are preserved. |
 
 By using LocalDNS, you get faster and more reliable DNS resolution for your workloads, reduce the risk of DNS-related outages, and gain more control over DNS traffic in your AKS environment.
 

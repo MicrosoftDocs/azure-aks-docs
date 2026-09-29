@@ -5,8 +5,8 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
-ms.date: 07/31/2026
-ms.custom: devx-track-azurecli
+ms.date: 09/14/2026
+ms.custom: devx-track-azurecli, devx-track-terraform
 zone_pivot_groups: csi-secrets-store-identity-access
 ai-usage: ai-assisted
 ms.service: azure-kubernetes-service
@@ -130,13 +130,13 @@ In this security model, the AKS cluster acts as the token issuer. When the Secre
 
 1. Deploy a `SecretProviderClass` using the `kubectl apply` command and the following YAML script.
 
-  The following parameters configure workload identity access:
+    The following parameters configure workload identity access:
 
-  - `usePodIdentity`: Set to `"false"` when using workload identity.
-  - `clientID`: Set to `${USER_ASSIGNED_CLIENT_ID}`, the client ID of the user-assigned managed identity used for workload identity.
-  - `cloudName`: Optional. Leave empty to use the default `AzurePublicCloud` environment.
-  - `objectType`: Set to the type of Key Vault object to mount. Valid values are `secret`, `key`, and `cert`.
-  - `tenantId`: Set to the tenant ID that contains the key vault.
+    - `usePodIdentity`: Set to `"false"` when using workload identity.
+    - `clientID`: Set to `${USER_ASSIGNED_CLIENT_ID}`, the client ID of the user-assigned managed identity used for workload identity.
+    - `cloudName`: Optional. Leave empty to use the default `AzurePublicCloud` environment.
+    - `objectType`: Set to the type of Key Vault object to mount. Valid values are `secret`, `key`, and `cert`.
+    - `tenantId`: Set to the tenant ID that contains the key vault.
 
     ```bash
     cat <<EOF | kubectl apply -f -
@@ -236,7 +236,11 @@ This method uses the user-assigned managed identity that AKS automatically creat
 
 A [Microsoft Entra managed identity][managed-identity] enables an Azure resource or workload to authenticate to services that support Microsoft Entra authentication without storing credentials in code. Grant this identity the appropriate Key Vault data-plane permissions through Azure RBAC or access policies, and then use it in the following steps.
 
-### Configure managed identity
+Choose the tab that matches how you created your AKS cluster and key vault in [Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster][csi-secrets-store-driver]. If you deployed the tested Terraform sample, it already grants the add-on identity the `Key Vault Secrets User` role, so skip the manual role assignment step.
+
+### [Azure CLI](#tab/azure-cli)
+
+#### Configure managed identity
 
 1. Access your key vault using the [`az aks show`][az-aks-show] command and the user-assigned managed identity created by the add-on. You should also retrieve the identity's `clientId`, which you use in later steps when creating a `SecretProviderClass`.
 
@@ -381,8 +385,7 @@ A [Microsoft Entra managed identity][managed-identity] enables an Azure resource
     kubectl apply -f pod.yaml
     ```
 
-
-## Validate Key Vault secrets with managed identity
+#### Validate Key Vault secrets with managed identity
 
 After the pod starts, the mounted content at `/mnt/secrets-store` is available. Use the following commands to validate your secrets and print a test secret.
 
@@ -397,6 +400,157 @@ After the pod starts, the mounted content at `/mnt/secrets-store` is available. 
     ```bash
     kubectl exec busybox-secrets-store-inline-user-msi -- cat /mnt/secrets-store/secret1
     ```
+
+### [Terraform](#tab/terraform)
+
+#### Prerequisites
+
+- Terraform 1.6 or later.
+- Azure CLI, installed and signed in. [Install the latest version](/cli/azure/install-azure-cli).
+- `kubectl`, connected to your cluster with the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+#### Configure managed identity
+
+The tested Terraform sample creates the resource group, AKS cluster with the Azure Key Vault provider for Secrets Store CSI Driver enabled, Azure Key Vault, `ExampleSecret`, and a role assignment that grants the add-on's managed identity the `Key Vault Secrets User` role on the key vault. If you already deployed the sample from [Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster][csi-secrets-store-driver], reuse that working directory and skip ahead to setting the variables.
+
+1. Create a `main.tf` file and copy the following tested sample configuration into it. The [Azure Terraform GitHub repository][terraform-sample] maintains the sample.
+
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-access-keyvault/main.tf)]
+
+1. Initialize, validate, and apply the configuration.
+
+    ```bash
+    terraform init
+    terraform fmt
+    terraform validate
+    terraform plan
+    terraform apply
+    ```
+
+1. Set the variables used in the remaining commands from the Terraform outputs.
+
+    ```bash
+    export RESOURCE_GROUP=$(terraform output -raw resource_group_name)
+    export CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
+    export KEYVAULT_NAME=$(terraform output -raw key_vault_name)
+    export KEYVAULT_SECRET_NAME=$(terraform output -raw key_vault_secret_name)
+    export USER_ASSIGNED_CLIENT_ID=$(terraform output -raw aks_csi_client_id)
+    export IDENTITY_OBJECT_ID=$(terraform output -raw aks_csi_object_id)
+    export KEYVAULT_TENANT_ID=$(terraform output -raw tenant_id)
+    ```
+
+    > [!NOTE]
+    > The sample already creates the role assignment that grants `$IDENTITY_OBJECT_ID` the `Key Vault Secrets User` role on the key vault. Don't repeat the `az role assignment create` step from the Azure CLI tab for this identity and key vault—the sample already did it for you.
+
+1. Create a `SecretProviderClass` using the identity client ID and secret name from the Terraform outputs.
+
+    The following parameters configure user-assigned managed identity access:
+
+    - `usePodIdentity`: Set to `"false"` when using managed identity.
+    - `useVMManagedIdentity`: Set to `"true"` to enable managed identity mode.
+    - `userAssignedIdentityID`: Set to the client ID of the user-assigned managed identity.
+    - `tenantId`: Set to the tenant ID that contains the key vault.
+
+    ```bash
+    cat <<EOF > secretproviderclass.yaml
+    # This is a SecretProviderClass example using the add-on's managed identity, created by the Terraform sample, to access your key vault
+    apiVersion: secrets-store.csi.x-k8s.io/v1
+    kind: SecretProviderClass
+    metadata:
+      name: azure-kvname-user-msi
+    spec:
+      provider: azure
+      parameters:
+        usePodIdentity: "false"
+        useVMManagedIdentity: "true"          # Set to true for using managed identity
+        userAssignedIdentityID: ${USER_ASSIGNED_CLIENT_ID} # Set to the client ID of the user-assigned managed identity to use
+        keyvaultName: ${KEYVAULT_NAME}         # Set to the name of your key vault
+        cloudName: ""                         # [OPTIONAL for Azure] if not provided, the Azure environment defaults to AzurePublicCloud
+        objects:  |
+          array:
+            - |
+              objectName: ${KEYVAULT_SECRET_NAME}
+              objectType: secret              # object types: secret, key, or cert
+              objectVersion: ""               # [OPTIONAL] object versions, default to latest if empty
+        tenantId: ${KEYVAULT_TENANT_ID}       # The tenant ID of the key vault
+    EOF
+    ```
+
+    > [!NOTE]
+    > The sample only creates a `secret` type object. For `key` or `cert` type coverage, see [Obtain certificates and keys](#obtain-certificates-and-keys).
+
+1. Apply the `SecretProviderClass` to your cluster by using the `kubectl apply` command.
+
+    ```bash
+    kubectl apply -f secretproviderclass.yaml
+    ```
+
+1. Create a pod manifest named `pod.yaml` by using the following command.
+
+    ```bash
+    cat <<EOF > pod.yaml
+    # This is a sample pod definition for using SecretProviderClass and the user-assigned identity to access your key vault
+    kind: Pod
+    apiVersion: v1
+    metadata:
+      name: busybox-secrets-store-inline-user-msi
+    spec:
+      containers:
+        - name: busybox
+          image: registry.k8s.io/e2e-test-images/busybox:1.29-4
+          command:
+            - "/bin/sleep"
+            - "10000"
+          volumeMounts:
+          - name: secrets-store01-inline
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
+      volumes:
+        - name: secrets-store01-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kvname-user-msi"
+    EOF
+    ```
+
+1. Apply the pod to your cluster by using the `kubectl apply` command.
+
+    ```bash
+    kubectl apply -f pod.yaml
+    ```
+
+#### Validate Key Vault secrets with managed identity
+
+After the pod starts, the mounted content at `/mnt/secrets-store` is available. Use the following commands to validate your secret.
+
+1. Show secrets held in the secrets store by using the following command.
+
+    ```bash
+    kubectl exec busybox-secrets-store-inline-user-msi -- ls /mnt/secrets-store/
+    ```
+
+1. Display the secret in the store using the following command. `$KEYVAULT_SECRET_NAME` resolves to the sample's `ExampleSecret`.
+
+    ```bash
+    kubectl exec busybox-secrets-store-inline-user-msi -- cat /mnt/secrets-store/$KEYVAULT_SECRET_NAME
+    ```
+
+#### Clean up Terraform resources
+
+If you deployed the sample only to complete this article and don't need the resources for anything else, remove them from the same working directory you used to apply the configuration.
+
+> [!WARNING]
+> Only run `terraform destroy` from the working directory used for this sample, and confirm the plan before you apply it. Avoid running `terraform destroy` against a configuration pointed at existing, shared, or imported infrastructure.
+
+```bash
+KUBE_CONTEXT=$(kubectl config current-context)
+kubectl config delete-context $KUBE_CONTEXT
+terraform destroy
+```
+
+---
 
 ::: zone-end
 
@@ -444,6 +598,7 @@ If you want to configure extra configuration options or perform troubleshooting,
 
 [csi-secrets-store-driver]: ./csi-secrets-store-driver.md
 [az-aks-show]: /cli/azure/aks#az-aks-show
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [workload-identity]: ./workload-identity-overview.md
 [managed-identity]:/entra/identity/managed-identities-azure-resources/overview
@@ -452,3 +607,4 @@ If you want to configure extra configuration options or perform troubleshooting,
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-aks-disable-addons]: /cli/azure/aks#az-aks-disable-addons
 [az-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
+[terraform-sample]: https://github.com/Azure/terraform/tree/master/quickstart/101-aks-access-keyvault

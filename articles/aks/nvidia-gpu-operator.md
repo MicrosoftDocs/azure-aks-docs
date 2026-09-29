@@ -22,17 +22,15 @@ The NVIDIA GPU Operator automates the management and deployment of all NVIDIA so
 
 ## Before you begin
 
-* This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* You need the Azure CLI version 2.72.2 or later installed to set the `--gpu-driver` field. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
+- You need the Azure CLI version 2.72.2 or later installed to set the `--gpu-driver` field. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
 
 ## Limitations
 
-- NVIDIA GPU Operator isn't supported for the following OS options: Windows Server versions, [Flatcar Container Linux for AKS (preview)][flatcar], and [Azure Linux with OS Guard for AKS (preview)][os-guard].
-
-
+NVIDIA GPU Operator isn't supported for the following OS options: Windows Server versions, [Flatcar Container Linux for AKS (preview)][flatcar], and [Azure Linux with OS Guard for AKS (preview)][os-guard].
 
 ## Get the credentials for your cluster
 
@@ -49,7 +47,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 
 1. Skip automatic GPU driver installation by creating an NVIDIA GPU-enabled node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to the value `none`. Setting this API field to `none` during node pool creation skips the default GPU driver installation. For an example, see [Skip GPU driver installation](./use-nvidia-gpu.md#skip-gpu-driver-installation). This setting doesn't change any existing nodes. You can scale the node pool to zero and then back up to make the change take effect.
 
-```
+```azurecli-interactive
 az aks nodepool add \
 --resource-group myResourceGroup \
 --cluster-name myAKSCluster \
@@ -60,7 +58,7 @@ az aks nodepool add \
 --gpu-driver none
 ```
 
-2. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
+1. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
 
 1. After you install the GPU Operator, check that your [GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable) and [run a GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload).
 

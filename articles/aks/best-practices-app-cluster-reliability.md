@@ -2,7 +2,7 @@
 title: Deployment and Cluster Reliability Best Practices for Azure Kubernetes Service (AKS)
 description: Learn the best practices for deployment and cluster reliability for Azure Kubernetes Service (AKS), including guidance for AKS Automatic and AKS Standard cluster modes.
 ms.topic: best-practice
-ms.date: 08/19/2026
+ms.date: 08/20/2026
 ms.service: azure-kubernetes-service
 ms.custom: aks-reliability, aeo-round-2
 author: schaffererin
@@ -47,6 +47,14 @@ For more information, see [What is AKS Automatic?](./intro-aks-automatic.md)
 ## Deployment level best practices
 
 The following deployment level best practices help ensure high availability and reliability for your AKS workloads. These best practices are local configurations that you can implement in the YAML files for your pods and deployments.
+
+> **Quick Reference Checklist:**
+>
+> - Configure PDBs for all production workloads
+> - Set CPU and memory limits for all pods
+> - Deploy at least 2 replicas for zone-resilient workloads
+> - Configure readiness, liveness, and startup probes for all containers
+> - Use pod topology spread constraints for critical applications
 
 > [!NOTE]
 > Make sure you implement these best practices every time you deploy an update to your application. If not, you might experience issues with your application's availability and reliability, such as unintentional application downtime.
@@ -468,6 +476,14 @@ For more information, see [Recommended active-active high availability solution 
 ## Cluster and node pool level best practices
 
 The following cluster and node pool level best practices help ensure high availability and reliability for your AKS clusters. You can implement these best practices when creating or updating your AKS clusters. Compared with deployment-level settings, responsibility differs more significantly between AKS Automatic and AKS Standard.
+
+> **Quick Reference Checklist:**
+>
+> - Enable availability zones at cluster creation (**3 availability zones recommended**)
+> - Use Standard Load Balancer for all production workloads
+> - Configure **minimum 2 nodes per system node pool**
+> - Enable Container Insights for monitoring
+> - Use Standard or Premium pricing tier for production
 
 ### Availability zones
 

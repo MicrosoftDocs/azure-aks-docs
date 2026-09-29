@@ -765,11 +765,11 @@ In this article, you learned how to create and manage system node pools in an AK
 [quotas-skus-regions]: quotas-skus-regions.md
 [supported-versions]: supported-kubernetes-versions.md
 [tag-limitation]: ../azure-resource-manager/management/tag-resources.md
-[taints-tolerations]: operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations
+[taints-tolerations]: operator-best-practices-advanced-scheduler.md#what-are-taints-and-tolerations
 [vm-sizes]: ../virtual-machines/sizes.md
 [create-node-pools]: create-node-pools.md
 [maximum-pods]: concepts-network-ip-address-planning.md#maximum-pods-per-node
 [b-series-vm]: /azure/virtual-machines/sizes-b-series-burstable
 [update-node-pool-mode]: use-system-pools.md#update-existing-cluster-system-and-user-node-pools
 [start-stop-nodepools]: ./start-stop-nodepools.md
-[node-affinity]: operator-best-practices-advanced-scheduler.md#node-affinity
+[node-affinity]: operator-best-practices-advanced-scheduler.md#what-is-node-affinity
