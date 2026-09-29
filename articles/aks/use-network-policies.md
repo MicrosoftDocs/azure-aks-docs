@@ -135,7 +135,7 @@ Instead of using a system-assigned identity, you can also use a user-assigned id
 
 Create an AKS cluster using the [`az aks create`][az-aks-create] command and specify `--network-plugin azure` and `--network-policy calico`. Specifying `--network-policy calico` enables Calico on both Linux and Windows node pools.
 
-If you plan on adding Windows node pools to your cluster, include the `windows-admin-username` and `windows-admin-password` parameters that meet the [Windows Server password requirements][windows-server-password]. To create a username to use as administrator credentials for your Windows Server containers on your cluster. The following command prompts you for a username. Set it to WINDOWS_USERNAME
+If you plan to add Windows node pools to your cluster, include the `windows-admin-username` and `windows-admin-password` parameters that meet the [Windows Server password requirements][windows-server-password]. To create a username to use as administrator credentials for your Windows Server containers on your cluster, the following command prompts you for a username. Set it to WINDOWS_USERNAME.
 
 ```bash
 echo "Please enter the username to use as administrator credentials for Windows Server containers on your cluster: " && read WINDOWS_USERNAME
