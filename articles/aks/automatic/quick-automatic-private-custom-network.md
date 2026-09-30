@@ -2,7 +2,7 @@
 title: 'Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster in a custom virtual network'
 description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic in a custom virtual network.
 ms.topic: quickstart
-ms.date: 08/25/2026
+ms.date: 09/15/2026
 ms.custom: devx-track-azurecli, devx-track-bicep, devx-track-terraform
 author: wangyira
 ms.author: wangamanda
@@ -96,7 +96,7 @@ The following sample output resembles successful creation of the resource group:
 
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
-When using a custom virtual network with AKS Automatic, you must create an API server subnet. AKS will delegate the subnet to  `Microsoft.ContainerService/managedClusters`on your behalf, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*. 
+When you use a custom virtual network with AKS Automatic, you must create an API server subnet. AKS delegates the subnet to `Microsoft.ContainerService/managedClusters` on your behalf, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for the API server subnet for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size to support a single cluster is a */28*.
 
 > [!WARNING]
 > An AKS cluster reserves at least nine (9) IPs in the subnet address space. Running out of IP addresses might prevent API server scaling and cause an API server outage.
@@ -514,6 +514,8 @@ terraform apply main.destroy.tfplan
 ## Next steps
 
 In this quickstart, you deployed a private Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] inside a custom virtual network and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
+
+Because this cluster is private, its API server has no public IP address. To connect to and manage the cluster, see [Options for connecting to the private cluster][connect-private-cluster]. For other private cluster configuration options, see the [private cluster][private-cluster] documentation.
 
 To learn more about AKS Automatic, continue to the introduction.
 

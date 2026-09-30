@@ -21,6 +21,8 @@ AKS provides multiple autoupgrade channels dedicated to timely node-level OS sec
 > [!TIP]
 > If you're using **AKS Automatic**, node OS upgrades are preconfigured to use the **NodeImage** channel with security fixes and bug fixes applied on a weekly cadence. No configuration is needed. For AKS Automatic clusters with custom virtual networks, you can adjust maintenance windows if needed. To learn more, see [What is Azure Kubernetes Service (AKS) Automatic?][intro-aks-automatic] For AKS Standard clusters, continue reading to select the channel that best fits your requirements.
 
+[!INCLUDE [os-guard-preview-retirement](includes/os-guard-preview-retirement.md)]
+
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Interactions between node OS autoupgrade and cluster autoupgrade

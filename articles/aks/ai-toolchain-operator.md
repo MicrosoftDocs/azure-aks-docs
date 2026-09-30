@@ -3,7 +3,8 @@ title: Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchai
 description: Learn how to enable the AI toolchain operator add-on on Azure Kubernetes Service (AKS) to simplify OSS AI model management and deployment.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service, devx-track-azurecli, aks-ai-ml
-ms.date: 9/19/2025
+ms.date: 9/12/2026
+ai-usage: ai-assisted
 author: schaffererin
 ms.author: schaffererin
 
@@ -27,13 +28,14 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 ## Before you begin
 
 * This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for AKS](./concepts-clusters-workloads.md).
-* For ***all hosted model preset images*** and default resource configuration, see the [KAITO GitHub repository](https://github.com/kaito-project/kaito/tree/main/presets).
-* The AI toolchain operator add-on currently supports KAITO **version 0.6.0**, please make a note of this in considering your choice of model from the KAITO model repository.
+* For ***the curated supported model list*** and default resource configuration, see the [KAITO GitHub document](https://kaito-project.github.io/kaito/docs/presets).
+* The AI toolchain operator add-on typically lags one release behind the latest upstream KAITO version. Take this consideration when choosing a model from the KAITO model repository.
 
 ## Limitations
 
 * `Windows` OS SKU is not currently supported.
 * AMD GPU VM sizes are not supported `instanceType` in a KAITO workspace.
+* Virtual machine (VM) sizes that use NVIDIA GPUs older than the Ampere architecture (such as the T4, V100, M60, and K80) aren't supported. KAITO requires NVIDIA GPUs with CUDA compute capability 8.0 or later.
 * AI toolchain operator add-on is supported in **public** Azure regions.
 * AKS stop and start operations (az aks stop / az aks start) aren't fully supported for clusters with active KAITO Workspaces. In some scenarios, startup operations can result in node pool reconciliation conflicts, provisioning failures, or orphaned compute resources.
 

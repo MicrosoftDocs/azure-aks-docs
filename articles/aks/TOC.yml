@@ -86,6 +86,23 @@
               href: learn/quick-kubernetes-deploy-rm-template.md
             - name: Use Terraform
               href: learn/quick-kubernetes-deploy-terraform.md
+        - name: Create a GPU Linux-based AKS cluster
+          items:
+            - name: Use the Azure CLI
+              href: learn/quick-create-gpu-linux-cluster-cli.md
+        - name: Create a Linux-based AKS Automatic cluster
+          items:
+            - name: From a code repository
+              href: automatic/quick-automatic-from-code.md
+            - name: Inside a managed virtual network
+              href: automatic/quick-automatic-managed-network.md
+            - name: Inside a custom virtual network
+              expanded: true
+              items:
+                - name: Public cluster
+                  href: automatic/quick-automatic-custom-network.md
+                - name: Private cluster
+                  href: automatic/quick-automatic-private-custom-network.md
         - name: Create an Azure Container Linux (ACL)-based AKS cluster
           items:
             - name: Use the Azure CLI
@@ -304,8 +321,34 @@
           href: start-stop-nodepools.md
         - name: Create proximity placement groups
           href: reduce-latency-ppg.md
-        - name: Troubleshoot agent node pools
-          href: troubleshoot-agent-pool.md
+    - name: Flex nodes for AKS (preview)
+      items:
+        - name: Overview
+          href: flex-nodes-for-aks-overview.md
+        - name: Plan
+          items:
+            - name: Identity and access concepts
+              href: flex-nodes-identity-access-concepts.md
+            - name: Networking concepts
+              href: flex-nodes-networking-concepts.md
+            - name: Plan a deployment
+              href: plan-flex-nodes-deployment.md
+        - name: Deploy
+          items:
+            - name: Prepare an AKS cluster
+              href: prepare-aks-cluster-for-flex-nodes.md
+            - name: Configure networking and create a flex node pool
+              href: configure-flex-nodes-networking.md
+            - name: Prepare a host and identity
+              href: prepare-flex-node-host-identity.md
+            - name: Attach a flex node
+              href: attach-flex-node-to-aks.md
+        - name: Operate
+          items:
+            - name: Manage and remove flex nodes
+              href: manage-and-remove-flex-nodes.md
+            - name: Support policy
+              href: flex-nodes-support-policy.md
     - name: Virtual nodes
       items:
         - name: Use virtual nodes
@@ -314,6 +357,8 @@
           href: virtual-nodes-cli.md
         - name: Use the Azure portal
           href: virtual-nodes-portal.md
+    - name: Virtual Nodes v2 (preview)
+      href: virtual-nodes-v2.md
     - name: Use Windows Server
       items:
         - name: Windows container considerations
@@ -598,6 +643,8 @@
                 href: /azure/application-gateway/for-containers/overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
               - name: Deploy Application Gateway for Containers add-on
                 href: /azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller-addon?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+              - name: Deploy ALB Controller using Terraform
+                href: deploy-application-gateway-for-containers-alb-controller-terraform.md
           - name: Use application routing add-on
             items:
               - name: Application routing add-on overview
@@ -801,8 +848,8 @@
   items:
     - name: Security overview
       href: concepts-security.md
-    - name: Security baseline
-      href: /security/benchmark/azure/baselines/aks-security-baseline?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Secure your AKS deployment
+      href: secure-aks.md
     - name: Identity and access
       items:
         - name: Access and identity overview
@@ -1016,6 +1063,8 @@
       items:
         - name: Container threat protection overview
           href: /azure/defender-for-cloud/defender-for-containers-introduction?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Enable Defender for Containers using Terraform
+          href: enable-defender-for-containers-terraform.md
         - name: Runtime alerts for Kubernetes clusters
           href: /azure/defender-for-cloud/alerts-containers?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Detect binary drift in running containers
@@ -1278,6 +1327,8 @@
           href: nvidia-gpu-operator.md
         - name: GPU health checking with NPD
           href: gpu-health-monitoring.md
+        - name: Use Confidential GPUs
+          href: use-confidential-gpus.md
         - name: Optimize GPU workloads using profiling
           items:
             - name: Set up GPU profiling
@@ -1623,15 +1674,7 @@
     - name: GitOps
       href: /azure/azure-arc/kubernetes/tutorial-use-gitops-flux2?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 - name: AKS Hybrid and Edge
-  items:
-    - name: AKS on bare metal
-      href: /azure/aks/aksarc/aks-bare-metal-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: AKS on Azure Local (Hyperconverged)
-      href: /azure/aks/aksarc/aks-whats-new-local?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: AKS Edge Essentials
-      href: /azure/aks/aksarc/aks-edge-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: AKS on Windows Server
-      href: /aks/aksarc/overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+  href: ../aks-hybrid-edge/toc.yml
 - name: FAQ
   href: faq.yml
 - name: Reference

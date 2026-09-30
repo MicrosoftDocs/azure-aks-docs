@@ -5,7 +5,7 @@ metadata:
   keywords: frequently asked questions, faq
   ms.service: azure-kubernetes-service
   ms.topic: faq
-  ms.date: 11/06/2023
+  ms.date: 09/28/2026
 title: "Frequently asked questions about Windows Server on AKS"
 summary: |
     This article provides answers to some of the most common questions about using Windows Server containers on Azure Kubernetes Service (AKS).
@@ -33,9 +33,16 @@ sections:
           Does Windows support generation 2 virtual machines (VMs)?
         answer: |
           Generation 2 VMs are supported on Windows starting with Windows Server 2022. Generation 2 VMs are default in Windows Server 2025.
-          
+
           For more information, see [Support for generation 2 VMs on Azure](/azure/virtual-machines/generation-2).
-          
+
+      - question: |
+          Can I migrate my Windows Server 2022 node pools to Windows Server 2025 in place?
+        answer: |
+          Yes. You can migrate Windows Server 2022 node pools to Windows Server 2025 in place using the `aks-preview` Azure CLI extension version 22.0.0b6 or later. The cluster must run Kubernetes version 1.32 to 1.36.
+
+          For more information, see [Upgrade the operating system (OS) version for your AKS Windows workloads](./upgrade-windows-os.md#in-place-migration-from-windows-server-2022-to-windows-server-2025).
+
       - question: |
           How do I patch my Windows nodes?
         answer: |

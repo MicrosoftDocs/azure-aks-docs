@@ -3,7 +3,7 @@ title: Plan Node Networking for Azure Kubernetes Service (AKS) Workloads
 description: This article provides an overview of the networking components you need to consider for Azure Kubernetes Service (AKS) nodes.
 ms.topic: overview
 ms.subservice: aks-networking
-ms.date: 03/24/2025
+ms.date: 09/15/2026
 author: schaffererin
 ms.author: schaffererin
 # Customer intent: I want to understand the networking options available for my nodes to effectively plan and optimize my Azure Kubernetes Service (AKS) workloads.
@@ -30,6 +30,9 @@ When setting up node networking, you can choose between **Load Balancer**, **NAT
 ## Recommendations
 
 Our **general recommendation** is to use a **Load Balancer**. If you have a **high volume of outbound connections**, consider using a **NAT Gateway** for better SNAT port management. If you have any **custom egress needs (Azure Firewall, NVA, etc.)**, you might want to explore **User Defined Routing (UDR)**.
+
+> [!NOTE]
+> You can share subnets for system and agent node pools between multiple clusters. You must ensure sufficient IP addresses are allocated to avoid issues.
 
 ## Related content
 

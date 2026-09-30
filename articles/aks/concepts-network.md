@@ -1,12 +1,13 @@
 ---
-title: Concepts - Networking in Azure Kubernetes Services (AKS)
-description: Learn about networking in Azure Kubernetes Service (AKS), including kubenet and Azure CNI networking, ingress controllers, load balancers, and static IP addresses.
+title: Concepts - Networking in Azure Kubernetes Service (AKS)
+description: Learn how AKS provides application networking through virtual network models, egress controls, network security groups, DNS, and network policies.
 ms.topic: concept-article
 ms.subservice: aks-networking
-ms.date: 06/03/2024
+ms.date: 09/04/2026
 author: schaffererin
 ms.author: schaffererin
 ms.custom: fasttrack-edit
+ms.service: azure-kubernetes-service
 # Customer intent: As a cloud developer, I want to understand networking concepts in Azure Kubernetes Service (AKS) so that I can effectively manage application connectivity, security, and load balancing within my microservices architecture.
 ---
 
@@ -30,7 +31,7 @@ Kubernetes employs a virtual networking layer to manage access within and betwee
 
 - **Kubernetes nodes and virtual network**: Kubernetes nodes are connected to a virtual network. This setup enables pods (basic units of deployment in Kubernetes) to have both inbound and outbound connectivity.
 
-- **Kube-proxy component**: kube-proxy runs on each node and is responsible for providing the necessary network features.
+- **Service routing component**: Depending on the network data plane, nodes use either `kube-proxy` or Cilium for Kubernetes Service routing. AKS clusters that use Azure CNI Powered by Cilium don't use `kube-proxy`.
 
 Regarding specific Kubernetes functionalities:
 
@@ -43,7 +44,7 @@ In the context of the Azure platform:
 
 - Azure streamlines virtual networking for AKS (Azure Kubernetes Service) clusters.
 - Creating a Kubernetes load balancer on Azure simultaneously sets up the corresponding Azure load balancer resource.
-- As you open network ports to pods, Azure automatically configures the necessary network security group rules.
+- When you create a Kubernetes `LoadBalancer` Service, Azure configures the necessary network security group rules for service traffic on resources managed by AKS.
 - Azure can also manage external DNS configurations for HTTP application routing as new Ingress routes are established.
 
 ## Azure virtual networks
@@ -51,7 +52,7 @@ In the context of the Azure platform:
 In AKS, you can deploy a cluster that uses one of the following network models:
 
 * **Overlay network model**: Overlay networking is the most common networking model used in Kubernetes. Pods are given an IP address from a private, logically separate CIDR from the Azure virtual network subnet where AKS nodes are deployed. This model enables simpler, improved scalability when compared to the flat network model.
-* **Flat network model**: A flat network model in AKS assigns IP addresses to pods from a subnet from the same Azure virtual network as the AKS nodes. Any traffic leaving your clusters isn't SNAT'd, and the pod IP address is directly exposed to the destination. This model can be useful for scenarios like exposing pod IP addresses to external services.
+* **Flat network model**: A flat network model in AKS assigns IP addresses to pods from a subnet in the same Azure virtual network as the AKS nodes. For private network traffic, the source IP address that a destination sees depends on the IP address management (IPAM) option. Azure CNI Pod Subnet preserves the pod IP address across connected virtual networks. With Azure CNI Node Subnet, destinations in the cluster virtual network see the pod IP address, but destinations outside the cluster virtual network see the node IP address. For internet egress, the configured outbound method determines the public source IP address that internet destinations see.
 
 For more information on networking models in AKS, see [CNI Networking in AKS][network-cni-overview].
 
@@ -71,9 +72,9 @@ For more information on how to restrict outbound traffic from your cluster see [
 
 ## Network security groups
 
-A network security group filters traffic for VMs like the AKS nodes. As you create Services, such as a *LoadBalancer*, the Azure platform automatically configures any necessary network security group rules.
+A network security group filters traffic for VMs like the AKS nodes. As you create Services, such as a `LoadBalancer`, the Azure platform automatically configures the necessary network security group rules for service traffic on resources managed by AKS.
 
-You don't need to manually configure network security group rules to filter traffic for pods in an AKS cluster. You can define any required ports and forwarding as part of your Kubernetes Service manifests and let the Azure platform create or update the appropriate rules.
+AKS doesn't apply network security groups to its subnet or modify network security groups that you associate with a customer-provided subnet. If you associate a network security group with a custom subnet, you must ensure that its rules allow the required node and pod traffic. For more information, see [AKS CNI networking prerequisites][network-cni-prerequisites].
 
 You can also use network policies to automatically apply traffic filter rules to pods.
 
@@ -81,23 +82,34 @@ For more information, see [How network security groups filter network traffic][n
 
 ### Custom virtual network requirements
 
-When using a custom virtual network with AKS clusters, if you have added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
+When you use a custom virtual network with AKS clusters, if you add network security group rules to restrict traffic between subnets, ensure that the rules allow the traffic required by your cluster configuration.
+
+API Server VNet Integration is preconfigured in AKS Automatic. In AKS Standard, the feature is optional and you must enable it explicitly. When your cluster uses API Server VNet Integration, allow the following traffic:
 
 | Destination | Source | Protocol | Port | Use |
 |--- |--- |--- |--- |--- |
 | APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
 | APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
+
+For more information, see [API Server VNet Integration][api-server-vnet-integration].
+
+For node and pod communication, allow the following traffic when network security group rules restrict the corresponding CIDR ranges:
+
+| Destination | Source | Protocol | Port | Use |
+|--- |--- |--- |--- |--- |
 | Node CIDR | Node CIDR | All Protocols | All Ports | Required to enable communication between Nodes. |
-| Node CIDR | Pod CIDR | All Protocols | All Ports | Required for Service traffic routing. |
+| Pod CIDR | Node CIDR | All Protocols | All Ports | Required for Service traffic routing. |
 | Pod CIDR | Pod CIDR | All Protocols | All Ports | Required for Pod to Pod and Pod to Service traffic, including DNS. |
 
-These requirements apply to both AKS Standard and AKS Automatic clusters when using custom virtual networks.
+The applicable node and pod CIDR ranges depend on your cluster's network model. For more information, see [AKS CNI networking prerequisites][network-cni-prerequisites].
 
 ## DNS resolution
 
 DNS resolution is essential for service discovery and communication in AKS. By default, AKS uses [CoreDNS](./coredns-custom.md) to provide internal name resolution for pods and services.
 
-For improved DNS performance and reliability, AKS offers [LocalDNS](./dns-concepts.md), which deploys a DNS proxy on each node. LocalDNS resolves queries locally, reducing latency and eliminating `conntrack` table pressure from DNS traffic. It also supports serving cached responses during upstream DNS outages, improving workload resilience. LocalDNS is particularly beneficial in large clusters or environments with high DNS query volumes. For configuration details, see [Configure LocalDNS](./localdns-custom.md).
+For improved DNS performance and reliability, AKS offers [LocalDNS](./dns-concepts.md), which deploys a DNS proxy on each node. LocalDNS resolves queries locally, reducing latency and eliminating `conntrack` table pressure from DNS traffic. You can configure LocalDNS to serve cached responses during upstream DNS outages, but stale-response caching operates on a best-effort basis. LocalDNS is particularly beneficial in large clusters or environments with high DNS query volumes.
+
+LocalDNS is preconfigured in AKS Automatic. In AKS Standard, LocalDNS is optional and configured per node pool. Before you enable it in AKS Standard, verify the Kubernetes version, node operating system, and VM SKU prerequisites. Enabling LocalDNS on an existing node pool reimages its nodes. For prerequisites and rollout planning, see [Configure LocalDNS](./localdns-custom.md).
 
 ## Network policies
 
@@ -142,6 +154,8 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 [aks-concepts-identity]: concepts-identity.md
 [agic-overview]: ../application-gateway/ingress-controller-overview.md
 [network-cni-overview]: concepts-network-cni-overview.md
+[network-cni-prerequisites]: concepts-network-cni-overview.md#aks-cni-networking-prerequisites
+[api-server-vnet-integration]: api-server-vnet-integration.md
 [configure-azure-cni-dynamic-ip-allocation]: configure-azure-cni-dynamic-ip-allocation.md
 [use-network-policies]: use-network-policies.md
 [operator-best-practices-network]: operator-best-practices-network.md
@@ -155,4 +169,3 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 [azure-cni-powered-by-cilium]: azure-cni-powered-by-cilium.md
 [azure-cni-powered-by-cilium-limitations]: azure-cni-powered-by-cilium.md#limitations
 [use-byo-cni]: use-byo-cni.md
-

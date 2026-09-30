@@ -147,7 +147,8 @@
         ]
       },
       "ms.service": {
-        "articles/aks/**/*.md": "azure-kubernetes-service"
+        "articles/aks/**/*.md": "azure-kubernetes-service",
+        "articles/aks-hybrid-edge/**/*.md": "azure-kubernetes-service-hybrid"
       },
       "searchScope": {
         "articles/aks/**/*.md": [

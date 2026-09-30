@@ -319,6 +319,8 @@ All traffic within the VNet is allowed by default. But if you have added NSG rul
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
+[az-aks-stop]: /cli/azure/aks#az-aks-stop
+[az-aks-start]: /cli/azure/aks#az-aks-update
 [az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create
 [az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
 [az-identity-create]: /cli/azure/identity#az-identity-create

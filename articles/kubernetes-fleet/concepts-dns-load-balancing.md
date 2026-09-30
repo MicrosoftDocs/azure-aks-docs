@@ -51,7 +51,7 @@ The important properties to understand include:
 
 * `name`: used as the DNS prefix for the `trafficmanager.net` DNS name. It must be unique. If the name is already in use, deployment fails.
 * `namespace`: must be the same as the corresponding `TrafficManagerBackend` and `Service` resources.
-* `monitorCOnfig`: maps to the standard Azure Traffic Manager monitoring configuration. Unsupported Azure Traffic Manager endpoint monitoring options are: Custom header settings; expected status codes.
+* `monitorConfig`: maps to the standard Azure Traffic Manager monitoring configuration. Unsupported Azure Traffic Manager endpoint monitoring options are: Custom header settings; expected status codes.
 
 ## TrafficManagerBackend properties
 
@@ -74,7 +74,7 @@ spec:
 The important properties to understand include:
 
 * `spec/profile/name`: must match the corresponding `TrafficManagerProfile`.
-* `spec/backend/name`: must match the exported service name to load balance. 
+* `spec/backend/name`: must match the exported service name to load balance.
 * `spec/weight`: optional weight (priority) to apply to this backend. Integer value between 0 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. Set to '0' to disable traffic routing without deleting the associated Traffic Manger Profile resource. For further information, see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
 
 ## ServiceExport properties
@@ -92,7 +92,7 @@ metadata:
 ```
 
 The important properties to understand include:
-* `metadata/namespace`: must match the namespace of the `Service` to be exported.  
+* `metadata/namespace`: must match the namespace of the `Service` to be exported.
 * `metadata/annotations/networking.fleet.azure.com/weight`: optional weight (priority) to apply to this service export. Integer value between 0 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. Set to '0' to disable traffic routing without deleting the associated Service endpoint. For further information, see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
 
 ## Unique DNS hostname via Service annotation
@@ -158,7 +158,7 @@ Once deployed, Traffic Manager will pick a cluster at random, considering all cl
 
 ### Distribute traffic across clusters with different weights
 
-To provide Traffic Manager with preference hints when selecting clusters, set the `weight` property on the `TrafficManagerBackend` and `ServiceExport` objects. 
+To provide Traffic Manager with preference hints when selecting clusters, set the `weight` property on the `TrafficManagerBackend` and `ServiceExport` objects.
 
 1. Create a `TrafficManagerBackend` resource and set the `weight` property to `100`.
 
@@ -208,7 +208,7 @@ metadata:
 
 When a `TrafficManagerProfile` Kubernetes resource is deleted, the associated Azure Traffic Manager and its endpoints are also deleted and requests are no longer routed to clusters.
 
-If you wish to stop traffic routing but retain the Azure Traffic Manager and its endpoints, set the `weight` property to `0` on the `TrafficManagerBackend` resource. 
+If you wish to stop traffic routing but retain the Azure Traffic Manager and its endpoints, set the `weight` property to `0` on the `TrafficManagerBackend` resource.
 
 ## Next steps
 

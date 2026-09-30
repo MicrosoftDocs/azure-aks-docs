@@ -202,7 +202,7 @@ Multiple clusters can join an Azure Kubernetes Application Network.
 
 ## Delete Azure Kubernetes Application Network resources
 
-You must remove all members before you can delete the Azure Kubernetes Application Network resource. Removing a member doesn't delete the corresponding AKS cluster.
+Deleting an Azure Kubernetes Application Network resource automatically removes all of its members, so you don't need to remove members first. Removing a member, whether individually or through this cascade, doesn't delete the corresponding AKS cluster.
 
 ### Remove an Azure Kubernetes Application Network member
 

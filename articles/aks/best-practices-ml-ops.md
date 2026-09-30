@@ -4,7 +4,7 @@ description: Learn MLOps and long-running batch job best practices for AI and ma
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
 ms.custom: aks-ai-ml, aeo-round-2
-ms.date: 08/26/2026
+ms.date: 09/12/2026
 author: schaffererin
 ms.author: schaffererin
 ai-usage: ai-assisted
@@ -771,7 +771,7 @@ KAITO provides an AKS-focused workspace abstraction for model deployment and fin
 The following workspace requests an A100 GPU VM and starts QLoRA fine-tuning for a supported Phi-3 preset using a publicly accessible dataset:
 
 ```yml
-apiVersion: kaito.sh/v1alpha1
+apiVersion: kaito.sh/v1beta1
 kind: Workspace
 metadata:
   name: workspace-tuning-phi-3-mini
@@ -851,7 +851,7 @@ The default Kubernetes scheduler places pods individually. For a distributed job
 
 AKS Automatic provides the default Kubernetes scheduler and automatic node provisioning as a starting point. Submit ordinary Jobs or operator-managed training jobs with accurate resource requests and let the platform provision eligible capacity. This behavior doesn't guarantee atomic admission for every worker. Install Kueue or Volcano when a workload requires gang scheduling, queueing, team quotas, fair sharing, or custom preemption behavior.
 
-### Allocate multi-tenant GPU quota with Kueue
+### Allocate multitenant GPU quota with Kueue
 
 Install a Kueue version compatible with the Kubernetes version and enable integrations for the workload types you use. The following manifest creates:
 

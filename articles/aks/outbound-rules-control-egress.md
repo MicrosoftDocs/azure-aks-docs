@@ -59,8 +59,13 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`*:1194`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.<Region>:1194`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:1194`** <br/> *Or* <br/> **`APIServerPublicIP:1194`** `(only known after cluster creation)`  | UDP           | 1194      | For tunneled secure communication between the nodes and the control plane. This isn't required for [private clusters][private-clusters], or for clusters with the *konnectivity-agent* enabled. |
 | **`*:9000`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.<Region>:9000`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:9000`** <br/> *Or* <br/> **`APIServerPublicIP:9000`** `(only known after cluster creation)`  | TCP           | 9000      | For tunneled secure communication between the nodes and the control plane. This isn't required for [private clusters][private-clusters], or for clusters with the *konnectivity-agent* enabled. |
 | **`*:123`** or **`ntp.ubuntu.com:123`** (if using Azure Firewall network rules)  | UDP      | 123     | Required for Network Time Protocol (NTP) time synchronization on Linux nodes. This isn't required for nodes provisioned after March 2021.                 |
-| **`CustomDNSIP:53`** `(if using custom DNS servers)`                             | UDP      | 53      | If you're using custom DNS servers, you must ensure they're accessible by the cluster nodes. |
+| **`CustomDNSIP:53`** `(if using custom DNS servers)` | TCP and UDP | 53 | If you're using custom DNS servers, ensure that cluster nodes can reach them over both TCP and UDP port 53. The DNS server must listen and respond on both protocols. |
 | **`APIServerPublicIP:443`** `(if running pods/deployments, like Ingress Controller, that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server (like Ingress Controller), those pods/deployments would use the API IP. This port isn't required for [private clusters][private-clusters]. |
+
+> [!IMPORTANT]
+> DNS must be allowed over both UDP and TCP port 53. DNS clients can retry over TCP when a UDP response is truncated, when a response is too large, or when the configured forwarding behavior selects TCP. This requirement also applies when LocalDNS is configured with `PreferUDP`.
+>
+> Ensure that NSGs, firewalls, NVAs, and custom DNS server access controls allow both protocols from every AKS node subnet.
 
 ### Azure Global required FQDN / application rules
 
