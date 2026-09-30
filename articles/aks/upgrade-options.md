@@ -141,6 +141,26 @@ In AKS Standard, tune upgrade controls directly:
 > [!NOTE]
 > Before you upgrade, check for API breaking changes and review the [AKS release notes](https://github.com/Azure/AKS/releases) to avoid disruptions.
 
+## Validate LocalDNS and custom DNS before upgrading to Kubernetes 1.37
+
+Starting with Kubernetes 1.37, AKS defaults an AKS Standard node pool that doesn't have an explicit LocalDNS profile to `Preferred` mode, and enables LocalDNS when the node pool passes the compatibility checks. This change affects the workload DNS path and can expose existing custom DNS or firewall configurations that support UDP port 53 but not TCP port 53.
+
+Before upgrading a node pool to Kubernetes 1.37 or later:
+
+1. Check whether the node pool has an explicit LocalDNS profile.
+1. Test the custom virtual network DNS server from an AKS node over both UDP and TCP.
+
+    ```bash
+    dig +udp @<custom-dns-ip> <fqdn>
+    dig +tcp @<custom-dns-ip> <fqdn>
+    ```
+
+1. Verify that NSGs, firewalls, NVAs, and routes permit both UDP and TCP port 53.
+1. Upgrade a non-production node pool first and monitor CoreDNS and LocalDNS errors.
+1. If the DNS path isn't ready for LocalDNS, explicitly configure `mode` as `Disabled` before upgrading.
+
+For configuration and opt-out instructions, see [Configure LocalDNS in AKS](./localdns-custom.md).
+
 ## Validations used in the upgrade process
 
 AKS performs pre-upgrade validations to ensure cluster health:
@@ -240,22 +260,12 @@ Behavior options:
 - **Schedule (default)**: Deletes blocked node and surges replacement.
 - **Cordon (recommended)**: Cordons node and labels it as `kubernetes.azure.com/upgrade-status=Quarantined`.
 
-Max blocked nodes (preview):
+Max blocked nodes:
 
 - Specifies how many nodes that fail to drain are tolerated
 - Requires `undrainable-node-behavior` to be set
 - Defaults to `maxSurge` value (typically 10%) if not specified
 - Like max surge, if the calculated value is higher than the number of nodes remaining to be upgraded in the current operation, the number of nodes remaining to be upgraded is used instead
-
-###### Prerequisites for max blocked nodes
-
-The Azure CLI `aks-preview` extension version 18.0.0b9 or later is required to use the max blocked nodes feature.
-
-```azurecli-interactive
-# Install or update the aks-preview extension
-az extension add --name aks-preview
-az extension update --name aks-preview
-```
 
 ###### Example configuration with max blocked nodes
 

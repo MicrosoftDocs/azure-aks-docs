@@ -8,7 +8,7 @@ metadata:
   ms.service: azure-kubernetes-fleet-manager
   ms.author: simonwaight
   ms.topic: landing-page
-  ms.date: 05/14/2026
+  ms.date: 09/15/2026
 landingContent:
   - title: About Azure Kubernetes Fleet Manager
     linkLists:
@@ -47,6 +47,10 @@ landingContent:
         links:
           - text: Monitoring and alerting for multi-cluster updates
             url: howto-monitor-update-runs.md
+      - linkListType: tutorial
+        links:
+          - text: Send notification emails for pending update run gates
+            url: howto-send-email-pending-gate.md
 
   - title: Multi-cluster resource placement
     linkLists:

@@ -48,12 +48,12 @@ The following table shows the minimum Cilium version for each Kubernetes version
 
 | Kubernetes version | Minimum Cilium version |
 | ------------------ | ---------------------- |
-| 1.31 (LTS) | 1.16.16 |
-| 1.32 (LTS) | 1.17.9 |
-| 1.33 (LTS) | 1.17.9 |
-| 1.34 | 1.18.6 |
-| 1.35 | 1.18.6 |
-| 1.36 | 1.18.9 |
+| 1.31 (LTS) | 1.16.19 |
+| 1.32 (LTS) | 1.17.18 |
+| 1.33 (LTS) | 1.17.18 |
+| 1.34 | 1.18.12 |
+| 1.35 | 1.18.12 |
+| 1.36 | 1.19.6 |
 
 For more information on AKS versioning and release timelines, see [Supported Kubernetes Versions](./supported-kubernetes-versions.md).
 

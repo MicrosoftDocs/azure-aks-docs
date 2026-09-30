@@ -68,65 +68,14 @@ cd aks-use-azure-policy
 
 ### Create the Terraform configuration
 
-Create a file named `main.tf`.
+Create a _main.tf_ file and copy the following tested sample configuration into it. The sample is maintained in the [Azure Terraform GitHub repository][terraform-sample]. The configuration:
 
-```bash
-touch main.tf
-```
+- Configures the Azure provider for Terraform (`azurerm`).
+- Defines input variables for the existing resource group and AKS cluster.
+- Retrieves the existing resource group and built-in pod security baseline initiative.
+- Assigns the initiative to the resource group with the policy effect set to `Deny`.
 
-Open the `main.tf` file and add the following configuration.
-
-### Configure the Terraform provider
-
-The following configuration:
-
-- Defines the Terraform version.
-- Configures the AzureRM provider.
-- Enables Azure provider features required for resource management.
-
-```terraform
-terraform {
- required_version = ">= 1.6.0"
- required_providers {
-   azurerm = {
-     source  = "hashicorp/azurerm"
-     version = "~> 4.0"
-   }
- }
-}
-provider "azurerm" {
- features {}
-}
-```
-
-### Define input variables
-
-Use the following variables to provide the name of the existing resource group and AKS cluster during deployment.
-
-```terraform
-variable "resource_group_name" {
- description = "Name of the resource group that contains the existing AKS cluster."
- type        = string
-}
-variable "aks_cluster_name" {
- description = "Name of the existing AKS cluster."
- type        = string
-}
-```
-
-### Reference the existing AKS cluster
-
-The following data sources retrieve information about the existing resource group and AKS cluster. Terraform uses this data to reference infrastructure that already exists in Azure instead of creating new resources.
-
-```terraform
-data "azurerm_resource_group" "aks" {
- name = var.resource_group_name
-}
-data "azurerm_kubernetes_cluster" "aks" {
- name                = var.aks_cluster_name
- resource_group_name = data.azurerm_resource_group.aks.name
-}
-```
+[!code-terraform[master](~/terraform_samples/quickstart/101-aks-use-azure-policy/main.tf)]
 
 :::zone-end
 
@@ -269,35 +218,7 @@ In the previous example, the container image automatically tried to use root to 
 
 Use the following steps to assign a built-in Azure Policy initiative to your AKS cluster by using Terraform.
 
-### Retrieve the built-in Azure Policy initiative
-
-The following data source retrieves the built-in Azure Policy initiative for Kubernetes pod security baseline standards.
-
-```terraform
-data "azurerm_policy_set_definition" "aks_pod_security_baseline" {
- display_name = "Kubernetes cluster pod security baseline standards for Linux-based workloads"
-}
-```
-
-### Assign the Azure Policy initiative
-
-The following resource assigns the built-in Azure Policy initiative to the resource group that contains the AKS cluster.
-
-Set the policy effect to `Deny` to block workloads that violate the defined policy rules.
-
-```terraform
-resource "azurerm_resource_group_policy_assignment" "aks_pod_security_baseline" {
- name                 = "aks-pod-security-baseline"
- display_name         = "Kubernetes cluster pod security baseline standards for Linux-based workloads"
- resource_group_id    = data.azurerm_resource_group.aks.id
- policy_definition_id = data.azurerm_policy_set_definition.aks_pod_security_baseline.id
- parameters = jsonencode({
-   effect = {
-     value = "Deny"
-   }
- })
-}
-```
+The Terraform configuration shown earlier retrieves the built-in initiative and assigns it to the resource group that contains the AKS cluster.
 
 ### Initialize the Terraform configuration
 
@@ -378,7 +299,7 @@ The deployment fails because the Azure Policy assignment denies privileged conta
 :::zone-end
 
 
-:::zone pivot="azure-portal, terraform"
+:::zone pivot="azure-portal"
 
 ## Disable a policy or initiative
 
@@ -391,6 +312,22 @@ Remove the baseline initiative in the Azure portal by using the following steps:
 
 To remove the Azure Policy add-on from your AKS cluster, see [Remove the add-on][azure-policy-addon-remove].
 
+:::zone-end
+
+:::zone pivot="terraform"
+
+## Disable a policy or initiative
+
+Run `terraform destroy` from the directory that contains the Terraform configuration to remove the policy assignment created by the sample.
+
+```bash
+terraform destroy
+```
+
+To remove the Azure Policy add-on from your AKS cluster, see [Remove the add-on][azure-policy-addon-remove].
+
+:::zone-end
+
 ## Next steps
 
 For more information about how Azure Policy works, see the following articles:
@@ -399,13 +336,12 @@ For more information about how Azure Policy works, see the following articles:
 - [Azure Policy initiatives and policies for AKS][aks-policies]
 - [Remove the add-on][azure-policy-addon-remove]
 
-:::zone-end
-
 
 <!-- LINKS - external -->
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-delete]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+[terraform-sample]: https://github.com/Azure/terraform/tree/master/quickstart/101-aks-use-azure-policy
 
 <!-- LINKS - internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli

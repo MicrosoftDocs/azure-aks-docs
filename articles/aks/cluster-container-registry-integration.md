@@ -124,31 +124,7 @@ The `$RandomString` variable stores a random 10-digit string. The `$MyAcr` value
 
 :::zone pivot="terraform"
 
-Create a _main.tf_ file for the configuration, and begin by defining the Terraform providers and generating a unique suffix for globally unique resource names. A globally unique name ensures your Azure Container Registry name doesn't conflict with existing registries.
-
-```terraform
-terraform {
- required_version = ">= 1.6.0"
- required_providers {
-   azurerm = {
-     source  = "hashicorp/azurerm"
-     version = "~> 4.0"
-   }
-   random = {
-     source  = "hashicorp/random"
-     version = "~> 3.6"
-   }
- }
-}
-provider "azurerm" {
- features {}
-}
-resource "random_string" "suffix" {
- length  = 6
- upper   = false
- special = false
-}
-```
+The Terraform sample in the next section creates the ACR as part of the complete AKS and ACR deployment.
 
 :::zone-end
 
@@ -221,63 +197,9 @@ Azure PowerShell only supports attaching ACR to AKS using the `-AcrNameToAttach`
 
 :::zone pivot="terraform"
 
-Next, create a resource group and an Azure Container Registry. This registry stores the container images that your AKS cluster pulls later.
+Create a _main.tf_ file and copy the following tested sample configuration into it. The Azure Terraform GitHub repository maintains the sample in the [Azure Terraform GitHub repository][terraform-sample]. The sample creates an ACR and an AKS cluster, assigns the `AcrPull` role to the kubelet managed identity, imports an NGINX image into the registry, and deploys that image to the cluster.
 
-```terraform
-locals {
- location           = "westcentralus"
- acr_name           = "myacr${random_string.suffix.result}"
- acr_resource_group = "myContainerRegistryResourceGroup"
-}
-resource "azurerm_resource_group" "acr_rg" {
- name     = local.acr_resource_group
- location = local.location
-}
-resource "azurerm_container_registry" "acr" {
- name                = local.acr_name
- resource_group_name = azurerm_resource_group.acr_rg.name
- location            = azurerm_resource_group.acr_rg.location
- sku                 = "Basic"
- admin_enabled       = false
-}
-```
-
-Now create the AKS cluster that consumes images from the registry. This cluster uses a **system-assigned managed identity**, which will be granted permission to pull images.
-
-```terraform
-locals {
- aks_name           = "myAKSCluster"
- aks_resource_group = "myClusterResourceGroup"
-}
-resource "azurerm_resource_group" "aks_rg" {
- name     = local.aks_resource_group
- location = local.location
-}
-resource "azurerm_kubernetes_cluster" "aks" {
- name                = local.aks_name
- location            = azurerm_resource_group.aks_rg.location
- resource_group_name = azurerm_resource_group.aks_rg.name
- dns_prefix          = local.aks_name
- identity {
-   type = "SystemAssigned"
- }
- default_node_pool {
-   name       = "systempool"
-   node_count = 2
-   vm_size    = "Standard_DS2_v2"
- }
-}
-```
-
-At this stage, the AKS cluster exists, but it doesn't yet have access to the container registry. In Azure CLI, use the `--attach-acr` parameter. In Terraform, you explicitly assign the `AcrPull` role.
-
-```terraform
-resource "azurerm_role_assignment" "aks_acr_pull" {
- scope                = azurerm_container_registry.acr.id
- role_definition_name = "AcrPull"
- principal_id         = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-}
-```
+[!code-terraform[master](~/terraform_samples/quickstart/101-aks-acr-auth/main.tf)]
 
 :::zone-end
 
@@ -333,23 +255,7 @@ The `Set-AzAksCluster -AcrNameToAttach` cmdlet uses the permissions of the user 
 
 :::zone pivot="terraform"
 
-If your AKS cluster already exists, you can attach an ACR by referencing both resources and creating the same role assignment.
-
-```terraform
-data "azurerm_kubernetes_cluster" "existing_aks" {
- name                = "myAKSCluster"
- resource_group_name = "myClusterResourceGroup"
-}
-data "azurerm_container_registry" "existing_acr" {
- name                = "mycontainerregistry"
- resource_group_name = "myContainerRegistryResourceGroup"
-}
-resource "azurerm_role_assignment" "existing_aks_acr_pull" {
- scope                = data.azurerm_container_registry.existing_acr.id
- role_definition_name = "AcrPull"
- principal_id         = data.azurerm_kubernetes_cluster.existing_aks.kubelet_identity[0].object_id
-}
-```
+The tested Terraform sample creates new AKS and ACR resources. To integrate existing resources, use the Azure CLI or Azure PowerShell tab, or adapt the sample's `AcrPull` role assignment to reference your existing resources.
 
 :::zone-end
 
@@ -394,16 +300,7 @@ Set-AzAksCluster @DetachCluster
 
 :::zone pivot="terraform"
 
-To remove access, delete the role assignment that grants the cluster permission to pull images.
-
-```terraform
-# Remove this resource to revoke access
-# resource "azurerm_role_assignment" "existing_aks_acr_pull" {
-#   scope                = data.azurerm_container_registry.existing_acr.id
-#   role_definition_name = "AcrPull"
-#   principal_id         = data.azurerm_kubernetes_cluster.existing_aks.kubelet_identity[0].object_id
-# }
-```
+The tested Terraform sample doesn't define a standalone detach workflow. To revoke access while preserving the AKS and ACR resources, remove both the `kubernetes_deployment_v1.nginx` and `azurerm_role_assignment.aks_acr_pull` resources from your configuration, and then apply the updated Terraform plan.
 
 :::zone-end
 
@@ -436,7 +333,7 @@ Import an image into your ACR, then deploy that image to your AKS cluster.
 
 ### Import an image into your ACR
 
-:::zone pivot="azure-cli, terraform"
+:::zone pivot="azure-cli"
 
 Import an image from Docker Hub into your ACR using the [`az acr import`][az-acr-import] command.
 
@@ -453,6 +350,12 @@ Run the following commands to verify the image was imported.
 az acr repository show --name $MYACR --repository nginx
 az acr repository show-tags --name $MYACR --repository nginx
 ```
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+The Terraform sample imports the NGINX image into ACR during deployment.
 
 :::zone-end
 
@@ -512,10 +415,9 @@ spec:
         - containerPort: 80
 ```
 
-
 ### Get credentials and run deployment
 
-:::zone pivot="azure-cli, terraform"
+:::zone pivot="azure-cli"
 
 1. Ensure you have the proper AKS credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
@@ -544,6 +446,21 @@ spec:
     nginx0-deployment-669dfc4d4b-x74kr   1/1     Running   0          20s
     nginx0-deployment-669dfc4d4b-xdpd6   1/1     Running   0          20s
     ```
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+The Terraform sample configures the Kubernetes provider and deploys the NGINX workload during `terraform apply`. Get the cluster credentials, and then verify the deployment:
+
+```bash
+RESOURCE_GROUP=$(terraform output -raw resource_group_name)
+CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
+az aks get-credentials \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME
+kubectl get pods
+```
 
 :::zone-end
 
@@ -588,11 +505,21 @@ spec:
 
 When you no longer need the resources created in this article, you can delete the resource groups to remove all associated resources. These commands delete the ACR and AKS cluster and the clusters node resource group that begins with `MC_`.
 
-:::zone pivot="azure-cli, terraform"
+:::zone pivot="azure-cli"
 
 ```azurecli-interactive
 az group delete --name $ACR_RESOURCE_GROUP --yes --no-wait
 az group delete --name $CLUSTER_RESOURCE_GROUP --yes --no-wait
+```
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+Run the following command from the directory that contains the Terraform configuration:
+
+```bash
+terraform destroy
 ```
 
 :::zone-end
@@ -616,6 +543,7 @@ Remove-AzResourceGroup -Name $ClusterResourceGroup -Force
 [image-pull-secret]: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 [kubelet]: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
 [terraform-reference]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry
+[terraform-sample]: https://github.com/Azure/terraform/tree/master/quickstart/101-aks-acr-auth
 
 
 <!-- LINKS INTERNAL -->

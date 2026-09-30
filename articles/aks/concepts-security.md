@@ -5,8 +5,10 @@ author: shashankbarsin
 ms.service: azure-kubernetes-service
 ms.topic: concept-article
 ms.subservice: aks-security
-ms.date: 11/10/2025
+ms.date: 09/11/2026
 ms.author: shasb
+ai-usage: ai-assisted
+ms.custom: aeo-round-2
 # Customer intent: "As a cloud security engineer, I want to implement comprehensive security practices for Azure Kubernetes Service, so that I can safeguard applications and clusters against vulnerabilities and unauthorized access throughout the development and deployment pipeline."
 ---
 
@@ -27,6 +29,8 @@ Kubernetes includes security components, such as _pod security standards_ and _S
 AKS supports two cluster modes: [AKS Automatic](./intro-aks-automatic.md) and AKS Standard. The security concepts in this article apply to both modes unless otherwise noted. AKS Automatic includes a hardened security baseline with several controls preconfigured by default, while AKS Standard provides more configuration flexibility.
 
 This article introduces the core concepts that secure your applications in AKS.
+
+For a prescriptive checklist of security best practices to configure for your deployment, see [Secure your Azure Kubernetes Service (AKS) deployment](secure-aks.md).
 
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
@@ -55,6 +59,14 @@ By default, the Kubernetes API server uses a public IP address and a fully quali
 For AKS Automatic, API server virtual network integration is preconfigured as part of the default security posture. In AKS Standard, the same capability is available and can be enabled based on your network design and security requirements.
 
 You can control access to the API server using Kubernetes role-based access control (Kubernetes RBAC) and Azure RBAC. In AKS Automatic, Azure RBAC for Kubernetes authorization is preconfigured. In AKS Standard, you can choose and configure the authorization model that best fits your environment. For more information, see [Microsoft Entra integration with AKS][aks-aad].
+
+### Secure API server access for deployment pipelines
+
+A deployment pipeline needs both network connectivity to the API server and authorization to modify Kubernetes resources. Configure these controls separately because network access doesn't grant permissions to the pipeline identity.
+
+- **Public API server:** Use [API server authorized IP ranges][authorized-ip-ranges] to allow only trusted source networks. Add the stable outbound public IP address or CIDR range of the network that hosts the deployment agent. If agent traffic passes through a firewall or NAT gateway, authorize the public egress IP address that the API server sees. Configure firewall rules to allow the agent to reach the API server FQDN.
+- **Private API server:** Place a self-hosted deployment agent or a Managed DevOps Pool in the cluster VNet, a peered VNet, or another network that can reach the private endpoint. Configure routing, network security groups, firewall rules, and private DNS resolution for the API server FQDN. Azure DevOps Microsoft-hosted agents aren't supported with private AKS clusters. For an example architecture, see [Use Azure Firewall to help protect an AKS cluster][pipeline-private-cluster].
+- **Pipeline identity:** Use [workload identity federation][pipeline-federated-identity] with a dedicated app registration or managed identity instead of storing long-lived credentials in the pipeline. Grant only the permissions required by the deployment. If the pipeline retrieves a kubeconfig file for a Microsoft Entra-integrated cluster, grant the [Azure Kubernetes Service Cluster User Role][control-kubeconfig-access], which allows credential retrieval but doesn't authorize Kubernetes API operations. Avoid cluster-admin credentials. For clusters that use Azure RBAC for Kubernetes authorization, assign an AKS RBAC role, such as **Azure Kubernetes Service RBAC Writer**, at the narrowest practical cluster or namespace scope. For clusters that use Kubernetes RBAC, use a `RoleBinding` or `ClusterRoleBinding` to grant the Microsoft Entra identity an appropriate `Role` or `ClusterRole`. For more information, see [Cluster authorization concepts][cluster-authorization].
 
 ### AKS Automatic security defaults
 
@@ -212,3 +224,7 @@ For more information on core Kubernetes and AKS concepts, see:
 [security-best-practices]: /azure/aks/operator-best-practices-cluster-security
 [security-container-access]: ./secure-container-access.md
 [etcd-encryption-cmk]: use-kms-etcd-encryption.md
+[pipeline-private-cluster]: /azure/architecture/guide/aks/aks-firewall#scenario-details
+[pipeline-federated-identity]: /azure/devops/pipelines/library/connect-to-azure
+[control-kubeconfig-access]: control-kubeconfig-access.md
+[cluster-authorization]: concepts-cluster-authorization.md

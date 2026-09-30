@@ -1,0 +1,209 @@
+### YamlMime:FAQ
+metadata:
+  title: GPU profiling frequently asked questions for Azure Kubernetes Service (AKS) (Preview)
+  description: Get answers to frequently asked questions about monitoring integrations and profile storage for GPU profiling on Azure Kubernetes Service.
+  ms.service: azure-kubernetes-service
+  ms.subservice: aks-developer
+  author: mayasingh17
+  ms.author: mayasingh
+  ms.topic: faq
+  ms.date: 08/25/2026
+  ai-usage: ai-assisted
+
+title: GPU profiling frequently asked questions for Azure Kubernetes Service (AKS) (Preview)
+summary: |
+  Get answers to frequently asked questions about monitoring integrations and profile storage for GPU profiling on Azure Kubernetes Service (AKS). Before you begin, [set up GPU profiling](./gpu-profiling.md).
+
+sections:
+  - name: Monitoring integrations
+    questions:
+      - question: |
+          How do I connect my own Prometheus instance to Inspektor Gadget?
+        answer: |
+          If you run your own Prometheus instance instead of Azure Monitor managed service for Prometheus, configure it to scrape metrics from the Inspektor Gadget pods.
+
+          Inspektor Gadget exposes its metrics at the following endpoint:
+
+          | Setting | Value |
+          |---|---|
+          | Namespace | `gadget` |
+          | Port | `2224` |
+          | Path | `/metrics` |
+
+          Add a scrape job to your Prometheus configuration to discover and scrape the pods:
+
+          > [!TIP]
+          > For Prometheus Operator deployments, create a `PodMonitor` with the equivalent namespace, label selector, port, and metrics path.
+
+          ```yaml
+          scrape_configs:
+            - job_name: "inspektor-gadget"
+              kubernetes_sd_configs:
+                - role: pod
+                  namespaces:
+                    names:
+                      - gadget
+              relabel_configs:
+                # Only keep pods with the k8s-app=gadget label.
+                - source_labels: [__meta_kubernetes_pod_label_k8s_app]
+                  action: keep
+                  regex: gadget
+
+                # Set the metrics path.
+                - target_label: __metrics_path__
+                  replacement: /metrics
+
+                # Set the metrics port.
+                - source_labels: [__address__]
+                  action: replace
+                  regex: ([^:]+)(?::\d+)?
+                  replacement: $1:2224
+                  target_label: __address__
+          ```
+
+          Verify the connection in your Prometheus UI under **Status** > **Targets**. The `inspektor-gadget` job should show its target as **UP**.
+
+      - question: |
+          How do I visualize Inspektor Gadget metrics in my own Grafana instance?
+        answer: |
+          Make sure your Prometheus instance is connected to Grafana as a data source. Then, import the Inspektor Gadget dashboard from the following JSON definition:
+
+          <https://raw.githubusercontent.com/inspektor-gadget/grafana-dashboards/refs/heads/main/dashboards/gpu-observability/AdvancedGPUObservability.json>
+
+  - name: Profile storage
+    questions:
+      - question: |
+          How do I use Azure Blob Storage as the Pyroscope backend?
+        answer: |
+          By default, the Pyroscope deployment in the [GPU profiling setup article](./gpu-profiling.md) stores profiles on the local filesystem. Profiling data is lost if the pod is recreated. To persist profiles, configure Pyroscope to use Azure Blob Storage with [Microsoft Entra Workload ID](./workload-identity-overview.md).
+
+          Export the required variables:
+
+          ```bash
+          export RESOURCE_GROUP="<your-resource-group>"
+          export AKS_CLUSTER="<your-aks-cluster-name>"
+          export LOCATION="<your-aks-cluster-location>"
+          export BLOB_STORAGE_NAME="<your-storage-account-name>"
+
+          export BLOB_STORAGE_CONTAINER="pyroscope-blob-storage"
+          export PYROSCOPE_IDENTITY="pyroscope-id"
+          export PYROSCOPE_SERVICE_ACCOUNT="pyroscope-sa"
+          export PYROSCOPE_FEDERATED_CREDS="pyroscope-federated-creds"
+          ```
+
+          ### Create the storage account and container
+
+          ```azurecli
+          az storage account create \
+            --name "$BLOB_STORAGE_NAME" \
+            --resource-group "$RESOURCE_GROUP" \
+            --location "$LOCATION" \
+            --sku Standard_ZRS \
+            --kind StorageV2 \
+            --min-tls-version TLS1_2 \
+            --allow-blob-public-access false \
+            --output none
+
+          az storage container create \
+            --name "$BLOB_STORAGE_CONTAINER" \
+            --account-name "$BLOB_STORAGE_NAME" \
+            --auth-mode login \
+            --output none
+          ```
+
+          ### Create a managed identity and grant access to the storage account
+
+          ```azurecli
+          az identity create \
+            --name "$PYROSCOPE_IDENTITY" \
+            --resource-group "$RESOURCE_GROUP" \
+            --location "$LOCATION" \
+            --output none
+
+          IDENTITY_CLIENT_ID=$(az identity show \
+            --name "$PYROSCOPE_IDENTITY" \
+            --resource-group "$RESOURCE_GROUP" \
+            --query 'clientId' \
+            --output tsv)
+
+          SUBSCRIPTION_ID=$(az account show --query id --output tsv)
+
+          # Restrict the role assignment scope to the storage account.
+          STORAGE_SCOPE="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP}/providers/Microsoft.Storage/storageAccounts/${BLOB_STORAGE_NAME}"
+
+          az role assignment create \
+            --assignee "$IDENTITY_CLIENT_ID" \
+            --role "Storage Blob Data Contributor" \
+            --scope "$STORAGE_SCOPE" \
+            --output none
+          ```
+
+          ### Enable workload identity and create federated credentials
+
+          ```azurecli
+          az aks update \
+            --name "$AKS_CLUSTER" \
+            --resource-group "$RESOURCE_GROUP" \
+            --enable-oidc-issuer \
+            --enable-workload-identity \
+            --output none
+
+          OIDC_ISSUER=$(az aks show \
+            --name "$AKS_CLUSTER" \
+            --resource-group "$RESOURCE_GROUP" \
+            --query 'oidcIssuerProfile.issuerUrl' \
+            --output tsv)
+
+          az identity federated-credential create \
+            --name "$PYROSCOPE_FEDERATED_CREDS" \
+            --identity-name "$PYROSCOPE_IDENTITY" \
+            --resource-group "$RESOURCE_GROUP" \
+            --issuer "$OIDC_ISSUER" \
+            --subject "system:serviceaccount:gadget:${PYROSCOPE_SERVICE_ACCOUNT}" \
+            --audiences "api://AzureADTokenExchange" \
+            --output none
+          ```
+
+          > [!IMPORTANT]
+          > The service account name in the federated credential subject must match the service account name used by the Pyroscope Helm release. Otherwise, Pyroscope can't authenticate to Azure Blob Storage.
+
+          ### Deploy Pyroscope with the Azure Blob Storage backend
+
+          Instead of the Helm command in [Enable profile visualization with Pyroscope](./gpu-profiling.md#step-2-enable-profile-visualization-with-pyroscope), run the following command. This configuration uses Azure Blob Storage, creates the service account, and enables workload identity on the Pyroscope pod.
+
+          ```bash
+          helm install pyroscope -n gadget \
+            oci://ghcr.io/grafana/helm-charts/pyroscope \
+            --version 1.15.0 \
+            --set pyroscope.image.repository=grafana/pyroscope \
+            --set-string pyroscope.image.tag=1.15.0 \
+            --set pyroscope.replicaCount=1 \
+            --set pyroscope.structuredConfig.self_profiling.disable_push=true \
+            --set pyroscope.structuredConfig.storage.backend=azure \
+            --set-string pyroscope.structuredConfig.storage.azure.account_name="$BLOB_STORAGE_NAME" \
+            --set-string pyroscope.structuredConfig.storage.azure.container_name="$BLOB_STORAGE_CONTAINER" \
+            --set pyroscope.serviceAccount.create=true \
+            --set-string pyroscope.serviceAccount.name="$PYROSCOPE_SERVICE_ACCOUNT" \
+            --set-string pyroscope.serviceAccount.annotations."azure\.workload\.identity/client-id"="$IDENTITY_CLIENT_ID" \
+            --set-string pyroscope.podLabels."azure\.workload\.identity/use"=true \
+            --set pyroscope.service.type=LoadBalancer \
+            --set pyroscope.service.port=4040 \
+            --set-string pyroscope.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-internal"=true \
+            --set-string pyroscope.service.annotations."service\.beta\.kubernetes\.io/azure-pls-create"=true \
+            --set-string pyroscope.service.annotations."service\.beta\.kubernetes\.io/azure-pls-name"=pyroscope-pls \
+            --set-string pyroscope.service.annotations."service\.beta\.kubernetes\.io/azure-pls-proxy-protocol"=false \
+            --set-string pyroscope.service.annotations."service\.beta\.kubernetes\.io/azure-pls-visibility"='*' \
+            --set alloy.enabled=false \
+            --set minio.enabled=false
+          ```
+
+          Verify that the pod is running:
+
+          ```bash
+          kubectl get pods -n gadget pyroscope-0
+          ```
+
+          Continue with [Connect Pyroscope to Azure Managed Grafana](./gpu-profiling.md#step-3-connect-pyroscope-to-azure-managed-grafana).
+
+          > [!NOTE]
+          > Helm value keys can change between chart versions. To confirm the available keys for your version, run `helm show values oci://ghcr.io/grafana/helm-charts/pyroscope --version 1.15.0`.

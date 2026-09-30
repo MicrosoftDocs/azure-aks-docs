@@ -7,7 +7,7 @@ ms.custom: ignite-2025, build-2026
 ms.topic: overview
 author: davidsmatlak
 ms.author: davidsmatlak
-ms.date: 05/22/2026
+ms.date: 09/08/2026
 
 # Customer intent: As a cluster developer, I want to understand AKS Automatic managed system node pools so that I can evaluate its benefits and limitations for my use case.
 ---
@@ -26,7 +26,7 @@ The managed system node pools feature allows you to focus on your applications w
 - **Simplified cluster creation**: You don't need to track or allocate compute quotas for system node pools because AKS handles quotas for you.
 - **Cost efficiency**: Virtual machines (VMs) running on system node pools aren't charged to customer subscriptions, allowing you to optimize costs while maintaining high performance.
 - **Enhanced performance**: Isolating system workloads from customer applications improves reliability and ensures consistent performance backed by [Services Level Agreements (SLAs)](https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services).
-- **Managed system node pool by default**: New automatic clusters that are created enable managed system node pool by default. If you have existing automatic cluster without managed system node pools, you should recreate the cluster and migrate the workloads.
+- **Managed system node pool by default**: New AKS Automatic clusters enable managed system node pools by default. If you have an existing AKS Automatic cluster without managed system node pools, you can migrate the cluster to use managed system node pools in preview.
 - **Autoscaling and Node repair**: [Cluster autoscaler](../cluster-autoscaler-overview.md) is enabled for system nodes in the managed system node pool. [Node auto-repair](../node-auto-repair.md) is enabled for system nodes in the managed system node pool.
 
 [!INCLUDE [Kubernetes gateway](../includes/aks-automatic/aks-automatic-kubernetes-gateway.md)]
@@ -48,6 +48,54 @@ The following table outlines the components managed by AKS in managed system nod
 | [Vertical Pod Autoscaling (VPA)](../vertical-pod-autoscaler.md) | `kube-system` | `vpa-admission-controller`, `vpa-recommender`, `vpa-updater` |
 
 Other add-ons and extensions run on an `aks-system-surge` node, with scaling handled by [node auto-provisioning (NAP)](../node-auto-provisioning.md). `DaemonSets` run on both managed system node pools and nodes in your subscription, including the `aks-system-surge` nodes.
+
+## Migrate an existing AKS Automatic cluster to managed system node pools (preview)
+
+AKS Automatic supports preview migration from non-managed system node pools to managed system node pools in regions where managed system node pools are generally available. To use this preview feature, register the `Microsoft.ContainerService/NonHoboToHoboConversionPreview` feature flag in your subscription, and then update the cluster with the `--enable-hosted-system` parameter.
+
+```azurecli-interactive
+az feature register \
+    --namespace Microsoft.ContainerService \
+    --name NonHoboToHoboConversionPreview
+```
+
+Check the registration status by using the [`az feature show`](/cli/azure/feature#az-feature-show) command:
+
+```azurecli-interactive
+az feature show \
+    --namespace Microsoft.ContainerService \
+    --name NonHoboToHoboConversionPreview \
+    --query properties.state \
+    --output tsv
+```
+
+Wait until the command returns `Registered` before you continue. Then, refresh the `Microsoft.ContainerService` resource provider registration.
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
+
+To migrate an existing AKS Automatic cluster that uses AKS-managed networking, run the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--enable-hosted-system` parameter:
+
+```azurecli-interactive
+az aks update \
+    --resource-group <resource-group> \
+    --name <cluster-name> \
+    --enable-hosted-system
+```
+
+For an AKS Automatic cluster that uses a custom virtual network, also provide the subnet for the managed system node pool. The system node subnet must be in the same virtual network and region as the cluster, be at least `/26`, and not be delegated to another service. The `--node-subnet-id` parameter is optional. If you don't provide it, AKS uses the existing system node pool subnet.
+
+```azurecli-interactive
+az aks update \
+    --resource-group <resource-group> \
+    --name <cluster-name> \
+    --enable-hosted-system \
+    --system-node-subnet-id <system-node-subnet-resource-id> \
+    --node-subnet-id <node-subnet-resource-id>
+```
+
+For more information, see [Migrate between AKS Automatic and AKS Base clusters](./aks-automatic-sku-migration.md).
 
 ## Security restrictions for managed system node pools
 

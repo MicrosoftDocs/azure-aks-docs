@@ -25,7 +25,7 @@ In addition to the general ACL limitations, the following apply specifically to 
 - The OS SKU migration feature isn't available through PowerShell or the Azure portal.
 - The OS SKU migration feature doesn't support renaming existing node pools.
 - Node pools with `UseGPUDedicatedVHD` enabled can't perform an OS SKU migration.
-- Windows OS SKU migration isn't supported.
+- Windows node pools can't migrate to ACL.
 
 ## Prerequisites
 

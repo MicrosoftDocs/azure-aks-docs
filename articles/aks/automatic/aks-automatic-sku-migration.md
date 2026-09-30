@@ -1,31 +1,37 @@
 ---
-title: AKS Automatic cluster SKU Migration
-description: Learn how to migrate to or from an Azure Kubernetes Service (AKS) Automatic cluster with managed system node pool.
+title: Migrate AKS Automatic clusters and managed system node pools
+description: Learn how to migrate AKS Automatic clusters between managed system node pool and AKS Standard configurations.
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 07/24/2026
+ms.date: 09/08/2026
 author: wangyira
 ms.author: wangamanda
 
 ---
 
-# Migrate between AKS Automatic and AKS Base Clusters
+# Migrate AKS Automatic clusters and managed system node pools
 
 **Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
-This article shows you how to migrate to or from an [Azure Kubernetes Service (AKS) Automatic with managed system node pool](./aks-automatic-managed-system-node-pools-about.md). 
+This article shows you how to migrate AKS Automatic clusters between supported [managed system node pool](./aks-automatic-managed-system-node-pools-about.md) and AKS Standard configurations.
 
-> [!NOTE]
-> This article covers migrating an AKS Automatic cluster with a managed system node pool to an AKS Standard (`base` SKU) cluster. Other migration paths, such as migrating from an AKS Standard cluster to an AKS Automatic cluster with a managed system node pool and migrating from an AKS Automatic cluster without a managed system node pool to one with a managed system node pool, are coming soon.
+## Supported migration paths
 
-## Migrate from AKS Automatic cluster with managed system node pool to AKS Standard Cluster (Base SKU)
+| Migration path | Support |
+|---|---|
+| AKS Automatic with managed system node pools to AKS Standard (`base` SKU) | Supported |
+| AKS Automatic without managed system node pools to AKS Automatic with managed system node pools | Supported in preview in regions where managed system node pools are generally available |
+| AKS Standard (`base` SKU) to AKS Automatic with managed system node pools | Coming soon |
+| AKS Automatic with managed system node pools to AKS Automatic without managed system node pools | Not supported |
+
+## Migrate from an AKS Automatic cluster with managed system node pools to an AKS Standard cluster
 
 ### How the migration works
 
-An AKS Automatic cluster with a managed system node pool runs its system components on a system node pool that AKS provisions, scales, and upgrades for you. 
+An AKS Automatic cluster with managed system node pools runs its system components on system node pools that AKS provisions, scales, and upgrades for you.
 
 > [!IMPORTANT]
-> An AKS Standard (`base` SKU) cluster doesn't enable managed system node pool, so you're responsible for running, managing, and upgrading the system node pool and the system components.
+> An AKS Standard (`base` SKU) cluster doesn't enable managed system node pools, so you're responsible for running, managing, and upgrading the system node pool and the system components.
 
 To migrate from AKS Automatic to AKS Standard, complete the following high-level steps:
 
@@ -77,3 +83,100 @@ After you update the SKU, the cluster runs as an AKS Standard cluster, and your 
         --query "[].{Name:name, Mode:mode, Count:count}" \
         --output table
     ```
+
+## Migrate from an AKS Automatic cluster without managed system node pools to AKS Automatic with managed system node pools (preview)
+
+AKS Automatic supports preview migration from non-managed system node pools to managed system node pools in regions where managed system node pools are generally available. This migration keeps the cluster on the `automatic` SKU and moves AKS system components to a system node pool managed by AKS.
+
+### Prerequisites
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+- An existing AKS Automatic cluster without managed system node pools.
+- Azure CLI version 2.86.0 or later. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+- The latest version of the `aks-preview` Azure CLI extension.
+- The `Microsoft.ContainerService/NonHoboToHoboConversionPreview` feature flag registered in your subscription.
+
+Register the `NonHoboToHoboConversionPreview` feature flag by using the [`az feature register`](/cli/azure/feature#az-feature-register) command:
+
+```azurecli-interactive
+az feature register \
+    --namespace Microsoft.ContainerService \
+    --name NonHoboToHoboConversionPreview
+```
+
+Check the registration status by using the [`az feature show`](/cli/azure/feature#az-feature-show) command:
+
+```azurecli-interactive
+az feature show \
+    --namespace Microsoft.ContainerService \
+    --name NonHoboToHoboConversionPreview \
+    --query properties.state \
+    --output tsv
+```
+
+Wait until the command returns `Registered` before you continue. Then, refresh the `Microsoft.ContainerService` resource provider registration.
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
+
+Install or update the `aks-preview` extension:
+
+```azurecli-interactive
+az extension add --name aks-preview
+az extension update --name aks-preview
+```
+
+### Migrate an AKS-managed virtual network cluster
+
+For an AKS Automatic cluster that uses AKS-managed networking, migrate to managed system node pools by using the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--enable-hosted-system` parameter:
+
+```azurecli-interactive
+az aks update \
+    --resource-group "${RESOURCE_GROUP}" \
+    --name "${RESOURCE_NAME}" \
+    --enable-hosted-system
+```
+
+### Migrate a custom virtual network cluster
+
+For an AKS Automatic cluster that uses a custom virtual network, provide a subnet for the managed system node pool by using the `--system-node-subnet-id` parameter. The system node subnet must:
+
+- Be in the same virtual network and region as the cluster.
+- Be at least `/26`.
+- Not be delegated to another service.
+- Be different from the node subnet.
+
+The `--node-subnet-id` parameter is optional. If you don't provide it, AKS uses the existing system node pool subnet.
+
+```azurecli-interactive
+az aks update \
+    --resource-group "${RESOURCE_GROUP}" \
+    --name "${RESOURCE_NAME}" \
+    --enable-hosted-system \
+    --system-node-subnet-id "${SYSTEM_NODE_SUBNET_ID}" \
+    --node-subnet-id "${NODE_SUBNET_ID}"
+```
+
+### Verify the migration
+
+Confirm the cluster uses managed system node pools by using the [`az aks show`](/cli/azure/aks#az-aks-show) command:
+
+```azurecli-interactive
+az aks show \
+    --resource-group "${RESOURCE_GROUP}" \
+    --name "${RESOURCE_NAME}" \
+    --query hostedSystemProfile \
+    --output json
+```
+
+The following example output shows the `hostedSystemProfile.enabled` property set to `true`:
+
+```output
+{
+  "enabled": true,
+  "nodeSubnetId": "<node-subnet-resource-id>",
+  "systemNodeSubnetId": "<system-node-subnet-resource-id>"
+}
+```

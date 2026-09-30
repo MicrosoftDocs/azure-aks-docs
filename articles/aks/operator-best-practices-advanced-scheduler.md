@@ -4,7 +4,7 @@ description: Learn the cluster operator best practices for using advanced schedu
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2, aks-scaling
-ms.date: 08/20/2026
+ms.date: 08/25/2026
 ms.author: schaffererin
 author: schaffererin
 ai-usage: ai-assisted
@@ -97,6 +97,115 @@ spec:
 ```
 
 When this pod is deployed using `kubectl apply -f gpu-toleration.yaml`, Kubernetes can successfully schedule the pod on the nodes with the taint applied. This logical isolation lets you control access to resources within a cluster.
+
+#### Dedicate node pools to multiple applications
+
+To dedicate separate nodes to different applications, create a node pool for each application with a unique taint and matching label. The taint prevents other pods from being scheduled on the node pool, while the label lets you require that an application runs only on its dedicated node pool.
+
+The following example creates separate node pools for frontend and backend applications:
+
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name frontpool \
+    --node-count 1 \
+    --labels workload=frontend \
+    --node-taints workload=frontend:NoSchedule
+
+az aks nodepool add \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name backpool \
+    --node-count 1 \
+    --labels workload=backend \
+    --node-taints workload=backend:NoSchedule
+```
+
+Create a file named `dedicated-apps.yaml` and add the following pod definitions. Each pod has a toleration that matches its node pool's taint and a `nodeSelector` that requires the corresponding node pool label:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  nodeSelector:
+    workload: frontend
+  tolerations:
+  - key: "workload"
+    operator: "Equal"
+    value: "frontend"
+    effect: "NoSchedule"
+  containers:
+  - name: frontend
+    image: mcr.microsoft.com/oss/nginx/nginx:1.25.5
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  nodeSelector:
+    workload: backend
+  tolerations:
+  - key: "workload"
+    operator: "Equal"
+    value: "backend"
+    effect: "NoSchedule"
+  containers:
+  - name: backend
+    image: mcr.microsoft.com/oss/nginx/nginx:1.25.5
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 250m
+        memory: 256Mi
+```
+
+Apply the manifest:
+
+```bash
+kubectl apply -f dedicated-apps.yaml
+```
+
+Verify each pod is running on a node with the expected workload label:
+
+```bash
+kubectl get pods -o wide
+kubectl get nodes -L workload
+```
+
+The `frontend` pod is scheduled on a node labeled `workload=frontend`, and the `backend` pod is scheduled on a node labeled `workload=backend`. A toleration alone allows a pod to use a tainted node but doesn't require placement on that node. The `nodeSelector` provides that requirement.
+
+Delete the example resources when you no longer need them:
+
+```azurecli-interactive
+kubectl delete -f dedicated-apps.yaml
+
+az aks nodepool delete \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name frontpool
+
+az aks nodepool delete \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name backpool
+```
 
 When you apply taints, work with your application developers and owners to allow them to define the required tolerations in their deployments.
 

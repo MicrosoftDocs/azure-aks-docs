@@ -1,18 +1,18 @@
 ---
-title: Set up identity bindings on Azure Kubernetes Service (AKS) (preview)
+title: Set up identity bindings on Azure Kubernetes Service (AKS)
 description: Learn how to enable and configure identity bindings on AKS to map a user-assigned managed identity (UAMI) across multiple clusters while using a single federated identity credential.
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 12/13/2025
-ms.custom: preview
+ms.date: 09/02/2026
+ai-usage: ai-assisted
 author: shashankbarsin
 ms.author: shasb
 ms.reviewer: schaffererin
 # Customer intent: "As an AKS operator, I want to configure identity bindings so my workloads can scale Microsoft Entra authentication across many clusters without hitting federated identity credential limits."
 ---
 
-# Set up identity bindings on Azure Kubernetes Service (AKS) (preview)
+# Set up identity bindings on Azure Kubernetes Service (AKS)
 
 Set up [identity bindings](./identity-bindings-concepts.md) on your Azure Kubernetes Service (AKS) clusters to map a user-assigned managed identity (UAMI) across multiple clusters while using a single federated identity credential (FIC). This setup helps you scale Microsoft Entra authentication for workloads without hitting FIC limits.
 
@@ -20,44 +20,8 @@ Set up [identity bindings](./identity-bindings-concepts.md) on your Azure Kubern
 
 - Review [Identity bindings concepts][identity-bindings-concepts] to understand how identity bindings work.
 - Azure CLI version 2.73.0 or later. To check your version, use the `az version` command. To install or update the Azure CLI, see [Install the Azure CLI](/cli/azure/install-azure-cli).
-- The [Azure CLI `aks-preview` extension version `18.0.0b26` or later installed](#install-or-update-the-aks-preview-extension).
-- The [`IdentityBindingPreview` feature flag enabled for your subscription](#enable-the-identitybindingpreview-feature-flag).
 - You need the following Azure permissions on the identity and cluster scope: `Microsoft.ManagedIdentity/userAssignedIdentities/federatedIdentityCredentials/write` and `Microsoft.ContainerService/managedClusters/write`.
 - You need Kubernetes cluster admin (or equivalent) permissions to create `ClusterRole` and `ClusterRoleBinding` resources.
-
-### Install or update the `aks-preview` extension
-
-- Install or update the Azure CLI `aks-preview` extension to the latest version using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`]( /cli/azure/extension#az-extension-update) command:
-
-    ```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update to the latest version if already installed
-    az extension update --name aks-preview
-    ```
-
-### Enable the `IdentityBindingPreview` feature flag
-
-1. Register the `IdentityBindingPreview` feature flag on your Azure subscription using the [`az feature register`]( /cli/azure/feature#az-feature-register) command.
-
-    ```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name IdentityBindingPreview
-    ```
-
-    Feature registration can take up to 15 minutes to complete.
-
-1. Wait for the feature to finish registering using the [`az feature show`]( /cli/azure/feature#az-feature-show) command.
-
-    ```azurecli-interactive
-    az feature show --namespace Microsoft.ContainerService --name IdentityBindingPreview
-    ```
-
-1. Once the feature shows as `Registered`, refresh the provider registration using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Limitations
 
@@ -88,16 +52,6 @@ Set up [identity bindings](./identity-bindings-concepts.md) on your Azure Kubern
     export MI_NAME="ib-test-mi"
     az identity create --resource-group $RESOURCE_GROUP --name $MI_NAME
     ```
-
-## Verify the workload identity webhook version
-
-- Identity binding requires the preview version of the workload identity webhook. Verify the installed webhook version using the following `kubectl get pods` command:
-
-    ```bash
-    kubectl -n kube-system get pods -l azure-workload-identity.io/system=true -o yaml | grep v1.6.0
-    ```
-
-    The output should show `v1.6.0-alpha.1` in the image tag, which confirms the correct version is installed.
 
 ## Get the UAMI IDs
 

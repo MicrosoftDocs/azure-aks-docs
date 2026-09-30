@@ -1,66 +1,78 @@
 ---
-title: Overview of Pod Sandboxing
-description: Learn how to spin up Kata pods to enforce compute isolation across your various workloads
+title: Pod sandboxing in Azure Kubernetes Service (AKS) overview
+description: Learn how to use Pod sandboxing in Azure Kubernetes Service (AKS) to isolate workloads in lightweight pod virtual machines (VMs) for stronger compute isolation.
 ms.topic: how-to
-ms.date: 11/18/2025
+ms.date: 09/17/2026
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security
 ms.author: davidsmatlak
 author: davidsmatlak
+ai-usage: ai-assisted
 ---
 
-# Overview of Pod Sandboxing in Azure Kubernetes Service (AKS)
+# Overview of Pod sandboxing in Azure Kubernetes Service (AKS)
 
-As clusters scale and host workloads from multiple teams or tenants, shared infrastructure can introduce complexity. Customers often need mechanisms to enforce stronger isolation between workloads. This isolation might be driven by performance considerations like separating resource-intensive or bursty workloads from more predictable workloads to avoid disruptions. Or by security requirements that call for isolating sensitive workloads from others.
+As AKS clusters scale and host workloads from multiple teams or tenants, shared infrastructure can make isolation more complex. You might need stronger isolation to prevent resource-intensive or bursty workloads from disrupting predictable workloads. You might also need to isolate sensitive workloads to meet security requirements.
 
-Customers today can opt for either logical or physical isolation. Customers who use logical isolation can [set up different namespaces][kubernetes-namespaces] to divide their deployments. The setup of these namespaces can be involved, and isolation isn't as in depth. With physical isolation, customer costs can increase as different clusters are spun up and not necessarily used to their full capacity.
+To meet these requirements, you might isolate your workloads through logical or physical isolation strategies. For logical isolation, use [Kubernetes namespaces][kubernetes-namespaces] to separate resources and deployments. Namespaces share the underlying cluster infrastructure, so they don't provide the same physical isolation boundary as separate clusters. While separate clusters provide a physical boundary, this strategy can increase costs when the clusters don't use their full capacity.
 
-Pod Sandboxing on AKS introduces the ability to spin up your workloads into separate lightweight pod virtual machines (VMs). Each Pod VM is isolated from other Pod VMs and the host kernel/resources, providing customers effective compute level isolation for their workloads.
+Pod sandboxing on AKS introduces the ability to run your workloads in separate lightweight pod virtual machines (VMs). Each pod VM provides a compute isolation boundary: the workload runs with its own guest kernel and is isolated from the host kernel and workloads in other pod VMs.
 
-Pod Sandboxing is built on the open-source [kata containers][kata-containers] project.
+Pod sandboxing is built on the open-source [Kata Containers][kata-containers] project.
 
 > [!IMPORTANT]
-> Alongside Pod Sandboxing, there are other considerations, such as control plane or storage isolation, that one should consider if hard multitenancy is required.
-> Take a look at the [AKS guidance for a multitenant solution][multi-tenant-guidance] to learn more about considerations to take into account for multitenant setups.
+> The pod VM boundary provides compute isolation only. It doesn't isolate the AKS control plane, storage or data paths, or actions performed by users with cluster-admin access. Pod sandboxing alone doesn't provide complete hard multitenancy. For a multitenant deployment, review the [AKS guidance for multitenant solutions][multi-tenant-guidance] and apply the required identity, network, storage, and governance controls.
 
-## How Pod Sandboxing works
+## Architecture and components
 
-Pod Sandboxing utilizes a few key components to introduce a new workload runtime for Kata containers.
-- Users can specify in their pod's YAML to utilize the Kata specific runtime.
-- The Kata runtime triggers AKS to activate the Kata shim (containerd-shim-kata) instead of the regular containerd-shim.
-- The Kata shim instructs the Virtual Machine Manager to create a Pod VM with the Kata Agent running inside it.
-- Creation and management of containers is delegated to the Kata Agent, which in turn creates and executes container workloads inside the Pod VM.
-- When a Pod VM is deleted, the Kata shim shuts down the VM and releases the resources associated with it back to the container host.
+Pod sandboxing uses the Kata Containers runtime to create a lightweight pod VM for each sandboxed pod. The following diagram shows how the host-side components create and manage the isolated pod VM and how the guest-side components run the workload.
 
-### Why Pod Sandboxing?
+- In the pod manifest, set `runtimeClassName: kata-vm-isolation` to select the Kata Containers runtime.
+- Containerd invokes the Kata shim (`containerd-shim-kata-v2`) instead of the standard runtime shim.
+- The Kata shim starts the Cloud Hypervisor virtual machine monitor (VMM), which creates a pod VM with a separate guest kernel and the Kata agent.
+- The Kata agent creates and manages the containers and workload processes inside the pod VM.
+- When the pod VM is deleted, the Kata shim shuts down the pod VM and releases its resources back to the container host.
 
-Pod Sandboxing introduces an easy method to isolate your workloads in individual Pod VMs. The boundary of workloads isolated on Pod VMs is the VM itself, effectively cutting it off from other workloads and the host. Each VM also comes with its own guest kernel, separate from the host kernel. Along with other security measures and/or data protection controls, Pod Sandboxing can help augment a cluster's security posture for more defense compared to traditional deployments.
+## Benefits and use cases
 
-#### Workload isolation
+Pod sandboxing isolates each sandboxed pod in a lightweight pod VM with its own guest kernel. This compute boundary separates the workload from the host kernel and workloads in other pod VMs. Combine pod sandboxing with controls such as network policies and Azure Policy to address network and governance risks that the pod VM boundary doesn't cover. For guidance on selecting controls for multitenant deployments, see [AKS guidance for multitenant solutions][multi-tenant-guidance].
 
-By using Pod Sandboxing, cluster operators can feel more at ease collocating workloads on their clusters to take full advantage of the resources. With the isolation boundary of a workload being the Pod VM, the blast radius by extension is also limited to the Pod VM.
+### Common use cases
 
-Pod Sandboxing allows a user to declare resource limits and requests for their workloads. If no quotas are declared, default values are used. If one workload is excessively resource hungry (for example, a noisy neighbor), isolating it in a pod VM would limit the workload to the resources that are allocated to that pod VM. Likewise, if a workload brings down the pod VM, other workloads sitting on the cluster remains unaffected.
+Pod sandboxing can help you:
 
-#### Lift and shift
+- Host workloads from different tenants on the same AKS cluster while providing a separate compute isolation boundary for each sandboxed pod.
+- Isolate untrusted workloads from the host kernel and workloads in other pod VMs while continuing to use shared cluster capacity.
+- Protect sensitive or high-value workloads from workloads running in other pod VMs.
+- Reduce the effect of resource-intensive or bursty workloads on other sandboxed pods by applying CPU and memory requests and limits to each pod VM.
+- Limit the compute blast radius of a workload failure to its pod VM.
 
-A touted benefit of Kata is the ease of integration. An operator can take their existing deployments and add one line to the pod's deployment YAML to spin it up as a Kata pod.
+### Workload isolation
 
-#### Flexibility
+:::image type="content" source="media/concepts-pod-sandboxing/workload-isolation.png" alt-text="Screenshot of architecture diagram showing workload isolation in AKS Pod sandboxing." lightbox="media/concepts-pod-sandboxing/workload-isolation.png":::
 
-Kata pods are also flexible, in the sense they can be plugged into most workloads and placed on cluster alongside normal, non-Kata workloads. A user can opt to mix Kata and non-Kata workloads on the same cluster with relatively little effect to either type of workloads.
+Pod sandboxing lets you colocate workloads on shared cluster nodes while maintaining a separate compute isolation boundary for each sandboxed pod.
 
-#### Open source
+You can declare resource requests and limits for your workloads. AKS applies default values when you omit them. The pod VM limits a resource-intensive workload to the CPU and memory allocated to that VM. If a workload causes its pod VM to fail, the compute isolation boundary protects workloads in other pod VMs from that failure.
 
-Many of the components that Pod Sandboxing is based on are open source. That includes components such as the [Cloud Hypervisor][cloud-hypervisor] Virtual Machine Monitor (VMM), [Kata runtime][kata-containers], and the [guest/host kernels][azure-linux].
+### Flexibility
+
+You can run sandboxed and standard pods in the same cluster. This flexibility lets you apply pod VM isolation only to workloads that require it.
+
+### Open-source components
+
+Pod sandboxing uses open-source components, including the [Cloud Hypervisor][cloud-hypervisor] VMM and the [Kata Containers][kata-containers] runtime. Open development provides transparency into the isolation components and enables community review. The architecture also separates the guest kernel in each pod VM from the [Azure Linux][azure-linux] host kernel.
+
+## Migrate existing workloads
+
+For a basic deployment, add the Kata runtime class to an existing pod specification to run the workload in a pod VM. This manifest change doesn't guarantee behavior identical to a pod that uses the standard `runc` runtime. Before migration, validate the workload's operational behavior and Kubernetes feature compatibility, and account for the pod VM's resource sizing and overhead. For more information, see [Considerations for Pod sandboxing][considerations-pod-sandboxing].
 
 ## Next steps
 
-- Learn about some considerations that should be taken into account before you deploy your pods on Pod Sandboxing [here][considerations-pod-sandboxing].
-- Once you're ready, [deploy Pod Sandboxing on AKS][deploy-pod-sandboxing].
+- Review [Pod sandboxing considerations][considerations-pod-sandboxing] before deployment.
+- [Deploy Pod sandboxing on AKS][deploy-pod-sandboxing].
 
 <!--- External Links --->
-[create-azure-subscription]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [kata-containers]: https://katacontainers.io/
 [cloud-hypervisor]: https://github.com/cloud-hypervisor/cloud-hypervisor
 [azure-linux]: https://github.com/microsoft/azurelinux

@@ -6,14 +6,16 @@ ms.author: allyford
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
-ms.date: 03/07/2025
+ms.date: 08/26/2026
+ai-usage: ai-assisted
+
 # Customer intent: As a Kubernetes administrator, I want to install custom certificate authorities on my AKS cluster nodes so that I can ensure secure connections to private registries and maintain the trustworthiness of the node's trust store.
 ---
 
 # Use custom certificate authorities (CAs) in Azure Kubernetes Service (AKS)
 
 
-Custom Certificate Authority (CA) allows you to add up to 10 base64-encoded certificates to your node's trust store. This feature is often needed when certificate authorities (CAs) are required to be present on the node, like when connecting to a private registry.  
+Custom Certificate Authority (CA) support lets you add up to 10 base64-encoded certificates to your node's trust store. For new clusters, the CA certificate content can't exceed 35 KB. You often need this feature when the node requires certificate authorities (CAs), such as when connecting to a private registry.
 
 This article shows you how to create custom CAs and apply them to your AKS clusters.
 
@@ -30,10 +32,11 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 - Windows node pools aren't supported.
 - Installing different CAs in the same cluster isn't supported.
+- For new clusters, the CA certificate content can't exceed 35 KB.
 
 ## Create a certificate file
 
-- Create a text file containing up to 10 blank line separated certificates. When you pass this file to your cluster, the certificates are installed in the trust stores of the AKS node.
+- Create a text file containing up to 10 blank line-separated certificates. For new clusters, the CA certificate content in the file can't exceed 35 KB. When you pass this file to your cluster, the certificates are installed in the trust stores of the AKS node.
 
     Example text file:
 
@@ -111,24 +114,37 @@ If containerd doesn't pick up new certificates, run the `systemctl restart conta
 
 [!INCLUDE [custom-ca-preview-retirement](./includes/custom-ca-preview-retirement.md)]
 
-### Update your node pools to remove the Custom CA Trust property
+### Remove the Custom CA Trust property from your node pools
+
+Current Azure CLI releases don't include the `--disable-custom-ca-trust` option. To remove the retiring `enableCustomCATrust` property, use a generic resource update for each affected node pool. The `2025-08-02-preview` API is the last API version that exposes this property.
 
 ```azurecli
-az aks nodepool update \
+POOL_ID=$(az aks nodepool show \
   --resource-group <resource-group> \
   --cluster-name <cluster-name> \
   --name <node-pool-name> \
-  --disable-custom-ca-trust
+  --query id \
+  --output tsv)
+
+az resource update \
+  --ids "$POOL_ID" \
+  --api-version 2025-08-02-preview \
+  --set properties.enableCustomCATrust=false
 ```
 
-### Update your clusters to remove the Custom CA Trust property
+This command retrieves the complete node pool resource, updates `enableCustomCATrust`, and sends the updated resource back. It preserves the other node pool properties.
+
+Verify that the property is disabled and that the node pool update succeeded:
 
 ```azurecli
-az aks update \
-  --resource-group <resource-group> \
-  --name <cluster-name> \
-  --disable-custom-ca-trust
+az rest \
+  --method get \
+  --url "https://management.azure.com${POOL_ID}?api-version=2025-08-02-preview" \
+  --query "properties.{enableCustomCATrust:enableCustomCATrust,provisioningState:provisioningState}" \
+  --output json
 ```
+
+Repeat these steps for every node pool where `enableCustomCATrust` is enabled. The expected output shows `enableCustomCATrust` set to `false` and `provisioningState` set to `Succeeded`.
 
 If you want Custom CA Trust enabled on your clusters after this retirement, use `--custom-ca-trust-certificates` and provide a path to a certificate file.
 
