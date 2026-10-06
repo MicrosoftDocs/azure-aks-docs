@@ -3,7 +3,7 @@ title: Connect your Azure Kubernetes Service (AKS) cluster to AI agents using th
 description: Learn how to install and use the Model Context Protocol (MCP) server to intelligently troubleshoot and manage your Azure Kubernetes Service (AKS) clusters.
 author: juliayin
 ms.topic: how-to
-ms.date: 01/27/2026
+ms.date: 10/06/2026
 ms.author: juliayin
 ms.service: azure-kubernetes-service
 # Customer intent: "As a developer managing Kubernetes clusters, I want to use the AKS extension for my code editor, so that I can efficiently view and manage my clusters directly from my development environment."
@@ -22,7 +22,7 @@ The AKS MCP server connects to Azure using the Azure SDK and provides a set of t
 - Enabling best practices and recommended features
 - Manage Azure Fleet operations for multi-cluster scenarios
 
-The AKS MCP server is fully open-sourced project, with example templates and Helm configurations available in the GitHub repository.
+The AKS MCP server is a fully open-source project. For source code and releases, see the [AKS MCP GitHub repository](https://github.com/Azure/aks-mcp).
 
 ## When to use the AKS MCP server
 
@@ -38,7 +38,7 @@ The AKS MCP server can be used with any compatible AI assistant, including the [
   - Correlate signals across Kubernetes and Azure resources
   - Apply changes and enable new features directly on your cluster
 
-All actions performed through the AKS MCP server are constrained by Kubernetes Role-Based Access Control (RBAC) and Azure RBAC. By default, the AKS MCP server inherits the user's permissions when accessing cluster and Azure resources. To customize the roles and permissions of the AKS MCP server, deploy the remote AKS MCP server mode with built-in RBAC control.
+All actions you perform through the AKS MCP server are constrained by Kubernetes Role-Based Access Control (RBAC) and Azure RBAC. The AKS MCP server inherits your permissions when accessing cluster and Azure resources.
 
 ## Available tools
 
@@ -52,8 +52,6 @@ There are three sets of permissions you can enable for the AKS MCP server: read-
 For example:
 ```
 "args": [
-  "--transport",
-  "stdio",
   "--access-level",
   "readwrite"
 ]
@@ -301,13 +299,12 @@ eBPF.
 
 ## Getting started with the AKS MCP server
 
-The AKS MCP server has two modes: local and remote. In this section, we cover the use cases and installation processes for both modes.
+The MCP server runs on your local machine and connects to AKS by using your existing permissions. You can quickly set up your local AI agent with AKS expertise and tooling. The server uses the current cluster context and enforces your Kubernetes and Azure RBAC permissions.
 
-### Local MCP server
+> [!NOTE]
+> As of version 0.0.20, remote deployments with Helm or containers aren't supported. Use the local binary.
 
-In local mode, the MCP server runs on a developer’s local machine and connects to AKS using the developer’s existing permissions. This mode is best for quickly setting up your local AI agent with AKS expertise and tooling without requiring any cluster-side components. Local mode can use the current cluster context and enforces the developer’s Kubernetes and Azure RBAC permissions. By default, the local AKS MCP server supports the STDIO and SSE transport modes.
-
-#### Prerequisites
+### Prerequisites
 
 Before installing the AKS MCP server, set up [Azure CLI](/cli/azure/install-azure-cli) and authenticate:
 
@@ -315,7 +312,7 @@ Before installing the AKS MCP server, set up [Azure CLI](/cli/azure/install-azur
 az login
 ```
 
-#### [Visual Studio Code with GitHub Copilot (Recommended)](#tab/vscode)
+### [Visual Studio Code with GitHub Copilot (Recommended)](#tab/vscode)
 
 The easiest way to get started with AKS-MCP is through the **Azure Kubernetes Service Extension for VS Code**. The AKS extension handles binary downloads, updates, and configuration automatically, ensuring you always have the latest version with optimal settings.
 
@@ -341,7 +338,7 @@ Try a prompt like *"List all my AKS clusters"* to start using tools from the AKS
 > [!TIP]
 > **WSL Configuration**: If you're using VS Code on Windows with WSL, use `"command": "wsl"` to invoke the WSL binary. If VS Code is running inside WSL (Remote-WSL), call the binary directly or use a bash wrapper instead.
 
-#### [Manual Binary Installation](#tab/manual)
+### [Manual Binary Installation](#tab/manual)
 
 For direct binary usage without the VS Code extension:
 
@@ -371,7 +368,6 @@ Create a `.vscode/mcp.json` file in your workspace root with the path to your do
       "type": "stdio",
       "command": "<path-to-binary>",
       "args": [
-        "--transport", "stdio"
       ]
     }
   }
@@ -389,7 +385,6 @@ Add to your VS Code User Settings JSON (`Ctrl+,` or `Cmd+,`, then search for "mc
       "type": "stdio",
       "command": "<path-to-binary>",
       "args": [
-        "--transport", "stdio"
       ]
     }
   }
@@ -407,60 +402,7 @@ Add to your VS Code User Settings JSON (`Ctrl+,` or `Cmd+,`, then search for "mc
 > [!TIP]
 > If you don't see the AKS-MCP tools after restarting, check the VS Code output panel for any MCP server connection errors and verify your binary path in `.vscode/mcp.json`.
 
-#### [Docker](#tab/docker)
-
-You can run the AKS-MCP server using the official Docker image from Docker MCP Toolkit or as a containerized MCP configuration.
-
-**Option 1: Docker MCP Toolkit**
-
-1. Open Docker Desktop.
-1. Select **MCP Toolkit** in the left sidebar.
-1. Search for "aks" in Catalog tab.
-1. Select the AKS-MCP server card.
-1. Enable the server by selecting **+** in the top right corner.
-1. Configure the server using **Configuration** tab:
-   - **azure_dir** `[REQUIRED]`: Absolute path to your Azure credentials directory (for example, `/home/user/.azure`)
-   - **kubeconfig** `[REQUIRED]`: Absolute path to your kubeconfig file (for example, `/home/user/.kube/config`)
-   - **access_level** `[REQUIRED]`: Set to `readonly`, `readwrite`, or `admin` as needed
-   - **container_user** `[OPTIONAL]`: Username or UID to run the container as (default is `mcp`). Use your host user ID (for example, `1000`) if running Docker Engine on Linux.
-
-> [!NOTE]
-> On Windows, Azure credentials don't work by default. Configure a custom Azure directory with token cache encryption disabled, or use the long-lived servers option to authenticate inside the container.
-
-**Option 2: Containerized MCP configuration**
-
-Mount credentials from host (recommended):
-
-```json
-{
-  "mcpServers": {
-    "aks": {
-      "type": "stdio",
-      "command": "docker",
-      "args": [
-        "run", "-i", "--rm",
-        "--user", "<your-user-id>",
-        "-v", "~/.azure:/home/mcp/.azure",
-        "-v", "~/.kube:/home/mcp/.kube",
-        "ghcr.io/azure/aks-mcp:latest",
-        "--transport", "stdio"
-      ]
-    }
-  }
-}
-```
-
-To fetch credentials inside the container instead, omit the volume mounts and run the following commands after starting the container:
-
-```bash
-# Login to Azure CLI
-docker exec -it <container-id> az login --use-device-code
-
-# Get kubeconfig
-docker exec -it <container-id> az aks get-credentials -g <resource-group> -n <cluster-name>
-```
-
-#### [Custom Client Installation](#tab/custom)
+### [Custom Client Installation](#tab/custom)
 
 For other MCP-compatible AI clients like Claude Desktop, configure the server in your MCP configuration:
 
@@ -470,7 +412,6 @@ For other MCP-compatible AI clients like Claude Desktop, configure the server in
     "aks": {
       "command": "<path-to-binary>",
       "args": [
-        "--transport", "stdio"
       ]
     }
   }
@@ -480,7 +421,7 @@ For other MCP-compatible AI clients like Claude Desktop, configure the server in
 You can also run the server directly from the command line:
 
 ```bash
-./aks-mcp --transport stdio
+./aks-mcp
 ```
 
 **Command-line options:**
@@ -490,217 +431,19 @@ You can also run the server directly from the command line:
 | `--access-level` | Access level (`readonly`, `readwrite`, `admin`) | `readonly` |
 | `--enabled-components` | Comma-separated list of enabled components | all |
 | `--allow-namespaces` | Comma-separated list of allowed Kubernetes namespaces | all |
-| `--host` | Host to listen (SSE/HTTP transport only) | `127.0.0.1` |
-| `--port` | Port to listen (SSE/HTTP transport only) | `8000` |
-| `--transport` | Transport mechanism (`stdio`, `sse`, `streamable-http`) | `stdio` |
 | `--timeout` | Timeout for command execution in seconds | `600` |
 | `--log-level` | Log level (`debug`, `info`, `warn`, `error`) | `info` |
 
 **Environment variables:**
 
 - `USE_LEGACY_TOOLS`: Set to `true` to use legacy specialized tools instead of unified tools (default: `false`)
-- Standard Azure authentication environment variables are supported (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_SUBSCRIPTION_ID`)
+- Standard Azure authentication environment variables are supported (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_SUBSCRIPTION_ID`).
 
 ---
-
-### Remote MCP server
-
-In remote mode, the MCP server runs as a workload inside the AKS cluster or any compute of your choosing. This mode is best for production environments with shared tooling, consistent permissions across users, and full access control using Kubernetes ServiceAccount and Workload Identity. The remote AKS MCP server uses the HTTP protocol to facilitate interactions between your AI assistant and AKS cluster.
-
-#### Prerequisites
-
-- AKS cluster with Kubernetes 1.19+
-- Helm 3.8+
-- Azure CLI installed and authenticated (`az login`)
-
-#### Install with the Helm chart
-
-Clone the repository and install the AKS-MCP Helm chart:
-
-```bash
-git clone https://github.com/Azure/aks-mcp.git
-cd aks-mcp/chart
-
-helm install aks-mcp . --namespace aks-mcp --create-namespace
-```
-
-For the complete list of configuration parameters, see the [Helm chart documentation](https://github.com/Azure/aks-mcp/tree/main/chart).
-
-#### Configure authentication
-
-Choose an authentication method based on your environment and security requirements:
-
-##### [Workload Identity (Recommended)](#tab/workload-identity)
-
-Workload Identity provides passwordless authentication by linking a Kubernetes ServiceAccount to an Azure Managed Identity.
-
-**1. Enable OIDC on your AKS cluster**
-
-```bash
-az aks update \
-  --resource-group <your-resource-group> \
-  --name <your-aks-cluster> \
-  --enable-oidc-issuer \
-  --enable-workload-identity
-```
-
-**2. Create a Managed Identity and assign RBAC permissions**
-
-```bash
-# Create identity
-az identity create --resource-group <your-resource-group> --name aks-mcp-identity --location <your-location>
-
-# Get IDs
-IDENTITY_CLIENT_ID=$(az identity show --resource-group <your-resource-group> --name aks-mcp-identity --query "clientId" -o tsv)
-IDENTITY_PRINCIPAL_ID=$(az identity show --resource-group <your-resource-group> --name aks-mcp-identity --query "principalId" -o tsv)
-
-# Assign Reader role (use Contributor for readwrite access)
-az role assignment create --role "Reader" --assignee-object-id $IDENTITY_PRINCIPAL_ID --assignee-principal-type ServicePrincipal --scope "/subscriptions/<subscription-id>"
-```
-
-**3. Create a federated identity credential**
-
-```bash
-AKS_OIDC_ISSUER=$(az aks show --resource-group <your-resource-group> --name <your-aks-cluster> --query "oidcIssuerProfile.issuerUrl" -o tsv)
-
-az identity federated-credential create \
-  --name "aks-mcp-federated-credential" \
-  --identity-name aks-mcp-identity \
-  --resource-group <your-resource-group> \
-  --issuer $AKS_OIDC_ISSUER \
-  --subject "system:serviceaccount:aks-mcp:aks-mcp" \
-  --audience api://AzureADTokenExchange
-```
-
-> [!IMPORTANT]
-> Create the federated credential **before** installing the Helm chart.
-
-**4. Install with Workload Identity enabled**
-
-```bash
-helm install aks-mcp . \
-  --namespace aks-mcp \
-  --create-namespace \
-  --set workloadIdentity.enabled=true \
-  --set azure.clientId=$IDENTITY_CLIENT_ID \
-  --set azure.subscriptionId=<your-subscription-id>
-```
-
-##### [OAuth for Read-Write Access](#tab/oauth)
-
-Enable OAuth authentication to require user sign-in for read-write or admin operations:
-
-```bash
-helm install aks-mcp . \
-  --namespace aks-mcp \
-  --create-namespace \
-  --set app.accessLevel=readwrite \
-  --set oauth.enabled=true \
-  --set oauth.tenantId=<your-tenant-id> \
-  --set oauth.clientId=<your-oauth-client-id> \
-  --set azure.subscriptionId=<your-subscription-id>
-```
-
-##### [Service Principal with Existing Secret](#tab/service-principal)
-
-Use a Kubernetes secret containing Service Principal credentials:
-
-```bash
-# Create secret first
-kubectl create secret generic azure-credentials \
-  --namespace aks-mcp \
-  --from-literal=tenant-id=<your-tenant-id> \
-  --from-literal=client-id=<your-client-id> \
-  --from-literal=client-secret=<your-client-secret> \
-  --from-literal=subscription-id=<your-subscription-id>
-
-# Install with existing secret
-helm install aks-mcp . \
-  --namespace aks-mcp \
-  --set app.accessLevel=readonly \
-  --set azure.existingSecret=azure-credentials
-```
-
-##### [Direct Credentials](#tab/direct)
-
-Pass credentials directly via Helm values (not recommended for production):
-
-```bash
-helm install aks-mcp . \
-  --namespace aks-mcp \
-  --create-namespace \
-  --set azure.tenantId=<your-tenant-id> \
-  --set azure.clientId=<your-client-id> \
-  --set azure.clientSecret=<your-client-secret>
-```
-
----
-
-#### Enable Ingress with Azure App Routing
-
-Expose the MCP server externally using Azure App Routing:
-
-```bash
-# Enable App Routing on your cluster
-az aks approuting enable --resource-group <your-resource-group> --name <your-cluster-name>
-
-# Install with Ingress enabled
-helm install aks-mcp . \
-  --namespace aks-mcp \
-  --create-namespace \
-  --set ingress.enabled=true \
-  --set ingress.hosts[0].host=aks-mcp.example.com \
-  --set ingress.hosts[0].paths[0].path=/ \
-  --set ingress.hosts[0].paths[0].pathType=Prefix \
-  --set azure.existingSecret=azure-credentials
-```
-
-#### Connect your MCP client
-
-After deployment, connect your AI assistant to the remote MCP server:
-
-```bash
-# Port forward for local testing
-kubectl port-forward svc/aks-mcp 8000:8000 -n aks-mcp
-```
-
-Configure your MCP client to connect:
-
-```json
-{
-  "mcpServers": {
-    "aks-mcp": {
-      "url": "http://localhost:8000",
-      "transport": "streamable-http"
-    }
-  }
-}
-```
-
-For in-cluster access, use: `http://aks-mcp.aks-mcp.svc.cluster.local:8000`
-
-#### Helm configuration reference
-
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
-| `workloadIdentity.enabled` | Enable Azure Workload Identity | `false` |
-| `azure.clientId` | Azure Client ID | `""` |
-| `azure.tenantId` | Azure Tenant ID | `""` |
-| `azure.clientSecret` | Azure Client Secret | `""` |
-| `azure.subscriptionId` | Azure Subscription ID | `""` |
-| `azure.existingSecret` | Use an existing Kubernetes secret | `""` |
-| `app.accessLevel` | Access level: `readonly`, `readwrite`, `admin` | `readonly` |
-| `app.transport` | Transport: `stdio`, `sse`, `streamable-http` | `streamable-http` |
-| `oauth.enabled` | Enable OAuth authentication | `false` |
-| `ingress.enabled` | Enable Ingress | `false` |
 
 ## Uninstall the AKS MCP server
 
-The process of uninstalling the AKS MCP server depends on the deployment mode and where it's currently running.
-
-### [Local Installation](#tab/uninstall-local)
-
-#### VS Code with AKS Extension
+### VS Code with AKS Extension
 
 1. Open the **Command Palette** (`Ctrl+Shift+P` on Windows/Linux or `Cmd+Shift+P` on macOS).
 1. Run **MCP: List Servers**.
@@ -714,67 +457,9 @@ Alternatively, manually remove the server configuration:
 1. Delete the `aks-mcp-server` entry from the `servers` or `github.copilot.chat.mcp.servers` object.
 1. Delete the AKS-MCP binary from your system (location varies based on installation method).
 
-#### Docker
-
-If using Docker MCP Toolkit:
-
-1. Open Docker Desktop.
-1. Select **MCP Toolkit** in the left sidebar.
-1. Find the AKS-MCP server and disable it.
-
-If using a containerized configuration, stop and remove the container:
-
-```bash
-docker stop <container-id>
-docker rm <container-id>
-```
-
-#### Other MCP Clients
+### Other MCP Clients
 
 Remove the `aks` or `aks-mcp` entry from your MCP client configuration file (for example, Claude Desktop's `claude_desktop_config.json`).
-
-### [Remote Installation](#tab/uninstall-remote)
-
-#### Remove the Helm release
-
-```bash
-helm uninstall aks-mcp --namespace aks-mcp
-```
-
-#### Clean up the namespace (optional)
-
-```bash
-kubectl delete namespace aks-mcp
-```
-
-#### Clean up Azure resources (Workload Identity only)
-
-If you configured Workload Identity, remove the associated Azure resources:
-
-```bash
-# Delete the federated credential
-az identity federated-credential delete \
-  --name "aks-mcp-federated-credential" \
-  --identity-name aks-mcp-identity \
-  --resource-group <your-resource-group>
-
-# Remove role assignments
-IDENTITY_PRINCIPAL_ID=$(az identity show --resource-group <your-resource-group> --name aks-mcp-identity --query "principalId" -o tsv)
-az role assignment delete --assignee $IDENTITY_PRINCIPAL_ID --scope "/subscriptions/<subscription-id>"
-
-# Delete the managed identity
-az identity delete --resource-group <your-resource-group> --name aks-mcp-identity
-```
-
-#### Delete the Kubernetes secret (Service Principal only)
-
-If you created a secret for Service Principal credentials:
-
-```bash
-kubectl delete secret azure-credentials --namespace aks-mcp
-```
-
----
 
 ## Common issues and troubleshooting
 
@@ -787,28 +472,11 @@ Symptoms:
 - No resources are visible
 
 Likely causes:
-- User or MCP identity doesn't have sufficient permissions
-- Incorrect ServiceAccount binding
-- Misconfigured kubeconfig context (local mode)
+- User doesn't have sufficient permissions
+- Misconfigured kubeconfig context
 
 Resolution:
-- Local mode: Check that you have sufficient permissions to access the cluster. Verify that you are in the right cluster and subscription context.
-- Remote mode: Verify the ClusterRole bindings for the ServiceAccount used by the MCP server
-
-### Azure API calls fail
-
-Symptoms:
-- call_az tools return authentication or authorization errors
-
-Likely causes:
-- Workload Identity not enabled for your cluster
-- ServiceAccount not federated
-- Missing Azure RBAC assignments
-
-Resolution:
-- Check that Workload Identity is enabled on your cluster
-- Verify federated identity configuration
-- Assign appropriate Azure roles to the managed identity
+- Check that you have sufficient permissions to access the cluster. Verify that you are in the right cluster and subscription context.
 
 ## Next steps
 Learn more about the intelligent features built natively for AKS:
