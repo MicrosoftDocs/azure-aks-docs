@@ -513,6 +513,8 @@
               href: aks-desktop-deploy-troubleshooting.md
             - name: Use AI with AKS desktop
               href: aks-desktop-deploy-ai-assistant.md
+            - name: Use Headlamp plugins
+              href: aks-desktop-headlamp-plugins.md
         - name: Use cluster extensions
           items:
             - name: About cluster extensions
