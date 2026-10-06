@@ -154,7 +154,7 @@ You can select one of the following [Azure storage redundancy SKUs][storage-skus
 > To use the provisioned v2 billing model for Azure Files, you must use the Azure Files CSI driver [version 1.35.0](https://github.com/kubernetes-sigs/azurefile-csi-driver/releases/tag/v1.35.0) or later.
 
 > [!NOTE]
-> For new deployments, we recommend SSD provisioned v2 (`PremiumV2_LRS` or `PremiumV2_ZRS`) for most workloads. SSD file shares offer higher performance and low-latency disk support for I/O-intensive workloads. The minimum file share capacity for Premium accounts is 100 GiB.
+> For new deployments, we recommend SSD provisioned v2 (`PremiumV2_LRS` or `PremiumV2_ZRS`) for most workloads. SSD file shares offer higher performance and low-latency disk support for I/O-intensive workloads. The minimum file share capacity for Premium accounts is 32 GiB.
 
 ## Create custom storage classes for dynamic PVs with Azure Files
 
@@ -225,7 +225,7 @@ The following table includes parameters you can use to define a custom storage c
 | `shareAccessTier` | [Access tier for file share][storage-tiers] | General purpose v2 account can choose between `TransactionOptimized` (default), `Hot`, and `Cool`. Premium storage account type for file shares only. | No | Empty. Use default setting for different storage account types. |
 | `shareName` | Specify Azure file share name. | Existing or new Azure file share name. | No | If empty, driver generates an Azure file share name. |
 | `shareNamePrefix` | Specify Azure file share name prefix created by driver. | Share name can only contain lowercase letters, numbers, hyphens, and length should be fewer than 21 characters. | No | |
-| `skuName` | Azure Files storage account type (alias: `storageAccountType`) | `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS`, `StandardV2_LRS`, `StandardV2_ZRS`, `StandardV2_GRS`, `StandardV2_GZRS`, `PremiumV2_LRS`, `PremiumV2_ZRS` | No | `Standard_LRS` <br> Minimum file share size for Premium account type is 100 GB. <br> ZRS account type is supported in limited regions. <br> NFS file share only supports Premium account type. <br> Standard V2 SKU names are for [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). |
+| `skuName` | Azure Files storage account type (alias: `storageAccountType`) | `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS`, `StandardV2_LRS`, `StandardV2_ZRS`, `StandardV2_GRS`, `StandardV2_GZRS`, `PremiumV2_LRS`, `PremiumV2_ZRS` | No | `Standard_LRS` <br> Minimum file share size for Premium account type is 32 GiB. <br> ZRS account type is supported in limited regions. <br> NFS file share only supports Premium account type. <br> Standard V2 SKU names are for [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). |
 | `storageAccount` | Specify an Azure storage account name. | storageAccountName | No | When a specific storage account name is not provided, the driver will look for a suitable storage account that matches the account settings within the same resource group. If it fails to find a matching storage account, it will create a new one. However, if a storage account name is specified, the storage account must already exist. |
 | `storageEndpointSuffix` | Specify Azure storage endpoint suffix. | `core.windows.net`, `core.chinacloudapi.cn`, etc. | No | If empty, driver uses default storage endpoint suffix according to cloud environment. For example, `core.windows.net`. |
 | `subscriptionID` | Specify Azure subscription ID where Azure file share is created. | Azure subscription ID | No | If not empty, `resourceGroup` must be provided. |
@@ -312,7 +312,7 @@ A PVC uses the storage class object to dynamically provision an Azure file share
     ```
 
     > [!NOTE]
-    > If using the `Premium_LRS` SKU for your storage class, the minimum value for `storage` must be `100Gi`.
+    > If using the `Premium_LRS` SKU for your storage class, the minimum value for `storage` must be `100Gi`. If using the `PremiumV2_LRS` SKU for your storage class, the minimum value for `storage` can be `32Gi`
 
 1. Create the PVC using the [`kubectl apply`][kubectl-apply] command.
 
