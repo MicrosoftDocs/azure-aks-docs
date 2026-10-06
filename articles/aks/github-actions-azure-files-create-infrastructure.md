@@ -112,14 +112,14 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 
 ## Create an Azure file share
 
-Before you can use an Azure Files file share as a Kubernetes volume, you need to create an Azure storage account and file share. In this guide, we use *Azure file share Premium SMB* with support for metadata caching. The minimum is *100 Gb* for each share you create.
+Before you can use an Azure Files file share as a Kubernetes volume, you need to create an Azure storage account and file share. In this guide, we use *Azure file share Premium SMB* with support for metadata caching. The minimum is *32 GiB* for each share you create.
 
 1. Create a storage account using the [`az storage account create`](/cli/azure/storage/account#create) command. The following command creates a storage account using the Premium_LRS SKU.
 
     ```azurecli-interactive
     az storage account create --name "${STORAGE_ACCOUNT_NAME}" --resource-group "${AKS_AND_STORAGE_ACCOUNT_RG}" \
         --location "${AKS_STORAGE_ACCOUNT_LOCATION}" \
-        --sku Premium_LRS \
+        --sku PremiumV2_LRS \
         --kind FileStorage
     ```
 
@@ -129,10 +129,10 @@ Before you can use an Azure Files file share as a Kubernetes volume, you need to
     export AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string --name "${STORAGE_ACCOUNT_NAME}" --resource-group "${AKS_AND_STORAGE_ACCOUNT_RG}" --query connectionString -o tsv)
     ```
 
-1. Create the 100 Gb Premium file share using the [`az storage share create`](/cli/azure/storage/share#create) command. In this example, we use *metadatacaching* as the share name. If you change this name, you also have to change the `arc-runners-set-pv.yaml` file to reflect this change.
+1. Create the 32 GiB Premium file share using the [`az storage share create`](/cli/azure/storage/share#create) command. In this example, we use *metadatacaching* as the share name. If you change this name, you also have to change the `arc-runners-set-pv.yaml` file to reflect this change.
 
     ```azurecli-interactive
-    az storage share create --name metadatacaching --quota 100 --connection-string "${AZURE_STORAGE_CONNECTION_STRING}"
+    az storage share create --name metadatacaching --quota 32 --connection-string "${AZURE_STORAGE_CONNECTION_STRING}"
     ```
 
 ## Install the ARC runners scale set controller
@@ -210,7 +210,7 @@ We use the Azure Files file share in the following ways:
       namespace: arc-runners
     ```
 
-* As an **ephemeral volume** for the GitHub runners work folder. We also create two storage classes: Azure Files Standard (`github-azurefile`) and Azure File Premium (`github-azurefile-premium`). These classes allow you to create and delete volumes on demand. When a GitHub job runs, a new runner pod is created on Kubernetes and a new Azure File file share is created and mounted. The volume lives only during the job run. Standard class allows any volume size and Premium allows a minimum of *100 Gb* volume. You can select whichever class you prefer. Keep in mind that Premium gives you a better performance. You can customize the `arc-runners-storage-class-files.yaml` file, but it's not required.
+* As an **ephemeral volume** for the GitHub runners work folder. We also create two storage classes: Azure Files Standard (`github-azurefile`) and Azure File Premium (`github-azurefile-premium`). These classes allow you to create and delete volumes on demand. When a GitHub job runs, a new runner pod is created on Kubernetes and a new Azure File file share is created and mounted. The volume lives only during the job run. Standard class allows any volume size and Premium allows a minimum of *32 GiB* volume. You can select whichever class you prefer. Keep in mind that Premium gives you a better performance. You can customize the `arc-runners-storage-class-files.yaml` file, but it's not required.
 
 ### Create the persistent volume and persistent volume claim
 
@@ -239,7 +239,7 @@ containerMode:
     storageClassName: "github-azurefile-premium" # or "github-azurefile" for Standard_LRS 
     resources: 
       requests: 
-        storage: 100Gi # 100Gi minimum to premium or any size when using Standard_LRS "github-azurefile" storage class 
+        storage: 32Gi # 32Gi minimum to premium or any size when using Standard_LRS "github-azurefile" storage class 
 template: 
   spec: 
   securityContext: 
@@ -272,7 +272,7 @@ In this example, we use a customized version the Kubernetes `containerMode` 
 The following parameters aren't mandatory to change:
 
 * `storageClassName`: Choose between "github-azurefile-premium" and "github-azurefile".
-* `storage`: Choose the size of the storage. 100 Gb minimum for Premium.
+* `storage`: Choose the size of the storage. 32 GiB minimum for Premium.
 
 The other Helm parameters are set on the `helm install` command using the `--set` option.
 
