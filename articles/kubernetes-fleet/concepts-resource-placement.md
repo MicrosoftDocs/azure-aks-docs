@@ -1,7 +1,7 @@
 ---
 title: "Introducing Azure Kubernetes Fleet Manager intelligent resource placement"
 description: This article describes the concepts of Azure Kubernetes Fleet Manager intelligent resource placement
-ms.date: 09/24/2026
+ms.date: 10/05/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -809,7 +809,7 @@ kubectl describe resourceplacement place-cmap-1
 
 :::zone target="docs" pivot="cluster-scope"
 
-* **ClusterResourcePlacementStatus (preview)**: View placement status through a namespace-scoped `ClusterResourcePlacementStatus` resource. Use this resource when namespace-scoped users need to view placement status without granting cluster-level permissions. For more information, see the [ClusterResourcePlacementStatus section](#use-clusterresourceplacementstatus-resource-preview).
+* **ClusterResourcePlacementStatus**: View placement status through a namespace-scoped `ClusterResourcePlacementStatus` resource. Use this resource when namespace-scoped users need to view placement status without granting cluster-level permissions. For more information, see the [ClusterResourcePlacementStatus section](#use-clusterresourceplacementstatus-resource).
 
 Both approaches provide the following information:
 
@@ -922,23 +922,20 @@ Events:
   Normal  PlacementRolloutCompleted  3m28s (x7 over 3d22h)  cluster-resource-placement-controller  Resources have been applied to the selected clusters
 ```
 
-### Use ClusterResourcePlacementStatus resource (preview)
+### Use ClusterResourcePlacementStatus resource
 
 The `ClusterResourcePlacementStatus` resource is namespace-scoped and provides the placement status for a corresponding cluster-scoped `ClusterResourcePlacement` object. This resource enables namespace users without cluster-level rights to read the status.
 
-> [!IMPORTANT]
-> The `ClusterResourcePlacementStatus` resource and `StatusReportingScope` field are available in the `placement.kubernetes-fleet.io/v1beta1` API version as a preview feature. They're not available in the `placement.kubernetes-fleet.io/v1` API.
-
-To use this approach, configure the `ClusterResourcePlacement` with `statusReportingScope: NamespaceAccessible` by using the `v1beta1` API.
+To use this approach, configure the `ClusterResourcePlacement` with `statusReportingScope: NamespaceAccessible` by using the `v1` API.
 
 When you set `statusReportingScope` to `NamespaceAccessible`, you can only specify one namespace resource selector, and you can't change it after creation.
 
 #### Configuring ClusterResourcePlacementStatus
 
-To use this feature, specify the `v1beta1` API version in your `ClusterResourcePlacement`:
+To use this feature, specify the `v1` API version in your `ClusterResourcePlacement`:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp-with-status-reporting
@@ -958,7 +955,7 @@ spec:
 You can view the status by using the `kubectl describe` command:
 
 ```bash
-kubectl describe clusterresourceplacementstatuses.v1beta1.placement.kubernetes-fleet.io crp-with-status-reporting -n my-app
+kubectl describe clusterresourceplacementstatuses.v1.placement.kubernetes-fleet.io crp-with-status-reporting -n my-app
 ```
 
 The output contains the same status information as the `ClusterResourcePlacement` but is accessible to users with only namespace-level permissions.
