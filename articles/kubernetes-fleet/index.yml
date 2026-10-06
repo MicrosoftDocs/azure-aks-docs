@@ -8,7 +8,7 @@ metadata:
   ms.service: azure-kubernetes-fleet-manager
   ms.author: simonwaight
   ms.topic: landing-page
-  ms.date: 09/15/2026
+  ms.date: 10/06/2026
 landingContent:
   - title: About Azure Kubernetes Fleet Manager
     linkLists:
@@ -20,6 +20,8 @@ landingContent:
         links:
           - text: Fleets and member clusters
             url: concepts-fleet.md
+          - text: Using member cluster labels
+            url: concepts-member-cluster-labels.md
           - text: Safe updates across multiple member clusters
             url: concepts-update-orchestration.md
           - text: Kubernetes resource placement and management

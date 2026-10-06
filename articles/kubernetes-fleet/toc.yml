@@ -36,6 +36,8 @@
           href: concepts-fleet-kubernetes-version-support.md
         - name: Fleet and Arc integration
           href: concepts-fleet-arc-integration.md
+    - name: Using member cluster labels
+      href: concepts-member-cluster-labels.md
     - name: Safe multi-cluster upgrades
       href: concepts-update-orchestration.md
     - name: Multi-tenancy with Managed Fleet Namespaces
