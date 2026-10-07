@@ -59,7 +59,7 @@ az aks nodepool add \
 ```
 
 1. Follow the NVIDIA GPU Operator installation documentation to install the GPU Operator. When installing the Helm chart, override the default tolerations and configuration as follows:
-    - The GPU nodes are tainted with `sku=gpu:NoSchedule`. Ensure that the GPU Operator's Helm configuration includes a matching toleration so that its components can be scheduled on these nodes.
+    - Set `daemonsets.tolerations` in the Helm values to tolerate `sku=gpu:NoSchedule` (use `key: sku`, `operator: Equal`, `value: gpu`, and `effect: NoSchedule`) so every GPU Operator DaemonSet can be scheduled on the GPU nodes.
     - The NVIDIA documentation uses `any` as the default device plugin configuration selector. Ensure that each GPU node has the `nvidia.com/device-plugin.config=any` label, where `any` matches the configuration name defined in the device plugin configuration.
 
 1. After you install the GPU Operator, check that your [GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable) and [run a GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload).
