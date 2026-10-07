@@ -568,9 +568,50 @@ spec:
   # LocalDNS mode - allows use of LocalDNS feature
   # Default: Disabled
   # Valid values: Preferred, Required, Disabled
+  # vnetDNSOverrides and kubeDNSOverrides are both required, even when mode is Disabled
+  # Each list must include the "." and "cluster.local" zones, and each zone must set all nine fields
   localDNS:
     mode: Disabled
-    # additional details on vnetDNSOverrides and kubeDNSOverrides can be added here
+    # vnetDNSOverrides apply to DNS traffic from pods with dnsPolicy:default and from kubelet
+    vnetDNSOverrides:
+      - zone: "."
+        cacheDuration: "3600s"
+        forwardDestination: VnetDNS   # the "." zone can't forward to ClusterCoreDNS in vnetDNSOverrides
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS   # cluster.local can't forward to VnetDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+    # kubeDNSOverrides apply to DNS traffic from pods with dnsPolicy:ClusterFirst
+    kubeDNSOverrides:
+      - zone: "."
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
 
   # Virtual network subnet configuration (optional)
   # If not specified, uses the default --vnet-subnet-id from Karpenter installation
