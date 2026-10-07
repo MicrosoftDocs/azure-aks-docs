@@ -927,7 +927,7 @@ Events:
 The `ClusterResourcePlacementStatus` resource is namespace-scoped and provides a namespace-specific view of the status for a corresponding cluster-scoped `ClusterResourcePlacement` object. This resource enables namespace users without cluster-level rights to read placement status without exposing information from outside their namespace.
 
 > [!IMPORTANT]
-> Starting on January 31, 2027, the namespace-specific view includes only the selected namespace and resources and references within that namespace. Fleet Manager omits cluster-scoped and cross-namespace resources and references. It also replaces nonempty member-cluster and hub values in drift and difference details with `(redacted for security reasons)`. The cluster-scoped `ClusterResourcePlacement` status remains unchanged.
+> Starting on January 31, 2027, the namespace-specific view includes only the selected namespace and resources and references within that namespace. Fleet Manager omits cluster-scoped and cross-namespace resources and references. It also replaces nonempty member-cluster and hub values in drift and difference details with `(redacted)`. The cluster-scoped `ClusterResourcePlacement` status remains unchanged.
 
 To use this approach, configure the `ClusterResourcePlacement` with `statusReportingScope: NamespaceAccessible` by using the `v1` API.
 
@@ -963,7 +963,7 @@ kubectl describe clusterresourceplacementstatuses.v1.placement.kubernetes-fleet.
 
 The output contains the status information that's visible within the selected namespace. It includes the selected namespace, resources in that namespace, and references to same-namespace resource overrides and resource envelopes. It doesn't include cluster-scoped or cross-namespace resources, cluster resource overrides, or cluster resource envelopes.
 
-Drift and difference details retain their JSON paths. Fleet Manager replaces each nonempty `valueInMember` and `valueInHub` value with `(redacted for security reasons)`. An empty value continues to indicate that the JSON path doesn't exist on that side.
+Drift and difference details retain their JSON paths. Fleet Manager replaces each nonempty `valueInMember` and `valueInHub` value with `(redacted)`. An empty value continues to indicate that the JSON path doesn't exist on that side.
 
 If an application reads `ClusterResourcePlacementStatus`, update it before January 31, 2027, to tolerate omitted entries and treat the redaction marker as unavailable data. If the application requires complete resource identities or raw drift and difference values, read the cluster-scoped `ClusterResourcePlacement` status by using credentials with appropriate cluster-level role-based access control (RBAC) permissions.
 
