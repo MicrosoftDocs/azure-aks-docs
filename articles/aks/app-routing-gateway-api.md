@@ -14,8 +14,6 @@ zone_pivot_groups: azure-cli-or-terraform
 
 # Configure ingress with the Kubernetes Gateway API via the application routing add-on for Azure Kubernetes Service (AKS)
 
-[!INCLUDE [ingress-nginx-retirement](./includes/ingress-nginx-retirement.md)]
-
 The application routing add-on supports the Kubernetes Gateway API for ingress traffic management. The [Kubernetes Gateway API][k8s-gateway-api] is a set of resources that provide a standardized, role-oriented, and extensible framework for traffic management, designed to be a successor and evolution of the Ingress API. The application routing Gateway API implementation thus aims to serve as a successor to the [managed NGINX][app-routing-nginx] add-on, which is based on the legacy Ingress API and will stop receiving Azure support from Azure after November 2026. If you are using managed NGINX, you must migrate to the application routing Gateway API implementation, or another supported implementation, by November 2026.
 
 For production workloads, this model is the recommended default ingress model on AKS Automatic. Starting with AKS version 1.36, new AKS Automatic clusters use Kubernetes Gateway API via the application routing add-on by default. For background on AKS Automatic production defaults, see [What is Azure Kubernetes Service (AKS) Automatic?](./intro-aks-automatic.md)
