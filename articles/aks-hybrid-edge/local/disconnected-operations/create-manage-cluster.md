@@ -1,19 +1,17 @@
 ---
-title: Create and manage an AKS cluster with disconnected operations (preview)
-description: Learn how to create and manage an Azure Kubernetes Service (AKS) cluster enabled by Azure Arc for Azure Local with disconnected operations (preview).
+title: Create and manage an AKS cluster with disconnected operations
+description: Learn how to create and manage an Azure Kubernetes Service (AKS) cluster enabled by Azure Arc for Azure Local with disconnected operations.
 ms.topic: how-to
 author: davidsmatlak
 ms.author: davidsmatlak
-ms.date: 09/01/2026
+ms.date: 10/06/2026
 ms.custom: disconnected-operations
 ai-usage: ai-assisted
 ---
 
-# Create and manage an AKS cluster with disconnected operations (preview)
+# Create and manage an AKS cluster with disconnected operations
 
-This article shows you how to install the required Azure CLI extensions, create logical networks, and create, access, and delete an Azure Kubernetes Service (AKS) cluster enabled by Azure Arc for Azure Local with disconnected operations (preview).
-
-[!INCLUDE [IMPORTANT](../../includes/aks-disconnected-operations-preview.md)]
+This article shows you how to install the required Azure CLI extensions, create logical networks, and create, access, and delete an Azure Kubernetes Service (AKS) cluster enabled by Azure Arc for Azure Local with disconnected operations.
 
 Before you continue, review the [prerequisites and limitations](overview.md) for AKS with disconnected operations.
 
@@ -178,7 +176,7 @@ az aksarc delete --name $aksclustername --resource-group $resource_group
 
 ## Related content
 
-- [AKS on Azure Local with disconnected operations (preview)](overview.md)
+- [AKS on Azure Local with disconnected operations](overview.md)
 - [AKS on Azure Local architecture](../hyperconverged/cluster-architecture.md)
 - [AKS Hybrid and Edge network requirements](../hyperconverged/network-system-requirements.md)
 - [Manage node pools for an AKS cluster](../hyperconverged/manage-node-pools.md)
