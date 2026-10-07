@@ -3,7 +3,7 @@ title: Configure Disruption Policies for Node Auto-Provisioning (NAP) Nodes in A
 description: Learn how to configure node disruption policies for node auto-provisioning (NAP) nodes in Azure Kubernetes Service (AKS) to optimize resource utilization.
 ms.topic: overview
 ms.custom: devx-track-azurecli, aks-scaling
-ms.date: 07/30/2026
+ms.date: 09/18/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -97,6 +97,9 @@ For example, if a `NodeClaim` has `node.kubernetes.io/instance-type: Standard_D2
 
 > [!IMPORTANT]
 > Karpenter monitors subnet configuration changes and detects drift when the `vnetSubnetID` in an `AKSNodeClass` is modified. Understanding this behavior is critical when managing custom networking configurations. For more information, see [Subnet drift behavior](./node-auto-provisioning-networking.md#subnet-drift-behavior).
+
+> [!NOTE]
+> Node-level features that you configure through the `AKSNodeClass` follow this same drift path. These features include [LocalDNS](./node-auto-provisioning-aksnodeclass.md#localdns-configuration), [artifact streaming](./node-auto-provisioning-aksnodeclass.md#artifact-streaming), [FIPS mode](./node-auto-provisioning-aksnodeclass.md#fips-compliant-node-image-configuration), and [kubelet configuration](./node-auto-provisioning-aksnodeclass.md#kubelet-configuration). Enabling or disabling these features doesn't reconfigure existing nodes in place. Karpenter replaces the nodes, rate limited by your disruption budgets and pod disruption budgets. The `tags` field is the exception, because tag changes apply to existing Azure resources without replacing the node.
 
 For more information, see [Drift Design](https://github.com/aws/karpenter-core/blob/main/designs/drift.md).
 

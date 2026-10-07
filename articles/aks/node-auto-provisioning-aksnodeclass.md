@@ -3,7 +3,7 @@ title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azur
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
 ms.topic: how-to
 ms.custom: devx-track-azurecli, aks-scaling
-ms.date: 07/5/2026
+ms.date: 09/18/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -19,6 +19,9 @@ This article explains how to configure `AKSNodeClass` resources to define Azure-
 ## Overview of AKSNodeClass resources
 
 `AKSNodeClass` resources enable you to configure Azure-specific settings for NAP. Each [`NodePool` resource](./node-auto-provisioning-node-pools.md) must reference an `AKSNodeClass` using `spec.template.spec.nodeClassRef`. You can have multiple `NodePools` that point to the same `AKSNodeClass`, allowing you to share common Azure configurations across different node pools.
+
+> [!IMPORTANT]
+> Changing a setting on an existing `AKSNodeClass` doesn't reconfigure running nodes in place. NAP marks the nodes provisioned from the previous configuration as _drifted_ and replaces them, subject to the disruption controls on the referencing `NodePool` resources. The `tags` field is the only exception, because tag changes apply to existing Azure resources without replacing the node. To learn more, see [Drift](./node-auto-provisioning-disruption.md#drift) and [Disruption budgets](./node-auto-provisioning-disruption.md#disruption-budgets). Before you modify an `AKSNodeClass` that production workloads use, review this guidance.
 
 ## Image family configuration
 
@@ -204,7 +207,7 @@ You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDN
 
 ```yaml
 spec:
-  LocalDNS:
+  localDNS:
     mode: Required
     vnetDNSOverrides:
       - zone: "."
@@ -245,6 +248,70 @@ spec:
         serveStale: Immediate
         serveStaleDuration: "3600s"
 ``` 
+
+### Update the LocalDNS configuration on an existing AKSNodeClass
+
+The `localDNS` setting participates in drift detection like other `AKSNodeClass` settings. When you change `spec.localDNS` on an `AKSNodeClass` that existing nodes already reference, NAP applies the change through the standard [Drift](./node-auto-provisioning-disruption.md#drift) mechanism. NAP doesn't reimage existing nodes.
+
+The following behavior applies when you change the LocalDNS mode or overrides, such as changing `mode` from `Disabled` to `Required`:
+
+- **New nodes**: Every node that NAP provisions after you update the `AKSNodeClass` uses the new LocalDNS configuration.
+- **Existing nodes**: NAP marks the existing `NodeClaim` objects as _drifted_ because their recorded configuration no longer matches the `AKSNodeClass`. NAP launches a replacement node that uses the new LocalDNS configuration, then cordons, drains, and removes the drifted node.
+- **No reimage**: Enabling LocalDNS on an AKS managed node pool reimages every node in the pool. NAP replaces the node instead. Either way, pods on the affected nodes are evicted and rescheduled, so plan for the same workload impact.
+
+> [!IMPORTANT]
+> Setting `mode` to `Preferred` or `Disabled` also changes the resolved `AKSNodeClass` configuration and drifts existing nodes. Any change within the `localDNS` section, including the `vnetDNSOverrides` and `kubeDNSOverrides` values, causes node replacement.
+
+#### When replacement starts
+
+Drift evaluation and replacement begin as soon as you apply the updated `AKSNodeClass`. Replacement follows the standard NAP disruption lifecycle, so the rate and timing depend on the disruption controls that you configure on the `NodePool` resources referencing the `AKSNodeClass`.
+
+#### How NAP orchestrates replacement
+
+Drift caused by a LocalDNS change honors the standard NAP disruption controls described in the following table:
+
+| Control | Effect on LocalDNS-induced replacement |
+| --- | --- |
+| [Disruption budgets](./node-auto-provisioning-disruption.md#disruption-budgets) (`spec.disruption.budgets`) | Rate limits how many nodes NAP replaces at once. If you don't define budgets, NAP defaults to one budget of `nodes: 10%`, so it disrupts a maximum of 10 percent of the node pool's nodes concurrently. |
+| [Budget `schedule` and `duration`](./node-auto-provisioning-disruption.md#schedule-and-duration-fields) | Confines replacement to a maintenance window. Set `nodes: "0"` outside the window to block replacement. |
+| Pod disruption budgets (PDBs) | Apply during node drain. NAP waits instead of evicting pods that violate a PDB. |
+| `karpenter.sh/do-not-disrupt` annotation | Excludes annotated pods and nodes from voluntary disruption, including drift. |
+| [`terminationGracePeriod`](./node-auto-provisioning-disruption.md#termination-grace-period) | Caps drain time. This setting bypasses PDBs and the `karpenter.sh/do-not-disrupt` annotation when the period elapses. |
+
+Replacement is neither fully serial nor fully parallel. NAP provisions replacement capacity before it removes a drifted node, but it can replace multiple nodes that reference the same `AKSNodeClass` concurrently, up to the limit that your disruption budgets set.
+
+> [!WARNING]
+> If you don't define disruption budgets on your node pools and don't define pod disruption budgets for your workloads, changing `localDNS` on a busy `AKSNodeClass` can disrupt up to 10 percent of your nodes at a time with no application-level protection, which can cause workload downtime. Define PDBs for critical workloads and set a conservative disruption budget before you change `localDNS` on a production cluster.
+
+#### Reduce availability risk when you enable LocalDNS
+
+1. Confirm that your custom DNS servers answer queries over both UDP and TCP port 53 from the node subnet. For more information, see [Validate custom DNS before enabling LocalDNS](./localdns-custom.md#validate-custom-dns-before-enabling-localdns).
+2. Define pod disruption budgets for every critical workload.
+3. Set a conservative disruption budget on the affected `NodePool` resources before you change the `AKSNodeClass`, as shown in the following example:
+
+    ```yaml
+    apiVersion: karpenter.sh/v1
+    kind: NodePool
+    metadata:
+      name: default
+    spec:
+      disruption:
+        budgets:
+        - nodes: "1"   # Replace one node at a time
+    ```
+
+4. Apply the `localDNS` change to a nonproduction `AKSNodeClass` first. Alternatively, create an `AKSNodeClass` that has LocalDNS enabled and migrate workloads to a `NodePool` that references it.
+5. Monitor replacement progress by listing the node claims. Replacement is complete when no node claim reports the `Drifted` status condition.
+
+    ```bash
+    # List node claims and watch replacements appear as drifted nodes are removed
+    kubectl get nodeclaims
+
+    # Inspect the status conditions on a specific node claim
+    kubectl describe nodeclaim <nodeclaim-name>
+    ```
+
+6. Confirm that LocalDNS is active on the replacement nodes. For more information, see [Verify LocalDNS operation](./localdns-custom.md#verify-localdns-operation).
 
 ## Kubelet configuration
 
@@ -501,9 +568,50 @@ spec:
   # LocalDNS mode - allows use of LocalDNS feature
   # Default: Disabled
   # Valid values: Preferred, Required, Disabled
-  LocalDNS:
+  # vnetDNSOverrides and kubeDNSOverrides are both required, even when mode is Disabled
+  # Each list must include the "." and "cluster.local" zones, and each zone must set all nine fields
+  localDNS:
     mode: Disabled
-    # additional details on vnetDNSOverrides and kubeDNSOverrides can be added here
+    # vnetDNSOverrides apply to DNS traffic from pods with dnsPolicy:default and from kubelet
+    vnetDNSOverrides:
+      - zone: "."
+        cacheDuration: "3600s"
+        forwardDestination: VnetDNS   # the "." zone can't forward to ClusterCoreDNS in vnetDNSOverrides
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS   # cluster.local can't forward to VnetDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+    # kubeDNSOverrides apply to DNS traffic from pods with dnsPolicy:ClusterFirst
+    kubeDNSOverrides:
+      - zone: "."
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
 
   # Virtual network subnet configuration (optional)
   # If not specified, uses the default --vnet-subnet-id from Karpenter installation
