@@ -107,6 +107,14 @@ Enable KMS encryption with platform-managed keys on an existing AKS cluster.
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+> 
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to check if you can read and write existing secrets:
+>
+> ```bash
+> kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+> ```
+>
+> If this command fails (for example, webhook rejection or resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
@@ -251,6 +259,14 @@ Enable KMS encryption with customer-managed keys using a private key vault on an
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+>
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to check if you can read and write existing secrets:
+>
+> ```bash
+> kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+> ```
+>
+> If this command fails (for example, webhook rejection or resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
@@ -391,6 +407,14 @@ Enable KMS encryption with customer-managed keys on an existing AKS cluster.
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+>
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to check whether existing secrets can be read and written:
+>
+> ```bash
+> kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+> ```
+>
+> If this command fails (for example, webhook rejection or resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
