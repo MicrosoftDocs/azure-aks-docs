@@ -4,10 +4,11 @@ description: Learn how to create an AKS cluster with managed NAT integration and
 ms.topic: how-to
 ms.subservice: aks-networking
 ms.service: azure-kubernetes-service
-ms.date: 07/07/2026
+ms.date: 08/25/2026
 author: schaffererin
 ms.author: schaffererin
 ms.custom: devx-track-azurecli
+ai-usage: ai-assisted
 ---
 
 # Create a managed or user-assigned NAT gateway for your Azure Kubernetes Service (AKS) cluster
@@ -18,13 +19,13 @@ For most production workloads, AKS Automatic is the recommended production-ready
 
 In AKS Standard, you can create or configure a managed NAT gateway when you want AKS-managed outbound connectivity for your cluster. For bring-your-own (BYO) networking scenarios, use a user-assigned NAT gateway.
 
-While you can route egress traffic through an Azure Load Balancer, there are limitations on the number of outbound flows of traffic you can have. Azure NAT Gateway supports up to 64,512 outbound UDP and TCP traffic flows per IP address with a maximum of 16 IP addresses. Three outbound types support NAT gateway: `managedNATGatewayV2` (Preview), `managedNATGateway`, and `userAssignedNATGateway`.
+While you can route egress traffic through an Azure Load Balancer, there are limitations on the number of outbound flows of traffic you can have. Azure NAT Gateway supports up to 64,512 outbound UDP and TCP traffic flows per IP address with a maximum of 16 IP addresses. Two outbound types support NAT gateway: `managedNATGateway` and `userAssignedNATGateway`.
 
 This article shows you how to create an AKS cluster with managed NAT gateway and user-assigned NAT gateway for outbound traffic. It also shows you how to disable OutboundNAT for Windows.
 
-> [!IMPORTANT]
-> The `managedNATGatewayV2` outbound type is currently in preview.
-> See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
+> [!NOTE]
+> Starting with API version 2026-06-01, `outboundType: managedNATGateway` defaults to StandardV2 NAT Gateway which shows as `natGatewayProfile.sku: StandardV2` instead of the `managedNATGatewayV2` outbound type used during preview. Preview API versions `2026-01-02-preview` through `2026-05-02-preview` continue to accept `managedNATGatewayV2` for around one year, which gives you time to move to `managedNATGateway` with an explicit `sku`. For deprecation dates of the preview APIs, see the [AKS Preview API life cycle documentation](concepts-preview-api-life-cycle.md).
+>
 
 ## Prerequisites
 
@@ -63,70 +64,81 @@ The following table describes each outbound IP parameter and when to use it:
 | `--nat-gateway-outbound-ips` | Comma-separated public IP resource IDs for NAT gateway outbound connection. | IPv4 or IPv6 | Customer |
 | `--nat-gateway-outbound-ip-prefixes` | Comma-separated public IP prefix resource IDs for NAT gateway outbound connection. | IPv4 or IPv6 | Customer |
 
-### Create an AKS cluster with a managed StandardV2 NAT gateway (`managedNATGatewayV2`)
+### Choose a managed NAT gateway SKU
 
-`managedNATGatewayV2` uses the StandardV2 NAT Gateway SKU. For details on the differences and enhancements compared to the Standard NAT Gateway SKU, see the [Azure NAT Gateway SKUs](/azure/nat-gateway/nat-sku#sku-comparison).
-The following section describes how to create an AKS cluster using `managedNATGatewayV2`.
+Starting with API version `2026-06-01`, `managedNATGateway` supports the `StandardV2` and `Standard` SKUs through `networkProfile.natGatewayProfile.sku`. StandardV2 is the default for new clusters in supported regions when the request uses this API version or later. Requests that use an earlier API version retain the existing Standard behavior.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+| Scenario | Behavior |
+| --- | --- |
+| New cluster with no SKU specified | Defaults to `StandardV2` where available. AKS validates regional availability before applying the default. In regions where StandardV2 isn't available, AKS uses `Standard`. |
+| Existing Standard cluster | Continues to use that NAT gateway resource. API version `2026-06-01` and later returns the read-only `natGatewayProfile.sku` property as `Standard`. |
+| Upgrade from Standard to StandardV2 | Set `networkProfile.natGatewayProfile.sku` to `StandardV2`. |
+| Downgrade from StandardV2 to Standard | Not supported. |
 
-- Create an AKS cluster with a managed StandardV2 NAT gateway by using the [`az aks create`][az-aks-create] command with the `--outbound-type managedNATGatewayV2`, `--nat-gateway-outbound-ips`, `--nat-gateway-outbound-ip-prefixes`, `--nat-gateway-managed-outbound-ip-count`, `--nat-gateway-managed-outbound-ipv6-count`, and `--nat-gateway-idle-timeout` parameters.
-- When you configure outbound IPs for a `managedNATgatewayV2`, use **one of the following approaches**. You can't use both Azure-managed and customer-defined outbound IPs.
-  - **Azure-managed IPs**: Use `--nat-gateway-managed-ip-outbound-count` and `--nat-gateway-managed-outbound-ipv6-count` to have Azure automatically allocate and manage the outbound public IPs on your behalf.
-  - **Customer-defined IPs**: Use `--nat-gateway-outbound-ips` and `--nat-gateway-outbound-ip-prefixes` to bring your own pre-provisioned public IP addresses or prefixes, giving you full control over the specific addresses used for outbound traffic. StandardV2 NAT Gateway requires the use of new StandardV2 public IPs. Existing Standard SKU Public IPs don't work with StandardV2 NAT gateway.
+StandardV2 NAT Gateway is recommended because it's zone-redundant by default and offers higher bandwidth and throughput. StandardV2 requires StandardV2 public IP addresses and prefixes. Existing Standard SKU public IP resources aren't compatible with StandardV2 NAT Gateway. Review the [key limitations of StandardV2 NAT Gateway](/azure/nat-gateway/nat-overview#key-limitations-of-standardv2) for the current list of unsupported regions.
 
-#### Install the `aks-preview` Azure CLI extension
+The StandardV2 public IP requirement applies only to the NAT gateway's outbound IPs. The AKS-managed load balancer that serves `type: LoadBalancer` Services remains a Standard load balancer and requires Standard public IPs. If you preprovision tagged public IP inventory, plan for both SKUs: StandardV2 for NAT gateway egress and Standard for inbound Services.
 
-The `managedNATGatewayV2` outbound type is currently in preview. To use this outbound type, install the `aks-preview` Azure CLI extension and register the `ManagedNATGatewayV2Preview` feature flag.
+#### Managed NAT gateway SKU capabilities
 
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command. The minimum version of the `aks-preview` Azure CLI extension is `20.0.0b1`.
+The `managedNATGateway` outbound type supports different capabilities depending on the value of `networkProfile.natGatewayProfile.sku`.
+
+| Capability | `StandardV2` | `Standard` |
+| --- | --- | --- |
+| Default for new clusters | Default where available unless the customer explicitly selects `Standard`. | Used when explicitly selected or when StandardV2 isn't available in the region. |
+| Availability zone behavior | Zone-redundant by default. | Zonal or nonzonal, depending on the cluster configuration. |
+| Azure-managed outbound IPv4 addresses | Supported. | Supported. |
+| Azure-managed outbound IPv6 addresses | Supported. | Not supported. |
+| Customer-defined outbound IP addresses and prefixes | Supported with StandardV2 public IP addresses and prefixes. | Not supported for an AKS-managed NAT gateway. |
+
+### Create an AKS cluster
+
+Create an AKS cluster by running the [`az aks create`][az-aks-create] command with the `--outbound-type managedNATGateway` parameter. AKS defaults to StandardV2 SKU in supported regions and Standard SKU in unsupported regions.
 
 ```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-
-# Update the extension to make sure you have the latest version installed
-az extension update --name aks-preview
+az aks create \
+    --resource-group <resource-group> \
+    --name <cluster-name> \
+    --location <location> \
+    --outbound-type managedNATGateway \
+    --nat-gateway-managed-outbound-ip-count 1 \
+    --generate-ssh-keys
 ```
 
-#### Register the `ManagedNATGatewayV2Preview` feature flag
+> [!IMPORTANT]
+> You can upgrade an existing managed Standard NAT gateway to StandardV2, but you can't downgrade a managed StandardV2 NAT gateway to Standard.
 
-1. Register the `ManagedNATGatewayV2Preview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
+### Configure outbound IPs for a managed StandardV2 NAT gateway
 
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "ManagedNATGatewayV2Preview"
-    ```
+In regions that have `StandardV2` available, configure outbound addresses by using **one** of the following approaches. You can't combine Azure-managed and customer-defined outbound IP configuration.
 
-1. Verify successful registration using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the registration to complete.
+#### Use Azure-managed IPs
 
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "ManagedNATGatewayV2Preview"
-    ```
+Use `managedOutboundIPProfile` to have AKS allocate and manage the outbound public IPv4 and IPv6 addresses.
 
-    Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
+```json
+{
+  "properties": {
+    "networkProfile": {
+      "outboundType": "managedNATGateway",
+      "natGatewayProfile": {
+          "managedOutboundIPProfile": {
+          "count": 1,
+          "countIPv6": 1
+        }
+      }
+    }
+  }
+}
+```
 
-#### Create an AKS cluster with a managed StandardV2 NAT gateway
+#### Use customer-defined IPs and prefixes
 
-The following commands create the required resource group, the public IP and public IP prefix resources to attach to the NAT gateway, and the AKS cluster with a managed StandardV2 NAT gateway.
+Use `outboundIPs` and `outboundIPPrefixes` to provide precreated public IP addresses or prefixes. These resources must use the StandardV2 SKU. Existing Standard SKU public IP addresses and prefixes aren't compatible with a StandardV2 NAT gateway.
 
-1. Create a resource group using the [`az group create`][az-group-create] command.
-
-    ```azurecli-interactive
-    # Set environment variables for resource group, AKS cluster, public IP, and public IP prefix names
-    export RANDOM_SUFFIX=$(openssl rand -hex 3)
-    export MY_RG="myResourceGroup$RANDOM_SUFFIX"
-    export MY_AKS="myNatV2Cluster$RANDOM_SUFFIX"
-    export MY_IP="myNatOutboundIP$RANDOM_SUFFIX"
-    export MY_IP_PREFIX="myNatOutboundIPPrefix$RANDOM_SUFFIX"
-
-    # Create the resource group
-    az group create --name $MY_RG --location "eastus2"
-    ```
-
-1. Create a zone redundant IPv4 public IP address and public IP prefix using the [`az network public-ip create`][az-network-public-ip-create] command. Store `$MY_IP` and `$MY_IP_PREFIX` to use as outbound IPs for the managed StandardV2 NAT gateway.
+1. Create a zone-redundant StandardV2 public IP address and public IP prefix.
 
     ```azurecli-interactive
-    # Create a zone redundant IPv4 public IP address and store the ID to $MY_IP_ID for later use
     export MY_IP_ID=$(az network public-ip create \
         --resource-group $MY_RG \
         --name $MY_IP \
@@ -138,7 +150,6 @@ The following commands create the required resource group, the public IP and pub
         --query publicIp.id \
         --output tsv)
 
-    # Create a zone redundant IPv4 public IP prefix and store the ID to $MY_IP_PREFIX_ID for later use
     export MY_IP_PREFIX_ID=$(az network public-ip prefix create \
         --resource-group $MY_RG \
         --name $MY_IP_PREFIX \
@@ -151,27 +162,31 @@ The following commands create the required resource group, the public IP and pub
         --output tsv)
     ```
 
-1. Create the AKS cluster and reference the public IP address (`$MY_IP_ID`) and public IP prefix (`$MY_IP_PREFIX_ID`) using the [`az aks create`][az-aks-create] command with the `--outbound-type managedNATGatewayV2`, `--nat-gateway-outbound-ips`, and `--nat-gateway-outbound-ip-prefixes` parameters.
+1. Deploy a managed NAT gateway outbound type in a region that supports StandardV2 NAT Gateway and reference the public IP address and prefix in the AKS cluster configuration.
 
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $MY_RG \
-        --name $MY_AKS \
-        --node-count 3 \
-        --outbound-type managedNATGatewayV2 \
-        --nat-gateway-outbound-ips $MY_IP_ID \
-        --nat-gateway-outbound-ip-prefixes $MY_IP_PREFIX_ID \
-        --nat-gateway-idle-timeout 4 \
-        --generate-ssh-keys
-    ```
+    ```json
+    {
+      "properties": {
+        "networkProfile": {
+          "outboundType": "managedNATGateway",
+          "natGatewayProfile": {
+            "outboundIPs": {
+              "publicIPs": [
+                "<standard-v2-public-ip-resource-id>"
+              ]
+            },
+            "outboundIPPrefixes": {
+              "publicIPPrefixes": [
+                "<standard-v2-public-ip-prefix-resource-id>"
+              ]
+            }
+          }
+        }
+      }
+    }
+   ```
 
-Update the outbound IPs, outbound IP prefixes, managed outbound IP count, or idle timeout using the [`az aks update`][az-aks-update] command with the `--nat-gateway-outbound-ips`, `--nat-gateway-outbound-ip-prefixes`, `--nat-gateway-managed-outbound-count`, `--nat-gateway-managed-outbound-ipv6-count`, or `--nat-gateway-idle-timeout` parameter. A `managedNATGatewayV2` can't be updated to switch between customer-defined and managed outbound IP addresses after creation. The outbound IP configuration is determined when the StandardV2 NAT gateway is initially created and remains immutable.
-
-### Create an AKS cluster with a managed Standard NAT gateway (`managedNATGateway`)
-
-- Create an AKS cluster with a managed Standard NAT gateway using the `az aks create` command with `--outbound-type managedNATGateway`, `--nat-gateway-managed-outbound-ip-count`, and `--nat-gateway-idle-timeout` parameters. If you want the NAT gateway to operate out of specific availability zone, specify the zone using `--zones`.
-- You can't use a managed NAT gateway resource across multiple availability zones. For zone-redundant outbound connectivity, consider using [`managedNATgatewayV2`](#create-an-aks-cluster-with-a-managed-nat-gateway).
-- If you don't specify a zone when creating a managed NAT gateway, the NAT gateway is deployed to **no zone** by default. When the NAT gateway is in **no zone**, Azure places the resource in a zone for you. For more information on the non-zonal deployment model, see [non-zonal NAT gateway](/azure/nat-gateway/nat-availability-zones#non-zonal).
+The outbound IP ownership model is determined when the StandardV2 NAT gateway is initially created. You can change individual outbound IP resources within the selected model, but you can't switch an existing NAT gateway between Azure-managed and customer-defined outbound IPs. You also can't change the NAT gateway SKU. Downgrading from StandardV2 to Standard isn't supported.
   
 ### Create an AKS cluster with a `userAssignedNatGateway`
 
