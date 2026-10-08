@@ -822,6 +822,12 @@
             items:
               - name: Use cases (Preview)
                 href: cross-cluster-networking-fleet-use-cases.md
+          - name: Multi-nic pods
+            items:
+              - name: Overview
+                href: multiple-network-interfaces-for-pods-overview.md
+              - name: Configure multi-nic pods 
+                href: configure-multiple-network-interfaces-for-pods.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
