@@ -848,6 +848,8 @@
         items:
           - name: Learn about Kueue for batch scheduling
             href: kueue-overview.md
+          - name: Define Queues with managed Kueue extension
+            href: configure-queues-with-automatic-resource-flavors.md
           - name: Schedule and deploy batch jobs with Kueue
             href: deploy-batch-jobs-with-kueue.md
           - name: Provision capacity for Kueue jobs with the cluster autoscaler

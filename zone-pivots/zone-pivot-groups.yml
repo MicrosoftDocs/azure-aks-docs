@@ -422,3 +422,12 @@ groups:
     title: Azure CLI
   - id: azure-powershell
     title: Azure PowerShell
+# Owner: colinmixon
+- id: helm-or-extension
+  title: Choose a deployment method
+  prompt: Select how you want to deploy resources
+  pivots:
+  - id: helm
+    title: Helm
+  - id: extension
+    title: Azure Extension
