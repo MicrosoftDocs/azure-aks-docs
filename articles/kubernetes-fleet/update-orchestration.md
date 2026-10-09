@@ -59,7 +59,8 @@ Update run supports two options for the cluster upgrade sequence:
 * **Control sequence of clusters using update groups and stages**: If you want to control the cluster upgrade sequence, you can structure member clusters in update groups and update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md). You can create update runs later using the update strategies instead of defining the sequence every time you need to create an update run.
 
 > [!NOTE]
-> Update runs honor the [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance-windows), which explains how update runs handle member clusters configured with planned maintenance windows.
+> - **Planned maintenance windows:** Update runs honor the [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. See [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance-windows) for details.
+> - **AKS platform-initiated upgrades:** If a member cluster stays on an unsupported Kubernetes version after the platform support grace period, AKS can upgrade it directly, outside Fleet Manager's update-run sequence and the cluster's maintenance window. See [AKS platform-initiated upgrades](./concepts-update-orchestration.md#aks-platform-initiated-upgrades) for ways to keep member clusters under Fleet orchestration.
 
 ## Update all clusters one by one
 

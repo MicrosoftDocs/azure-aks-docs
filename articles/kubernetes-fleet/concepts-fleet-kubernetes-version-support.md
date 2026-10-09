@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to understand the supported Kubernetes version lifecycle in Azure Kubernetes Fleet Manager, so that I can ensure my clusters remain compliant, up-to-date and can use new features."
 ---
 
