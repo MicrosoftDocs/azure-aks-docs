@@ -421,6 +421,8 @@
     items:
     - name: Upgrade concepts
       href: upgrade-conceptual.md
+    - name: Platform-initiated upgrades
+      href: platform-initiated-upgrades.md
     - name: Maintain and upgrade cluster components
       href: upgrade-cluster-components.md
     - name: Upgrade options and recommendations

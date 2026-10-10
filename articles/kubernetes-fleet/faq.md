@@ -123,6 +123,10 @@ Fleet Manager doesn't change the configuration of AKS cluster auto-upgrade setti
 
 If you want Fleet Manager to manage auto-upgrades, disable auto-upgrade on each member AKS cluster.
 
+### Impact of AKS platform-initiated upgrades
+
+If the cluster remains on an unsupported Kubernetes version after its platform support grace period, AKS upgrades it directly through a [platform-initiated upgrade](../aks/platform-initiated-upgrades.md). This upgrade isn't a Fleet Manager update run or a cluster auto-upgrade. Fleet Manager update groups and strategies don't control the upgrade sequence, and the upgrade can happen outside the cluster's maintenance window. Keep member clusters on supported versions with [Fleet Manager update runs and auto-upgrade profiles](./concepts-update-orchestration.md#aks-platform-initiated-upgrades).
+
 ### AKS cluster maintenance window support
 
 A maintenance window defines when a cluster can safely be upgraded.

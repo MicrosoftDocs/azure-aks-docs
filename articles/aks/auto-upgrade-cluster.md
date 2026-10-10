@@ -13,6 +13,8 @@ ms.custom: aks-upgrade, automation, innovation-engine
 
 # Automatically upgrade an Azure Kubernetes Service (AKS) cluster
 
+[!INCLUDE [platform-initiated upgrades](./includes/platform-initiated-upgrade-notice.md)]
+
 > [!div class="nextstepaction"]
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321740)
 
@@ -40,6 +42,10 @@ You can specify cluster autoupgrade specifics using the following guidance. The 
 
 - AKS automatically upgrades clusters in version N-3 (where N is the latest supported AKS GA minor version) that are about to fall to N-4, upgrading them to N-2 instead. This action ensures clusters remain in the AKS support window. For more information, see [AKS support window][supported-kubernetes-versions].
 - Stopped node pools are upgraded during an autoupgrade operation. The upgrade applies to nodes when the node pool is started. To minimize disruptions, set up [maintenance windows][planned-maintenance].
+
+If a cluster stays on an unsupported version after the 60-day platform support grace period, AKS upgrades it through a [platform-initiated upgrade][platform-initiated-upgrades]. This upgrade can run regardless of your auto-upgrade channel, including `none` or `patch`, or when no channel is configured. It can occur outside your maintenance window. Your channel and maintenance window configurations aren't changed.
+
+Setting the `stable` channel together with a [maintenance window][planned-maintenance] helps keep your cluster on a supported minor version and avoid a platform-initiated upgrade. The `patch` channel applies patches within the current minor version but doesn't move the cluster to a newer minor version. For more information, see [How to avoid platform-initiated upgrades][platform-initiated-upgrades-avoid].
 
 ## Cluster autoupgrade limitations
 
@@ -95,7 +101,7 @@ The following upgrade channels are available:
 >
 > - With AKS, you can create a cluster without specifying the exact patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. To learn more, see [AKS support window][supported-kubernetes-versions].
 >
-> - Autoupgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions], even if using the `node-image` channel.
+> - Auto-upgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions], even if using the `node-image` channel. Once a cluster falls out of support, auto-upgrade no longer applies. If it remains on the unsupported version after the 60-day platform support grace period, AKS upgrades it through a [platform-initiated upgrade][platform-initiated-upgrades] instead.
 >
 > - If you're using the preview API `11-02-preview` or later, and you select the `node-image` cluster autoupgrade channel, the node image upgrade setting automatically switches to the `NodeImage` channel.
 >
@@ -228,6 +234,8 @@ To learn more about AKS Automatic's preconfigured settings and production-ready 
 
 <!-- INTERNAL LINKS -->
 [supported-kubernetes-versions]: ./supported-kubernetes-versions.md
+[platform-initiated-upgrades]: ./platform-initiated-upgrades.md
+[platform-initiated-upgrades-avoid]: ./platform-initiated-upgrades.md#how-to-avoid-platform-initiated-upgrades
 [upgrade-aks-cluster]: ./upgrade-cluster.md
 [planned-maintenance]: ./planned-maintenance.md
 [operator-best-practices-scheduler]: operator-best-practices-scheduler.md

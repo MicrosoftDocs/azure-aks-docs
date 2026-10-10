@@ -14,6 +14,8 @@ zone_pivot_groups: cli-portal-terraform-json
 
 # Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster
 
+[!INCLUDE [platform-initiated upgrades](./includes/platform-initiated-upgrade-notice.md)]
+
 This article shows you how to use planned maintenance to schedule and control cluster and node image upgrades in Azure Kubernetes Service (AKS).
 
 Regular maintenance is performed on your AKS cluster automatically. There are two types of maintenance operations:
@@ -55,6 +57,7 @@ When you use planned maintenance, the following considerations apply:
 
 - AKS reserves the right to break planned maintenance windows for unplanned, reactive maintenance operations that are urgent or critical. These maintenance operations might even run during the `notAllowedTime` or `notAllowedDates` periods defined in your configuration.
 - Maintenance operations are considered _best effort only_ and aren't guaranteed to occur within a specified window.
+- [Platform-initiated upgrades](./platform-initiated-upgrades.md) can occur outside maintenance windows. If a cluster stays on an unsupported Kubernetes version after the 60-day [platform support grace period](./platform-initiated-upgrades.md#platform-support-grace-period) ends, AKS can upgrade it during or after the planned platform-initiated upgrade month. Keep your cluster on a supported version to avoid a platform-initiated upgrade outside your maintenance window.
 
 ## Schedule configuration types for planned maintenance
 
