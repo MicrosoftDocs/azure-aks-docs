@@ -6,7 +6,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 author: kevinkrp93
 ms.author: kevinthomas
-ms.date: 09/08/2026
+ms.date: 10/09/2026
 ai-usage: ai-assisted
 # Customer intent: As a cluster operator, I want to enable Cluster Health Monitor in AKS so that I can run built-in data plane health checks and use CoreDNS remediation safeguards.
 ---
@@ -157,7 +157,25 @@ az aks update --resource-group myResourceGroup --name myCluster --disable-on-dem
 
 ### Check node health status with On-Demand Monitor
 
-AKS automatically triggers a node health check when a node is provisioned or rebooted. Like the control plane and add-on monitor, On-Demand Monitor reports node health as `Healthy`, `Unhealthy`, or `Unknown`. 
+AKS automatically triggers a node health check when a node is provisioned or rebooted. Like the control plane and add-on monitor, On-Demand Monitor reports node health as `Healthy`, `Unhealthy`, or `Unknown`.
+
+| Status | Meaning |
+| --- | --- |
+| `Healthy` | The pod scheduling and pod networking checks completed successfully. |
+| `Unhealthy` | One or more checks completed and detected a node health problem. AKS might start [node remediation](#how-node-remediation-works). |
+| `Unknown` | The checker couldn't determine the node health conclusively. For example, a required dependency might be unavailable, or the target node might host a CoreDNS pod used by the pod networking check. An `Unknown` result doesn't by itself mean that the node is unhealthy. |
+
+> [!NOTE]
+> The automatic `CheckNodeHealth` custom resource (CR) might not appear immediately after the Kubernetes Node object is created. Before it creates the CR, AKS waits for the target node to become ready and for all desired replicas in the CoreDNS deployment to become ready. For node auto-provisioning nodes, AKS waits for the node to be initialized instead of checking the Kubernetes `Ready` condition. If these prerequisites aren't met, AKS retries the automatic check.
+>
+> To inspect these prerequisites, run:
+>
+> ```bash
+> kubectl get node <node-name>
+> kubectl get deployment coredns -n kube-system
+> kubectl get pods -n kube-system -l k8s-app=kube-dns -o wide
+> kubectl get checknodehealths
+> ```
 
 ### Manually trigger a node health check
 
