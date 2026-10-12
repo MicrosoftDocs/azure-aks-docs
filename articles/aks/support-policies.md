@@ -232,7 +232,7 @@ Microsoft provides patches and new images for your image nodes weekly. To keep y
 - [Manually upgrade AKS node images](./node-image-upgrade.md).
 - [Automatically upgrade AKS node images](./auto-upgrade-node-os-image.md).
 
-Similarly, AKS regularly releases new Kubernetes patches and minor versions. These updates can contain security or functionality improvements to Kubernetes. You're responsible to keep your clusters' Kubernetes version updated and according to the [AKS Kubernetes support version policy](supported-kubernetes-versions.md).
+Similarly, AKS regularly releases new Kubernetes patches and minor versions. These updates can contain security or functionality improvements to Kubernetes. You're responsible to keep your clusters' Kubernetes version updated and according to the [AKS Kubernetes support version policy](supported-kubernetes-versions.md). Use [cluster auto-upgrade](auto-upgrade-cluster.md) or [Fleet Manager auto-upgrade profiles](../kubernetes-fleet/update-automation.md) to keep clusters on a supported minor version. If a cluster stays on an unsupported version after the platform support grace period ends, AKS upgrades it automatically. For more information, see [Platform-initiated upgrades](platform-initiated-upgrades.md).
 
 #### User customization of agent nodes
 

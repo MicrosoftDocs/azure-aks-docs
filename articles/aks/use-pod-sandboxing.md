@@ -4,7 +4,7 @@ description: Learn how to deploy Pod sandboxing on an Azure Kubernetes Service (
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, build-2023
-ms.date: 09/17/2026
+ms.date: 10/02/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
@@ -23,27 +23,6 @@ In this article, you deploy Pod sandboxing on a new or existing Azure Linux AKS 
 - The Azure CLI version 2.80.0 or later. Run `az --version` to find the version of your Azure CLI, and run `az upgrade` to upgrade. For more details, see the steps at [Install Azure CLI][install-azure-cli].
 - AKS supports Pod sandboxing on Kubernetes version 1.27.0 and higher.
 - To manage a Kubernetes cluster, use the Kubernetes command-line client [`kubectl`][kubectl]. Azure Cloud Shell comes with `kubectl`. You can install `kubectl` locally using the [`az aks install-cli`][az-aks-install-cmd] command.
-- The `Microsoft.Network/AllowBringYourOwnPublicIpAddress` feature must be registered in your subscription. This feature is required for Pod sandboxing workloads that use the Kata runtime.
-
-### Register the `Microsoft.Network/AllowBringYourOwnPublicIpAddress` feature
-
-1. Register the `Microsoft.Network/AllowBringYourOwnPublicIpAddress` feature in your subscription by using the [`az feature register`][az-feature-register] command. Registration can take several minutes.
-
-    ```azurecli-interactive
-    az feature register --namespace Microsoft.Network --name AllowBringYourOwnPublicIpAddress
-    ```
-
-1. Verify that the registration state is `Registered` by using the [`az feature show`][az-feature-show] command before you deploy Pod sandboxing.
-
-    ```azurecli-interactive
-    az feature show --namespace Microsoft.Network --name AllowBringYourOwnPublicIpAddress --query properties.state --output tsv
-    ```
-
-1. After the feature is registered, refresh the `Microsoft.Network` resource provider registration by using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.Network
-    ```
 
 ## Limitations
 
@@ -317,9 +296,6 @@ To deploy a pod with the Kata runtime on your AKS cluster, perform the following
 
 <!-- INTERNAL LINKS -->
 [install-azure-cli]: /cli/azure/install-azure-cli
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[az-provider-register]: /cli/azure/provider#az-provider-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
 [aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-deployment-group-create]: /cli/azure/deployment/group#az-deployment-group-create

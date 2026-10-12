@@ -14,6 +14,8 @@ ms.author: schaffererin
 
 **Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
+[!INCLUDE [platform-initiated upgrades](./includes/platform-initiated-upgrade-notice.md)]
+
 This article shows how Azure Kubernetes Service (AKS) can automatically block cluster upgrades when it detects deprecated Kubernetes API usage.
 
 For most production workloads, AKS Automatic is the recommended production-ready default experience for AKS. Kubernetes API breaking-change detection is preconfigured on both AKS Automatic and AKS Standard clusters.
@@ -32,6 +34,9 @@ In both modes, AKS can block minor version upgrade operations when it detects re
 To stay within a supported Kubernetes version, you must upgrade your cluster at least once per year and prepare for possible disruptions. These disruptions can include API breaking changes, deprecations, and dependencies such as Helm and Container Storage Interface (CSI). It can be difficult to anticipate these disruptions and migrate critical workloads without downtime.
 
 When AKS detects deprecated API usage for the target version, it can automatically block minor version upgrade operations and alert you to the issue. This behavior helps you avoid unexpected disruptions and gives you time to fix deprecated API usage before continuing the upgrade.
+
+> [!IMPORTANT]
+> This safeguard doesn't apply to [platform-initiated upgrades](./platform-initiated-upgrades.md). When a cluster stays on an unsupported Kubernetes version after the platform support grace period ends, AKS upgrades it even if deprecated API usage is detected. Check for deprecated API usage and remediate it before your cluster's platform-initiated upgrade month.
 
 ## Prerequisites
 
