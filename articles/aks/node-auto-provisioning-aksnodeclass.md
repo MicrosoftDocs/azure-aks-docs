@@ -507,6 +507,21 @@ NAP supports clusters that use customer-managed keys and disk encryption sets. E
 
 For information on customer-managed keys and disk encryption sets enabled during cluster creation, see [Customer-Managed Keys documentation](./azure-disk-customer-managed-keys.md).
 
+### Enable trusted launch in NAP clusters
+
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable trusted launch by using the `spec.security.trustedLaunch` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set the `secureBoot` and `vTPM` fields to `true` to enable trusted launch for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+
+
+```yaml
+spec:
+  security:
+  # Enables trusted lunch
+  # Valid values: true, false; defaults to false if not specified
+     trustedLaunch:
+       secureBoot: true
+       vTPM: true   
+```
+
 ## Azure resource tags configuration
 
 You can specify Azure resource tags that apply to all VM instances created using a particular `AKSNodeClass` resource. Tags are useful for cost tracking, resource organization, and compliance requirements.
@@ -689,6 +704,17 @@ spec:
     # Pod process limits
     # Default: -1 (unlimited)
     podPidsLimit: 4096
+
+  security:
+  # Enables trusted lunch
+  # Valid values: true, false; default(or if not specified): false  
+     trustedLaunch:
+      secureBoot: true
+      vTPM: true
+  # Encryption at host
+     encryptionatHost: 
+      # acceptable values: [true, false] default(or if not specified): false  
+      false
 ```
 
 ## Next steps

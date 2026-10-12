@@ -18,6 +18,9 @@ zone_pivot_groups: azure-cli-arm-bicep-terraform-portal
 
 This article helps you understand this new feature, and how to implement it.
 
+> [!NOTE]
+> Trusted Launch is supported with Node Auto Provisioning (NAP). For more information, see [Enable trusted launch in NAP clusters](./node-auto-provisioning-aksnodeclass.md#enable-trusted-launch-in-nap-clusters).
+
 [!INCLUDE [azure linux 2.0 retirement](./includes/azure-linux-retirement.md)]
 
 ## Overview
