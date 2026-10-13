@@ -5,7 +5,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: how-to 
 ms.subservice: aks-security
-ms.date: 06/16/2026
+ms.date: 10/13/2026
 ms.custom: template-how-to, linux-related-content
 ai-usage: ai-assisted
 zone_pivot_groups: azure-cli-arm-bicep-terraform-portal
@@ -42,6 +42,7 @@ The Federal Information Processing Standard (FIPS) 140-3 is a US government stan
 :::zone pivot="azure-cli"
 
 - Azure CLI version 2.32.0 or later installed and configured. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][install-azure-cli].
+- To use FIPS with Azure Container Linux (ACL), install Azure CLI version 2.86.0 or later.
 
 :::zone-end
 
@@ -68,8 +69,8 @@ The Federal Information Processing Standard (FIPS) 140-3 is a US government stan
 
 FIPS-enabled node pools have the following limitations:
 
-- FIPS-enabled node pools require Kubernetes version 1.19 and greater.
-- Trusted Launch with FIPS is only supported with Ubuntu 22.04 on Gen2 VM sizes.
+- FIPS-enabled node pools require Kubernetes version 1.19 and greater. FIPS-enabled ACL node pools require AKS version 1.34 or later.
+- Trusted Launch with FIPS supports Ubuntu 22.04 and Azure Container Linux (ACL) on Generation 2 VM sizes. ACL requires Trusted Launch with Secure Boot and vTPM.
 - To update the underlying packages or modules used for FIPS, you must use [Node image upgrade][node-image-upgrade].
 - Container images on the FIPS nodes aren't assessed for FIPS compliance.
 - Mounting of a CIFS share fails because FIPS disables some authentication modules. To work around this issue, see [Errors when mounting a file share on a FIPS-enabled node pool][errors-mount-file-share-fips].
@@ -91,6 +92,7 @@ The following table includes the supported OS versions for FIPS-enabled node poo
 | ------- | ------ | --------------- | ------- |
 | Linux | Ubuntu | Supported for Ubuntu 20.04 and Ubuntu 22.04 | Disabled by default |
 | Linux | Azure Linux | Supported for Azure Linux 3.0 | Disabled by default |
+| Linux | Azure Container Linux | Supported for Azure Container Linux on AKS version 1.34 and later | Disabled by default |
 | Windows | Windows Server 2022 | Supported | Enabled by default |
 | Windows | Windows Server 2025 | Supported | Enabled by default and can't be disabled |
 
@@ -675,13 +677,13 @@ For more information on the `azurerm_kubernetes_cluster_node_pool` resource, see
 
 ## Add a Linux node pool with FIPS and Trusted Launch enabled
 
-Trusted Launch with FIPS is only supported for Ubuntu 22.04 on Generation 2 VM sizes.
+Trusted Launch with FIPS supports Ubuntu 22.04 and Azure Container Linux (ACL) on Generation 2 VM sizes.
 
 For more information about Trusted Launch requirements and behavior, see [Trusted Launch for Azure Kubernetes Service (AKS)][trusted-launch].
 
 :::zone pivot="azure-cli"
 
-1. Add a Linux node pool with FIPS and Trusted Launch enabled by using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+1. Add a Linux node pool with FIPS and Trusted Launch enabled by using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example uses Ubuntu. To use ACL, replace `--os-sku Ubuntu` with `--os-sku AzureContainerLinux`.
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -737,7 +739,7 @@ Adding a Linux node pool with both FIPS and Trusted Launch currently **isn't sup
 
 :::zone pivot="arm"
 
-1. Create a Linux node pool with FIPS and Trusted Launch enabled by using an ARM template. Deploy an agent pool resource with `enableFips` set to `true` and both `enableVTPM` and `enableSecureBoot` set to `true`. For example:
+1. Create a Linux node pool with FIPS and Trusted Launch enabled by using an ARM template. Deploy an agent pool resource with `enableFips` set to `true` and both `enableVTPM` and `enableSecureBoot` set to `true`. The following example uses Ubuntu. To use ACL, replace `"osSKU": "Ubuntu"` with `"osSKU": "AzureContainerLinux"`.
 
     ```json
     {
@@ -786,7 +788,7 @@ Adding a Linux node pool with both FIPS and Trusted Launch currently **isn't sup
 
 :::zone pivot="bicep"
 
-1. Create a Linux node pool with FIPS and Trusted Launch enabled by using Bicep. Deploy an agent pool resource with `enableFIPS`, `enableVTPM`, and `enableSecureBoot` set to `true`. For example:
+1. Create a Linux node pool with FIPS and Trusted Launch enabled by using Bicep. Deploy an agent pool resource with `enableFIPS`, `enableVTPM`, and `enableSecureBoot` set to `true`. The following example uses Ubuntu. To use ACL, replace `osSKU: 'Ubuntu'` with `osSKU: 'AzureContainerLinux'`.
 
     ```bicep
     param clusterName string
