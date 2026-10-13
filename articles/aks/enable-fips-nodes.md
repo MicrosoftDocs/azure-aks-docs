@@ -69,7 +69,7 @@ The Federal Information Processing Standard (FIPS) 140-3 is a US government stan
 FIPS-enabled node pools have the following limitations:
 
 - FIPS-enabled node pools require Kubernetes version 1.19 and greater.
-- Trusted Launch with FIPS is supported with Ubuntu 22.04 and Azure Container Linux (ACL) on Generation 2 VM sizes. ACL requires Trusted Launch with Secure Boot and vTPM.
+- Trusted Launch with FIPS supports Ubuntu 22.04 and Azure Container Linux (ACL) on Generation 2 VM sizes. ACL requires Trusted Launch with Secure Boot and vTPM.
 - To update the underlying packages or modules used for FIPS, you must use [Node image upgrade][node-image-upgrade].
 - Container images on the FIPS nodes aren't assessed for FIPS compliance.
 - Mounting of a CIFS share fails because FIPS disables some authentication modules. To work around this issue, see [Errors when mounting a file share on a FIPS-enabled node pool][errors-mount-file-share-fips].
@@ -676,7 +676,7 @@ For more information on the `azurerm_kubernetes_cluster_node_pool` resource, see
 
 ## Add a Linux node pool with FIPS and Trusted Launch enabled
 
-Trusted Launch with FIPS is supported for Ubuntu 22.04 and Azure Container Linux (ACL) on Generation 2 VM sizes. ACL requires Trusted Launch with Secure Boot and vTPM.
+Trusted Launch with FIPS supports Ubuntu 22.04 and Azure Container Linux (ACL) on Generation 2 VM sizes. ACL requires Trusted Launch with Secure Boot and vTPM.
 
 For more information about Trusted Launch requirements and behavior, see [Trusted Launch for Azure Kubernetes Service (AKS)][trusted-launch].
 

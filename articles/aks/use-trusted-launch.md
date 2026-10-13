@@ -43,8 +43,8 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 - AKS supports Trusted Launch on Kubernetes version 1.25.2 and higher.
 - Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
 - Node pools with Windows Server operating system aren't supported.
-- For Ubuntu and Azure Linux node pools, Trusted Launch can't be enabled in the same node pool as [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. Azure Container Linux (ACL) supports Trusted Launch on supported AMD64 VM sizes and supported Arm64 VM sizes. For more information, see [node images documentation][node-images].
-- Trusted Launch can be enabled in the same node pool as [FIPS][FIPS] with Ubuntu 22.04 or ACL.
+- For Ubuntu and Azure Linux node pools, you can't enable Trusted Launch in the same node pool as [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. Azure Container Linux (ACL) supports Trusted Launch on supported AMD64 VM sizes and supported Arm64 VM sizes. For more information, see [node images documentation][node-images].
+- You can enable Trusted Launch in the same node pool as [FIPS][FIPS] with Ubuntu 22.04 or ACL.
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
 - To enable Secure Boot on GPU node pools using the Ubuntu operating system, you need to skip installing the GPU driver (`--gpu-driver None`). For more information, see [Skip GPU driver installation][skip-gpu-driver-install] and [Use NVIDIA GPUs on Azure Kubernetes Service (AKS)][use-nvidia-gpu]. This limitation doesn't apply for running GPU workloads with Azure Linux or Azure Container Linux operating systems.
