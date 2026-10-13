@@ -35,12 +35,14 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 
 :::zone target="docs" pivot="azure-cli"
 - The Azure CLI version 2.66.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- To use Trusted Launch with Azure Container Linux (ACL), install Azure CLI version 2.86.0 or later.
 :::zone-end
 - Secure Boot requires signed boot loaders, OS kernels, and drivers.
 
 ## Limitations
 
 - AKS supports Trusted Launch on Kubernetes version 1.25.2 and higher.
+- ACL node pools with Trusted Launch require AKS version 1.34 or later.
 - Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
 - Node pools with Windows Server operating system aren't supported.
 - For Ubuntu and Azure Linux node pools, you can't enable Trusted Launch in the same node pool as [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. Azure Container Linux (ACL) supports Trusted Launch on supported AMD64 VM sizes and supported Arm64 VM sizes. For more information, see [node images documentation][node-images].
@@ -224,7 +226,7 @@ The Azure portal **doesn't support** adding a node pool with Trusted Launch enab
 
 ## Add a node pool with Trusted Launch and FIPS enabled
 
-You can enable Trusted Launch and FIPS together for Ubuntu 22.04 and Azure Container Linux (ACL) node pools on Generation 2 VM sizes. ACL requires Trusted Launch with Secure Boot and vTPM.
+You can enable Trusted Launch and FIPS together for Ubuntu 22.04 and Azure Container Linux (ACL) node pools on Generation 2 VM sizes. ACL requires AKS version 1.34 or later, Azure CLI version 2.86.0 or later, and Trusted Launch with Secure Boot and vTPM.
 
 For FIPS-specific operations, such as disabling FIPS on an existing node pool, see [Enable Federal Information Processing Standard (FIPS) for Azure Kubernetes Service (AKS) node pools][FIPS].
 
