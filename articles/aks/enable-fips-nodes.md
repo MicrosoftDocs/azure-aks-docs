@@ -677,7 +677,7 @@ For more information on the `azurerm_kubernetes_cluster_node_pool` resource, see
 
 ## Add a Linux node pool with FIPS and Trusted Launch enabled
 
-Trusted Launch with FIPS supports Ubuntu 22.04 and Azure Container Linux (ACL) on Generation 2 VM sizes. ACL requires AKS version 1.34 or later, Azure CLI version 2.86.0 or later, and Trusted Launch with Secure Boot and vTPM.
+Trusted Launch with FIPS supports Ubuntu 22.04 and Azure Container Linux (ACL) on Generation 2 VM sizes.
 
 For more information about Trusted Launch requirements and behavior, see [Trusted Launch for Azure Kubernetes Service (AKS)][trusted-launch].
 
