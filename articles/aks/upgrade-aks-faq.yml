@@ -6,6 +6,7 @@ metadata:
   ms.service: azure-kubernetes-service
   ms.topic: faq
   ms.date: 07/24/2025
+  ai-usage: ai-assisted
 
 title: "AKS upgrades frequently asked questions"
 summary: |
@@ -18,7 +19,7 @@ sections:
       - question: |
           Can I upgrade my AKS cluster directly to a newer Kubernetes version, or do I need to upgrade sequentially?
         answer: |
-          AKS cluster upgrades must be performed sequentially through each minor Kubernetes version. Direct upgrades that skip minor versions aren't supported, except when upgrading from an unsupported version to a supported one. AKS ensures that the requested [upgrade path is valid](./upgrade-cluster.md#validations-used-in-the-upgrade-process) before allowing the upgrade operation to proceed.
+          Supported community-version upgrades must proceed sequentially through each minor Kubernetes version. Some LTS and unsupported-version upgrades can skip minor versions when AKS offers a valid target. AKS ensures that the requested [upgrade path is valid](./upgrade-options.md#validations-used-in-the-upgrade-process) before allowing the upgrade operation to proceed.
           
           See the following articles for more recommendations on selecting an upgrade path for your cluster and guidance on AKS upgrade strategies:
 
@@ -28,7 +29,7 @@ sections:
       - question: |
           What happens if I skip minor versions during an AKS upgrade?
         answer: |
-          Skipping minor versions during an upgrade is only allowed when upgrading from an unsupported version to a supported one. Check [Kubernetes version upgrades](./upgrade-aks-cluster.md#kubernetes-version-upgrades) for specific considerations which should be taken into account when performing an upgrade from an unsupported version that skips two or more minor versions.
+          Supported community-version upgrades must be sequential. Some LTS and unsupported-version upgrades can skip minor versions when the target and version skew meet AKS requirements. Check [Can I skip multiple AKS versions during a cluster upgrade?](./supported-kubernetes-versions.md#can-i-skip-multiple-aks-versions-during-a-cluster-upgrade) for the supported paths and constraints.
 
       - question: |
           How do I handle deprecated Kubernetes APIs used by workloads before upgrading AKS?
@@ -45,7 +46,7 @@ sections:
         answer: |
           Yes, you can upgrade the control plane of an AKS cluster independently and along with specific node pools. However, ensuring compatibility between the control plane and all node pools is crucial for cluster stability and therefore the version skew between control plane and node pools follows specific rules and restrictions. See the following resources for more information on these rules and guidance on control plane/node pool version skew management:
 
-          - [Manage node pools for a cluster in Azure Kubernetes Service (AKS)](./manage-node-pools.md#validation-rules-for-upgrades)
+          - [Validation rules for upgrading node pools in AKS](./upgrade-node-pools.md#validation-rules-for-upgrades)
           - [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)
 
   - name: Impact and mitigation
@@ -138,7 +139,7 @@ sections:
       - question: |
           Does the AKS cluster upgrade process restart or reimage nodes?
         answer: |
-          During an AKS cluster upgrade, nodes are reimaged rather than just restarted. Reimaging ensures that nodes run the updated Kubernetes version and configurations. This process helps maintain cluster consistency and health. See [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster) for a detailed description of the AKS node upgrade process.
+          During an AKS cluster upgrade, nodes are reimaged rather than just restarted. Reimaging ensures that nodes run the updated Kubernetes version and configurations. This process helps maintain cluster consistency and health. See [Rolling upgrade behavior](./upgrade-aks-node-pools-rolling.md#overview-of-rolling-upgrade-behavior) for a detailed description of the AKS node upgrade process.
 
           AKS also provides the option to use the [OS Security Patch Channel](./auto-upgrade-node-os-image.md#available-node-os-upgrade-channels), which guarantees worker nodes get the latest operating system security updates with minimum disruption. See [Enhancing Your Operating System’s Security with OS Security Patches in AKS](https://blog.aks.azure.com/2025/04/22/Enhance-security-OS-Security-Patch) for more information on using OS Security Patch Channel and its benefits.
 
@@ -164,23 +165,50 @@ sections:
       - question: |
           How long can I continue running unsupported AKS Kubernetes versions, and what's the grace period for upgrades?
         answer: |
-          AKS provides a 30-day grace period after every version removal, during which you will still receive support for your cluster. We highly recommended you monitor AKS deprecation notices to ensure your clusters remain within the supported version range. Once the grace period ends, running unsupported versions might lead to a lack of support and potential exposure to security vulnerabilities. See the following resources for detailed information on AKS version deprecations, release calendars and release notes:
+          AKS provides a 60-day grace period after the published end-of-life date, during which your cluster stays in [platform support](./supported-kubernetes-versions.md#platform-support-policy) and you still receive support for Azure platform issues. If the cluster remains on an unsupported version when the grace period ends, AKS upgrades it to a supported version through a [platform-initiated upgrade](./platform-initiated-upgrades.md). Monitor AKS deprecation notices and consider enabling a minor-version auto-upgrade channel, such as `stable`, to keep your cluster within the supported version range. See the following resources for information on AKS version deprecations, release calendars, and release notes:
 
           - [Supported Kubernetes versions in Azure Kubernetes Service (AKS)](./supported-kubernetes-versions.md)
+          - [Platform-initiated upgrades in AKS](./platform-initiated-upgrades.md)
           - [Releases - AKS/AKS](https://github.com/Azure/AKS/releases)
 
           AKS also provides a long-term support (LTS) option, which extends the support window for a Kubernetes version to give you more time to plan and test upgrades to newer Kubernetes versions. See [Long-term support for AKS versions](./long-term-support.md) for more information on using AKS LTS.
+
+      - question: |
+          Can I opt out of platform-initiated upgrades?
+        answer: |
+          No. There's no opt-out setting and an in-flight platform-initiated upgrade can't be canceled. You keep control by keeping the cluster on a supported version — either a supported community minor version, or a [long-term support (LTS)](./long-term-support.md) version that you explicitly enroll in. Platform-initiated upgrades act only on clusters that remain on an unsupported Kubernetes version after the 60-day platform support grace period ends. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
+
+      - question: |
+          How do I avoid platform-initiated upgrades?
+        answer: |
+          Keep your clusters on a supported Kubernetes version. For individual clusters, set the [`stable` auto-upgrade channel](./auto-upgrade-cluster.md) and pair it with a [maintenance window](./planned-maintenance.md). The `patch` channel doesn't move a cluster to a newer minor version. For many clusters, use [Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration) auto-upgrade profiles and update runs to keep every member cluster in support.
+
+          You choose when to start a manual upgrade. Cluster auto-upgrade and Fleet Manager update runs honor your maintenance window. A platform-initiated upgrade can occur outside that window and doesn't run the deprecated API breaking-change check. For more information, see [How to avoid platform-initiated upgrades](./platform-initiated-upgrades.md#how-to-avoid-platform-initiated-upgrades).
+
+      - question: |
+          Will a platform-initiated upgrade disrupt my workloads?
+        answer: |
+          Possibly. AKS attempts a normal node drain and honors Pod Disruption Budgets (PDBs) where it can, but it overrides a PDB if the drain times out or fails. Platform-initiated upgrades also don't follow your maintenance window and don't run the deprecated API breaking-change check. A platform-initiated upgrade is best effort and carries no workload availability guarantee.
+
+          Upgrading the cluster before it falls out of support keeps your maintenance window, PDBs, and surge settings fully honored. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
+
+      - question: |
+          What happens if a platform-initiated upgrade fails?
+        answer: |
+          AKS retries the upgrade automatically on a system-determined cadence, and the cluster stays on an unsupported version until the upgrade succeeds. Common blockers include an unsupported add-on, a retired VM size, insufficient subnet IP addresses, a resource lock, or an Azure Policy assignment that denies changes to the Kubernetes version.
+
+          Check the failure reason in Azure Resource Health or **Diagnose and solve problems**, resolve the blocker, and then upgrade the cluster yourself. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
 
       - question: |
           What are the best practices for upgrading AKS clusters running unsupported or significantly outdated versions?
         answer: |
           For AKS clusters running unsupported or significantly outdated Kubernetes versions, the recommended best practices include:
 
-          1. **Create a new cluster** with a [supported Kubernetes version](./supported-kubernetes-versions.md).
-          2. **Migrate workloads** to the new cluster to ensure they run on supported versions.
-          3. **Avoid upgrading across multiple versions**. Instead of upgrading through several minor versions, moving to a new cluster minimizes complexity and potential issues.
-          4. **Back up and validate data** before migration.
-          5. **Perform thorough testing** in a staging environment to identify and resolve any compatibility issues.
+          - **Check the platform-initiated upgrade month** for your current version in the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions), and plan to upgrade before then.
+          - **Check for deprecated API usage** in the Azure portal under **Diagnose and solve problems** > **Kubernetes API deprecations**. A [platform-initiated upgrade](./platform-initiated-upgrades.md) doesn't stop for this check.
+          - **Perform thorough testing** in a staging environment to identify and resolve any compatibility issues.
+          - **Back up and validate data** before upgrading or migrating.
+          - **Upgrade sequentially through each minor version**, or create a new cluster with a [supported Kubernetes version](./supported-kubernetes-versions.md) and migrate your workloads if the cluster is many versions behind.
 
       - question: |
           Is standby or proactive Microsoft support available during AKS cluster upgrades?

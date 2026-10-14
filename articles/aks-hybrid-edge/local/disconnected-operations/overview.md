@@ -1,17 +1,15 @@
 ---
-title: AKS on Azure Local with disconnected operations (preview)
-description: Learn about Azure Kubernetes Service (AKS) enabled by Azure Arc for Azure Local with disconnected operations (preview), including supported scenarios, prerequisites, and limitations.
+title: AKS on Azure Local with disconnected operations
+description: Learn about Azure Kubernetes Service (AKS) enabled by Azure Arc for Azure Local with disconnected operations, including supported scenarios, prerequisites, and limitations.
 ms.topic: overview
 author: davidsmatlak
 ms.author: davidsmatlak
-ms.date: 09/01/2026
+ms.date: 10/06/2026
 ms.custom: disconnected-operations
 ai-usage: ai-assisted
 ---
 
-# AKS on Azure Local with disconnected operations (preview)
-
-[!INCLUDE [IMPORTANT](../../includes/aks-disconnected-operations-preview.md)]
+# AKS on Azure Local with disconnected operations
 
 [Disconnected operations](/azure/azure-local/manage/disconnected-operations-overview) is an Azure Local capability that you use to deploy and manage Azure Local instances without a connection to the Azure public cloud. Use select Azure Arc-enabled services from a local control plane. Azure Kubernetes Service (AKS) enabled by Azure Arc is one of the services supported for disconnected operations. You get the same familiar Azure portal, Azure CLI, and Azure Resource Manager experience for creating and managing Kubernetes clusters, entirely from the local control plane.
 

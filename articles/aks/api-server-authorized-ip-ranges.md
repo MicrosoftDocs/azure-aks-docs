@@ -29,7 +29,7 @@ This article shows you how to use API server authorized IP address ranges to lim
 
 - AKS supports this feature only with the Standard SKU load balancer. AKS no longer supports the Basic SKU load balancer. If you have an existing cluster that uses the Basic SKU, [migrate to the Standard SKU][upgrade-basic-load-balancer]. The migration requires downtime and has additional prerequisites.
 - You can't use this feature with [private clusters](./private-clusters.md).
-- For clusters that use [Node public IPs](use-node-public-ips.md), each node pool with public IPs must use public IP prefixes. Add those prefixes as authorized ranges.
+- For clusters that use [Node public IPs](use-node-public-ips.md), each node pool with public IPs must use public IP prefixes. Add those prefixes as authorized ranges. You can't use an IPv6-only node public IP prefix, because Azure assigns the node's IPv4 address automatically and you can't add it as an authorized range.
 - You can specify up to 200 authorized IP ranges. To go beyond this limit, consider using [API Server VNet Integration][api-server-vnet-integration], which supports up to 2,000 authorized IP ranges.
 
 ## Overview of API server authorized IP ranges

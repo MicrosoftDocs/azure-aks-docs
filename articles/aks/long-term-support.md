@@ -9,10 +9,13 @@ ms.service: azure-kubernetes-service
 ms.custom:
   - devx-track-azurecli
   - build-2025
+ai-usage: ai-assisted
 # Customer intent: As a cluster operator or developer, I want to understand long-term support for Kubernetes versions in AKS, so that I can effectively manage upgrade timelines and maintain application stability.
 ---
 
 # Long-term support for Azure Kubernetes Service (AKS) versions
+
+[!INCLUDE [platform-initiated-upgrades](./includes/platform-initiated-upgrade-notice.md)]
 
 The Kubernetes community releases a new minor version approximately every four months, and each version has a support window of one year. In Azure Kubernetes Service (AKS), this support window is called _community support_.
 
@@ -150,6 +153,8 @@ The following table summarizes current lifecycle considerations:
 
 AKS makes consecutive Kubernetes versions eligible for LTS and publishes a separate LTS end-of-life date for each version. Use the [AKS LTS release calendar](./supported-kubernetes-versions.md#lts-versions) and [AKS release tracker](release-tracker.md) to choose an offered target version and plan your migration before the current version reaches its LTS end-of-life date.
 
+If you don't upgrade, AKS upgrades the cluster for you after the 60-day grace period that follows the LTS end-of-life date, through a [platform-initiated upgrade](./platform-initiated-upgrades.md). The cluster stays on the LTS track and moves to the next supported LTS version. Platform-initiated upgrades don't follow your maintenance window, so upgrading on your own schedule is the only way to keep control of the timing.
+
 ## Frequently asked questions
 
 ### Can I create a new AKS cluster with an LTS version after community support ends?
@@ -163,6 +168,14 @@ Yes, you can enable the LTS support plan on any AKS-supported version even after
 ### Does a community-supported AKS cluster automatically become eligible for LTS after end of life?
 
 No. You must explicitly enable LTS and move the cluster to the Premium tier.
+
+### Does a platform-initiated upgrade enroll my cluster in LTS?
+
+No. AKS never enrolls a cluster in LTS on your behalf and never changes your billing tier. A [platform-initiated upgrade](./platform-initiated-upgrades.md) keeps the cluster in its current support tier: a community-support cluster moves to the lowest supported community minor version, and an LTS cluster moves to the applicable LTS version.
+
+### What happens if my cluster's LTS version reaches end of life and I don't upgrade?
+
+AKS upgrades the cluster to the next supported LTS version after the 60-day grace period that follows the LTS end-of-life date. The cluster isn't dropped to a community-supported version. To find the month for your version, see the [AKS LTS release calendar](./supported-kubernetes-versions.md#lts-versions). For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
 
 ### Is every AKS version eligible for long-term support?
 
@@ -180,4 +193,4 @@ No. It's a configuration-only change; it doesn't reimage nodes or disrupt worklo
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
-[supported]: ./supported-kubernetes-versions.md#aks-kubernetes-release-calendar
+[supported]: ./supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions

@@ -7,7 +7,8 @@ ms.topic: overview
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
-ms.date: 07/13/2026
+ms.date: 10/13/2026
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to implement certificate rotation in my AKS cluster, so that I can ensure the security and compliance of my cluster by managing certificate expirations and maintaining secure communication between components."
 ---
 
@@ -80,6 +81,9 @@ After you rotate the cluster CA certificate, you must also manually rotate the `
 Kubelet uses an AKS-specific TLS bootstrapping protocol and relies on the node's identity within Entra ID. This identity provides kubelet its client certificate and corresponding kubeconfig before kubelet starts. This change aims to harden the AKS node security posture by eliminating kubelet's dependency on a static bootstrap token secret to register itself with the API server. If the secure TLS bootstrapping protocol fails for any reason, kubelet can still register itself with the API server by using a bootstrap token, and the node eventually becomes ready. You see `aksService` (instead of `system:bootstrap:<>`) as the requestor field on the certificate signing request (CSR) objects created by the protocol.
 
 The kubelet client certificate is still located within _/var/lib/kubelet/pki/kubelet-client-current.pem_ on Linux nodes and _C:\k\pki\kubelet-client-current.pem_ on Windows nodes. The _bootstrap-kubeconfig_ is still located in the same spot. AKS continues to automatically rotate this certificate as part of its certificate rotation process.
+
+> [!IMPORTANT]
+> Starting on **November 30, 2026**, AKS requires a dedicated Azure role-based access control (Azure RBAC) DataAction to authorize kubelet client certificate issuance. If you use a custom Azure role for external-node bootstrap or kubelet client certificate renewal, [update the custom role before this date](./update-custom-roles-external-node-certificate-bootstrap.md). Otherwise, new external nodes might fail to join the cluster, and existing external nodes might fail to renew their kubelet client certificates. AKS-managed nodes aren't expected to be affected.
 
 ## Kubelet serving certificate rotation
 

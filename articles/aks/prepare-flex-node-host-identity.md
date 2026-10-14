@@ -66,7 +66,7 @@ Continue when the resource ID matches `AKS_RESOURCE_ID` and the provisioning sta
 
 Use a dedicated host that meets the following requirements:
 
-- Ubuntu 24.04 LTS or Azure Linux 3 on AMD64 or ARM64.
+- An AMD64 or ARM64 host running Ubuntu 24.04 LTS, Azure Linux 3.x, or Red Hat Enterprise Linux (RHEL) 9 or 10.
 - A unique host name that is a valid DNS subdomain name. The agent converts it to lowercase when it registers the node.
 - At least four vCPUs and at least 8 GiB free under `/var/lib`.
 - An SSH account with root or passwordless `sudo` access on the host.

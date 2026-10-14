@@ -184,6 +184,8 @@ Yes, if you performed only a node image update within the last seven days (witho
 
 No, you can't roll back to a Kubernetes version that's no longer supported by AKS. For example, if your node pool was on version 1.27.9 (now out of support) and you upgraded to 1.28.5, you can't roll back to 1.27.9 because it's no longer in the supported version list. Always check the [AKS Kubernetes version support policy](supported-kubernetes-versions.md) to verify version availability.
 
+For the same reason, you can't roll back a [platform-initiated upgrade](platform-initiated-upgrades.md). When AKS upgrades a cluster off an unsupported version, the previous version is no longer available.
+
 ### Do I need to disable autoupgrade before performing a node pool rollback?
 
 Yes, you must disable the Kubernetes automatic upgrade channel before performing a rollback. If you enable only the node OS upgrade channel, the Kubernetes version rollback can proceed, but the previous node image might not be restored. Disable the node OS upgrade channel when you need to roll back both the Kubernetes version and node image.

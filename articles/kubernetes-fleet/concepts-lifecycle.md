@@ -1,11 +1,12 @@
 ---
 title: Azure Kubernetes Fleet Manager hub cluster overview
 description: This article provides an overview on the Azure Kubernetes Fleet Manager hub cluster.
-ms.date: 08/01/2025
+ms.date: 10/07/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+ai-usage: ai-assisted
 # Customer intent: As a cloud operations manager, I want to understand how the Azure Kubernetes Fleet Manager manages hub cluster works, so that I can identify Azure resources associated with it and what I can and can't manage.
 ---
 
@@ -47,6 +48,62 @@ The hub cluster has the following restrictions that ensure it functions as requi
   - `kubernetes.azure.com/{guid}` (optional): This deny assignment prevents users from modifying the hub cluster AKS resources (Virtual Machine Scale Sets, networks), as described in [AKS node resource group lockdown][aks-nrg-lockdown].
 - **Applied Resources not instantiated:** The hub cluster doesn't schedule applied Kubernetes resources onto the hub cluster node. Some Kubernetes resources must be applied using an envelope object to avoid side effects on the hub cluster. For more information about envelope objects, see the [documentation of Envelope Objects](./quickstart-envelope-reserved-resources.md).
 
+### Protected-resource access restrictions
+
+> [!IMPORTANT]
+> Starting January 31, 2027, Fleet Manager hub clusters deny access to protected service-managed resources and privileged interfaces. These restrictions apply in addition to Azure role-based access control (Azure RBAC). An Azure role assignment that previously allowed a request doesn't override these restrictions.
+
+The following Kubernetes API requests are denied:
+
+- All identity impersonation requests.
+- All operations other than `get`, `list`, and `watch` in namespaces with names that begin with `fleet-` or `kube-`.
+- `get`, `list`, and `watch` requests for pods, secrets, service accounts, roles, and role bindings in namespaces with names that begin with `fleet-` or `kube-`.
+- Cross-namespace `list` and `watch` requests for pods, secrets, service accounts, roles, and role bindings.
+- Write requests for cluster roles and cluster role bindings.
+- Read and write requests to the `nodes/proxy` subresource.
+- Write requests for validating admission policies, validating admission policy bindings, and validating webhook configurations with names that begin with `fleet-builtin-`.
+- Collection deletion requests for validating admission policies, validating admission policy bindings, and validating webhook configurations.
+
+Other supported operations in customer-managed namespaces remain available.
+
+#### Identify affected Fleet Manager resources and automation
+
+A Fleet Manager resource is potentially affected if it has a hub cluster enabled. Use [Azure Resource Graph Explorer][resource-graph-explorer] to find these resources:
+
+```kusto
+Resources
+| where type =~ "microsoft.containerservice/fleets"
+| where isnotnull(properties.hubProfile)
+| project id, name, subscriptionId, resourceGroup, location
+```
+
+Having a hub cluster doesn't necessarily mean that you need to take action. You're affected only if your users, scripts, controllers, or CI/CD pipelines send one of the restricted requests to the hub cluster.
+
+Review automation that accesses the hub cluster for:
+
+- Impersonation options or headers, including `--as` and `--as-group`.
+- Requests to `nodes/proxy`.
+- Access to namespaces with names that begin with `fleet-` or `kube-`.
+- Cluster-wide or `--all-namespaces` list and watch requests for protected resources.
+- Changes to cluster roles or cluster role bindings.
+- Changes to validation resources with names that begin with `fleet-builtin-`.
+- Collection deletion of validation resources.
+
+#### Update affected automation
+
+Before January 31, 2027:
+
+- Move customer-owned resources and automation out of namespaces with names that begin with `fleet-` or `kube-`.
+- Scope list and watch requests for pods, secrets, service accounts, roles, and role bindings to customer-managed namespaces.
+- For resource placement, wrap cluster roles and cluster role bindings in a `ClusterResourceEnvelope`. For more information, see [Use envelope objects to safely place resources](./quickstart-envelope-reserved-resources.md).
+- For programmatic access to the hub cluster, use a dedicated Microsoft Entra identity, assign it the least-privileged Fleet Manager RBAC role required, and don't use identity impersonation.
+- Stop using the `nodes/proxy` subresource.
+- Don't modify validation resources with names that begin with `fleet-builtin-`.
+- Replace collection deletion of validation resources with requests scoped to customer-managed resources.
+- Test the updated automation before the enforcement date.
+
+If you don't update affected automation before January 31, 2027, its restricted requests receive authorization-denied responses. Scripts, controllers, deployments, or operational workflows that depend on those requests might fail or repeatedly retry. If you don't use any restricted operations, no action is required.
+
 ## Requirements from customers
 
 In order for Fleet Manager to create and keep hub clusters up-to-date with the latest patches, ensure that:
@@ -72,6 +129,7 @@ In order for Fleet Manager to create and keep hub clusters up-to-date with the l
 [fleet-get-credentials]: /cli/azure/fleet#az-fleet-get-credentials
 [quotas-regional-quota-requests]: /azure/quotas/regional-quota-requests
 [azure-deny-assignments]: /azure/role-based-access-control/deny-assignments
+[resource-graph-explorer]: /azure/governance/resource-graph/first-query-portal
 
 <!-- LINKS - external -->
 [aks-release-status]: https://releases.aks.azure.com

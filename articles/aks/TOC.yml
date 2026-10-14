@@ -421,6 +421,8 @@
     items:
     - name: Upgrade concepts
       href: upgrade-conceptual.md
+    - name: Platform-initiated upgrades
+      href: platform-initiated-upgrades.md
     - name: Maintain and upgrade cluster components
       href: upgrade-cluster-components.md
     - name: Upgrade options and recommendations
@@ -822,6 +824,12 @@
             items:
               - name: Use cases (Preview)
                 href: cross-cluster-networking-fleet-use-cases.md
+          - name: Multi-nic pods
+            items:
+              - name: Overview
+                href: multiple-network-interfaces-for-pods-overview.md
+              - name: Configure multi-nic pods 
+                href: configure-multiple-network-interfaces-for-pods.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
@@ -842,6 +850,8 @@
         items:
           - name: Learn about Kueue for batch scheduling
             href: kueue-overview.md
+          - name: Define Queues with managed Kueue extension
+            href: configure-queues-with-automatic-resource-flavors.md
           - name: Schedule and deploy batch jobs with Kueue
             href: deploy-batch-jobs-with-kueue.md
           - name: Provision capacity for Kueue jobs with the cluster autoscaler
@@ -938,6 +948,8 @@
           items:
             - name: Overview
               href: certificate-rotation.md
+            - name: Update custom roles for external-node bootstrap
+              href: update-custom-roles-external-node-certificate-bootstrap.md
             - name: Rotate certificates
               href: rotate-certificates.md
             - name: Use custom certificate authorities

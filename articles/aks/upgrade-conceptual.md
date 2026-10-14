@@ -12,6 +12,8 @@ ms.author: kaarthis
 
 # How Azure Kubernetes Service (AKS) cluster upgrades work
 
+[!INCLUDE [platform-initiated upgrades](./includes/platform-initiated-upgrade-notice.md)]
+
 Azure Kubernetes Service (AKS) performs rolling upgrades to minimize disruption to running workloads.
 
 For most production workloads, AKS Automatic is the recommended default where applicable. AKS Automatic includes production-ready defaults for upgrade operations, such as automatic Kubernetes version upgrades, automatic node operating system (OS) image updates, managed system node operations, and built-in safeguards that reduce manual overhead. For more information, see [Introduction to AKS Automatic](./intro-aks-automatic.md).
@@ -113,6 +115,9 @@ All nodes are now running Kubernetes version 1.31 with pods scheduled across the
 ## Restrictive Pod Disruption Budget (PDB) behavior
 
 If a restrictive PDB blocks eviction, node draining can be delayed or prevented. AKS can use the `Cordon` undrainable node behavior to continue upgrading other eligible nodes depending on the configured behavior. Blocked nodes might remain on an older version until the blocking condition is resolved.
+
+> [!NOTE]
+> [Platform-initiated upgrades](./platform-initiated-upgrades.md) behave differently. AKS attempts a normal drain first, but if the drain times out or fails, it overrides the PDB so that the cluster reaches a supported Kubernetes version.
 
 ### Restrictive PDB example
 
@@ -313,6 +318,6 @@ In AKS Automatic, several platform-level upgrade choices are preconfigured for p
 - [Create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md)
 - [AKS Automatic managed system node pools](./automatic/aks-automatic-managed-system-node-pools-about.md)
 - [Upgrade an AKS cluster](./upgrade-cluster.md)
-- [Configure upgrade settings](./upgrade-aks-cluster.md#customize-node-surge-upgrade)
+- [Configure upgrade settings](./upgrade-aks-node-pools-rolling.md#configure-rolling-upgrade-settings)
 - [Best practices for cluster upgrades](./operator-best-practices-cluster-isolation.md)
 - [Set up cluster autoupgrade](./auto-upgrade-cluster.md)

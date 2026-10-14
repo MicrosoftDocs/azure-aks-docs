@@ -86,7 +86,6 @@ az feature register --namespace Microsoft.ContainerService --name ManagedGPUExpe
 - Migrating your existing [multi-instance GPU](./gpu-multi-instance.md) node pools to use this feature isn't supported.
 - In-place upgrades from an existing NVIDIA GPU node pool to a managed GPU node pool aren't supported. To migrate, cordon and drain your existing GPU nodes, then redeploy your workloads to a new GPU node pool created with `--enable-managed-gpu=true`. For more information, see [Resize node pools on AKS](./resize-node-pool.md).
 - The `managementMode`, `migStrategy`, and `driver` fields under `gpuProfile` are immutable after node pool creation. To change these values, create a new node pool.
-- Cluster autoscaler isn't supported on manually created managed GPU node pools during preview. Scale these pools manually, or use NAP for auto-provisioned GPU capacity.
 
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
@@ -375,9 +374,6 @@ az aks nodepool scale \
     --name gpunp \
     --node-count 2
 ```
-
-> [!IMPORTANT]
-> During preview, manually created managed GPU node pools don't support the cluster autoscaler. Scale these pools manually, or use NAP for auto-provisioned GPU capacity.
 
 ## Alternative install profiles
 
