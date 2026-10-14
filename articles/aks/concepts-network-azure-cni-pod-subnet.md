@@ -48,7 +48,7 @@ The Dynamic IP Allocation mode offers the following benefits:
 
 With Dynamic IP Allocation, nodes and pods scale independently, so you can plan their address spaces separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.
 
-You allocate IPs to nodes in batches of 16. Plan pod subnet IP allocation with a minimum of 16 IPs per node in the cluster, as the nodes request 16 IPs on startup and request another batch of 16 anytime there are fewer than 8 IPs unallocated in their allotment. If your workloads repeatedly create and delete many short-lived pods, see [Pod startup for workloads with high pod churn](#pod-startup-for-workloads-with-high-pod-churn).
+IPs are allocated to nodes in batches of 16. Plan pod subnet IP allocation with a minimum of 16 IPs per node in the cluster, as the nodes request 16 IPs on startup and request another batch of 16 anytime there are fewer than 8 IPs unallocated in their allotment. If your workloads repeatedly create and delete many short-lived pods, see [Pod startup for workloads with high pod churn](#pod-startup-for-workloads-with-high-pod-churn).
 
 IP address planning for Kubernetes services and Docker Bridge remain unchanged.
 
@@ -56,7 +56,7 @@ IP address planning for Kubernetes services and Docker Bridge remain unchanged.
 
 With Dynamic IP Allocation, each node keeps a small pool of free IP addresses from the pod subnet so that new pods can start without waiting for an IP address. The node requests more addresses when its free addresses run low, and it returns unused addresses to the pod subnet when demand drops.
 
-If your workloads repeatedly create and delete many short-lived pods on the same node, some pods might wait for an IP address before they start. Common examples include CronJobs that run every minute or every few minutes, CI/CD build agents, and batch or test jobs. On each run, pods can use up the node's free IP addresses faster than the node receives new ones, especially if the node returned addresses after the previous run.
+If your workloads repeatedly create and delete many short-lived pods on the same node, some pods might wait for an IP address before they start. Common examples include CronJobs that run every minute or every few minutes, CI/CD build agents, and batch or test jobs. On each run, pods can consume the node's free IP addresses faster than the node receives new ones. This effect is more pronounced if the node returned addresses after the previous run.
 
 When a pod waits for an IP address:
 
@@ -69,11 +69,11 @@ This behavior is expected. It affects only pods that start while their node has 
 - Many pods start on the same node at the same time.
 - The pod subnet is close to full.
 
-The kubelet retries pod sandbox creation at intervals, so a waiting pod starts at the kubelet's next retry after its node receives more IP addresses. As a result, a pod can wait longer than the time that the node needs to get the addresses.
+A waiting pod might not start immediately after its node receives more IP addresses because the kubelet must retry pod sandbox creation. As a result, a pod can wait longer than the time that the node needs to get the addresses.
 
 To plan for this behavior:
 
-- **Allow time for pod startup.** Don't assume that a pod starts within a few seconds after it's created. When you set the following values, include headroom for pod startup, for example at least 60 seconds:
+- **Allow time for pod startup.** Don't assume that a pod starts within a few seconds after it's created. When setting the following values, include headroom for pod startup, for example at least 60 seconds:
   - [`activeDeadlineSeconds`][k8s-job-termination] for Jobs, including Jobs that CronJobs create. This deadline includes the time that the Job's pods wait to start.
   - [`startingDeadlineSeconds`][k8s-cronjob-starting-deadline] for CronJobs that use `concurrencyPolicy: Forbid`. If a run is still in progress at the next scheduled time, for example because its pods waited to start, the next run starts late. Kubernetes skips that run if it misses this deadline.
   - Timeouts in your applications and pipelines, such as the time that a CI/CD system waits for a build agent pod to start. Make sure that these timeouts don't treat a pod in the `ContainerCreating` state as failed.
