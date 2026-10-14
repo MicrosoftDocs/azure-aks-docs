@@ -121,7 +121,7 @@ Extension support for security, identity, networking, and deployment readiness c
 | [Flux (GitOps)][gitops-overview] | GitOps-based configuration and application deployment management. | ✅ | ❌ | ✅ | ❌ | ✅ |
 | [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) | Persistent storage for AKS workloads. | ✅ | ❌ | ✅ | N/R | ❌ |
 | Service Connector | Simplifies secure connectivity between AKS workloads and Azure services. | ✅ | ❌ | ✅ | ✅ | N/R |
-| [Virtual Nodes v2 on Azure Container Instances (preview)][virtual-nodes-v2-overview] | Use Virtual Nodes v2 to burst AKS workloads to serverless compute on Azure Container Instances (ACI). | N/R | ✅ | ❌ | ✅ | ✅ |
+| [Virtual Nodes v2 on Azure Container Instances (preview)][virtual-nodes-v2-overview] | Use Virtual Nodes v2 to burst AKS workloads to serverless compute on Azure Container Instances (ACI). | N/R | ❌ | ❌ | ✅ | ✅ |
 | [Azure Monitor - Container Insights](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-container-insights-and-logging-on-an-aks-cluster) | Log collection and monitoring for AKS clusters and containers. **(Core Extension)**| ❌ | ❌ | ❌ | ❌ | ✅ |
 | [Azure Monitor - Prometheus](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-prometheus-metrics-on-an-aks-cluster) | Prometheus-compatible metrics collection for AKS. **(Core Extension)**| ✅ | ❌ | ✅ | N/R | ✅ |
 | [Azure Monitor - App Monitoring](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-container-insights-and-logging-on-an-aks-cluster) | Application performance monitoring and telemetry collection. **(Core Extension)**| ❌ | ❌ | ❌ | ❌ | ❌ |
