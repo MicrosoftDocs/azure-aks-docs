@@ -58,7 +58,10 @@ az aks nodepool add \
 --gpu-driver none
 ```
 
-1. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
+1. Follow the NVIDIA GPU Operator installation documentation to install the GPU Operator. When installing the Helm chart, override the default tolerations and configuration as follows:
+    - Set `daemonsets.tolerations` in the Helm values to tolerate `sku=gpu:NoSchedule` (use `key: sku`, `operator: Equal`, `value: gpu`, and `effect: NoSchedule`) so every GPU Operator DaemonSet can be scheduled on the GPU nodes.
+
+    - Add `--labels nvidia.com/device-plugin.config=any` to the node-pool command so every GPU node has the selector, where `any` matches the configuration name defined in the device plugin configuration.
 
 1. After you install the GPU Operator, check that your [GPUs are schedulable](./use-nvidia-gpu.md#confirm-that-gpus-are-schedulable) and [run a GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload).
 
