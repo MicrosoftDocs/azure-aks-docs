@@ -53,6 +53,8 @@ Planning your IP addressing is much simpler with this feature. Since the nodes a
 
 You allocate IPs to nodes in batches of 16. Nodes request 16 IPs on startup and request another batch of 16 when fewer than eight IPs remain unallocated in their allotment. When you size the pod subnet, account for the maximum pods per node, the maximum number of nodes, upgrade surge nodes, and expected scaling. Also include extra capacity for the delay between deleting a pod and releasing its IP address. For more information, see [Upgrading and scaling considerations][ip-planning-considerations].
 
+If your workloads repeatedly create and delete many short-lived pods, such as CronJobs that run every minute or every few minutes, some pods might wait for an IP address before they start. For more information, see [Pod startup for workloads with high pod churn][pod-startup-high-churn].
+
 The planning of IPs for Kubernetes services and Docker bridge remain unchanged.
 
 To view and verify the NodeNetworkConfiguration (NNC) resources responsible for these IP allocations, you can run the following command:
@@ -189,3 +191,4 @@ Learn more about networking in AKS in the following articles:
 [ip-planning-considerations]: ./concepts-network-ip-address-planning.md#upgrading-and-scaling-considerations
 [maximum-pods-per-node]: ./concepts-network-ip-address-planning.md#maximum-pods-per-node
 [network-policy-options]: ./use-network-policies.md#network-policy-options-in-aks
+[pod-startup-high-churn]: ./concepts-network-azure-cni-pod-subnet.md#pod-startup-for-workloads-with-high-pod-churn
