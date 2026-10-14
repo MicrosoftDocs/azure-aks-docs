@@ -48,7 +48,7 @@ The Dynamic IP Allocation mode offers the following benefits:
 
 With Dynamic IP Allocation, nodes and pods scale independently, so you can plan their address spaces separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.
 
-IPs are allocated to nodes in batches of 16. Pod subnet IP allocation should be planned with a minimum of 16 IPs per node in the cluster, as the nodes request 16 IPs on startup and request another batch of 16 anytime there are <8 IPs unallocated in their allotment. If your workloads repeatedly create and delete many short-lived pods, see [Pod startup for workloads with high pod churn](#pod-startup-for-workloads-with-high-pod-churn).
+You allocate IPs to nodes in batches of 16. Plan pod subnet IP allocation with a minimum of 16 IPs per node in the cluster, as the nodes request 16 IPs on startup and request another batch of 16 anytime there are fewer than 8 IPs unallocated in their allotment. If your workloads repeatedly create and delete many short-lived pods, see [Pod startup for workloads with high pod churn](#pod-startup-for-workloads-with-high-pod-churn).
 
 IP address planning for Kubernetes services and Docker Bridge remain unchanged.
 
