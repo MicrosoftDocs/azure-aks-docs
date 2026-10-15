@@ -635,8 +635,7 @@ Shared maintenance windows let you apply the same maintenance window schedule ac
 
 Use shared maintenance windows when you want cluster auto-upgrades and node OS auto-upgrades to use the same approved maintenance schedule instead of managing each schedule independently.
 
-> [!NOTE]
-> Shared maintenance window support is in preview. Preview features are provided without a service-level agreement and aren't recommended for production workloads.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 Shared maintenance windows are available in the `2026-05-02-preview` AKS API version or later. To use these preview commands, install Azure CLI version 2.85.0 or later and version 21.0.0b13 or later of the `aks-preview` extension. You create a shared maintenance window as a standalone resource, then link it to one or more clusters by setting the `maintenanceWindowId` field in the `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintenance configuration.
 
