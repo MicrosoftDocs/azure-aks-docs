@@ -4,7 +4,7 @@ description: Learn about Azure CNI Pod Subnet, dynamic IP allocation mode, and s
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
-ms.date: 09/10/2026
+ms.date: 10/14/2026
 author: schaffererin
 ms.author: schaffererin
 ms.custom: references_regions
@@ -42,14 +42,45 @@ The Dynamic IP Allocation mode offers the following benefits:
 
 - The maximum supported pod subnet size is `/16`. Large clusters can also be limited to approximately 65,000 pods by the Azure address mapping limit. For larger-scale scenarios, use Static Block Allocation.
 - Azure CNI Pod Subnet with Dynamic IP Allocation isn't supported with [node auto-provisioning (NAP)][nap-networking].
+- Pods that start while their node has no free IP addresses wait until the node receives more addresses. This behavior mainly affects workloads with high pod churn. For more information, see [Pod startup for workloads with high pod churn](#pod-startup-for-workloads-with-high-pod-churn).
 
 ### Plan IP addressing
 
 With Dynamic IP Allocation, nodes and pods scale independently, so you can plan their address spaces separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.
 
-IPs are allocated to nodes in batches of 16. Pod subnet IP allocation should be planned with a minimum of 16 IPs per node in the cluster, as the nodes request 16 IPs on startup and request another batch of 16 anytime there are <8 IPs unallocated in their allotment.
+IPs are allocated to nodes in batches of 16. Plan pod subnet IP allocation with a minimum of 16 IPs per node in the cluster, as the nodes request 16 IPs on startup and request another batch of 16 anytime there are fewer than 8 IPs unallocated in their allotment. If your workloads repeatedly create and delete many short-lived pods, see [Pod startup for workloads with high pod churn](#pod-startup-for-workloads-with-high-pod-churn).
 
 IP address planning for Kubernetes services and Docker Bridge remain unchanged.
+
+### Pod startup for workloads with high pod churn
+
+With Dynamic IP Allocation, each node keeps a small pool of free IP addresses from the pod subnet so that new pods can start without waiting for an IP address. The node requests more addresses when its free addresses run low, and it returns unused addresses to the pod subnet when demand drops.
+
+If your workloads repeatedly create and delete many short-lived pods on the same node, some pods might wait for an IP address before they start. Common examples include CronJobs that run every minute or every few minutes, CI/CD build agents, and batch or test jobs. On each run, pods can consume the node's free IP addresses faster than the node receives new ones. This effect is more pronounced if the node returned addresses after the previous run.
+
+When a pod waits for an IP address:
+
+- The pod stays in the `ContainerCreating` state.
+- The pod's events show `FailedCreatePodSandBox` with a message similar to `not enough IPs available ..., waiting on Azure CNS to allocate more`.
+- The kubelet retries automatically, and the pod starts after the node receives more IP addresses.
+
+This behavior is expected. It affects only pods that start while their node has no free IP addresses, and it doesn't affect pods that are already running. The wait is usually short, but it can be longer when:
+
+- Many pods start on the same node at the same time.
+- The pod subnet is close to full.
+
+A waiting pod might not start immediately after its node receives more IP addresses because the kubelet must retry pod sandbox creation. As a result, a pod can wait longer than the time that the node needs to get the addresses.
+
+To plan for this behavior:
+
+- **Allow time for pod startup.** Don't assume that a pod starts within a few seconds after it's created. When setting the following values, include headroom for pod startup, for example at least 60 seconds:
+  - [`activeDeadlineSeconds`][k8s-job-termination] for Jobs, including Jobs that CronJobs create. This deadline includes the time that the Job's pods wait to start.
+  - [`startingDeadlineSeconds`][k8s-cronjob-starting-deadline] for CronJobs that use `concurrencyPolicy: Forbid`. If a run is still in progress at the next scheduled time, for example because its pods waited to start, the next run starts late. Kubernetes skips that run if it misses this deadline.
+  - Timeouts in your applications and pipelines, such as the time that a CI/CD system waits for a build agent pod to start. Make sure that these timeouts don't treat a pod in the `ContainerCreating` state as failed.
+- **Stagger schedules.** If several CronJobs run on the same schedule, spread them across different minute offsets so that they don't all start at the same time.
+- **Spread bursts across nodes.** Use [topology spread constraints][k8s-topology-spread] with the `kubernetes.io/hostname` topology key so that a burst of pods doesn't land on a single node.
+- **Size the pod subnet for peak usage.** Plan for the peak number of pods, including pods that are being replaced and the free addresses that each node keeps, rather than the average number of pods. To track pod subnet usage, see [Monitor IP subnet usage][monitor-ip-subnet-usage].
+- **Consider another IP allocation option for highly bursty workloads.** With [Static Block Allocation](#static-block-allocation-mode), each node receives its pod CIDR blocks when the node is created and keeps them, so pods don't wait for IP addresses at startup. To use it in an existing cluster, [add a node pool that uses Static Block Allocation with a new pod subnet][migrate-to-static-block], and run your high-churn workloads in that node pool. For new clusters, [Azure CNI Overlay][azure-cni-overlay] also assigns pod IP addresses from a range that's local to each node.
 
 ## Static block allocation mode
 
@@ -102,11 +133,16 @@ IP address planning for Kubernetes services remains unchanged.
 > Ensure your VNet has a sufficiently large and contiguous address space to support your cluster's scale.
 
 <!-- LINKS - External -->
+[k8s-cronjob-starting-deadline]: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#starting-deadline
+[k8s-job-termination]: https://kubernetes.io/docs/concepts/workloads/controllers/job/#job-termination-and-cleanup
+[k8s-topology-spread]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
 
 <!-- LINKS - Internal -->
 [aks-cni-networking-prerequisites]: ./concepts-network-cni-overview.md#aks-cni-networking-prerequisites
+[azure-cni-overlay]: ./concepts-network-azure-cni-overlay.md
 [configure-dynamic-ip-allocation]: ./configure-azure-cni-dynamic-ip-allocation.md
 [configure-static-block-allocation]: ./configure-azure-cni-static-block-allocation.md
 [migrate-to-static-block]: ./configure-azure-cni-static-block-allocation.md#migrating-from-pod-subnet---dynamic-ip-allocation-to-pod-subnet---static-block-allocation
+[monitor-ip-subnet-usage]: ./configure-azure-cni-dynamic-ip-allocation.md#monitor-ip-subnet-usage
 [nap-networking]: ./node-auto-provisioning-networking.md#supported-networking-configurations-for-nap
 [network-policies]: ./use-network-policies.md
