@@ -139,8 +139,5 @@ This approach lets you use AKS-managed ResourceFlavors and priority classes with
 
 After you configure a `ClusterQueue` and `LocalQueue` with the automatically generated ResourceFlavor, and default priority classes, submit and schedule workloads by using your configured queues.
 
-> [!div class="nextstepaction"]
-> LINK-TO-SCHEDULING-ARTICLE
-
 <!-- LINKS -->
 [install-helm]: https://helm.sh/docs/intro/install/
