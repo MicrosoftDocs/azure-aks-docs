@@ -123,8 +123,6 @@ az k8s-extension create \
 --cluster-type managedClusters \
 --name kueue \
 --extension-type microsoft.kueue \
---scope cluster \
---release-namespace kueue-system \
 ```
 
 ### Verify the extension installation
