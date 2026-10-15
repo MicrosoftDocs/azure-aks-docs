@@ -141,3 +141,5 @@ After you configure a `ClusterQueue` and `LocalQueue` with the automatically gen
 
 <!-- LINKS -->
 [install-helm]: https://helm.sh/docs/intro/install/
+[install-kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+
