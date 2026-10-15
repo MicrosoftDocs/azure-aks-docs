@@ -121,13 +121,13 @@ az k8s-extension create \
 --resource-group "$RESOURCE_GROUP" \
 --cluster-name "$CLUSTER_NAME" \
 --cluster-type managedClusters \
---name kueue \
+--name aks-kueue \
 --extension-type microsoft.kueue \
 ```
 
 ### Verify the extension installation
 
-Get the provisioning state and installed version of the Kueue extension. After the extension finishes provisioning, continue to #verify-your-kueue-installation.
+Get the provisioning state and installed version of the Kueue extension. After the extension finishes provisioning, continue to [Confirm deployment status](#confirm-deployment-status).
 
 ```bash
 az k8s-extension show \
@@ -140,12 +140,12 @@ az k8s-extension show \
 
 ### Uninstall the managed Kueue extension
 
-Uninstalling Managed Kueue deletes all Kueue custom resources in the cluster, including customer-created LocalQueues, ClusterQueues, ResourceFlavors, and other Kueue configuration. It also clears finalizers that would block deletion. Keep customer-owned configuration in Git or export it before uninstalling. Reapply it after reinstalling Kueue and before admitting queued Jobs. If you use GitOps, pause reconciliation before uninstalling and resume it after Kueue is reinstalled.
+Uninstalling Managed Kueue deletes all Kueue custom resources in the cluster, including customer-created LocalQueues, ClusterQueues, ResourceFlavors, and other Kueue configuration. It also clears finalizers that block deletion. Keep customer-owned configuration in Git or export it before uninstalling. Reapply it after reinstalling Kueue and before admitting queued Jobs. If you use GitOps, pause reconciliation before uninstalling and resume it after Kueue is reinstalled.
  
-Kueue-managed Kubernetes Jobs and their Pods are not deleted:
+Kueue-managed Kubernetes Jobs and their Pods aren't deleted:
  
 - Running Jobs and Pods continue without Kueue management.
-- Queued Jobs remain suspended and do not create Pods.
+- Queued Jobs remain suspended and don't create Pods.
 - After Kueue is reinstalled, it creates new Workloads for surviving Jobs that still have a queue label.
 
 If you want to remove managed Kueue without deleting the AKS cluster, delete the extension:
@@ -275,6 +275,8 @@ Regardless of which installation method you use, verify that the Kueue component
     NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
     kueue-controller-manager       1/1     1            1           7s
     ```
+
+For the AKS managed Kueue extension, the output should include both `kueue-controller-manager` and `kueue-extension`. Verify that both deployments show `READY` and `AVAILABLE` as `1`.
 
 2. Confirm the installation of Kueue resources on your AKS cluster:
 
