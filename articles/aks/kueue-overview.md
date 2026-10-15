@@ -102,9 +102,9 @@ Before you begin, make sure you have the following tools:
 - Azure CLI k8s-extension version 1.9.3 or later
 
 ### Limitations
-- The AKS managed Kueue extension currently only supports Cluster Autoscaler with support for node auto-provisioning planned
-- AKS Automatic is not supported yet: Support is planned for a future release.
-- Existing OSS Kueue installations must be removed first: Managed Kueue is a cluster singleton and installation rejects an unmanaged Kueue controller, even in another namespace.
+- The AKS managed Kueue extension currently only supports Cluster Autoscaler with support for node auto-provisioning planned.
+- AKS Automatic isn't supported yet. Support is planned for a future release.
+- You must remove existing OSS Kueue installations first. Managed Kueue is a cluster singleton and installation rejects an unmanaged Kueue controller, even in another namespace.
 - Supported workload integrations: Kubernetes Job, Pod, Deployment, StatefulSet, JobSet, Ray, MPIJob, and Trainer v2 TrainJob.
 - Unsupported workload integrations: Legacy Kubeflow v1 jobs, AppWrapper, and LeaderWorkerSet.
 
