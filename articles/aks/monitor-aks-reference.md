@@ -25,6 +25,12 @@ The following table lists the metrics available for the Microsoft.ContainerServi
 
 [!INCLUDE [horz-monitor-ref-metrics-tableheader](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
 
+> [!IMPORTANT]
+> The `pod` dimension for the AKS platform metrics `kube_pod_status_ready` and
+> `kube_pod_status_phase` will be retired on September 30, 2027. To continue
+> using the `pod` dimension in these metrics after the retirement date, use
+> [Azure Monitor managed service for Prometheus](/azure/azure-monitor/metrics/prometheus-metrics-overview).
+
 [!INCLUDE [Microsoft.ContainerService/managedClusters](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-containerservice-managedclusters-metrics-include.md)]
 
 ### Supported metrics for microsoft.kubernetes/connectedClusters
