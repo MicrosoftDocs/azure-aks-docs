@@ -1,5 +1,5 @@
 ---
-title: Bin Pack Nodes with Scheduler Profiles on Azure Kubernetes Service (AKS) (preview)
+title: Bin Pack Nodes with Scheduler Profiles on Azure Kubernetes Service (AKS) 
 description: Learn how to configure scheduler profiles to reduce idle costs and improve node utilization on Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
 ms.topic: how-to
@@ -9,7 +9,7 @@ author: colinmixon
 # Customer intent: "As a Kubernetes cluster operator, I want to improve node utilization by scheduling more pods on provisioined nodes using one or more configurable bin packing profiles, so that I can effectively manage provisioned resources across my AKS clusters."
 ---
 
-# Bin Pack Nodes with scheduler profiles on Azure Kubernetes Service (AKS) (preview)
+# Bin Pack Nodes with scheduler profiles on Azure Kubernetes Service (AKS) 
 
 In this article, you learn how to bin pack your nodes to improve node utilization for Azure Kubernetes Service (AKS) clusters using in-tree scheduling plugin, `NodeResourcesFit`. The default AKS scheduler operates in a `NodeResourcesFit:LeastAllocated` mode, which prioritizes nodes with lower utilization with scheduling pods. Configurable Scheduler Profiles on AKS allows you to change this default behavior and fine-tune the configuration to prioritize nodes with higher utilization. This documentation covers three different custom scheduler profiles while highlighting the best practice recommendation to improve utilization while reducing node hot spots.  
 
