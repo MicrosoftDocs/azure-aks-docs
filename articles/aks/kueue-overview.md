@@ -125,8 +125,6 @@ az k8s-extension create \
 --extension-type microsoft.kueue \
 --scope cluster \
 --release-namespace kueue-system \
---version 0.19.6-aks.0.4.4 \
---auto-upgrade-mode none
 ```
 
 ### Verify the extension installation
@@ -143,6 +141,14 @@ az k8s-extension show \
 ```
 
 ### Uninstall the managed Kueue extension
+
+Uninstalling Managed Kueue deletes all Kueue custom resources in the cluster, including customer-created LocalQueues, ClusterQueues, ResourceFlavors, and other Kueue configuration. It also clears finalizers that would block deletion. Keep customer-owned configuration in Git or export it before uninstalling. Reapply it after reinstalling Kueue and before admitting queued Jobs. If you use GitOps, pause reconciliation before uninstalling and resume it after Kueue is reinstalled.
+ 
+Kueue-managed Kubernetes Jobs and their Pods are not deleted:
+ 
+- Running Jobs and Pods continue without Kueue management.
+- Queued Jobs remain suspended and do not create Pods.
+- After Kueue is reinstalled, it creates new Workloads for surviving Jobs that still have a queue label.
 
 If you want to remove managed Kueue without deleting the AKS cluster, delete the extension:
 
