@@ -48,7 +48,7 @@ The following flow shows how Kueue evaluates a workload before Kubernetes schedu
 A `LocalQueue` identifies the `ClusterQueue` that should evaluate the workload. The `ClusterQueue` determines whether sufficient quota is available for the workload to be admitted. Platform administrators typically configure cluster-level resources and policies, while workload owners submit jobs through a `LocalQueue`.
 
 > [!NOTE]
-> A `LocalQueue` is always needed for users to submit batch workloads, and the `LocalQueue` tells Kueue about which ClusterQueue to assign the job to. The `ClusterQueue` determines if sufficient resources are available for the job to be admitted and run.
+> To submit a workload to Kueue, add the `kueue.x-k8s.io/queue-name: <local-queue-name>` label to the workload. This label associates the workload with a LocalQueue, which routes it to the appropriate ClusterQueue for admission.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -96,22 +96,23 @@ The AKS managed Kueue extension provides an Azure-native installation path for d
 
 Before you begin, make sure you have the following tools:
 
-- AKS version v1.34 or later
+- AKS version 1.34 or later
 - Azure CLI version 2.56 or later
-- kubectl version 1.21.0 or later
-- Azure CLI k8s-extension version 1.9.3
-- Permissions to create and delete: resource groups, AKS clusters, AKS node pools, and cluster extensions
+- kubectl version 1.33–1.35
+- Azure CLI k8s-extension version 1.9.3 or later
 
 ### Limitations
-- The AKS managed Kueue extension is currently available in the following Azure regions: centralus, westus, westus2, and eastus
-- The AKS managed Kueue extension currently only supports Cluster Autoscaler with support for Node Autoprovisioning planned
+- The AKS managed Kueue extension currently only supports Cluster Autoscaler with support for node auto-provisioning planned
+- AKS Automatic is not supported yet: Support is planned for a future release.
+- Existing OSS Kueue installations must be removed first: Managed Kueue is a cluster singleton and installation rejects an unmanaged Kueue controller, even in another namespace.
+- Supported workload integrations: Kubernetes Job, Pod, Deployment, StatefulSet, JobSet, Ray, MPIJob, and Trainer v2 TrainJob.
+- Unsupported workload integrations: Legacy Kubeflow v1 jobs, AppWrapper, and LeaderWorkerSet.
 
 ### Install the managed Kueue extension
 
 Set environment variables for your Azure subscription, resource group, and AKS cluster:
 
 ```bash
-SUBSCRIPTION_ID="<subscription-id>"
 RESOURCE_GROUP="<resource-group-name>"
 CLUSTER_NAME="<aks-cluster-name>"
 ```
@@ -123,11 +124,12 @@ az k8s-extension create \
 --cluster-type managedClusters \
 --name aks-kueue \
 --extension-type microsoft.kueue \
+--release-train preview
 ```
 
 ### Verify the extension installation
 
-Get the provisioning state and installed version of the Kueue extension. After the extension finishes provisioning, continue to [Confirm deployment status](#confirm-deployment-status).
+Get the provisioning state and installed version of the Kueue extension. Verify that `provisioningState` is `Succeeded` and `extensionState` is `Available`. Then continue to [Confirm deployment status](#confirm-deployment-status).
 
 ```bash
 az k8s-extension show \
