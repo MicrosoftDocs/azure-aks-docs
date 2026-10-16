@@ -23,7 +23,7 @@ This article lists the known limitations and scope boundaries for the AKS on bar
 | **Host operating system** | Azure Linux 3.0. | Ubuntu 24.04.3 LTS or 24.04.4 LTS. |
 | **Processor architecture** | x86_64. | x86_64. |
 | **Cluster topology** | Single-node cluster. | Single-node cluster, with one cluster per host. |
-| **Kubernetes version** | Kubernetes 1.34. | Kubernetes 1.33.3 by default. See [Supported Kubernetes versions](aks-bare-metal-create-cluster-ubuntu-cli.md#supported-kubernetes-versions) for the versions and parameter values available during deployment. |
+| **Kubernetes version** | Kubernetes 1.34. | Kubernetes 1.35.5 by default. See [Supported Kubernetes versions](aks-bare-metal-create-cluster-ubuntu-cli.md#supported-kubernetes-versions) for the versions available during deployment. |
 | **Cluster creation** | Azure portal, Azure Resource Manager template, or Bicep. | Azure CLI |
 | **Patch-version upgrades** | Azure portal. | Azure CLI. |
 | **Cluster deletion** | Ordered Azure resource deletion. | Use Azure CLI for structured deletion of cluster and dependent resources. |

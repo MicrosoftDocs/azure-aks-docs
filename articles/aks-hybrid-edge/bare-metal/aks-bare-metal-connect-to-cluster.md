@@ -79,7 +79,7 @@ Expected output:
 
 ```output
 NAME               STATUS   ROLES           AGE   VERSION
-<cluster-name>     Ready    control-plane   1d    v1.34.2
+<cluster-name>     Ready    control-plane   1d    v1.34.3
 ```
 
 ## Download credentials for an Ubuntu cluster
