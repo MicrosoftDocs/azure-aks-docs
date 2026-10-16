@@ -29,6 +29,8 @@ Ray simplifies distributed computing by handling scheduling, fault tolerance, an
 
 [Kueue](https://kueue.sigs.k8s.io/) is a Kubernetes-native job queueing controller that manages workload admission based on resource quotas. Instead of letting every submitted job consume resources immediately, Kueue gates admission against defined quotas - jobs that fit run, jobs that don't wait in line. For a detailed overview of Kueue concepts and configuration, see [Kueue overview on AKS](./kueue-overview.md).
 
+For managed installation and operation, see [Install the managed Kueue extension on AKS (preview)](./kueue-overview.md).
+
 ## Solution architecture
 
 This solution combines Kueue for admission control with KubeRay for Ray cluster lifecycle management on AKS. Terraform provisions the infrastructure, Helm installs the operators from Microsoft Container Registry (MCR), and workload identity provides secure access to Azure Blob Storage without stored credentials.
