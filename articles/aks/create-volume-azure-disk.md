@@ -4,7 +4,7 @@ description: Learn how to create and manage persistent volumes using Azure Disks
 ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
-ms.date: 01/08/2025
+ms.date: 10/16/2026
 author: schaffererin
 ms.author: schaffererin
 ai-usage: ai-assisted
@@ -409,6 +409,14 @@ The CSI driver for Azure Disks supports volume cloning. To demonstrate, create a
 > Shrinking persistent volumes is currently not supported. Trying to patch an existing PVC with a smaller size than the current one leads to the following error message:
 >
 > `The persistentVolumeClaim "pvc-azuredisk" is invalid: spec.resources.requests.storage: Forbidden: field can not be less than previous value.`
+
+> [!IMPORTANT]
+> You can expand a persistent volume without downtime for volumes up to 4 TiB.
+> To expand a **Standard HDD**, **Standard SSD**, or **Premium SSD** volume beyond 4 TiB, you must unmount the disk and detach it from the AKS node. Before you update the `PersistentVolumeClaim` (PVC), scale the workload down to zero replicas to ensure the volume is detached.
+>
+> This limitation doesn't apply to **Premium SSD v2** or **Ultra Disk** volumes, which support online expansion beyond 4 TiB.
+>
+> For more information, see [Expand an Azure managed disk](/azure/virtual-machines/linux/expand-disks?tabs=ubuntu#expand-an-azure-managed-disk).
 
 You can request a larger volume for a PVC by editing the PVC object to specify a larger size. This change triggers the expansion of the underlying volume that backs the PV. A new PV is never created to satisfy the claim. Instead, an existing volume is resized.
 
