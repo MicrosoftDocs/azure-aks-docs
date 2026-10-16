@@ -493,6 +493,13 @@ Increase [read-ahead size](/azure/storage/files/nfs-performance#increase-read-ah
 
 While Azure Files supports setting nconnect up to the maximum setting of 16, we recommend configuring the mount options with the optimal setting of nconnect=4. Currently, there are no gains beyond four channels for the Azure Files implementation of nconnect.
 
+The `mountOptions` shown here are Microsoft's recommended subset, not an exhaustive list. The Azure Files NFS CSI driver passes `mountOptions` through to the Linux kernel NFS client, so you can use most standard Linux NFS client mount options. This behavior is the same whether you set `mountOptions` on a `StorageClass` for dynamic provisioning or on a `PersistentVolume` for static provisioning, since both go through the same `file.csi.azure.com` driver.
+
+> [!NOTE]
+> The Azure Files CSI driver automatically configures `vers`, `minorversion`, and `sec`. Don't set these properties yourself, whether you're using a `StorageClass` or a `PersistentVolume`.
+
+For a complete list of mount options supported by the Linux NFS client, see the [`nfs(5)` man page](https://linux.die.net/man/5/nfs).
+
 ## Create a volume snapshot from a PVC with Azure Files
 
 The Azure Files CSI driver supports creating [snapshots of persistent volumes](https://kubernetes-csi.github.io/docs/snapshot-restore-feature.html) and the underlying file shares.
