@@ -734,7 +734,7 @@ This option is optimized for random access workloads with in-place data updates 
 - Your AKS cluster's service principal or managed identity must be added to the Contributor role on the storage account.
 
 > [!NOTE]
-> To use the NFS protocol natively in Azure Kubernetes Service (AKS), you must disable the **Secure transfer required** setting on the storage account. Otherwise, the volume mount operation fails.
+> To use the NFS protocol natively in Azure Kubernetes Service (AKS), disable the **Secure transfer required** setting on the storage account. Otherwise, the volume mount operation fails.
 
 > [!NOTE]
 > You can use a private endpoint instead of allowing access to the selected VNet.
