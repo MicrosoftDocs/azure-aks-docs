@@ -31,7 +31,7 @@ az extension add --name aksarc --upgrade --allow-preview true
 
 ## Check available upgrades
 
-The versions supported for new deployments don't necessarily represent valid upgrade paths for an existing cluster. For deployment versions and their full parameter values, see [Supported Kubernetes versions](aks-bare-metal-create-cluster-ubuntu-cli.md#supported-kubernetes-versions).
+The versions supported for new deployments don't necessarily represent valid upgrade paths for an existing cluster. For deployment versions, see [Supported Kubernetes versions](aks-bare-metal-create-cluster-ubuntu-cli.md#supported-kubernetes-versions).
 
 List the patch versions available for your cluster:
 
