@@ -496,7 +496,7 @@ While Azure Files supports setting nconnect up to the maximum setting of 16, we 
 The `mountOptions` shown here are Microsoft's recommended subset, not an exhaustive list. The Azure Files NFS CSI driver passes `mountOptions` through to the Linux kernel NFS client, so you can use most standard Linux NFS client mount options. This behavior is the same whether you set `mountOptions` on a `StorageClass` for dynamic provisioning or on a `PersistentVolume` for static provisioning, since both go through the same `file.csi.azure.com` driver.
 
 > [!NOTE]
-> `vers`, `minorversion`, and `sec` are configured automatically by the Azure Files CSI driver. Don't set these properties yourself, whether you're using a `StorageClass` or a `PersistentVolume`.
+> The Azure Files CSI driver automatically configures `vers`, `minorversion`, and `sec`. Don't set these properties yourself, whether you're using a `StorageClass` or a `PersistentVolume`.
 
 For a complete list of mount options supported by the Linux NFS client, see the [`nfs(5)` man page](https://linux.die.net/man/5/nfs).
 
