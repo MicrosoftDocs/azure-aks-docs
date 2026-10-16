@@ -412,7 +412,7 @@ The CSI driver for Azure Disks supports volume cloning. To demonstrate, create a
 
 > [!IMPORTANT]
 > You can expand a persistent volume without downtime for volumes up to 4 TiB.
-> To expand a **Standard HDD**, **Standard SSD**, or **Premium SSD** volume beyond 4 TiB, you must unmount the disk and detach it from the AKS node. Before you update the `PersistentVolumeClaim` (PVC), scale the workload down to zero replicas to make sure the volume is detached.
+> To expand a **Standard HDD**, **Standard SSD**, or **Premium SSD** volume beyond 4 TiB, you must unmount the disk and detach it from the AKS node. Before you update the `PersistentVolumeClaim` (PVC), scale the workload down to zero replicas to ensure the volume is detached.
 >
 > This limitation doesn't apply to **Premium SSD v2** or **Ultra Disk** volumes, which support online expansion beyond 4 TiB.
 >
