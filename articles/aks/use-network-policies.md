@@ -44,14 +44,14 @@ Azure provides three network policy engines for enforcing network policies:
 - **Azure Network Policy Manager (NPM)**
 - **Calico** (an open-source network and network security solution founded by [Tigera][tigera])
 
-We recommend using Cilium, which provides robust support for Kubernetes-native policies, extended features such as [Layer 7 policy](./container-network-security-l7-policy-concepts.md) and [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md), and an eBPF-based dataplane that offers better performance, scalability, and security compared to _IPTables_-based solutions.
+We recommend using Cilium, which provides robust support for Kubernetes-native policies, extended features such as [Layer 7 policy](./container-network-security-l7-policy-concepts.md) and [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md), and an eBPF-based dataplane that offers better performance, scalability, and security compared to *IPTables*-based solutions.
 
-To enforce the specified policies, Azure NPM uses _IPTables_ for Linux nodes. Policies are translated into sets of allowed and disallowed IP pairs. The system programs these pairs as `IPTable` filter rules.
+To enforce the specified policies, Azure NPM uses *IPTables* for Linux nodes. Policies are translated into sets of allowed and disallowed IP pairs. The system programs these pairs as `IPTable` filter rules.
 
 ## Differences between network policy engines: Cilium, Azure NPM, and Calico
 
 | Network policy engine | Supported platforms | Supported networking options | Kubernetes specification compliance | Other features | Support |
-| --------------------- | ------------------- | ---------------------------- | ----------------------------------- | -------------- | ------- |
+| --- | --- | --- | --- | --- | --- |
 | Cilium | Linux | Azure CNI | Supports all policy types | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md) | Azure support and engineering team |
 | Azure NPM | Linux | Azure CNI | Supports all policy types | N/A | Azure support and engineering team |
 | Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | While Calico has many features that AKS doesn't block, AKS doesn't test or support them. For more information, see [Calico Guidance](https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate). | Azure support and engineering team |
@@ -60,7 +60,7 @@ To enforce the specified policies, Azure NPM uses _IPTables_ for Linux nodes. Po
 
 Azure NPM has the following limitations:
 
-- Scaling beyond _250 nodes_ and _20,000 pods_ isn't supported. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, we recommend using or upgrading to [Azure CNI Powered by Cilium](./update-azure-cni.md) for your network policy engine.
+- Scaling beyond *250 nodes* and *20,000 pods* isn't supported. If you attempt to scale beyond these limits, you might experience *Out of Memory (OOM)* errors. For better scalability and IPv6 support, we recommend using or upgrading to [Azure CNI Powered by Cilium](./update-azure-cni.md) for your network policy engine.
 - IPv6 isn't supported. Otherwise, it fully supports the network policy specifications in Linux.
 - Starting on September 30, 2026, Azure Kubernetes Service (AKS) no longer supports Azure Network Policy Manager (NPM) on Windows nodes.
 
@@ -71,7 +71,12 @@ You might experience temporary connectivity issues for new connections to/from p
 
 If this race condition occurs for a node, the Azure NPM pod on that node enters a state where it can't update security rules, which might lead to unexpected connectivity for new connections to/from pods on the impacted node. To mitigate the issue, the Azure NPM pod automatically restarts ~15 seconds after entering this state. While Azure NPM is rebooting on the impacted node, it deletes all security rules, then reapplies security rules for all network policies. While all the security rules are being reapplied, there's a chance of temporary, unexpected connectivity for new connections to/from pods on the impacted node.
 
-To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with _four or fewer_ `ipBlock` sections is less likely to hit the issue.
+To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with *four or fewer* `ipBlock` sections is less likely to hit the issue.
+
+## Calico limitations
+
+- AKS does not support running AKS-managed Calico alongside Calico Cloud or Calico Enterprise, as this combination can cause conflicts and unintended behavior. If you use Calico Cloud or Enterprise, Microsoft strongly recommends disabling AKS-managed Calico. Contact Tigera for support with those products.
+- AKS-managed Calico only supports `networking.k8s.io` network policies. If intending to use `projectcalico.org/v3` policies, we recommend migrating to a self-hosted solution (e.g. Calico Cloud, Calico Enterprise or BYOCNI).
 
 ## Load balancer services and network policies
 
@@ -280,7 +285,7 @@ AKS only supports Calico for standard Kubernetes network policies and doesn't te
 > [!NOTE]
 > Keep the following information in mind when uninstalling Azure NPM or Calico from a cluster:
 >
-> - The uninstall process **doesn't remove** Custom Resource Definitions (CRDs) and Custom Resources (CRs) used by Calico. These CRDs and CRs all have names ending with either _projectcalico.org_ or _tigera.io_. You can manually remove these CRDs and associated CRs _after_ successfully uninstalling Calico.
+> - The uninstall process **doesn't remove** Custom Resource Definitions (CRDs) and Custom Resources (CRs) used by Calico. These CRDs and CRs all have names ending with either *projectcalico.org* or *tigera.io*. You can manually remove these CRDs and associated CRs *after* successfully uninstalling Calico.
 > - The upgrade doesn't remove any network policy resources in the cluster, but the policies are no longer enforced after the uninstall process.
 
 Remove Azure Network Policy Manager or Calico from an existing cluster using the [`az aks update`][az-aks-update] command and specifying `none` for the `--network-policy` parameter.
