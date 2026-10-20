@@ -1251,6 +1251,8 @@
               href: open-ai-quickstart.md
             - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
               href: open-ai-secure-access-quickstart.md
+        - name: Install the managed KubeRay extension (preview)
+          href: kuberay-overview.md
         - name: Run Ray AI workloads with Kueue
           items:
             - name: Overview
