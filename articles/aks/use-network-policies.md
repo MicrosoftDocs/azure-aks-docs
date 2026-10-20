@@ -54,7 +54,7 @@ To enforce the specified policies, Azure NPM uses _IPTables_ for Linux nodes. Po
 | --------------------- | ------------------- | ---------------------------- | ----------------------------------- | -------------- | ------- |
 | Cilium | Linux | Azure CNI | Supports all policy types | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md) | Azure support and engineering team |
 | Azure NPM | Linux | Azure CNI | Supports all policy types | N/A | Azure support and engineering team |
-| Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | While Calico has many features that AKS doesn't block, AKS doesn't test or support them. For more information, see [Calico Guidance](https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate). | Azure support and engineering team |
+| Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | AKS doesn't test or support features beyond enforcement of `networking.k8s.io` policies. | Azure support and engineering team |
 
 ## Azure Network Policy Manager limitations 
 
@@ -72,6 +72,11 @@ You might experience temporary connectivity issues for new connections to/from p
 If this race condition occurs for a node, the Azure NPM pod on that node enters a state where it can't update security rules, which might lead to unexpected connectivity for new connections to/from pods on the impacted node. To mitigate the issue, the Azure NPM pod automatically restarts ~15 seconds after entering this state. While Azure NPM is rebooting on the impacted node, it deletes all security rules, then reapplies security rules for all network policies. While all the security rules are being reapplied, there's a chance of temporary, unexpected connectivity for new connections to/from pods on the impacted node.
 
 To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with _four or fewer_ `ipBlock` sections is less likely to hit the issue.
+
+## Calico limitations
+
+- AKS doesn't support running AKS-managed Calico alongside Calico Cloud or Calico Enterprise, as this combination can cause conflicts and unintended behavior. If you use Calico Cloud or Enterprise, Microsoft strongly recommends disabling AKS-managed Calico. Contact Tigera for support with those products.
+- AKS-managed Calico only supports `networking.k8s.io` network policies. If you intend to use `projectcalico.org/v3` policies, consider migrating to a self-hosted solution, such as Calico Cloud, Calico Enterprise, or BYOCNI.
 
 ## Load balancer services and network policies
 
