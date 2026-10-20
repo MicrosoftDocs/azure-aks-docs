@@ -4,8 +4,8 @@ description: Learn how to create multiple node pools for a cluster in Azure Kube
 ms.topic: how-to
 ms.custom: devx-track-azurecli, build-2023, linux-related-content, annual
 ms.date: 07/13/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-nodes
 ms.service: azure-kubernetes-service
 zone_pivot_groups: azure-cli-or-arm

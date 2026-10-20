@@ -3,8 +3,8 @@ title: Create Node Pools with Unique Subnets in Azure Kubernetes Service (AKS)
 description: Learn how to create node pools with unique subnets in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.date: 09/26/2025
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-nodes
 ms.service: azure-kubernetes-service
 # Customer intent: As a node pool operator, I want to create node pools with unique subnets in AKS to support logical isolation of workloads.

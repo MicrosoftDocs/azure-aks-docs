@@ -4,8 +4,8 @@ description: Learn how to deploy and manage the lifecycle of cluster extensions 
 ms.date: 09/09/2025
 ms.topic: overview
 ms.subservice: aks-developer
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ai-usage: ai-assisted
 
 # Customer intent: As a Kubernetes administrator, I want to deploy and manage cluster extensions on Azure Kubernetes Service so that I can enhance my cluster's capabilities and streamline the lifecycle management of related applications and services.
@@ -117,6 +117,7 @@ Extension support for security, identity, networking, and deployment readiness c
 | [Azure App Configuration][app-config-overview] | Centralized management of application settings and feature flags. | ✅ | ❌ | ✅ | ✅ | ✅ |
 | [Kueue][azure-kueue] | Managed job queuing, prioritization, and resource-aware workload admission for batch and AI workloads on AKS. | ✅  | ❌ | ❌ | ✅  | ✅ |
 | [Azure Machine Learning][azure-ml-overview] | Train, deploy, and manage machine learning workloads on AKS. | ❌ | ❌ | ❌ | ❌ | ✅ |
+| [Managed KubeRay (preview)][kuberay-overview] | Install and manage the KubeRay operator for Ray workloads on AKS. | ✅ | ❌ | ✅ | N/R | ❌ |
 | [Dapr][dapr-overview] | Event-driven application runtime for cloud and edge workloads. | ✅ | ❌ | ❌ | ✅ | ✅ |
 | [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview) | Backup and restore protection for persistent volumes. **(Core Extension)**| ✅ | ❌ | ✅ | ✅ | ✅ |
 | [Flux (GitOps)][gitops-overview] | GitOps-based configuration and application deployment management. | ✅ | ❌ | ✅ | ❌ | ✅ |
@@ -146,6 +147,7 @@ You can also [select and deploy Kubernetes applications available through Market
 [arc-k8s-extensions]: /azure/azure-arc/kubernetes/conceptual-extensions
 [app-config-overview]: ./azure-app-configuration-quickstart.md
 [azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
+[kuberay-overview]: ./kuberay-overview.md
 [dapr-overview]: ./dapr.md
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
 [gitops-support]: /azure/azure-arc/kubernetes/extensions-release#flux-gitops

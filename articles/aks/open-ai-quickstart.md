@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.date: 08/06/2026
 ms.custom: template-how-to, devx-track-azurecli
 ms.subservice: aks-developer
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a developer, I want to deploy an application using OpenAI on a Kubernetes service, so that I can leverage AI capabilities for functionalities such as automated content generation in my application.
 ---

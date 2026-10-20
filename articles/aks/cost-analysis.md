@@ -1,8 +1,8 @@
 ---
 title: Azure Kubernetes Service (AKS) cost analysis
 description: Learn how to use cost analysis to surface granular cost allocation data for your Azure Kubernetes Service (AKS) cluster.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to

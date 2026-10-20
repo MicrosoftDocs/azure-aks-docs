@@ -5,8 +5,8 @@ description: Learn the application developer best practices for resource managem
 ms.topic: best-practice
 ms.subservice: aks-developer
 ms.date: 05/25/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As an application developer, I want to define pod resource requests and limits in my deployments, so that I can optimize application performance and ensure proper resource allocation within Azure Kubernetes Service.
 ---

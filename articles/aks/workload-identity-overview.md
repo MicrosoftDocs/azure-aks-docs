@@ -7,7 +7,7 @@ ms.topic: overview
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.custom: build-2023
-ms.date: 09/04/2026
+ms.date: 10/06/2026
 ai-usage: ai-assisted
 # Customer intent: As a cloud developer, I want to implement Microsoft Entra Workload ID with Azure Kubernetes Service, so that my applications can authenticate securely and access Azure resources effectively without relying on managed identities.
 ---
@@ -308,7 +308,7 @@ All annotations are optional. If the annotation isn't specified, the default val
 
 ## Use identity bindings and direct federation in the same workload
 
-[Identity bindings][identity-bindings-concepts] are a preview feature that extends workload identity to support large-scale AKS environments. Instead of creating a federated identity credential (FIC) for each cluster, identity bindings let multiple clusters share a single user-assigned managed identity through one FIC. When enabled, AKS routes pod token requests through an identity binding proxy webhook that handles token exchange on behalf of the workload.
+[Identity bindings][identity-bindings-concepts] extend workload identity to support large-scale AKS environments. Instead of creating a federated identity credential (FIC) for each cluster, identity bindings let multiple clusters share a single user-assigned managed identity through one FIC. When enabled, AKS routes pod token requests through an identity binding proxy webhook that handles token exchange on behalf of the workload.
 
 A projected service account token has a single audience. When identity bindings are enabled, the identity binding webhook sets the default token referenced by `AZURE_FEDERATED_TOKEN_FILE` to the audience `api://AKSIdentityBinding`, which the identity binding proxy uses.
 

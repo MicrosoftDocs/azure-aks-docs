@@ -1,10 +1,10 @@
 ---
 title: Use the Azure Kubernetes Service (AKS) extension for Visual Studio Code
 description: Learn how to the Azure Kubernetes Service (AKS) extension for Visual Studio Code to manage your Kubernetes clusters.
-author: davidsmatlak
+author: schaffererin
 ms.topic: concept-article
 ms.date: 04/08/2024
-ms.author: davidsmatlak
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-developer
 # Customer intent: "As a developer managing Kubernetes clusters, I want to use the AKS extension for my code editor, so that I can efficiently view and manage my clusters directly from my development environment."

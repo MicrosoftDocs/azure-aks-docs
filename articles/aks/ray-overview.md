@@ -25,6 +25,8 @@ Ray simplifies distributed computing by handling scheduling, fault tolerance, an
 
 [KubeRay](https://docs.ray.io/en/latest/cluster/kubernetes/getting-started.html) is a Kubernetes operator that manages the lifecycle of Ray clusters. It provides custom resources - `RayJob` for batch workloads and `RayService` for persistent serving endpoints - that automate cluster creation, scaling, and teardown. For more information, see the [KubeRay GitHub repository](https://github.com/ray-project/kuberay).
 
+For managed operator installation outside this Terraform workflow, see [Install the managed KubeRay extension on AKS (preview)](./kuberay-overview.md).
+
 ## What is Kueue?
 
 [Kueue](https://kueue.sigs.k8s.io/) is a Kubernetes-native job queueing controller that manages workload admission based on resource quotas. Instead of letting every submitted job consume resources immediately, Kueue gates admission against defined quotas - jobs that fit run, jobs that don't wait in line. For a detailed overview of Kueue concepts and configuration, see [Kueue overview on AKS](./kueue-overview.md).

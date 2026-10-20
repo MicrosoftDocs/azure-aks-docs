@@ -1,8 +1,8 @@
 ---
 title: "Quickstart: Deploy an Azure Container Linux (ACL) for AKS Cluster using Azure CLI"
 description: Learn how to quickly deploy an Azure Kubernetes Service (AKS) cluster with Azure Container Linux (ACL) for AKS using the Azure CLI.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aks-getting-started
 ms.topic: quickstart

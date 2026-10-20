@@ -1,8 +1,8 @@
 ---
 title: "Quickstart: Deploy an Azure Container Linux (ACL) for AKS Cluster using an ARM Template"
 description: Learn how to quickly deploy an Azure Kubernetes Service (AKS) cluster with Azure Container Linux (ACL) for AKS using an Azure Resource Manager (ARM) template.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aks-getting-started
 ms.topic: quickstart

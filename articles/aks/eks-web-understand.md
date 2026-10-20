@@ -1,8 +1,8 @@
 ---
 title: Understand platform differences for the web application workload
 description: Learn about the key differences between the AWS and Azure platforms related to the web application hosting.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.date: 11/10/2025
 ms.topic: how-to
 ms.service: azure-kubernetes-service

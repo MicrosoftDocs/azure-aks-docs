@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.date: 09/17/2026
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ai-usage: ai-assisted
 ---
 

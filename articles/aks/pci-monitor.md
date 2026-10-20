@@ -4,8 +4,8 @@ description: Monitoring and logging guidance for AKS clusters under PCI DSS 4.0.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance

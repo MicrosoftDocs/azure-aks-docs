@@ -1,8 +1,8 @@
 ---
 title: Get Started With Azure Kubernetes Service (AKS) Basics
 description: Learn the basics of Azure Kubernetes Service (AKS) and start with AKS Automatic as the recommended production-ready default for most workloads.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aks-getting-started
 ms.topic: get-started
