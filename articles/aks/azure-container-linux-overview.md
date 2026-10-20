@@ -6,7 +6,7 @@ ms.author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.custom: linux-related-content
 ms.topic: overview
-ms.date: 04/28/2026
+ms.date: 10/20/2026
 ---
 
 # What is Azure Container Linux (ACL) for Azure Kubernetes Service (AKS)?
@@ -36,6 +36,7 @@ The following key features distinguish ACL as a hardened, container-optimized OS
 - **Immutability**: The '/usr' directory is mounted as a read-only volume protected by dm-verity. At runtime, the kernel validates a signed root hash to detect and block tampering
 - **Mandatory access control with SELinux**: ACL includes SELinux to enforce mandatory access control policies that restrict which processes can access sensitive system resources. Note that _SELinux is operating in enforcing mode by default. SELinux policies might evolve over time_.
 - **Trusted Launch and Secure Boot**: ACL requires [Trusted Launch](/azure/virtual-machines/trusted-launch) with Secure Boot and vTPM, to ensure the integrity of the boot chain before the OS loads. This is achieved using a Unified Kernel Image (UKI), which bundles the kernel, initramfs, and kernel command line into a single signed artifact. During boot, the UKI is measured and recorded in the vTPM, ensuring integrity from the earliest stage.
+- **Confidential VM support**: ACL supports [Confidential VM node pools](./use-cvm.md) on supported CVM VM sizes and AKS versions. For ACL CVM, Trusted Launch with Secure Boot and vTPM is required. ACL CVM can also be combined with FIPS on supported Generation 2 CVM VM sizes.
 - **NVIDIA GPU node support**: ACL supports NVIDIA GPU-enabled node pools on AMD64 architectures, allowing you to run high-performance computing (HPC) and AI/ML workloads on AKS with a hardened, container-optimized OS. ACL doesn't support ARM64 architectures for GPU-enabled node pools.
 - **AMD64 and ARM64 architecture support**: ACL is available for both AMD64 and ARM64 architectures on AKS.
 - **Sovereign Supply Chain Security**: ACL inherits Azure Linux’s secure build pipelines and signed Unified Kernel Images (UKIs).
@@ -79,4 +80,5 @@ To get started using ACL for AKS, see the following resources:
 - [Deploy an ACL cluster using the Azure CLI](./learn/quick-azure-container-linux-deploy-cli.md)
 - [Deploy an ACL cluster using an ARM template](./learn/quick-azure-container-linux-deploy-arm-template.md)
 - [Add an ACL node pool to an existing cluster](create-node-pools.md#add-a-second-node-pool-using-the-azure-cli)
+- [Use Confidential Virtual Machines (CVMs) in AKS](./use-cvm.md)
 - [Migrate existing nodes to ACL](./migrate-nodes-azure-container-linux.md)

@@ -4,7 +4,7 @@ description: Learn how Trusted Launch protects the Azure Kubernetes Cluster (AKS
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-security
-ms.date: 10/13/2026
+ms.date: 10/20/2026
 ai-usage: ai-assisted
 author: allyford
 ms.author: allyford
@@ -45,7 +45,7 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 - ACL node pools with Trusted Launch require AKS version 1.34 or later.
 - Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
 - Node pools with Windows Server operating system aren't supported.
-- For Ubuntu and Azure Linux node pools, you can't enable Trusted Launch in the same node pool as [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. Azure Container Linux (ACL) supports Trusted Launch on supported AMD64 VM sizes and supported Arm64 VM sizes. For more information, see [node images documentation][node-images].
+- For Ubuntu and Azure Linux node pools, you can't enable Trusted Launch in the same node pool as [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. Azure Container Linux (ACL) supports Trusted Launch on supported AMD64 VM sizes and supported Arm64 VM sizes, including supported ACL CVM node pools.
 - You can enable Trusted Launch in the same node pool as [FIPS][FIPS] with Ubuntu 22.04 or ACL.
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
@@ -226,7 +226,7 @@ The Azure portal **doesn't support** adding a node pool with Trusted Launch enab
 
 ## Add a node pool with Trusted Launch and FIPS enabled
 
-You can enable Trusted Launch and FIPS together for Ubuntu 22.04 and Azure Container Linux (ACL) node pools on Generation 2 VM sizes.
+You can enable Trusted Launch and FIPS together for Ubuntu 22.04 and Azure Container Linux (ACL) node pools on Generation 2 VM sizes, including supported ACL CVM node pools.
 
 For FIPS-specific operations, such as disabling FIPS on an existing node pool, see [Enable Federal Information Processing Standard (FIPS) for Azure Kubernetes Service (AKS) node pools][FIPS].
 
