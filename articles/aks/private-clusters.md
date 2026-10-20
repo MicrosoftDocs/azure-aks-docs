@@ -2,8 +2,8 @@
 title: Create a Private Azure Kubernetes Service (AKS) Cluster
 description: Learn how to create a private Azure Kubernetes Service (AKS) cluster with enhanced security and network control using Azure CLI or Terraform.
 ms.topic: how-to
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.date: 08/05/2026
 ms.custom: references_regions, devx-track-azurecli
 ms.service: azure-kubernetes-service

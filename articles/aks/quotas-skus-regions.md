@@ -3,8 +3,8 @@ title: Limits for resources, SKUs, and regions in Azure Kubernetes Service (AKS)
 description: Learn about default quotas, restricted node VM SKU sizes, and regional availability in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.date: 08/03/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: "As a cloud architect, I want to understand the quotas, VM size restrictions, and regional availability for Azure Kubernetes Service (AKS), so that I can effectively plan and manage resources for my Kubernetes deployments."
 ---

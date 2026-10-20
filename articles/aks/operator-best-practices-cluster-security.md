@@ -6,8 +6,8 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-security
 ms.custom: linux-related-content
 ms.date: 06/04/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 # Customer intent: As a cluster operator, I want to implement best practices for securing my Kubernetes clusters and managing upgrades, so that I can minimize security risks and ensure compliance with operational standards.
 ---
 

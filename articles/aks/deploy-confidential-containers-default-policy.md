@@ -4,8 +4,8 @@ description: Learn how to create an Azure Kubernetes Service (AKS) cluster with 
 ms.topic: quickstart
 ms.subservice: aks-security
 ms.date: 09/17/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli, ignite-fall-2023, mode-api
 ai-usage: ai-assisted

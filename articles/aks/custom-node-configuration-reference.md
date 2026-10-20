@@ -3,9 +3,9 @@ title: Custom Node Configuration Parameters for Azure Kubernetes Service (AKS)
 description: Lists supported kubelet and OS configuration parameters for Azure Kubernetes Service (AKS) node pools using Custom Node Configuration.
 ms.service: azure-kubernetes-service
 ms.topic: reference
+ms.author: schaffererin
+author: schaffererin
 ms.date: 09/29/2026
-ms.author: davidsmatlak
-author: davidsmatlak
 ms.subservice: aks-nodes
 ai-usage: ai-assisted
 # Customer intent: "As a cloud engineer, I want to review custom node configuration parameters for AKS node pools, so that I can choose supported settings for my workloads."

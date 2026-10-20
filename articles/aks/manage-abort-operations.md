@@ -3,8 +3,8 @@ title: Abort an AKS long-running operation
 description: Learn how to abort a long-running Azure resource operation on an Azure Kubernetes Service (AKS) managed cluster or node pool.
 ms.topic: how-to
 ms.date: 08/06/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
 ms.custom: devx-track-azurecli

@@ -2,8 +2,8 @@
 title: What is Azure Kubernetes Service (AKS)?
 description: Learn about the features and cluster modes of Azure Kubernetes Service (AKS), and choose between AKS Automatic and AKS Standard to get started.
 ms.topic: overview
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 ms.date: 05/26/2026
 ms.custom: annual, aks-getting-started

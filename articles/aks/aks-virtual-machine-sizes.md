@@ -5,8 +5,8 @@ ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
 ms.date: 08/05/2025
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ---
 
 # Virtual machine (VM) sizes, generations, and features for Azure Kubernetes Service (AKS)

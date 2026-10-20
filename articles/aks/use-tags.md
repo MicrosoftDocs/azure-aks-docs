@@ -4,8 +4,8 @@ description: Learn how to use Azure provider tags to track resources in Azure Ku
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 06/16/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As an AKS user, I want to set and manage Azure tags for my AKS clusters and resources, so that I can effectively track and categorize resource usage for billing and operational purposes.
 ---

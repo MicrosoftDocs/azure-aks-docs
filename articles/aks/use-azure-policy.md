@@ -4,8 +4,8 @@ description: Learn how to use Azure Policy to secure your Azure Kubernetes Servi
 ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 06/30/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.custom: template-how-to
 zone_pivot_groups: portal-terraform
 

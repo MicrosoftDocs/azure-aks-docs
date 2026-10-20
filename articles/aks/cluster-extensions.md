@@ -4,8 +4,8 @@ description: Learn how to deploy and manage the lifecycle of cluster extensions 
 ms.date: 09/09/2025
 ms.topic: overview
 ms.subservice: aks-developer
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ai-usage: ai-assisted
 
 # Customer intent: As a Kubernetes administrator, I want to deploy and manage cluster extensions on Azure Kubernetes Service so that I can enhance my cluster's capabilities and streamline the lifecycle management of related applications and services.

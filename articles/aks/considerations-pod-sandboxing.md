@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, ignite-2025
 ms.date: 09/17/2026
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
 ---

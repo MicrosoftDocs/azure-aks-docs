@@ -1,8 +1,8 @@
 ---
 title: Optimize Azure Kubernetes Service (AKS) Usage and Costs
 description: Learn how to optimize Azure Kubernetes Service (AKS) usage and costs with AKS Automatic as the recommended default for most production workloads.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aks-cost
 ms.topic: how-to

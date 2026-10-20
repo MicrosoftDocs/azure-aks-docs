@@ -3,8 +3,8 @@ title: Performance and Scaling Best Practices for Large Workloads in Azure Kuber
 description: Learn the best practices for performance and scaling for large workloads in Azure Kubernetes Service (AKS), with guidance that starts from AKS Automatic as the recommended default for most production workloads.
 ms.topic: best-practice
 ms.date: 06/05/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aks-getting-started
 # Customer intent: As a cloud architect, I want to implement performance and scaling best practices for large workloads in Kubernetes, so that I can ensure optimal resource utilization and reliability of the applications deployed in Azure Kubernetes Service.

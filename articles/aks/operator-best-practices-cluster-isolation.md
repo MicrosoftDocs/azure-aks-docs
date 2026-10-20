@@ -5,8 +5,8 @@ description: Learn the cluster operator best practices for isolation in Azure Ku
 ms.topic: best-practice
 ms.custom: aks-getting-started
 ms.date: 05/25/2023
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 # Customer intent: "As a cluster operator, I want to implement best practices for resource isolation in Azure Kubernetes Service, so that I can effectively manage multi-tenant environments while optimizing costs and maintaining security."
 ---
 

@@ -5,8 +5,8 @@ description: Learn the best practices for performance and scaling for small to m
 ms.topic: best-practice
 ms.custom: aks-getting-started
 ms.date: 11/03/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: "As a Kubernetes administrator, I want to implement best practices for performance and scaling of small to medium workloads, so that I can optimize resource utilization and ensure high availability for my applications in Azure Kubernetes Service."
 ---

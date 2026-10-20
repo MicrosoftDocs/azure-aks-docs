@@ -1,8 +1,8 @@
 ---
 title: Deploy an Azure Kubernetes application by using an ARM template
 description: Learn how to deploy an Azure Kubernetes application by using an ARM template.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.topic: concept-article
 ms.custom: devx-track-arm-template
 ms.subservice: aks-developer

@@ -2,8 +2,8 @@
 ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 09/17/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ---
 
 > [!IMPORTANT]
