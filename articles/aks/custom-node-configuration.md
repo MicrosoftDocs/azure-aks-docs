@@ -3,7 +3,7 @@ title: Customize the Node Configuration for Azure Kubernetes Service (AKS) Node 
 description: Learn how to customize the configuration on Azure Kubernetes Service (AKS) cluster nodes and node pools.
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 08/06/2026
+ms.date: 10/07/2026
 ms.author: davidsmatlak
 author: davidsmatlak
 ms.subservice: aks-nodes
@@ -19,47 +19,9 @@ By customizing your node configuration, you can adjust operating system (OS) set
 
 As the service adds support for new settings and kubelet parameters, it might require preview feature flag registration. If a preview flag is required, the [custom node configuration parameters reference][custom-node-configuration-reference] calls it out.
 
-### Preview requirements for `kubeReserved` and `hardEvictionThreshold` kubelet settings
+<a name="preview-requirements-for-kubereserved-and-hardevictionthreshold-kubelet-settings"></a>
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-#### Install the `aks-preview` Azure CLI extension
-
-1. To install the aks-preview extension, run the following command:
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Run the following command to update to the latest version of the extension:
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-Register the `CustomNodeConfigPreview` feature flag in your Azure subscription before you use the preview `kubeReserved` and `hardEvictionThreshold` kubelet settings.
-
-#### Register the `CustomNodeConfigPreview` feature flag
-
-1. Register the `CustomNodeConfigPreview` feature flag by using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "CustomNodeConfigPreview"
-    ```
-
-    It takes a few minutes for the status to show _Registered_.
-
-1. Verify the registration status by using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "CustomNodeConfigPreview"
-    ```
-
-1. When the status shows _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider by using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace "Microsoft.ContainerService"
-    ```
+The `kubeReserved`, `hardEvictionThreshold`, `softEvictionThreshold`, `softEvictionGracePeriod`, and `evictionMaxPodGracePeriodInSeconds` kubelet settings are in preview and require the `CustomNodeConfigPreview` feature flag. These settings let you customize resource reservations and eviction thresholds, which are also configured by AKS Node Hardening. For registration steps, default values, and examples, see [Node Hardening (preview) in AKS][node-hardening].
 
 ## Create custom node configuration files for AKS node pools
 
@@ -90,24 +52,7 @@ Create a `linuxkubeletconfig.json` file with the following contents:
 }
 ```
 
-To use the Node Customization Preview kubelet settings on Linux node pools, add `kubeReserved` and `hardEvictionThreshold` to your kubelet configuration file. The following example reserves CPU and memory for Kubernetes system daemons and configures kubelet hard eviction thresholds:
-
-```json
-{
-  "cpuManagerPolicy": "static",
-  "kubeReserved": {
-    "cpuMillicores": 200,
-    "memoryMB": 1024
-  },
-  "hardEvictionThreshold": {
-    "memoryAvailable": "20%",
-    "nodeFsAvailable": "10%",
-    "nodeFsInodesFree": "5%"
-  }
-}
-```
-
-Use `kubeReserved` and `hardEvictionThreshold` only on Linux node pools. Both settings require the `CustomNodeConfigPreview` feature flag.
+To customize kube-reserved resources and eviction thresholds on Linux node pools, see [Customize Node Hardening settings][node-hardening-customize].
 
 #### [Windows node pools](#tab/windows-node-pools)
 
@@ -159,7 +104,7 @@ Currently unsupported.
 >
 > - If you specify a configuration when creating a cluster, the configuration applies only to the nodes in the initial node pool. The cluster retains default values for any settings not configured in the JSON file.
 > - `CustomLinuxOsConfig` isn't supported for the Windows OS type.
-> - The preview `kubeReserved` and `hardEvictionThreshold` kubelet settings are supported only for Linux node pools and require the `CustomNodeConfigPreview` feature flag. Complete the registration steps in [Preview requirements for `kubeReserved` and `hardEvictionThreshold` kubelet settings](#preview-requirements-for-kubereserved-and-hardevictionthreshold-kubelet-settings) before you create the cluster or node pool.
+> - The preview `kubeReserved` and eviction threshold kubelet settings are supported only for Linux node pools and require the `CustomNodeConfigPreview` feature flag. For registration steps, see [Node Hardening (preview) in AKS][node-hardening].
 
 Create a new cluster using custom configuration files by running the [`az aks create`][az-aks-create] command and specifying your configuration files for the `--kubelet-config` and `--linux-os-config` parameters. The following example command creates a new cluster with the custom `./linuxkubeletconfig.json` and `./linuxosconfig.json` files:
 
@@ -174,7 +119,7 @@ az aks create --name <cluster-name> --resource-group <resource-group-name> --kub
 >
 > - When you add a Linux node pool to an existing cluster, you can specify the kubelet configuration, OS configuration, or both. When you add a Windows node pool to an existing cluster, you can only specify the kubelet configuration. If you specify a configuration when adding a node pool, the configuration applies only to the nodes in the new node pool. The node pool retains default values for any settings not configured in the JSON file.
 > - `CustomKubeletConfig` is supported for Linux and Windows node pools.
-> - The preview `kubeReserved` and `hardEvictionThreshold` kubelet settings are supported only for Linux node pools and require the `CustomNodeConfigPreview` feature flag. Complete the registration steps in [Preview requirements for `kubeReserved` and `hardEvictionThreshold` kubelet settings](#preview-requirements-for-kubereserved-and-hardevictionthreshold-kubelet-settings) before you create the cluster or node pool.
+> - The preview `kubeReserved` and eviction threshold kubelet settings are supported only for Linux node pools and require the `CustomNodeConfigPreview` feature flag. For registration steps, see [Node Hardening (preview) in AKS][node-hardening].
 
 ### [Linux node pools](#tab/linux-node-pools)
 
@@ -209,9 +154,7 @@ Keep the following considerations in mind when customizing your node configurati
 - Node image upgrades reapply custom node configurations.
 - Scale-out operations preserve custom node configurations.
 - AKS doesn't perform pre-flight validation for every custom node configuration parameter or value. Ensure that the custom node configuration parameters and values you specify are supported and valid to avoid potential issues with your cluster nodes.
-- The preview `kubeReserved` and `hardEvictionThreshold` settings are available only on Linux node pools.
-- If you configure `kubeReserved`, the values must be positive and can't exceed the CPU or memory capacity available on the target node pool.
-- If you configure `hardEvictionThreshold`, use only the supported units: `Ki`, `Mi`, `Gi`, or `%` for `memoryAvailable` and `nodeFsAvailable`, and a raw number or `%` for `nodeFsInodesFree`.
+- The preview `kubeReserved` and eviction threshold kubelet settings are available only on Linux node pools. If you configure them, use the supported ranges, units, and pairing rules in the [custom node configuration parameters reference][custom-node-configuration-reference].
 - Default values for custom node configuration parameters often change with new operating system versions. When applying custom node configurations, review the default values for the parameters you're configuring to ensure that your custom settings are appropriate for the OS version of your cluster nodes.
 - Limit the number of people who have permissions to modify the custom node configuration to prevent unintended consequences on cluster stability and performance. Consider using [Microsoft Entra ID authorization for the Kubernetes API](./entra-id-authorization.md) to restrict access to cluster configuration settings.
 - Separate node pools with custom configurations from those without custom configurations to prevent unintended consequences on workloads that might be sensitive to certain configuration changes. For example, if you have a critical workload that requires specific kubelet settings, consider isolating that workload to a dedicated node pool with the necessary custom kubelet configuration.
@@ -226,7 +169,6 @@ Keep the following considerations in mind when customizing your node configurati
 <!-- LINKS - internal -->
 [node-access]: node-access.md
 [az-aks-create]: /cli/azure/aks#az-aks-create
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
-[az-provider-register]: /cli/azure/provider#az-provider-register
 [custom-node-configuration-reference]: custom-node-configuration-reference.md
+[node-hardening]: node-hardening.md
+[node-hardening-customize]: node-hardening.md#customize-node-hardening-settings

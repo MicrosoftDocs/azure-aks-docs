@@ -255,6 +255,8 @@
           href: aks-list-skus.md
         - name: Custom node configuration
           href: custom-node-configuration.md
+        - name: Node Hardening (preview)
+          href: node-hardening.md
         - name: Use Prepared Image Specification (PIS)
           items:
             - name: Overview

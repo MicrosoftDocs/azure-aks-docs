@@ -3,7 +3,7 @@ title: Custom Node Configuration Parameters for Azure Kubernetes Service (AKS)
 description: Lists supported kubelet and OS configuration parameters for Azure Kubernetes Service (AKS) node pools using Custom Node Configuration.
 ms.service: azure-kubernetes-service
 ms.topic: reference
-ms.date: 08/06/2026
+ms.date: 09/29/2026
 ms.author: davidsmatlak
 author: davidsmatlak
 ms.subservice: aks-nodes
@@ -20,6 +20,11 @@ This article lists supported custom node configuration parameters for Azure Kube
 > [!IMPORTANT]
 > When enabling unsafe sysctls, you assume responsibility for node stability and workload behavior. Unsafe sysctls can potentially cause node instability or security vulnerabilities if misconfigured. Ensure you understand the implications of enabling specific unsafe sysctls and monitor your cluster's health closely after making changes.
 
+> [!NOTE]
+> The `kubeReserved`, `hardEvictionThreshold`, `softEvictionThreshold`, `softEvictionGracePeriod`, and `evictionMaxPodGracePeriodInSeconds` settings are part of the AKS Node Hardening preview and apply only to Linux node pools. Register the `CustomNodeConfigPreview` feature flag before you use these settings. To enable Node Hardening, see [Node Hardening (preview) in AKS][node-hardening-preview].
+>
+> For each eviction signal, set both the `softEvictionThreshold` and matching `softEvictionGracePeriod` values. You can omit both values to use the default or set both values to empty strings to opt out of soft eviction for that signal. If you specify a soft eviction threshold, it must be greater than the effective hard eviction threshold for the same signal.
+
 ### Linux kubelet custom configuration
 
 | Parameter | Allowed values/interval | Default | Description |
@@ -35,11 +40,18 @@ This article lists supported custom node configuration parameters for Azure Kube
 | `containerLogMaxFiles` | 2 or greater | 5 | The maximum number of container log files to retain for a container. |
 | `podMaxPids` | -1 to kernel PID limit | -1 (infinite) | The maximum number of process IDs that can run in a pod. |
 | [`seccompDefault`][secure-container-access] | `Unconfined`, `RuntimeDefault` | `Unconfined` | Sets the default seccomp profile for all workloads. `RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls fail. `Unconfined` places no restrictions on syscalls, allowing all system calls and reducing security. For more information, see the [containerd default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). This parameter is in preview. [Register][register-preview] the "KubeletDefaultSeccompProfilePreview" feature flag using the [`az feature register`][az-feature-register] command with `--namespace "Microsoft.ContainerService"`. |
-| `kubeReserved.cpuMillicores` | 1 to the node pool CPU capacity in millicores | None | Reserves CPU for Kubernetes system daemons on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
-| `kubeReserved.memoryMB` | 1 to the node pool memory capacity in MiB | None | Reserves memory for Kubernetes system daemons on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
-| `hardEvictionThreshold.memoryAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for available memory on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
-| `hardEvictionThreshold.nodeFsAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for available node filesystem space on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
-| `hardEvictionThreshold.nodeFsInodesFree` | `<number>` or `<number>%` where percentage is no more than 100 | None | Sets the kubelet hard eviction threshold for free node filesystem inodes on Linux node pools. This parameter is in preview and requires the `CustomNodeConfigPreview` feature flag. |
+| `kubeReserved.cpuMillicores` | 140 to the node pool CPU capacity in millicores | AKS-computed based on VM size | Reserves CPU for Kubernetes system daemons. |
+| `kubeReserved.memoryMB` | 750 to the node pool memory capacity in MiB | AKS-computed from node memory and maximum pods per node: `min(20 × maxPods + 50, 25% of node memory)` MiB. With Node Hardening: `min(35 × maxPods + max(250, 2% of node memory), 25% of node memory)` MiB | Reserves memory for Kubernetes system daemons. |
+| `hardEvictionThreshold.memoryAvailable` | `<number>Ki`, `<number>Mi`, or `<number>Gi` with a minimum of `100Mi`; or `2%` to `100%` | `100Mi`. With Node Hardening: `250Mi` for nodes with 8 GiB of memory or less, `375Mi` for nodes with more than 8 GiB and less than 32 GiB, and `512Mi` for nodes with 32 GiB or more | Sets the hard eviction threshold for available memory. |
+| `hardEvictionThreshold.nodeFsAvailable` | `<number>Ki`, `<number>Mi`, `<number>Gi`, or `10%` to `100%` | `10%` | Sets the hard eviction threshold for available node filesystem space. |
+| `hardEvictionThreshold.nodeFsInodesFree` | `<number>` or `5%` to `100%` | `5%` | Sets the hard eviction threshold for free node filesystem inodes. |
+| `softEvictionThreshold.memoryAvailable` | Empty string; `<number>Ki`, `<number>Mi`, or `<number>Gi` with a minimum of `100Mi`; or `2%` to `100%` | None. With Node Hardening: `500Mi` for nodes with 8 GiB of memory or less, `750Mi` for nodes with more than 8 GiB and less than 32 GiB, and `1Gi` for nodes with 32 GiB or more | Sets the soft eviction threshold for available memory. The value must be greater than the effective `hardEvictionThreshold.memoryAvailable` value. |
+| `softEvictionThreshold.nodeFsAvailable` | Empty string; `<number>Ki`, `<number>Mi`, `<number>Gi`, or `10%` to `100%` | `12%` when Node Hardening is enabled; None otherwise | Sets the soft eviction threshold for available node filesystem space. The value must be greater than the effective `hardEvictionThreshold.nodeFsAvailable` value. |
+| `softEvictionThreshold.nodeFsInodesFree` | Empty string; `<number>` or `5%` to `100%` | `7%` when Node Hardening is enabled; None otherwise | Sets the soft eviction threshold for free node filesystem inodes. The value must be greater than the effective `hardEvictionThreshold.nodeFsInodesFree` value. |
+| `softEvictionGracePeriod.memoryAvailable` | Empty string or Go-style duration of at least `30s` using `ns`, `us`, `ms`, `s`, `m`, or `h` | `30s` when Node Hardening is enabled; None otherwise | Sets how long the `memoryAvailable` soft eviction threshold must be crossed before kubelet evicts pods. |
+| `softEvictionGracePeriod.nodeFsAvailable` | Empty string or Go-style duration of at least `30s` using `ns`, `us`, `ms`, `s`, `m`, or `h` | `2m` when Node Hardening is enabled; None otherwise | Sets how long the `nodeFsAvailable` soft eviction threshold must be crossed before kubelet evicts pods. |
+| `softEvictionGracePeriod.nodeFsInodesFree` | Empty string or Go-style duration of at least `30s` using `ns`, `us`, `ms`, `s`, `m`, or `h` | `2m` when Node Hardening is enabled; None otherwise | Sets how long the `nodeFsInodesFree` soft eviction threshold must be crossed before kubelet evicts pods. |
+| `evictionMaxPodGracePeriodInSeconds` | 0 or greater | 60 when Node Hardening is enabled; `0` otherwise | Sets the maximum number of seconds that kubelet allows pods to terminate during a soft eviction. |
 
 ### Windows kubelet custom configuration
 
@@ -126,5 +138,6 @@ The following table lists the kernel settings that you can customize per node po
 
 <!-- LINKS - internal -->
 [az-feature-register]: /cli/azure/feature#az-feature-register
+[node-hardening-preview]: node-hardening.md
 [register-preview]: /azure/azure-resource-manager/management/preview-features?tabs=azure-cli#register-preview-feature
 [secure-container-access]: secure-container-access.md
