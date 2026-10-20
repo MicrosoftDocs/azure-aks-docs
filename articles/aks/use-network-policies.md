@@ -54,7 +54,7 @@ To enforce the specified policies, Azure NPM uses _IPTables_ for Linux nodes. Po
 | --------------------- | ------------------- | ---------------------------- | ----------------------------------- | -------------- | ------- |
 | Cilium | Linux | Azure CNI | Supports all policy types | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md) | Azure support and engineering team |
 | Azure NPM | Linux | Azure CNI | Supports all policy types | N/A | Azure support and engineering team |
-| Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | AKS does not test or support features beyond enforcement of `networking.k8s.io` policies. | Azure support and engineering team |
+| Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | AKS doesn't test or support features beyond enforcement of `networking.k8s.io` policies. | Azure support and engineering team |
 
 ## Azure Network Policy Manager limitations 
 
