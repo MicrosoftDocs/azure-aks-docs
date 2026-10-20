@@ -76,7 +76,7 @@ To limit the chance of hitting this race condition, you can reduce the size of t
 ## Calico limitations
 
 - AKS does not support running AKS-managed Calico alongside Calico Cloud or Calico Enterprise, as this combination can cause conflicts and unintended behavior. If you use Calico Cloud or Enterprise, Microsoft strongly recommends disabling AKS-managed Calico. Contact Tigera for support with those products.
-- AKS-managed Calico only supports `networking.k8s.io` network policies. If intending to use `projectcalico.org/v3` policies, we recommend migrating to a self-hosted solution (e.g. Calico Cloud, Calico Enterprise or BYOCNI).
+- AKS-managed Calico only supports `networking.k8s.io` network policies. If you intend to use `projectcalico.org/v3` policies, consider migrating to a self-hosted solution, such as Calico Cloud, Calico Enterprise, or BYOCNI.
 
 ## Load balancer services and network policies
 
