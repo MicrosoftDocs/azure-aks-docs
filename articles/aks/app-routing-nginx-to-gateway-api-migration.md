@@ -51,26 +51,29 @@ export CLUSTER=<cluster-name>
 
 ## Step 1: Inventory current ingress
 
-List every `Ingress` that uses the ingress-nginx class and the hostnames pointing at the ingress-nginx load balancer IP. Include any upstream references such as Azure Front Door origins, Traffic Manager endpoints, and firewall allow lists.
+The application routing add-on can run more than one ingress-nginx controller. Each `NginxIngressController` has its own ingress class and its own load balancer IP. Inventory all of them, not just the default controller. Include any upstream references such as Azure Front Door origins, Traffic Manager endpoints, and firewall allow lists.
+
+List the add-on controllers and their ingress classes. The default controller uses the class `webapprouting.kubernetes.azure.com`.
 
 ```bash
-kubectl get ingress -A -o jsonpath='{range .items[?(@.spec.ingressClassName=="webapprouting.kubernetes.azure.com")]}{.metadata.namespace}/{.metadata.name}{"\n"}{end}'
+kubectl get nginxingresscontrollers -o custom-columns=NAME:.metadata.name,CLASS:.spec.ingressClassName
 ```
 
-Capture the current ingress-nginx IP for later validation:
+List every `Ingress`. Migrate the ones whose `CLASS` matches a class from the previous output. `HOSTS` shows the hostnames to update in DNS, and `ADDRESS` shows the controller's load balancer IP.
 
 ```bash
-INGRESS_NGINX_IP=$(kubectl get svc -n app-routing-system nginx -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+kubectl get ingress -A
 ```
 
-## Step 2: Lower the DNS TTL
+Later steps refer to the IP of the controller you're migrating as `INGRESS_NGINX_IP`. Set it from the `ADDRESS` column:
 
-> [!NOTE]
-> Skip this step if your clients reach the cluster by IP rather than DNS—the cutover in step 7 is a DNS change, so a low TTL is only relevant when DNS is in the path.
+```bash
+INGRESS_NGINX_IP=<address-from-the-previous-output>
+```
 
-For each hostname that resolves to `INGRESS_NGINX_IP`, lower the record TTL to 60 seconds (or the smallest value your provider allows). Wait for the previous TTL window to fully expire before you continue. If the previous TTL was one hour, wait at least one hour. Skipping this step means cached resolvers continue sending clients to ingress-nginx after you delete the `Ingress`.
+If you have more than one controller, repeat steps 3 through 7 for each controller's IP and hostnames.
 
-## Step 3: Enable the Gateway API implementation
+## Step 2: Enable the Gateway API implementation
 
 Enable the Managed Gateway API CRDs and the application routing Gateway API implementation. Ingress-nginx continues serving traffic.
 
@@ -86,9 +89,18 @@ kubectl -n aks-istio-system rollout status deploy/istiod --timeout=5m
 kubectl get gatewayclass approuting-istio
 ```
 
+## Step 3: Lower the DNS TTL
+
+> [!NOTE]
+> Skip this step if your clients reach the cluster by IP rather than DNS. The cutover in step 7 is a DNS change, so a low TTL is only relevant when DNS is in the path.
+
+For each hostname that resolves to `INGRESS_NGINX_IP`, lower the record TTL to 60 seconds (or the smallest value your provider allows). Wait for the previous TTL window to fully expire before you continue. If the previous TTL was one hour, wait at least one hour. If you skip this step, cached resolvers continue sending clients to ingress-nginx after you delete the `Ingress`.
+
 ## Step 4: Translate each Ingress to Gateway and HTTPRoute
 
 For each `Ingress`, create a matching `Gateway` and `HTTPRoute`. For per-field translation guidance—including how to convert path matches, redirects, rewrites, and header manipulation—follow the [Kubernetes Gateway API migration guide](https://gateway-api.sigs.k8s.io/guides/getting-started/migrating-from-ingress/). To bulk-translate existing manifests instead of writing them by hand, consider [`ingress2gateway`](https://github.com/kubernetes-sigs/ingress2gateway), a Kubernetes SIG Network tool that reads `Ingress` resources (including `ingress-nginx` annotations) and emits equivalent Gateway API resources—treat its output as a starting point and review before applying.
+
+By default, `ingress2gateway` reads only `Ingress` resources with the class `nginx`, so it skips `Ingress` resources on application routing classes unless you pass the class. Pass `--providers=ingress-nginx --ingress-nginx-ingress-class=<class>` with a class from step 1, and run the tool once per class.
 
 The following example converts an ingress-nginx `Ingress` for host `httpbin.contoso.com` with path prefix `/get` and backend `httpbin:8000`. For reference, the source `Ingress`:
 
@@ -195,7 +207,7 @@ Only proceed to step 7 once every preceding check passes consistently. If anythi
 
 ## Step 7: Cut over
 
-1. Update the DNS A record for the hostname to point to `GW_IP`. Because you already lowered the TTL in step 2, drain happens within minutes.
+1. Update the DNS A record for the hostname to point to `GW_IP`. Because you already lowered the TTL in step 3, drain happens within minutes.
 1. If any upstream system pins the ingress-nginx IP—for example, an Azure Front Door origin, a Traffic Manager endpoint, or a customer firewall allow list—update it to `GW_IP` at the same time. Don't try to reassign the existing IP to the Gateway: the cluster's cloud provider creates and manages the ingress-nginx Service's public IP, and deletes it when the Service is removed even if you set it to `Static`.
 1. Watch traffic drop on ingress-nginx. Scrape the `ingress-nginx` request-rate metrics (see [Monitor the ingress-nginx controller metrics with Prometheus][app-routing-nginx-prometheus]) until requests reach zero.
 1. Keep the DNS TTL low for a few hours of observation, then raise it back to your normal value.
