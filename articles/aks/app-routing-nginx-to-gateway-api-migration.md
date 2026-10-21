@@ -242,6 +242,7 @@ After you run `kubectl delete nginxingresscontrollers.approuting.kubernetes.azur
 [app-routing-nginx]: ./app-routing.md
 [app-routing-gateway-api]: ./app-routing-gateway-api.md
 [app-routing-gateway-api-tls]: ./app-routing-gateway-api-tls.md
+[app-routing-gateway-api-dns-tls]: ./app-routing-gateway-api-dns-tls.md
 [app-routing-gateway-api-limitations]: ./app-routing-gateway-api.md#limitations
 [managed-gateway-api]: ./managed-gateway-api.md
 [app-routing-nginx-prometheus]: ./app-routing-nginx-prometheus.md
