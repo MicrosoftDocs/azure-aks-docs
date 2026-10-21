@@ -92,7 +92,7 @@ kubectl get gatewayclass approuting-istio
 ## Step 3: Lower the DNS TTL
 
 > [!NOTE]
-> Skip this step if your clients reach the cluster by IP rather than DNS—the cutover in step 7 is a DNS change, so a low TTL is only relevant when DNS is in the path.
+> Skip this step if your clients reach the cluster by IP rather than DNS. The cutover in step 7 is a DNS change, so a low TTL is only relevant when DNS is in the path.
 
 For each hostname that resolves to `INGRESS_NGINX_IP`, lower the record TTL to 60 seconds (or the smallest value your provider allows). Wait for the previous TTL window to fully expire before you continue. If the previous TTL was one hour, wait at least one hour. Skipping this step means cached resolvers continue sending clients to ingress-nginx after you delete the `Ingress`.
 
