@@ -57,6 +57,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 | 1.35 | Dec 2025 | Feb 2026 | Mar 2026 | Mar 2027 | Until 1.39 GA | Jun 2027 |
 | 1.36 | Apr 2026 | May 2026 | Jun 2026 | Jun 2027 | Until 1.40 GA | Sep 2027 |
 | 1.37 | Aug 2026 | Sep 2026 | Oct 2026 | Oct 2027 | Until 1.41 GA | Jan 2028 |
+| 1.38 | TBD | Nov 2026 | Feb 2027 | TBD | TBD | TBD |
 
 ### LTS versions
 
@@ -76,6 +77,7 @@ You need to enable long-term support (LTS) to get extended support. For more inf
 | 1.35 | Dec 2025 | Feb 2026 | Mar 2026 | Mar 2027 | Mar 2028 | Jun 2028 |
 | 1.36 | Apr 2026 | May 2026 | Jun 2026 | Jun 2027 | Jun 2028 | Sep 2028 |
 | 1.37 | Aug 2026 | Sep 2026 | Oct 2026 | Oct 2027 | Oct 2028 | Jan 2029 |
+| 1.38 | TBD | Nov 2026 | Feb 2027 | TBD | TBD | TBD |
 
 For LTS clusters, the platform-initiated upgrade month follows the 60-day grace period after the LTS end-of-life date. AKS upgrades these clusters to the next supported LTS version. Enrollment in LTS is never automatic. The listed month is a planning estimate, not an exact upgrade date for a cluster.
 
