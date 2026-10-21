@@ -47,7 +47,6 @@ Limitations for disconnected operations with AKS include:
 - Supported Kubernetes versions: 1.33.4 and 1.33.5.
 - Windows node pools aren't supported.
 - Microsoft Entra ID (formerly Azure Active Directory) isn't supported for disconnected operations.
-- GPUs aren't supported.
 - Arc Gateway isn't supported for configuring outbound URLs.
 - Create logical networks by using the CLI only. The portal isn't supported.
 - Create SSH keys by using the CLI only. The portal isn't supported.
