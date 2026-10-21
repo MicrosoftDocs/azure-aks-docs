@@ -22,7 +22,7 @@ When a new version of the Windows Server operating system is released, AKS is co
 > [!IMPORTANT]
 > Windows Server 2019 node pools are deprecated and no longer supported.
 >
-> Windows Server 2022 node pools continue to be supported until Windows Server 2025 node pool support becomes available alongside Kubernetes 1.35. We recommend upgrading once Windows Server 2025 support is released; this page will be updated with specific guidance at that time. Note that Windows security patches and OS-level bug fixes follow the [Windows Server servicing and support lifecycle](/windows-server/get-started/windows-server-release-info), not the AKS support timeline.
+> AKS supports Windows Server 2022 node pools until support for Windows Server 2025 node pools becomes available alongside Kubernetes 1.35. Upgrade when support for Windows Server 2025 is released; this article will be updated with specific guidance at that time. Windows security patches and OS-level bug fixes follow the [Windows Server servicing and support lifecycle](/windows-server/get-started/windows-server-release-info), not the AKS support timeline.
 
 ## Before you begin
 
