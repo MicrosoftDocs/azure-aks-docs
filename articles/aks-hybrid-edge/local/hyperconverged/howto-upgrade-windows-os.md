@@ -4,10 +4,9 @@ description: Learn how to upgrade the Windows Server version on your node pools 
 ms.topic: how-to
 author: davidsmatlak
 ms.date: 09/01/2026
-ms.author: davidsmatlak 
+ms.author: davidsmatlak
 ms.lastreviewed: 09/24/2025
 ms.custom: hyperconverged
-
 ---
 
 # Upgrade the OS version for your Windows node pool
@@ -21,9 +20,9 @@ This article describes the steps to upgrade the OS version for Windows workloads
 When a new version of the Windows Server operating system is released, AKS is committed to supporting it, and recommends that you upgrade to the latest version to take advantage of its fixes, improvements, and new functionality.
 
 > [!IMPORTANT]
-> Windows Server 2019 is being retired in March 2026. Azure Local version 2510 will be the last release to include the Windows Server 2019 VHDs. The last Kubernetes version available on Windows Server 2019 is 1.32. Windows Server 2019 won't be supported on 1.33 and later. For more information, see [Windows Server 2019 node pool retirement](https://techcommunity.microsoft.com/blog/containers/announcing-the-3-year-retirement-of-windows-server-2019-on-azure-kubernetes-serv/3777341).
+> Windows Server 2019 node pools are deprecated and no longer supported.
 >
-> Windows Server 2022 is being retired in October 2026. Azure Local version 2603 will be the last release to include the Windows Server 2022 VHDs. The last Kubernetes version available on Windows Server 2022 is 1.34. Windows Server 2022 won't be supported on 1.35 and later.
+> Windows Server 2022 node pools continue to be supported until Windows Server 2025 node pool support becomes available alongside Kubernetes 1.35. We recommend upgrading once Windows Server 2025 support is released; this page will be updated with specific guidance at that time. Note that Windows security patches and OS-level bug fixes follow the [Windows Server servicing and support lifecycle](https://learn.microsoft.com/windows-server/get-started/windows-server-release-info), not the AKS support timeline.
 
 ## Before you begin
 
@@ -47,7 +46,7 @@ A node selector is the most common and recommended option for placement of Windo
 
    ```yaml
    nodeSelector:
-        "kubernetes.azure.com/os-sku": Windows2022
+     "kubernetes.azure.com/os-sku": Windows2022
    ```
 
    This enforces the placement of the pod on a Windows node that's running the latest OS version.
@@ -81,7 +80,7 @@ A node selector is the most common and recommended option for placement of Windo
    kubectl get pods -o wide
    ```
 
-You should now see the pods  running on the new Windows node pool you created. You can now delete the old Windows node pool that's running on the older Windows SKU.
+You should now see the pods running on the new Windows node pool you created. You can now delete the old Windows node pool that's running on the older Windows SKU.
 
 ## Next steps
 
