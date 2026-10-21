@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 author: kingoliver
 ms.topic: how-to
-ms.date: 05/27/2026
+ms.date: 10/21/2026
 ms.author: kingoliver
 # Customer intent: As a cloud engineer, I want to migrate my AKS workloads from the ingress-nginx-based application routing add-on to the Gateway API implementation so that I'm on a supported ingress before the November 2026 ingress-nginx deadline without dropping client traffic.
 ---
@@ -160,7 +160,7 @@ GW_IP=$(kubectl get gateway -n demo httpbin-gateway -o jsonpath='{.status.addres
 
 ## Step 5: Provision TLS on the Gateway
 
-If the original `Ingress` terminated HTTPS, configure TLS on the new `Gateway` *before* you change DNS. Follow [Secure application routing Gateway API ingress traffic][app-routing-gateway-api-tls] to sync the certificate from Azure Key Vault by using the Secrets Store CSI driver, then add a TLS listener that references the resulting Kubernetes `Secret` through `certificateRefs`. A native Azure Key Vault integration for the application routing Gateway API implementation is in development; until it ships, the preceding Secrets Store CSI driver workflow is the supported path.
+If the original `Ingress` terminated HTTPS, configure TLS on the new `Gateway` before you change DNS. Follow [Configure Azure DNS and TLS with the application routing Gateway API implementation][app-routing-gateway-api-dns-tls] to have the Application Routing operator sync the certificate from Azure Key Vault and set the listener `certificateRefs` for you. If you need full control over the certificate sync, follow [Secure application routing Gateway API ingress traffic][app-routing-gateway-api-tls] to configure the Secrets Store CSI driver manually.
 
 ## Step 6: Validate the Gateway before flipping client traffic
 
@@ -242,6 +242,7 @@ After you run `kubectl delete nginxingresscontrollers.approuting.kubernetes.azur
 [app-routing-nginx]: ./app-routing.md
 [app-routing-gateway-api]: ./app-routing-gateway-api.md
 [app-routing-gateway-api-tls]: ./app-routing-gateway-api-tls.md
+[app-routing-gateway-api-dns-tls]: ./app-routing-gateway-api-dns-tls.md
 [app-routing-gateway-api-limitations]: ./app-routing-gateway-api.md#limitations
 [managed-gateway-api]: ./managed-gateway-api.md
 [app-routing-nginx-prometheus]: ./app-routing-nginx-prometheus.md
