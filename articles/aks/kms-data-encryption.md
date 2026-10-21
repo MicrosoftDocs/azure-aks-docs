@@ -491,10 +491,12 @@ az aks update \
 With KMS data encryption, key rotation is handled differently depending on your key management option:
 
 - **Platform-managed keys**: Key rotation is automatic. No action is required.
-- **Customer-managed keys**: When you rotate the key version in Azure Key Vault, the KMS controller detects the rotation periodically (every 6 hours) and uses the new key version.
+- **Customer-managed keys**: After you rotate the key in Azure Key Vault, KMS periodically detects the new key version. Wait at least seven days between creating the new key version and deleting the old one.
 
 > [!NOTE]
 > Unlike the legacy KMS experience, with this new implementation you don't need to manually re-encrypt secrets after key rotation. The platform handles this automatically.
+>
+> Don't delete or expire the old key version right after you create the new one.
 
 ## Related content
 
