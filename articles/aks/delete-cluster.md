@@ -2,8 +2,8 @@
 title: Delete an Azure Kubernetes Service (AKS) cluster
 description: Learn about deleting a cluster in Azure Kubernetes Service (AKS).
 ms.topic: overview
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.date: 04/16/2024
 ms.custom: 
 ---

@@ -5,8 +5,8 @@ ms.topic: concept-article
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, devx-track-azurepowershell
 ms.date: 01/25/2024
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As a developer, I want to use Helm to package and deploy applications on Azure Kubernetes Service, so that I can efficiently manage the lifecycle of my containerized applications in the cloud.
 ---

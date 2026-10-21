@@ -2,8 +2,8 @@
 ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 09/18/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ---
 
 Install the aks-preview CLI extension by using the [`az extension add`][az-extension-add] command.

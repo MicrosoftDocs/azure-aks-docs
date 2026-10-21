@@ -4,8 +4,8 @@ description: Learn about node auto-drain functionality and how AKS protects your
 ms.topic: concept-article
 ms.subservice: aks-nodes
 ms.date: 03/30/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ai-usage: ai-assisted
 
 # Customer intent: As a cloud operations engineer, I want to implement node auto-drain in AKS, so that I can protect workloads from disruptions caused by scheduled VM maintenance events.

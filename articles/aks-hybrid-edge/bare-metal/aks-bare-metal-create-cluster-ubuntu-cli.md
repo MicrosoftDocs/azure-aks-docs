@@ -2,7 +2,7 @@
 title: Create an AKS on bare metal cluster on Ubuntu with Azure CLI
 description: Connect an Ubuntu host to Azure Arc and create an Azure Kubernetes Service on bare metal cluster by using an automated script or Azure CLI.
 ms.topic: how-to
-ms.date: 09/17/2026
+ms.date: 10/16/2026
 ai-usage: ai-assisted
 author: RishiMody
 ms.author: rmody
@@ -70,15 +70,16 @@ If you prefer a step-by-step installation process, complete the following steps 
 ## Supported Kubernetes versions
 
 If you don't specify `--kubernetes-version`, AKS deploys Kubernetes version
-`1.33.3`. To deploy another supported version, pass the corresponding version
-string to `--kubernetes-version`.
+`1.35.5`. To deploy another supported version, pass the corresponding version
+number to `--kubernetes-version`. 
 
-| Kubernetes version | `--kubernetes-version` value |
-| --- | --- |
-| 1.33.3 | `1.33.3-20251001` |
-| 1.34.2 | `1.34.2-20260204` |
-| 1.34.3 | `1.34.3-20260204` |
-| 1.34.4 | `1.34.4-20260323` |
+| Supported Kubernetes versions |
+| --- |
+| 1.34.3 |
+| 1.34.4 |
+| 1.34.8 |
+| 1.35.5 |
+| 1.36.1 |
 
 The following example deploys Kubernetes `1.34.3`:
 
@@ -86,7 +87,7 @@ The following example deploys Kubernetes `1.34.3`:
 az aksarc deploy \
   --resource-group <resource-group> \
   --arc-machine-names <host-name> \
-  --kubernetes-version 1.34.3-20260204
+  --kubernetes-version 1.34.3
 ```
 
 Deployment takes approximately 40 minutes. Keep the host connected to Azure and the required outbound endpoints throughout deployment.

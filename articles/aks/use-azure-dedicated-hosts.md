@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-nodes
 ms.custom: devx-track-azurecli
 ms.date: 03/10/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As a cloud architect, I want to configure Azure Dedicated Hosts for my AKS cluster, so that I can ensure hardware isolation and control maintenance events for sensitive applications.
 ---

@@ -1,7 +1,7 @@
 ---
 title: Use a Service Principal with Azure Kubernetes Service (AKS)
 description: Learn how to create and manage a Microsoft Entra service principal with a cluster in Azure Kubernetes Service (AKS).
-author: davidsmatlak
+author: schaffererin
 ms.topic: how-to
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service

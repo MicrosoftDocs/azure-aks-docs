@@ -2,8 +2,8 @@
 title: Establish network connectivity to a private Azure Kubernetes Service (AKS) cluster
 description: Learn about the options for connecting to a private AKS cluster, including using Azure Cloud Shell, Azure Bastion, virtual network peering, and private endpoints.
 ms.topic: how-to
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.date: 08/13/2026
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security

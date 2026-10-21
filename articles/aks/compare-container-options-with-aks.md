@@ -1,8 +1,8 @@
 ---
 title: Comparing AKS with Other Azure Container Options
 description: Understand when to use Azure Kubernetes Service (AKS) and how it compares to other container options including Azure Container Instances, Azure App Service, Azure Functions, and Azure Container Apps.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.topic: overview
 ms.date: 07/18/2025
 ms.service: azure-kubernetes-service

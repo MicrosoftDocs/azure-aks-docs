@@ -1,8 +1,8 @@
 ---
 title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Terraform'
 description: Learn how to quickly deploy a Kubernetes cluster using Terraform and deploy an application in Azure Kubernetes Service (AKS).
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.topic: quickstart
 ms.subservice: aks-developer
 ms.date: 03/22/2024

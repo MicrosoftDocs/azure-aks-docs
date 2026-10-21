@@ -4,8 +4,8 @@ description: Learn about how AKS uses Node Problem Detector to expose issues wit
 ms.topic: concept-article
 ms.subservice: aks-monitoring
 ms.date: 05/31/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ai-usage: ai-assisted
 
 # Customer intent: As a Kubernetes administrator, I want to utilize Node Problem Detector to monitor node health and detect issues, so that I can maintain cluster stability and promptly address any underlying problems affecting performance.

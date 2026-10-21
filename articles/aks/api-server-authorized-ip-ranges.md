@@ -4,8 +4,8 @@ description: Learn how to secure access to the API server in Azure Kubernetes Se
 ms.topic: how-to
 ms.custom: devx-track-azurecli, devx-track-azurepowershell, copilot-scenario-highlight
 ms.date: 08/03/2026
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security
 zone_pivot_groups: api-server-authorized-ip-ranges

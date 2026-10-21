@@ -4,8 +4,8 @@ description: Learn how to deploy and manage the lifecycle of cluster extensions 
 ms.date: 09/09/2025
 ms.topic: overview
 ms.subservice: aks-developer
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ai-usage: ai-assisted
 
 # Customer intent: As a Kubernetes administrator, I want to deploy and manage cluster extensions on Azure Kubernetes Service so that I can enhance my cluster's capabilities and streamline the lifecycle management of related applications and services.
@@ -115,16 +115,18 @@ Extension support for security, identity, networking, and deployment readiness c
 | Extension | Description | PSS - Baseline | FIPS | Deployment Safeguards | Workload Identity | Private Link |
 |-----------|-------------|:------------:|:----:|:--------------------:|:----------------:|:------------:|
 | [Azure App Configuration][app-config-overview] | Centralized management of application settings and feature flags. | ✅ | ❌ | ✅ | ✅ | ✅ |
+| [Kueue][azure-kueue] | Managed job queuing, prioritization, and resource-aware workload admission for batch and AI workloads on AKS. | ✅  | ❌ | ❌ | ✅  | ✅ |
 | [Azure Machine Learning][azure-ml-overview] | Train, deploy, and manage machine learning workloads on AKS. | ❌ | ❌ | ❌ | ❌ | ✅ |
+| [Managed KubeRay (preview)][kuberay-overview] | Install and manage the KubeRay operator for Ray workloads on AKS. | ✅ | ❌ | ✅ | N/R | ❌ |
 | [Dapr][dapr-overview] | Event-driven application runtime for cloud and edge workloads. | ✅ | ❌ | ❌ | ✅ | ✅ |
 | [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview) | Backup and restore protection for persistent volumes. **(Core Extension)**| ✅ | ❌ | ✅ | ✅ | ✅ |
 | [Flux (GitOps)][gitops-overview] | GitOps-based configuration and application deployment management. | ✅ | ❌ | ✅ | ❌ | ✅ |
 | [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) | Persistent storage for AKS workloads. | ✅ | ❌ | ✅ | N/R | ❌ |
 | Service Connector | Simplifies secure connectivity between AKS workloads and Azure services. | ✅ | ❌ | ✅ | ✅ | N/R |
 | [Virtual Nodes v2 on Azure Container Instances (preview)][virtual-nodes-v2-overview] | Use Virtual Nodes v2 to burst AKS workloads to serverless compute on Azure Container Instances (ACI). | N/R | ❌ | ❌ | ✅ | ✅ |
-| [Azure Monitor - Container Insights](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-container-insights-and-logging-on-an-aks-cluster) | Log collection and monitoring for AKS clusters and containers. **(Core Extension)**| ❌ | ❌ | ❌ | ❌ | ✅ |
+| [Azure Monitor - Container Insights](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-container-insights-and-logging-on-an-aks-cluster) | Log collection and monitoring for AKS clusters and containers. **(Core Extension)**|  N/R | ❌ | ❌ | N/R | ✅ |
 | [Azure Monitor - Prometheus](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-prometheus-metrics-on-an-aks-cluster) | Prometheus-compatible metrics collection for AKS. **(Core Extension)**| ✅ | ❌ | ✅ | N/R | ✅ |
-| [Azure Monitor - App Monitoring](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-container-insights-and-logging-on-an-aks-cluster) | Application performance monitoring and telemetry collection. **(Core Extension)**| ❌ | ❌ | ❌ | ❌ | ❌ |
+| [Azure Monitor - App Monitoring](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=azure-cli#enable-container-insights-and-logging-on-an-aks-cluster) | Application performance monitoring and telemetry collection. **(Core Extension)**| N/R | ❌ | ❌ | N/R | ✅ |
 | [Argo CD][argo-cd-overview] | GitOps-based continuous delivery for Kubernetes applications. | ✅ | ❌ | ✅ | ✅ | ❌ |
 
 You can also [select and deploy Kubernetes applications available through Marketplace](deploy-marketplace.md).
@@ -145,6 +147,7 @@ You can also [select and deploy Kubernetes applications available through Market
 [arc-k8s-extensions]: /azure/azure-arc/kubernetes/conceptual-extensions
 [app-config-overview]: ./azure-app-configuration-quickstart.md
 [azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
+[kuberay-overview]: ./kuberay-overview.md
 [dapr-overview]: ./dapr.md
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
 [gitops-support]: /azure/azure-arc/kubernetes/extensions-release#flux-gitops
@@ -158,6 +161,7 @@ You can also [select and deploy Kubernetes applications available through Market
 [argo-cd-overview]: /azure/azure-arc/kubernetes/tutorial-use-gitops-argocd
 [private-link-overview]: /azure/aks/concepts-network-isolated#how-a-network-isolated-cluster-works​
 [deployment-safeguards-overview]: /azure/aks/deployment-safeguards
+[azure-kueue]: /azure/aks/kueue-overview?pivots=extension
 
 <!-- EXTERNAL LINKS -->
 [arc-k8s-regions]: https://azure.microsoft.com/global-infrastructure/services/?products=azure-arc&regions=all

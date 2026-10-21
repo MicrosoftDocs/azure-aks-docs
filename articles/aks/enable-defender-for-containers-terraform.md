@@ -1,8 +1,8 @@
 ---
 title: 'Quickstart: Use Terraform for Defender for Containers on Azure'
 description: Use Terraform to deploy an AKS cluster, enable Microsoft Defender for Containers at the subscription level, and verify runtime protection.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: quickstart
 ms.custom: devx-track-terraform

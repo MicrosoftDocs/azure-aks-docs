@@ -4,8 +4,8 @@ description: Learn how to use Confidential GPUs on Azure Kubernetes Service (AKS
 ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 09/17/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
 # Customer intent: As a cloud administrator, I want to use Confidential GPUs on Azure Kubernetes Service (AKS) to run secure and isolated workloads.

@@ -1,10 +1,10 @@
 ---
 title: Create a GitHub Workflow using Automated Deployments in the Azure Kubernetes Service (AKS) extension for Visual Studio Code
 description: Learn how to create a GitHub Workflow using Automated Deployments in the Azure Kubernetes Service (AKS) extension for Visual Studio Code.
-author: davidsmatlak
+author: schaffererin
 ms.topic: how-to
 ms.date: 07/15/2024
-ms.author: davidsmatlak
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-developer
 # Customer intent: "As a developer, I want to create a GitHub Workflow using Automated Deployments for my Azure Kubernetes Service setup, so that I can streamline my CI/CD process and ensure consistent deployments of my applications."

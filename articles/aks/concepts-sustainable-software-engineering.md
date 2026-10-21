@@ -4,8 +4,8 @@ description: Learn about sustainable software engineering in Azure Kubernetes Se
 ms.topic: concept-article
 ms.custom: aks-getting-started
 ms.date: 06/20/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As a software engineer, I want to apply sustainable engineering principles in my Azure Kubernetes Service (AKS) deployments so that I can minimize carbon emissions and enhance operational efficiency in my cloud applications.
 ---

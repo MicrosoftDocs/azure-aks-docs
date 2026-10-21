@@ -1,6 +1,6 @@
 ---
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 01/21/2026

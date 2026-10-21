@@ -1,8 +1,8 @@
 ---
 title: 'Quickstart: Deploy Azure ALB Controller on AKS using Terraform'
 description: Use Terraform to deploy an AKS cluster, enable the Application Gateway for Containers ALB Controller add-on, and verify the Gateway API installation.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: quickstart
 ms.custom: devx-track-terraform

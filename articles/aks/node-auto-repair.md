@@ -5,8 +5,8 @@ ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
 ms.date: 07/01/2026
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 # Customer intent: As a DevOps engineer, I want to understand how automatic node repair works in Azure Kubernetes Service so that I can ensure high availability and minimize downtime for my applications.
 ---
 
