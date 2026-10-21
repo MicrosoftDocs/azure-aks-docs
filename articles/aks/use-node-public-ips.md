@@ -3,7 +3,7 @@ title: Use instance-level public IPs in Azure Kubernetes Service (AKS)
 description: Learn how to manage instance-level public IPs Azure Kubernetes Service (AKS)
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 09/25/2026
+ms.date: 10/21/2026
 ms.author: pahealy
 author: phealy
 ai-usage: ai-assisted
@@ -119,7 +119,7 @@ After the feature flags are registered, refresh the resource provider to ensure 
 ```azurecli-interactive
 az provider register --namespace Microsoft.ContainerService
 ```
-Once the registration is complete, you can create or update a cluster to use dual-stack public IP prefixes for node public IPs.
+Once the registration is complete, you can create a cluster, add a node pool, or update the prefixes on an existing node pool to use dual-stack node public IPs.
 
 ### Create public IP prefixes
 
@@ -217,19 +217,72 @@ az aks nodepool add \
 
 Because Azure assigns the IPv4 address automatically, the IPv4 address of each node isn't predictable and you can't add it to an allow list in advance. As a result, you can't use an IPv6-only public IP prefix on a cluster that uses [API server authorized IP ranges][api-server-authorized-ip-ranges]. Use [API Server VNet Integration][api-server-vnet-integration] or a [private cluster][private-clusters] instead, or include an IPv4 prefix in the list.
 
+### Update public IP prefixes for an existing node pool
+
+You can add or replace public IP prefixes on an existing node pool in public Azure by using [az aks nodepool update][az-aks-nodepool-update] with `--node-public-ip-prefix-ids`. Updates are supported for both Virtual Machine Scale Sets and Virtual Machines node pools, including pools created with the singular `--node-public-ip-prefix-id` parameter.
+
+Use version `22.0.0b11` or later of the `aks-preview` extension and register `NodePublicIPv6PrefixPreview` as described in [Register the preview features](#register-the-preview-features). The node pool must already have node public IPs enabled. The [requirements](#requirements) for dual-stack networking, prefix resources, and cluster identity permissions also apply to updates.
+
+Supported updates include:
+
+- Add an IPv6 prefix to a pool that uses an IPv4 prefix.
+- Add an IPv4 prefix to a pool that uses only an IPv6 prefix.
+- Assign prefixes to a pool that already has node public IPs enabled but doesn't use a custom prefix.
+- Replace an existing prefix with another prefix of the same IP version, including replacing both prefixes in one update.
+- Add a prefix for the other IP version and replace an existing prefix in the same update.
+
+Pass the **complete desired list** of prefix resource IDs, including any existing prefix you want to keep. The command doesn't append to the current list. You can't remove a configured IP family or clear the list. For example, a pool that uses both an IPv4 and an IPv6 prefix can't be changed to use only one of them. See [Limitations](#limitations) for other update restrictions.
+
+> [!IMPORTANT]
+> A prefix change recreates the nodes in the pool through a rolling operation. It isn't a metadata-only change. Individual node public IP addresses can change, even for a prefix that you keep, and direct connections to those addresses can be interrupted. Plan for workload disruption, review your pod disruption budgets, and allow capacity for temporary surge nodes, including compute quota and addresses in each prefix. Add new prefix ranges to any IP-based allow lists before the update, and keep the old ranges until the operation completes.
+
+To add an IPv6 prefix while keeping an existing IPv4 prefix, run:
+
+```azurecli-interactive
+az aks nodepool update \
+  --resource-group <resourceGroup> \
+  --cluster-name <aksClusterName> \
+  --name <nodePoolName> \
+  --node-public-ip-prefix-ids "<existingIpv4PrefixResourceId>,<ipv6PrefixResourceId>"
+```
+
+To add an IPv4 prefix to an IPv6-only prefix configuration, use the same command with the new IPv4 prefix resource ID and the existing IPv6 prefix resource ID.
+
+To replace an IPv6 prefix while keeping the existing IPv4 prefix, supply the replacement IPv6 prefix resource ID:
+
+```azurecli-interactive
+az aks nodepool update \
+  --resource-group <resourceGroup> \
+  --cluster-name <aksClusterName> \
+  --name <nodePoolName> \
+  --node-public-ip-prefix-ids "<existingIpv4PrefixResourceId>,<newIpv6PrefixResourceId>"
+```
+
+After the update completes, [verify the prefix configuration and the public IP addresses on every node](#verify-the-node-public-ip-prefix-configuration).
+
 ### Verify the node public IP prefix configuration
 
-Confirm which prefixes a node pool uses with the [az aks nodepool show][az-aks-nodepool-show] command:
+Confirm that the node pool's provisioning state is `Succeeded` and that it uses the expected prefix resource IDs with the [az aks nodepool show][az-aks-nodepool-show] command:
 
 ```azurecli-interactive
 az aks nodepool show \
   --resource-group <resourceGroup> \
   --cluster-name <aksClusterName> \
   --name <nodePoolName> \
-  --query "networkProfile.nodePublicIPPrefixIDs"
+  --query "{provisioningState:provisioningState, prefixIDs:networkProfile.nodePublicIPPrefixIDs}"
 ```
 
-List the public IP addresses that the nodes received with the [az vmss list-instance-public-ips][az-list-ips] command. Use the [node resource group][node-resource-group]:
+For either node pool type, connect `kubectl` to your cluster and list each node's external IP addresses:
+
+```bash
+kubectl get nodes \
+  --selector "agentpool=<nodePoolName>" \
+  --output jsonpath='{range .items[*]}{.metadata.name}{"\t"}{range .status.addresses[?(@.type=="ExternalIP")]}{.address}{" "}{end}{"\n"}{end}'
+```
+
+For a pool configured with both prefixes, verify that every node has an IPv4 address from the IPv4 prefix and an IPv6 address from the IPv6 prefix. After a prefix update, check the addresses against the new prefixes, not just the node pool configuration.
+
+For a Virtual Machine Scale Sets node pool, you can also list the public IP addresses with the [az vmss list-instance-public-ips][az-list-ips] command. Use the [node resource group][node-resource-group]:
 
 ```azurecli-interactive
 az vmss list-instance-public-ips \
@@ -250,7 +303,13 @@ The following limitations apply to public IP prefixes for node public IPs.
 - The prefix list can contain at most one IPv4 prefix and one IPv6 prefix. Two prefixes of the same IP version are rejected.
 - You must enable node public IPs on the node pool when you specify prefixes.
 - You can't use the `--node-public-ip-prefix-ids` and `--node-public-ip-prefix-id` parameters in the same command.
-- Node public IP configuration is immutable. To change the public IP prefixes, you must create a new node pool and migrate workloads.
+- You can't enable or disable node public IPs on an existing node pool. To change whether nodes have public IPs, create a new node pool and migrate workloads.
+
+**Updates:**
+
+- You can [add or replace prefixes on an existing node pool](#update-public-ip-prefixes-for-an-existing-node-pool), but you can't remove a configured IP family or clear all prefixes. For example, you can't remove the IPv4 prefix from a dual-stack prefix configuration to switch to Azure-assigned IPv4 addresses. Create a new node pool and migrate workloads for these changes.
+- Prefix updates aren't supported on Spot node pools.
+- For a nonempty node pool that uses the rolling upgrade strategy, `maxSurge` must be greater than `0`. Configure [node surge](upgrade-aks-node-pools-rolling.md#customize-node-surge) before changing the prefixes.
 
 **Prefix resources:**
 
