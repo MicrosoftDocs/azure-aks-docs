@@ -29,12 +29,12 @@ For Linux nodes, you can apply node image security patches and hotfixes without 
 - **Automatic node OS image upgrades** with security patches and bug fixes.
 - **Built-in API breaking change detection** that stops upgrades if deprecated Kubernetes APIs are detected.
 - **Automatic node repair** and cluster component patching.
-- **Guaranteed SLAs**: 99.9% pod readiness within five minutes during upgrades, and 99.95% uptime for the Kubernetes API server.
+- **Managed reliability defaults** for upgrade cadence, node maintenance, and control plane operations.
 
 No action is required on your part. AKS Automatic handles upgrades automatically during [planned maintenance windows][planned-maintenance]. This article covers advanced upgrade strategies for scenarios beyond the Automatic defaults.
 
 > [!TIP]
-> **Using AKS Automatic?** Your cluster is preconfigured for production-ready upgrades with SLA guarantees. Continue reading only if you need advanced customization, multi-cluster orchestration, or manual upgrade control for non-Automatic clusters.
+> **Using AKS Automatic?** Your cluster is preconfigured for production-ready upgrades. Continue reading only if you need advanced customization, multi-cluster orchestration, or manual upgrade control for non-Automatic clusters.
 
 ## Component upgrade overview
 
@@ -88,36 +88,23 @@ You can configure automatic upgrades through multiple methods:
 
 ## Planned maintenance
 
-For both AKS Automatic and AKS Standard clusters, [planned maintenance][planned-maintenance] allows you to schedule weekly maintenance windows that update your control plane and your kube-system pods, helping to minimize workload impact.
+For both AKS Automatic and AKS Standard clusters, use [planned maintenance][planned-maintenance] to schedule maintenance windows that update your control plane and your kube-system pods, helping to minimize workload impact. You can define maintenance schedules inline on each cluster or use a [shared maintenance window](/azure/aks/planned-maintenance?pivots=azure-cli#use-a-shared-maintenance-window-preview) to reuse a schedule across multiple clusters.
 
 ### Planned maintenance for AKS Automatic
 
 For AKS Automatic clusters, planned maintenance is **optional**:
 
 - **Default behavior**: Automatic upgrades are scheduled during planned maintenance windows automatically, minimizing disruption.
-- **Customization**: You can configure a custom planned maintenance schedule to control when upgrades occur and ensure minimal impact on your applications.
+- **Customization**: You can configure a custom planned maintenance schedule to control when upgrades occur and ensure minimal impact on your applications. If multiple clusters should use the same schedule, link their maintenance configurations to a shared maintenance window.
 - **No action required**: If you don't configure a custom schedule, AKS Automatic upgrades proceed during default maintenance windows with built-in safeguards.
 
 ### Planned maintenance for AKS Standard
 
 For AKS Standard clusters, planned maintenance windows help align upgrades with your operational schedule and reduce unexpected disruptions.
 
-## Service level agreement (SLA) guarantees for upgrades
+## Reliability and service-level details
 
-### AKS Automatic SLAs
-
-AKS Automatic includes financially-backed SLA guarantees that apply during and outside of upgrade operations:
-
-- **Pod readiness SLA**: 99.9% of qualifying pod readiness operations complete within 5 minutes, covering pod scheduling and node provisioning during upgrades and scaling events.
-- **Cluster uptime SLA**: 99.95% availability of the Kubernetes API server, ensuring your cluster remains responsive during upgrades.
-
-These SLAs are included with every AKS Automatic cluster at no extra cost and require no configuration.
-
-### AKS Standard SLAs
-
-AKS Standard clusters can optionally enable:
-
-- **Uptime SLA**: 99.95% availability of the Kubernetes API server (optional, available at Standard or Premium tiers).
+For more information, see [Service-level agreements for online services](https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services).
 
 ## Troubleshooting upgrade issues
 
