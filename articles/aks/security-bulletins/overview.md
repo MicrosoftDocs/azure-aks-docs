@@ -33,7 +33,7 @@ These updates cover security information related to the following AKS components
 
 ### Description
 
-Some vulnerability scanners report OpenSSL 3.3 as end of life (EOL) in AKS-managed add-on container images. This bulletin explains why an upstream EOL warning alone doesn't establish that the Azure Linux package lacks security maintenance.
+Some vulnerability scanners report OpenSSL 3.3 as end of life (EOL) in AKS-managed add-on container images. This article explains why an upstream EOL warning alone doesn't establish that the Azure Linux package lacks security maintenance.
 
 OpenSSL 3.3 reached [upstream EOL on April 9, 2026](https://openssl-library.org/roadmap/index.html). Azure Linux 3.0 continues to apply security fixes to its OpenSSL package through backports. A backport applies a fix without changing the upstream version number.
 
@@ -47,7 +47,7 @@ The [Azure Linux OpenSSL package changelog](https://github.com/microsoft/azureli
 These examples show backporting, not a minimum package version or a claim that every image contains every fix.
 
 > [!IMPORTANT]
-> This bulletin doesn't classify all OpenSSL findings as false positives. An upstream EOL warning and a missing security patch are different findings. Assess each reported CVE against the exact Azure Linux package revision.
+> This article doesn't classify all OpenSSL findings as false positives. An upstream EOL warning and a missing security patch are different findings. Assess each reported CVE against the exact Azure Linux package revision.
 
 ### Why scanners report these findings
 
