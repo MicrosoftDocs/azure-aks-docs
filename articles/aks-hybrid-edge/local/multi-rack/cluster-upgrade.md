@@ -2,10 +2,10 @@
 title: Upgrade an Azure Kubernetes Service (AKS) on Azure Local for multi-rack deployments
 description: Learn how to upgrade an AKS cluster to a newer Kubernetes version on Azure Local.
 ms.topic: overview
-ms.date: 09/01/2026
-ms.author: sanjanamohan
+ms.date: 10/06/2026
+ms.author: ekarandjeff
 ms.custom: multi-rack
-author: sanjanamsft
+author: eak13
 ---
 
 # Upgrade an Azure Kubernetes Service on Azure Local multi-rack cluster
@@ -25,14 +25,14 @@ The supported Kubernetes Versions are:
 - 1.31.100
 - 1.32.10
 - 1.32.11
-- 1.33.11
 - 1.33.12
-- 1.34.7
-- 1.34.8
-- 1.35.4
-- 1.35.5
-- 1.36.0
-- 1.36.1
+- 1.33.13
+- 1.34.10
+- 1.34.11
+- 1.35.7
+- 1.35.8
+- 1.36.3
+- 1.36.4
 
 ## Upgrade the Kubernetes version
 

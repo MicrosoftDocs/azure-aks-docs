@@ -44,11 +44,11 @@ Node Disruption Policy supports three policy configurations:
 | Policy | Description | Use case |
 |--------|-------------|----------|
 | `Allow` | Allows operations that require node reimage to proceed at any time. This is the default behavior. | Use when you want to prioritize applying updates quickly and can tolerate workload disruption. |
-| `AllowDuringMaintenanceWindow` | Blocks operations that require node reimage unless they occur within the `aksManagedNodeOSUpgradeSchedule` maintenance window. | Use when you want to limit disruptions to specific maintenance windows that align with your operational schedule. |
+| `AllowDuringMaintenanceWindow` | Blocks operations that require node reimage unless they occur within the `aksManagedNodeOSUpgradeSchedule` maintenance window. The configuration can use an inline schedule or link to a shared maintenance window. | Use when you want to limit disruptions to specific maintenance windows that align with your operational schedule. |
 | `Block` | Blocks all operations that require node reimage. | Use when you need to prevent any node disruptions, such as during critical business periods or high-traffic events. |
 
 > [!NOTE]
-> When you use `AllowDuringMaintenanceWindow`, you must configure an `aksManagedNodeOSUpgradeSchedule` maintenance window. For more information on setting up maintenance windows, see [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster][planned-maintenance]. If you don't configure the maintenance window, the node-disruptive operations are allowed.
+> When you use `AllowDuringMaintenanceWindow`, you must configure an `aksManagedNodeOSUpgradeSchedule` maintenance window. The maintenance configuration can define the schedule inline or reference a shared maintenance window. For more information on setting up maintenance windows, see [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster][planned-maintenance]. If you don't configure the maintenance window, the node-disruptive operations are allowed.
 
 ## Considerations
 
@@ -255,7 +255,7 @@ Node Disruption Policy **doesn't control** the following automated recovery oper
 
 ## Integration with planned maintenance
 
-Node Disruption Policy works seamlessly with [AKS planned maintenance][planned-maintenance] windows. When you set the policy to `AllowDuringMaintenanceWindow`, disruptive operations align with your `aksManagedNodeOSUpgradeSchedule` maintenance window, ensuring that:
+Node Disruption Policy works seamlessly with [AKS planned maintenance][planned-maintenance] windows. When you set the policy to `AllowDuringMaintenanceWindow`, disruptive operations align with your `aksManagedNodeOSUpgradeSchedule` maintenance window. The schedule can be inline or linked to a shared maintenance window. This integration ensures that:
 
 - Changes occur only during approved time windows.
 - Operations coordinate with other scheduled maintenance.
@@ -264,7 +264,7 @@ Node Disruption Policy works seamlessly with [AKS planned maintenance][planned-m
 This integration provides a comprehensive approach to managing cluster changes and minimizing impact on running workloads.
 
 > [!NOTE]
-> When you use `AllowDuringMaintenanceWindow`, you must configure an `aksManagedNodeOSUpgradeSchedule` maintenance window. Using the `default` maintenance window or `aksManagedAutoUpgradeSchedule` (cluster auto-upgrade) doesn't satisfy this requirement. If you set `AllowDuringMaintenanceWindow` without an `aksManagedNodeOSUpgradeSchedule` window configured, all disruptive operations are allowed (the policy has no window to gate against). For more information on setting up maintenance windows, see [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster][planned-maintenance].
+> When you use `AllowDuringMaintenanceWindow`, you must configure an `aksManagedNodeOSUpgradeSchedule` maintenance window. Using the `default` maintenance window or `aksManagedAutoUpgradeSchedule` (cluster auto-upgrade) doesn't satisfy this requirement. An `aksManagedNodeOSUpgradeSchedule` configuration linked to a shared maintenance window does satisfy this requirement. If you set `AllowDuringMaintenanceWindow` without an `aksManagedNodeOSUpgradeSchedule` window configured, all disruptive operations are allowed (the policy has no window to gate against). For more information on setting up maintenance windows, see [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster][planned-maintenance].
 
 ## Best practices
 
