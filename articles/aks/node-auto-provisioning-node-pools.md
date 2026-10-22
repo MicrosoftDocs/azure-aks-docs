@@ -40,44 +40,54 @@ When configuring `NodePools` for NAP, keep the following behaviors in mind:
 
 ## Review default node pool configuration
 
-The configuration of the default [Karpenter `NodePool`](https://karpenter.sh/docs/concepts/nodepools/) named `default` created by NAP is as follows:
+The following example shows the configuration of the default [Karpenter `NodePool`](https://karpenter.sh/docs/concepts/nodepools/) named `default` created by NAP on a cluster that uses Azure CNI Powered by Cilium:
 
 ```yaml
 apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: default
+  annotations:
+    kubernetes.io/description: "General purpose NodePool for generic workloads"
 spec:
   disruption:
-    consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: 0s
+    budgets:
+      - nodes: "30%"
   template:
+    metadata:
+      labels:
+        kubernetes.azure.com/mode: "user"
+        # Required for Karpenter to predict overhead from the Cilium DaemonSet.
+        kubernetes.azure.com/ebpf-dataplane: cilium
     spec:
-      nodeClassRef:
-        group: karpenter.azure.com
-        kind: AKSNodeClass
-        name: default
       expireAfter: Never
       # Requirements that constrain the parameters of provisioned nodes.
       # These requirements are combined with pod.spec.affinity.nodeAffinity rules.
       # Operators { In, NotIn, Exists, DoesNotExist, Gt, and Lt } are supported.
       # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#operators
       requirements:
-      - key: kubernetes.io/arch
-        operator: In
-        values:
-        - amd64
-      - key: kubernetes.io/os
-        operator: In
-        values:
-        - linux
-      - key: karpenter.sh/capacity-type
-        operator: In
-        values:
-        - on-demand
-      - key: karpenter.azure.com/sku-family
-        operator: In
-        values:
-        - D
+        - key: kubernetes.io/arch
+          operator: In
+          values: ["amd64"]
+        - key: kubernetes.io/os
+          operator: In
+          values: ["linux"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+        - key: karpenter.azure.com/sku-family
+          operator: In
+          values: [D]
+      startupTaints:
+        # https://karpenter.sh/docs/concepts/nodepools/#cilium-startup-taint
+        - key: node.cilium.io/agent-not-ready
+          effect: NoExecute
+          value: "true"
+      nodeClassRef:
+        group: karpenter.azure.com
+        kind: AKSNodeClass
+        name: default
 ```
 
 NAP also creates a `system-surge` node pool that provides on-demand Linux AMD64 capacity for critical system add-ons. When a pending pod tolerates the `CriticalAddonsOnly=true:NoSchedule` taint and matches the pool requirements, NAP can provision a node from this pool. Nodes created by the pool have the `kubernetes.azure.com/mode: system` label.
