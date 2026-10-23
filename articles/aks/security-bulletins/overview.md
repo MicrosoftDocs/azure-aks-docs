@@ -1,7 +1,7 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 05/11/2026
+ms.date: 10/21/2026
 author: bcho
 ms.author: bahe
 ms.topic: concept-article
@@ -23,6 +23,82 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
 - Azure Kubernetes Service add-ons (AKS add-ons)
+
+---
+
+
+## AKS-2026-0006 OpenSSL end-of-life scanner findings in AKS-managed add-on images
+
+**Published date**: October 21, 2026
+
+### Description
+
+Some vulnerability scanners report OpenSSL 3.3 as end of life (EOL) in AKS-managed add-on container images. This article explains why an upstream EOL warning alone doesn't establish that the Azure Linux package lacks security maintenance.
+
+OpenSSL 3.3 reached [upstream EOL on April 9, 2026](https://openssl-library.org/roadmap/index.html). Azure Linux 3.0 continues to apply security fixes to its OpenSSL package through backports. A backport applies a fix without changing the upstream version number.
+
+The [Azure Linux OpenSSL package changelog](https://github.com/microsoft/azurelinux/blob/59dd31f473b6eca8d05410731653177444d6a416/SPECS/openssl/openssl.spec#L387-L401) documents security fixes after that date:
+
+| Azure Linux package revision | Changelog date | Example security fix |
+| --- | --- | --- |
+| `3.3.7-4.azl3` | July 16, 2026 | [CVE-2026-45447 patch](https://github.com/microsoft/azurelinux/blob/59dd31f473b6eca8d05410731653177444d6a416/SPECS/openssl/CVE-2026-45447.patch) |
+| `3.3.7-6.azl3` | August 26, 2026 | [CVE-2026-54874 patch](https://github.com/microsoft/azurelinux/blob/59dd31f473b6eca8d05410731653177444d6a416/SPECS/openssl/CVE-2026-54874.patch) |
+
+These examples show backporting, not a minimum package version or a claim that every image contains every fix.
+
+> [!IMPORTANT]
+> This article doesn't classify all OpenSSL findings as false positives. An upstream EOL warning and a missing security patch are different findings. Assess each reported CVE against the exact Azure Linux package revision.
+
+### Why scanners report these findings
+
+The `openssl version` command reports the upstream version, such as `3.3.7`, without the Azure Linux package revision, such as `-4.azl3`. The image's RPM package metadata and software bill of materials (SBOM) contain the complete package version.
+
+A scanner that evaluates only the upstream version can miss Microsoft's backported fixes. The upstream EOL date is correct, but an inference that Microsoft no longer services the Azure Linux package is incorrect.
+
+Some scanners also report CVEs without accounting for distribution-specific fixes. The [Azure Linux 3.0 vulnerability feed](https://github.com/microsoft/AzureLinuxVulnerabilityData/blob/main/azurelinux-3.0-oval.xml) provides Open Vulnerability and Assessment Language (OVAL) definitions for evaluating CVEs against package revisions. Distribution-aware CVE matching doesn't remove an EOL-only warning that has no associated CVE.
+
+The container's base operating system is separate from the node's operating system. An add-on running on an Ubuntu node can use an Azure Linux base image. A node image upgrade doesn't change the packages inside that container image.
+
+### Evidence from a published image
+
+For the `linux/amd64` image `mcr.microsoft.com/oss/v2/kubernetes/coredns:v1.14.3-20`, the [digest-pinned SPDX SBOM](https://mcr.microsoft.com/v2/oss/v2/kubernetes/coredns/blobs/sha256:6f5dde31f4349cfbf4f532dc9b8ab090409047e6beb74c6cf8a5542801d65481) records:
+
+| Package | Complete package version |
+| --- | --- |
+| `azurelinux-release` | `3.0-49.azl3` |
+| `openssl` | `3.3.7-4.azl3` |
+| `openssl-libs` | `3.3.7-4.azl3` |
+
+The public [image manifest](https://mcr.microsoft.com/v2/oss/v2/kubernetes/coredns/manifests/sha256:6903c44b9016c274048ffc4b1b3691fb6ac6ccd82f2d2e19032142f80cea9339) and [attestation manifest](https://mcr.microsoft.com/v2/oss/v2/kubernetes/coredns/manifests/sha256:1f52d1dfa4fab42f5a7ab597ebb38782a85f7977193a7e6a15fcb5b53f307d2e) link that image to this SBOM. These links use immutable digests rather than a moving tag.
+
+This historical image illustrates package identification, not a recommendation to deploy it or a statement that it has no vulnerabilities. Check your deployed digest separately.
+
+### References
+
+- [OpenSSL release roadmap and upstream support dates](https://openssl-library.org/roadmap/index.html).
+- [Azure Linux OpenSSL package and backport changelog](https://github.com/microsoft/azurelinux/blob/59dd31f473b6eca8d05410731653177444d6a416/SPECS/openssl/openssl.spec#L387-L401).
+- [Azure Linux 3.0 vulnerability data and OVAL definitions](https://github.com/microsoft/AzureLinuxVulnerabilityData/blob/main/azurelinux-3.0-oval.xml).
+- [Vulnerability management for AKS](../concepts-vulnerability-management.md).
+
+### Affected components
+
+#### [**AKS add-ons**](#tab/aks-addons)
+
+**Affected versions**
+
+- AKS-managed add-on images based on Azure Linux 3.0 that contain OpenSSL 3.3 packages can trigger these findings.
+- Examples include CoreDNS, metrics-server, and Azure Disk and Azure Files CSI components. The finding depends on the exact image and the scanner's detection rules, not a single Kubernetes version.
+- This bulletin doesn't cover OpenSSL packages in node images or customer-managed containers.
+
+**Resolutions**
+
+No manual OpenSSL replacement is needed for a verified EOL-only finding in the scope of this bulletin. AKS manages updates to its add-on images. A newer add-on image can contain security fixes and still report the same upstream OpenSSL version.
+
+- **Verify the package.** Record the image repository, tag, and digest from the scanner report. Confirm Azure Linux 3.0 and the complete `openssl` or `openssl-libs` package revision from that image's SBOM or RPM metadata. Don't use `openssl version` alone to assess the package's patch status.
+- **Separate EOL warnings from CVEs.** For a specific CVE, compare the installed package revision with Azure Linux's published fix information. Ask your scanner vendor to use distribution-aware matching and current vulnerability data.
+- **Handle verified EOL-only findings through your security policy.** Consider a time-bound exception for the exact image digest and EOL finding. Attach the package version, the published backport evidence, and a review date. Don't extend the exception to unresolved CVEs.
+- **Keep managed components intact.** Don't replace or modify AKS-managed add-on images to change the reported OpenSSL version. Continue normal cluster and node image updates for other security fixes.
+- **Escalate findings outside this scope.** Contact Azure support if your report identifies a missing security patch or differs from this bulletin's scope. Include the image digest, full package version, finding identifier, and scanner output.
 
 ---
 
