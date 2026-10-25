@@ -3,7 +3,7 @@ title: Supported Kubernetes versions for AKS Hybrid and Edge
 description: Understand the Kubernetes version support policy and lifecycle of clusters for Azure Kubernetes Service Hybrid and Edge.
 services: container-service
 ms.topic: feature-availability
-ms.date: 09/01/2026
+ms.date: 10/24/2026
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.reviewer: srikantsarwa
@@ -59,8 +59,9 @@ You should install the latest patch release of the minor version you're running.
 
 |  K8s minor version | Supported Azure Local versions | Current status |
 |--------------|-------------------|--------------|
-| 1.33 | [2607, 2606, 2605, 2604, 2603, 2602](local/aks-whats-new-local.md#aks-hybrid-and-edge-releases) | Supported |
-| 1.32 | [2607, 2606, 2605, 2604, 2603, 2602, 2601, 2512, 2511, 2510](local/aks-whats-new-local.md#aks-hybrid-and-edge-releases) | Supported |
+| 1.34 | [2610](local/aks-whats-new-local.md#release-2610) | Supported |
+| 1.33 | [2610](local/aks-whats-new-local.md#release-2610), [2607, 2606, 2605, 2604, 2603, 2602](local/aks-whats-new-local.md#aks-hybrid-and-edge-releases) | Supported |
+| 1.32 | [2610](local/aks-whats-new-local.md#release-2610), [2607, 2606, 2605, 2604, 2603, 2602, 2601, 2512, 2511, 2510](local/aks-whats-new-local.md#aks-hybrid-and-edge-releases) | Supported |
 | 1.31 | [2607, 2606, 2605, 2604, 2603, 2602, 2601, 2512, 2511, 2510, 2509, 2508](local/aks-whats-new-local.md#aks-hybrid-and-edge-releases) | Supported |
 | 1.30 | [2601, 2512, 2511, 2510, 2509, 2508, 2507, 2503](local/aks-whats-new-local.md#aks-hybrid-and-edge-releases) | No more patch versions/CVE updates |
 | 1.29 | [2509, 2508, 2507, 2503](local/aks-whats-new-local.md#aks-hybrid-and-edge-releases), [2411](local/aks-whats-new-local.md#aks-hybrid-and-edge-releases), [2408](local/aks-whats-new-local.md#release-2408) | No more patch versions/CVE updates |
@@ -78,6 +79,7 @@ You should install the latest patch release of the minor version you're running.
 
 | Release             | Supported minor & patch versions                 |
 |---------------------|--------------------------------------------------|
+| 2610                | 1.32.10, 1.32.11, 1.33.6, 1.33.7, 1.34.3, 1.34.4 |
 | 2602                | 1.31.12, 1.31.13, 1.32.8, 1.32.9, 1.33.4, 1.33.5 |
 | 2510                | 1.30.13, 1.30.14, 1.31.9, 1.31.10, 1.32.5, 1.32.6|
 | 2508                | 1.29.12, 1.29.13, 1.30.8, 1.30.9, 1.31.4, 1.31.5 |
@@ -86,6 +88,8 @@ You should install the latest patch release of the minor version you're running.
 | 2411                | 1.27.7, 1.27.9, 1.28.5, 1.28.9, 1.29.2, 1.29.4   |
 | 2408                | 1.27.7, 1.27.9, 1.28.5, 1.28.9, 1.29.2, 1.29.4   |
 | 2405                | 1.26.10, 1.26.12, 1.27.7, 1.27.9, 1.28.3, 1.28.5 |
+
+Kubernetes 1.31 isn't available for cluster creation or upgrades in release 2610. Before you upgrade Azure Local, check that your clusters have a sequential Kubernetes upgrade path to a version available in the target Azure Local release. For instructions, see [Upgrade an AKS cluster](local/hyperconverged/cluster-upgrade.md).
 
 > [!IMPORTANT]
 > Once you upgrade your Azure Local instance to a specific release, you can only use the Kubernetes versions available in that release for Kubernetes cluster create and cluster upgrade operations. Outside of those operations, your existing Kubernetes clusters continue to run on the same version they were on before the Azure Local upgrade. For example, if you're on release 2510 and you create a cluster using Kubernetes version 1.30.13, and then you upgrade your Azure Local instance to 2602, the cluster created on 2510 will continue to run 1.30.13. If you create a new cluster after the upgrade, it will use a version available in the 2602 release (for example, 1.31.12, 1.31.13, 1.32.8, 1.32.9, 1.33.4, 1.33.5). You can also upgrade the cluster you created on 2510 to any version available in the 2602 release (for example, 1.31.12, 1.31.13, 1.32.8, 1.32.9, 1.33.4, 1.33.5).
