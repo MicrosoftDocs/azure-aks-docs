@@ -980,6 +980,8 @@
               href: enable-host-encryption.md
             - name: FIPS-compliant node pools
               href: enable-fips-nodes.md
+            - name: Cluster-level FIPS (preview)
+              href: enable-fips-cluster.md
             - name: Azure Dedicated Hosts for AKS nodes
               href: use-azure-dedicated-hosts.md
             - name: Restrict access to IMDS

@@ -1027,7 +1027,7 @@ There isn't an Azure portal experience to enable or disable FIPS settings for Wi
 Existing Linux node pools can be updated to enable or disable FIPS. If you're planning to migrate your node pools from non-FIPS to FIPS, first validate that your application is working properly in a test environment before migrating it to a production environment. Validating your application in a test environment should prevent issues caused by the FIPS kernel blocking some weak cipher or encryption algorithm, such as an MD4 algorithm that isn't FIPS compliant.
 
 > [!NOTE]
-> When updating an existing Linux node pool to enable or disable FIPS, the node pool update moves between the fips and nonfips image. This node pool update triggers a reimage to complete the update. This can cause the node pool update to take a few minutes to complete.
+> When updating an existing Linux node pool to enable or disable FIPS, the node pool update moves between the FIPS and non-FIPS image. This node pool update triggers a reimage to complete the update. This can cause the node pool update to take a few minutes to complete.
 
 :::zone pivot="azure-cli"
 
@@ -1395,11 +1395,13 @@ az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-gr
 
 ## Related content
 
+- To enforce FIPS on every node pool and block components that aren't FIPS-compliant across the whole cluster, see [Enable FIPS for AKS clusters (preview)][enable-fips-cluster].
 - For more information about AKS security, see [Best practices for cluster security and upgrades in Azure Kubernetes Service (AKS)][aks-best-practices-security].
 - For more information about upgrading your OS version for your Linux FIPS node pools, see [Upgrade Linux OS version][upgrade-os-version].
 - For more information about upgrading your OS version for your Windows FIPS node pools, see [Upgrade Windows OS version][upgrade-windows-os-version].
 
 <!-- LINKS - Internal -->
+[enable-fips-cluster]: enable-fips-cluster.md
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-show]: /cli/azure/aks#az-aks-show
