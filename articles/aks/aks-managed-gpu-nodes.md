@@ -186,17 +186,18 @@ To use managed GPU nodes with node auto-provisioning (NAP), add the `EnableManag
 
 To learn more about configurable Azure-specific settings, see [Configure AKSNodeClass resources for NAP](./node-auto-provisioning-aksnodeclass.md).
 
-1. Create an `AKSNodeClass` CRD with the `EnableManagedGPUExperience: "true"` value in the `tags` field.
+1. Create an `AKSNodeClass` CRD and set `mode: Driver` and `nvidia.managementMode: Managed` in the `spec.gpu` field.
 
    ```yaml
    apiVersion: karpenter.azure.com/v1beta1
    kind: AKSNodeClass
    metadata:
      name: managed-gpu-class
-   spec:
-     imageFamily: Ubuntu
-     tags:
-       EnableManagedGPUExperience: "true"
+  spec:
+    gpu:
+      mode: Driver
+      nvidia:
+        managementMode: Managed
    ```
 
 1. Create a `NodePool` CRD that allows NAP to deploy NVIDIA GPU SKUs.
