@@ -56,10 +56,10 @@ This table includes the supported OS versions:
 | Linux | `Ubuntu` | Supported | Ubuntu 20.04 is default for Kubernetes version 1.24-1.34. Ubuntu 24.04 is the default for Kubernetes version 1.35-1.38. |
 | Linux | `Ubuntu2204` | Not supported | AKS doesn't support CVM for Ubuntu 22.04. |
 | Linux | `Ubuntu2404` | Supported | CVM is supported on `Ubuntu2404` in Kubernetes 1.32-1.38. |
-| Linux | `AzureLinux` | Supported on Azure Linux 3.0 | Azure Linux 3 is default when enabling CVM for Kubernetes version 1.28-1.36. |
+| Linux | `AzureLinux` | Supported on Azure Linux 3.0 | Azure Linux 3 is default when enabling CVM for Kubernetes version 1.28-1.38. |
+| Linux | `AzureContainerLinux` | Supported | CVM is supported on `AzureContainerLinux` starting Kubernetes version 1.34+. |
 | Linux | `flatcar` | Not supported | [Flatcar Container Linux for AKS][flatcar] doesn't support CVM. |
 | Linux | `AzureLinuxOSGuard` | Not supported | [Azure Linux with OS Guard for AKS][os-guard] doesn't support CVM. |
-| Linux | AzureContainerLinux | Not supported | Azure Container Linux (ACL) doesn't support CVM. |
 | Windows | All Windows OS SKUs | Not supported | N/A |
 
 When you use `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version doesn't support CVMs, AKS defaults to the most recent CVM-supported version of the OS.
@@ -68,7 +68,7 @@ When you use `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version 
 
 The following limitations apply when adding a node pool with CVM to AKS:
 
-- You can't use FIPS, ARM64, Trusted Launch, Pod sandboxing, Confidential containers, or node auto-provisioning (NAP) with CVM node pools.
+- You can't use FIPS, ARM64, Pod sandboxing, Confidential containers, or node auto-provisioning (NAP) with CVM node pools.
 - You can't use CVMs with Windows node pools.
 
 ## Prerequisites
