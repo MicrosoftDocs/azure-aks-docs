@@ -32,6 +32,14 @@ The `imageFamily` field sets the default VM image and bootstrapping logic for no
 - **`Ubuntu`**: Ubuntu is the default Linux distribution for AKS nodes.
   - OS version defaults change based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes versions 1.25 to 1.33. Ubuntu 24.04 is default for Kubernetes versions 1.34 and later.
 - **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux).
+- **`AzureContainerLinux`**: Azure Container Linux is supported with AKS 1.34 and later. Use a generation 2 VM and explicitly enable both Trusted Launch settings, even when you don't otherwise require them:
+  - Set `security.trustedLaunch.vtpm` to `true`.
+  - Set `security.trustedLaunch.secureBoot` to `true`.
+  - If you set `osDiskSizeGB`, use a value of at least 60.
+  - Don't combine this image family with settings that its image doesn't support. See [Azure Container Linux on AKS](./azure-container-linux-overview.md) for details.
+- **`Windows2022`**: Windows Server 2022 is in preview. It requires AMD64 architecture and isn't supported with the Cilium data plane. Windows2022 doesn't support FIPS or Trusted Launch. Don't configure `linuxOSConfig`, enable artifact streaming, or set LocalDNS to a mode other than `Disabled`.
+- **`Windows2025`**: Windows Server 2025 is in preview. It requires AMD64 architecture and isn't supported with the Cilium data plane. FIPS is required and is enabled effectively even when `fipsMode` is omitted. Don't configure `linuxOSConfig`, enable artifact streaming, or set LocalDNS to a mode other than `Disabled`.
+
 
 #### Example image family configuration
 
@@ -41,6 +49,66 @@ The following example configures the `AKSNodeClass` to use the `AzureLinux` imag
 spec:
   imageFamily: AzureLinux
 ```
+
+#### Azure Container Linux configuration
+
+The following example uses Azure Container Linux with the required Trusted Launch settings. It omits `osDiskSizeGB` so that the platform selects a supported disk size.
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: azure-container-linux
+spec:
+  imageFamily: AzureContainerLinux
+  security:
+    trustedLaunch:
+      vtpm: true
+      secureBoot: true
+```
+
+#### Windows OS support (preview)
+
+>[!NOTE]
+> AKS preview features are available on a self-service, opt-in basis. Previews are provided "as is" and "as available," and they're excluded from the service-level agreements and limited warranty. AKS previews are partially covered by customer support on a best-effort basis. As such, these features aren't meant for production use. For more information, see the following support articles:
+>
+> - [AKS support Policies](./support-policies.md)
+> - [Azure support FAQ](./faq.yml)
+
+NAP supports `Windows2022` and `Windows2025` images. 
+
+- **`Windows2022`**: Windows Server 2022 is in preview. It requires AMD64 architecture and isn't supported with the Cilium data plane. Windows2022 doesn't support FIPS or Trusted Launch. Don't configure `linuxOSConfig`, enable artifact streaming, or set LocalDNS to a mode other than `Disabled`.
+- **`Windows2025`**: Windows Server 2025 is in preview. It requires AMD64 architecture and isn't supported with the Cilium data plane. FIPS is required and is enabled effectively even when `fipsMode` is omitted. Don't configure `linuxOSConfig`, enable artifact streaming, or set LocalDNS to a mode other than `Disabled`.
+
+**Windows2022 configuration**
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: windows-2025
+spec:
+  imageFamily: Windows2025
+```
+
+**Windows2025 Configuration**
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: windows-2025
+spec:
+  imageFamily: Windows2025
+  security:
+    trustedLaunch:
+      vtpm: true
+      secureBoot: true
+```
+
+> [!IMPORTANT]
+> Windows image families are preview functionality. Use a Windows `NodePool` that selects `kubernetes.io/os: windows` and `kubernetes.io/arch: amd64`, and ensure that the workloads also select Windows nodes. For details, see [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md).
+>
 
 #### FIPS compliant node image configuration
 You can also enable Federal Information Processing Standards (FIPS) compliant node images. For more information about FIPS in AKS, see [FIPS documentation](./enable-fips-nodes.md).
@@ -55,6 +123,50 @@ The following example configures the 'AKSNodeClass' to select FIPS-compliant nod
 spec:
   fipsMode: FIPS
 ```
+
+## Instance-level public IP configuration
+
+You can assign a public IPv4 address to each NAP-provisioned node by setting `nodePublicIP.enabled` to `true`. You can optionally specify `ipTags` or `prefixIDs`. Use one or the other, not both.
+
+### Use instance-level public IP with prefixes
+
+Optionally, specify one IPv4 public IP prefix using `prefixIDs`. The prefix must be in the same region as the cluster. For a zonal prefix, constrain the corresponding `NodePool` to the same availability zone. You can't specify `ipTags` and `prefixIDs` together - use only one.
+
+The cluster identity needs permission to use the public IP prefix, if specified, and to create and manage the node public IP resources. For complete setup, network security, and verification guidance, see [Use node public IPs](./use-node-public-ips.md).
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: public-ip-nodes
+spec:
+  nodePublicIP:
+    enabled: true
+    # Optional. Specify at most one IPv4 public IP prefix resource ID.
+    prefixIDs:
+      - /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Network/publicIPPrefixes/<prefix-name>
+```
+
+### Use instance-level public IP with IP tags an internet routing preference
+
+The following example shows how to use instance-level public IP with an IP tag: 
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: public-ip-nodes
+spec:
+  nodePublicIP:
+    enabled: true
+    ipTags:
+      - ipTagType: RoutingPreference
+        tag: Internet
+    # Optional. Specify at most one IPv4 public IP prefix resource ID.
+    prefixIDs:
+      - /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Network/publicIPPrefixes/<prefix-name>
+```
+
 
 ## Artifact streaming
 
@@ -207,7 +319,7 @@ You can customize LocalDNS configurations such as `vnetDNSOverrides` and `kubeDN
 
 ```yaml
 spec:
-  localDNS:
+  LocalDNS:
     mode: Required
     vnetDNSOverrides:
       - zone: "."
@@ -247,7 +359,7 @@ spec:
         queryLogging: Error
         serveStale: Immediate
         serveStaleDuration: "3600s"
-``` 
+```
 
 ### Update the LocalDNS configuration on an existing AKSNodeClass
 
@@ -448,7 +560,6 @@ spec:
       kernelThreadsMax: 100000         # Range: 20-513785  Default: Dynamically calculated
 ```
 
-
 ### Linux virtual memory settings
 
 Use the following options to tune the operation of the Linux virtual memory subsystem of the Linux kernel and the writeout of dirty data to disk.
@@ -481,6 +592,23 @@ spec:
       # none skips gpu driver installation, driver has NAP manage the GPU driver installation  
       none
 ```
+
+### Managed GPU 
+
+The `gpu.mode` field controls GPU driver installation. It accepts `Driver` or `None` and defaults to `Driver`. Set `None` to skip driver installation, for example, when using the NVIDIA GPU Operator.
+
+To opt in to the managed NVIDIA GPU experience, use `mode: Driver` and set `nvidia.managementMode: Managed`. Managed GPU is supported for Linux NVIDIA GPU nodes using the AKS Machine API provision mode. The default NVIDIA management mode is `Unmanaged`.
+
+```yaml
+spec:
+  gpu:
+    mode: Driver
+    nvidia:
+      managementMode: Managed
+```
+
+For a complete NAP-managed GPU example and verification steps, see [AKS-managed GPU nodes](./aks-managed-gpu-nodes.md).
+
 
 ## Security settings
 

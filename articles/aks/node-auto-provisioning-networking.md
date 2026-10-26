@@ -32,6 +32,18 @@ When evaluating networking support for NAP, consider the IP address management (
 
 Use Azure CNI Overlay with the Azure CNI Powered by Cilium data plane. Cilium provides advanced networking capabilities and is optimized for performance with NAP.
 
+## Dual-stack networking considerations for NAP (Preview)
+
+>[!NOTE]
+> AKS preview features are available on a self-service, opt-in basis. Previews are provided "as is" and "as available," and they're excluded from the service-level agreements and limited warranty. AKS previews are partially covered by customer support on a best-effort basis. As such, these features aren't meant for production use. For more information, see the following support articles:
+>
+> - [AKS support Policies](./support-policies.md)
+> - [Azure support FAQ](./faq.yml)
+
+IPv4/IPv6 Dualstack is a cluster level configuration not defined by NAP. Node auto-provisioning is supported on IPv4 and IPv6 dual-stack cluster networking when you meet the [dual-stack prerequisites](./configure-dual-stack.md). If you use NAP on a dual-stack cluster, confirm that the cluster's network plugin, IPAM mode, and data plane meet AKS prerequisites, then verify provisioned nodes and pods have the expected addresses.
+
+NAP uses the cluster's network configuration. Node public IPs on NAP-provisioned nodes aren't supported in dual-stack clusters. For AKS dual-stack setup and verification, see [Use dual-stack networking in AKS](./configure-dual-stack.md). For node public IP configuration and its limitations, see [Use instance-level public IPs in AKS](./use-node-public-ips.md).
+
 ## Subnet configurations for NAP
 
 Set the optional `vnetSubnetID` field in an [`AKSNodeClass`](./node-auto-provisioning-aksnodeclass.md) resource to configure the custom subnet that Karpenter uses to provision NAP nodes. If you don't specify `vnetSubnetID`, Karpenter uses the default subnet configured during installation, which is typically the subnet specified by the `--vnet-subnet-id` parameter when you create the AKS cluster.
