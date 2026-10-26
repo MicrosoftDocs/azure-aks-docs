@@ -4,8 +4,8 @@ description: Learn how to quickly deploy a Kubernetes cluster using a Bicep file
 ms.topic: quickstart
 ms.subservice: aks-developer
 ms.date: 04/28/2024
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 ms.custom: mvc, subject-armbicep, devx-track-bicep, devx-track-azurecli
 

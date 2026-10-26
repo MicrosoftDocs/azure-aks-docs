@@ -782,7 +782,7 @@ In this section, the terms _local_ and _remote_ are defined from the perspective
     ```bash
     results=()
     for i in $(seq 1 20); do
-      html=$(curl -sS --http1.1 -H 'Connection: close' http://$BOOKINFO_GTW_IP/productpage)
+      html=$(curl -sS --http1.1 -H 'Connection: close' http://$BOOK_INFO_GTW_IP/productpage)
       pod=$(printf '%s' "$html" | grep -oE 'reviews-v[0-9]-[a-z0-9-]+' | head -n1)
       if printf '%s' "$pod" | grep -q '^reviews-v1-'; then
         target=cluster-1

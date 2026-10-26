@@ -3,8 +3,8 @@ title: About the Agentic CLI for Azure Kubernetes Service (AKS) (preview)
 description: Learn about the agentic CLI for Azure Kubernetes Service (AKS) and its features, best practices, security considerations, how to get started, and more.
 ms.topic: overview
 ms.date: 10/20/2025
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-developer
 # Customer intent: As a cluster administrator or SRE, I want to use the AI-powered CLI agent for AKS to efficiently troubleshoot my AKS clusters and get intelligent cluster insights so that I can quickly diagnose and resolve issues.

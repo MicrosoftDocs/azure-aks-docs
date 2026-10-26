@@ -32,6 +32,7 @@ To open a support request, see the [Get support](help-support.md) article for in
 | Network validation | [Network validation error due to .local domain](network-validation-error-local.md) |
 | Network validation | [Troubleshoot BGP with FRR in AKS environments](connectivity-troubleshoot.md) |
 | Disable Windows node pools | [Disable Windows node pools](disable-windows-nodepool.md) | 
+| Azure Arc resource bridge deleted or recovered | [Impact to clusters when Arc resource bridge is deleted or recovered](azure-arc-resource-bridge-deleted-recovered.md) |
 
 ## Next steps
 

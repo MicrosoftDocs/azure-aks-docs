@@ -6,8 +6,8 @@ ms.subservice: aks-security
 ms.custom: devx-track-azurecli, innovation-engine, copilot-scenario-highlight, annual
 ms.date: 06/10/2025
 ms.service: azure-kubernetes-service
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 # Customer intent: As a cloud administrator, I want to access a private Azure Kubernetes Service cluster using the command invoke feature, so that I can run management commands without configuring complex network setups like VPNs or Express Routes.
 ---
 

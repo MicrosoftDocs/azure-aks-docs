@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.subservice: aks-storage
 ms.service: azure-kubernetes-service
 ms.custom: aeo-round-2
-ms.date: 08/25/2026
+ms.date: 10/16/2026
 author: schaffererin
 ms.author: schaffererin
 ai-usage: ai-assisted
@@ -493,6 +493,13 @@ Increase [read-ahead size](/azure/storage/files/nfs-performance#increase-read-ah
 
 While Azure Files supports setting nconnect up to the maximum setting of 16, we recommend configuring the mount options with the optimal setting of nconnect=4. Currently, there are no gains beyond four channels for the Azure Files implementation of nconnect.
 
+The `mountOptions` shown here are Microsoft's recommended subset, not an exhaustive list. The Azure Files NFS CSI driver passes `mountOptions` through to the Linux kernel NFS client, so you can use most standard Linux NFS client mount options. This behavior is the same whether you set `mountOptions` on a `StorageClass` for dynamic provisioning or on a `PersistentVolume` for static provisioning, since both go through the same `file.csi.azure.com` driver.
+
+> [!NOTE]
+> The Azure Files CSI driver automatically configures `vers`, `minorversion`, and `sec`. Don't set these properties yourself, whether you're using a `StorageClass` or a `PersistentVolume`.
+
+For a complete list of mount options supported by the Linux NFS client, see the [`nfs(5)` man page](https://linux.die.net/man/5/nfs).
+
 ## Create a volume snapshot from a PVC with Azure Files
 
 The Azure Files CSI driver supports creating [snapshots of persistent volumes](https://kubernetes-csi.github.io/docs/snapshot-restore-feature.html) and the underlying file shares.
@@ -732,6 +739,9 @@ This option is optimized for random access workloads with in-place data updates 
 - NFS requires SSD file shares (such as `PremiumV2_LRS`, `PremiumV2_ZRS`, `Premium_LRS`, or `Premium_ZRS`) and a virtual network-enabled storage account.
 - Your AKS cluster _control plane_ identity (that is, your AKS cluster name) is added to the [Contributor](/azure/role-based-access-control/built-in-roles#contributor) role on the VNet and NetworkSecurityGroup.
 - Your AKS cluster's service principal or managed identity must be added to the Contributor role on the storage account.
+
+> [!NOTE]
+> To use the NFS protocol natively in Azure Kubernetes Service (AKS), disable the **Secure transfer required** setting on the storage account. Otherwise, the volume mount operation fails.
 
 > [!NOTE]
 > You can use a private endpoint instead of allowing access to the selected VNet.

@@ -1,24 +1,22 @@
 ---
-title: Identity bindings for Azure Kubernetes Service (AKS) (preview)
+title: Identity bindings for Azure Kubernetes Service (AKS)
 description: Learn about identity bindings on AKS and how they extend Microsoft Entra workload identity for large scale scenarios that exceed federated identity credential limits.
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 05/07/2026
-ms.custom: preview
+ms.date: 09/02/2026
+ai-usage: ai-assisted
 author: shashankbarsin
 ms.author: shasb
 ms.reviewer: schaffererin
 # Customer intent: "As an operator of large AKS environments, I need a scalable way to map a user-assigned managed identity to many clusters and many service accounts without hitting federated identity credential limits so workloads can securely obtain Microsoft Entra tokens."
 ---
 
-# Identity bindings for Azure Kubernetes Service (AKS) (preview)
+# Identity bindings for Azure Kubernetes Service (AKS)
 
-Identity binding is a preview feature for Azure Kubernetes Service (AKS) that extends the existing [workload identity feature][workload-identity-overview] to address scale limitations around federated identity credentials (FICs) on user-assigned managed identities (UAMIs). With [workload identity for AKS][workload-identity-overview], a single UAMI can't have more than **20 FICs**. Large Kubernetes platform deployments might span more than 20 clusters (each cluster has a unique issuer) or have many `<namespace, service-account>` combinations that require mapping to the same UAMI, exhausting the FIC quota.
+Identity binding is a feature for Azure Kubernetes Service (AKS) that extends the existing [workload identity feature][workload-identity-overview] to address scale limitations around federated identity credentials (FICs) on user-assigned managed identities (UAMIs). With [workload identity for AKS][workload-identity-overview], a single UAMI can't have more than **20 FICs**. Large Kubernetes platform deployments might span more than 20 clusters (each cluster has a unique issuer) or have many `<namespace, service-account>` combinations that require mapping to the same UAMI, exhausting the FIC quota.
 
 Identity bindings address this limitation by allowing multiple AKS clusters to share the same UAMI using a single FIC per UAMI. This approach significantly increases scalability and simplifies operations for large-scale AKS environments that require Microsoft Entra authentication.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## What is an identity binding?
 

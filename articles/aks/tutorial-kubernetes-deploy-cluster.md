@@ -4,8 +4,8 @@ description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to c
 ms.topic: tutorial
 ms.date: 06/23/2026
 ms.service: azure-kubernetes-service
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ai-usage: ai-assisted
 
 ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell, devx-track-extended-azdevcli, aks-getting-started

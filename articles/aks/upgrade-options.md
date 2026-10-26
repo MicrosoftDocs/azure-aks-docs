@@ -15,6 +15,8 @@ ms.custom: scenarios
 
 **Applies to**: :heavy_check_mark: AKS Automatic :heavy_check_mark: AKS Standard
 
+[!INCLUDE [platform-initiated upgrades](./includes/platform-initiated-upgrade-notice.md)]
+
 For most production workloads, AKS Automatic is the recommended default cluster experience. It provides production-ready defaults for cluster and node lifecycle operations, including managed upgrade behavior, built-in safeguards, and reduced operational overhead.
 
 AKS Standard remains available for scenarios where you need deeper manual control over upgrade mechanics, networking choices, or node pool behavior.
@@ -77,6 +79,12 @@ AKS Standard gives you direct control over upgrade sequencing and tuning. You ch
 
 Use AKS Standard when your environment requires customization that goes beyond AKS Automatic defaults.
 
+### Platform-initiated upgrades
+
+Both operating models are subject to [platform-initiated upgrades](./platform-initiated-upgrades.md). If a cluster stays on an unsupported Kubernetes version after the 60-day [platform support grace period](./platform-initiated-upgrades.md#platform-support-grace-period) ends, AKS upgrades it to a supported version automatically.
+
+Platform-initiated upgrades don't follow your maintenance window and don't run the deprecated API check. Keeping your cluster on a supported version is the only way to keep full control of upgrade timing and behavior. For more information, see [How to avoid platform-initiated upgrades](./platform-initiated-upgrades.md#how-to-avoid-platform-initiated-upgrades).
+
 ## Upgrade options
 
 ### Perform manual upgrades
@@ -88,7 +96,7 @@ Manual upgrades let you control when your cluster upgrades to a new Kubernetes v
 - [Upgrade an AKS cluster](./upgrade-aks-cluster.md)
 - [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration)
 - [Upgrade the node image](./node-image-upgrade.md)
-- [Customize node surge upgrade](./upgrade-aks-cluster.md#customize-node-surge-upgrade)
+- [Customize node surge upgrade](./upgrade-aks-node-pools-rolling.md#customize-node-surge)
 - [Process node OS updates](./node-updates-kured.md)
 
 ### Configure automatic upgrades
@@ -110,7 +118,7 @@ To keep zones balanced, set surge to a multiple of three nodes. Persistent volum
 
 ### Optimize upgrades to improve performance and minimize disruptions
 
-Combine [planned maintenance window][planned-maintenance], [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade), [PDB][pdb-spec], [node drain timeout][drain-timeout], and [node soak time][soak-time] to increase the likelihood of successful, low-disruption upgrades.
+Combine [planned maintenance window][planned-maintenance], [max surge](./upgrade-aks-node-pools-rolling.md#customize-node-surge), [PDB][pdb-spec], [node drain timeout][drain-timeout], and [node soak time][soak-time] to increase the likelihood of successful, low-disruption upgrades.
 
 #### AKS Automatic
 
@@ -141,6 +149,26 @@ In AKS Standard, tune upgrade controls directly:
 > [!NOTE]
 > Before you upgrade, check for API breaking changes and review the [AKS release notes](https://github.com/Azure/AKS/releases) to avoid disruptions.
 
+## Validate LocalDNS and custom DNS before upgrading to Kubernetes 1.37
+
+Starting with Kubernetes 1.37, AKS defaults an AKS Standard node pool that doesn't have an explicit LocalDNS profile to `Preferred` mode, and enables LocalDNS when the node pool passes the compatibility checks. This change affects the workload DNS path and can expose existing custom DNS or firewall configurations that support UDP port 53 but not TCP port 53.
+
+Before upgrading a node pool to Kubernetes 1.37 or later:
+
+1. Check whether the node pool has an explicit LocalDNS profile.
+1. Test the custom virtual network DNS server from an AKS node over both UDP and TCP.
+
+    ```bash
+    dig +udp @<custom-dns-ip> <fqdn>
+    dig +tcp @<custom-dns-ip> <fqdn>
+    ```
+
+1. Verify that NSGs, firewalls, NVAs, and routes permit both UDP and TCP port 53.
+1. Upgrade a non-production node pool first and monitor CoreDNS and LocalDNS errors.
+1. If the DNS path isn't ready for LocalDNS, explicitly configure `mode` as `Disabled` before upgrading.
+
+For configuration and opt-out instructions, see [Configure LocalDNS in AKS](./localdns-custom.md).
+
 ## Validations used in the upgrade process
 
 AKS performs pre-upgrade validations to ensure cluster health:
@@ -154,6 +182,9 @@ AKS performs pre-upgrade validations to ensure cluster health:
 - **Managed Resource Lock Check:** Checks for resource locks applied to the managed cluster resource group.
 
 These checks apply across AKS. In AKS Automatic, they're integrated into the managed upgrade path; in AKS Standard, they're part of your operational workflow.
+
+> [!NOTE]
+> [Platform-initiated upgrades](./platform-initiated-upgrades.md) bypass the API breaking-change and PDB validations so that the upgrade can complete. Run these checks yourself and fix any problems before your cluster's platform-initiated upgrade month.
 
 ## Common upgrade scenarios and recommendations
 
@@ -240,22 +271,12 @@ Behavior options:
 - **Schedule (default)**: Deletes blocked node and surges replacement.
 - **Cordon (recommended)**: Cordons node and labels it as `kubernetes.azure.com/upgrade-status=Quarantined`.
 
-Max blocked nodes (preview):
+Max blocked nodes:
 
 - Specifies how many nodes that fail to drain are tolerated
 - Requires `undrainable-node-behavior` to be set
 - Defaults to `maxSurge` value (typically 10%) if not specified
 - Like max surge, if the calculated value is higher than the number of nodes remaining to be upgraded in the current operation, the number of nodes remaining to be upgraded is used instead
-
-###### Prerequisites for max blocked nodes
-
-The Azure CLI `aks-preview` extension version 18.0.0b9 or later is required to use the max blocked nodes feature.
-
-```azurecli-interactive
-# Install or update the aks-preview extension
-az extension add --name aks-preview
-az extension update --name aks-preview
-```
 
 ###### Example configuration with max blocked nodes
 
@@ -452,8 +473,8 @@ Use the [upgrade scenarios hub](upgrade-scenarios-hub.md) for a guided decision 
 [pdb-spec]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 
 <!-- LINKS - internal -->
-[drain-timeout]: ./upgrade-aks-cluster.md#set-node-drain-timeout-value
-[soak-time]: ./upgrade-aks-cluster.md#set-node-soak-time-value
+[drain-timeout]: ./upgrade-aks-node-pools-rolling.md#set-node-drain-timeout-value
+[soak-time]: ./upgrade-aks-node-pools-rolling.md#set-node-soak-time-value
 [nodepool-upgrade]: upgrade-node-image.md
 [planned-maintenance]: planned-maintenance.md
 [specific-nodepool]: upgrade-node-image.md#upgrade-a-specific-node-pool

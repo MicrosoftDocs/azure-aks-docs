@@ -4,9 +4,10 @@ description: Learn about node resource reservations in Azure Kubernetes Service 
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
-ms.date: 06/11/2026
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
+ms.date: 10/06/2026
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to understand node resource reservations in Azure Kubernetes Service, so that I can effectively manage resource allocation and optimize the performance of my clusters.
 ---
 
@@ -18,7 +19,7 @@ In this article, you learn about node resource reservations in Azure Kubernetes 
 
 AKS uses node resources to help the nodes function as part of the cluster. This usage can cause a discrepancy between the node's total resources and the allocatable resources in AKS.
 
-AKS reserves two types of resources, **CPU** and **memory**, on each node to maintain node performance and functionality. As a node grows larger in resources, the resource reservations also grow due to a higher need for management of user-deployed pods. Keep in mind that you can't change resource reservations on a node.
+AKS reserves two types of resources, **CPU** and **memory**, on each node to maintain node performance and functionality. As a node grows larger in resources, the resource reservations also grow due to a higher need for management of user-deployed pods.
 
 ### CPU reservations
 
@@ -44,7 +45,7 @@ In AKS, reserved memory consists of the sum of two values:
     For more information, see [Configure maximum pods per node in an AKS cluster][maximum-pods].
 
 > [!NOTE]
-> To customize `kubeReserved` CPU and memory values or `hardEvictionThreshold` on Linux node pools, use the preview custom node configuration settings and register the `AKSNodeCustomizationPreview` feature flag. For more information, see [Customize the node configuration for Azure Kubernetes Service (AKS) node pools][custom-node-configuration].
+> To apply hardened kube-reserved, system-reserved, and eviction defaults on Linux node pools, register the `CustomNodeConfigPreview` feature flag and enable Node Hardening on your cluster by using the `--enable-node-hardening` parameter. To customize `kubeReserved` CPU and memory values or eviction thresholds, use the preview custom node configuration settings. For more information, see [Node Hardening (preview) in AKS][node-hardening-preview].
 
 **AKS versions prior to 1.29**
 
@@ -78,5 +79,6 @@ For associated best practices, see [Best practices for basic scheduler features 
 
 <!---LINKS--->
 [custom-node-configuration]: custom-node-configuration.md
+[node-hardening-preview]: node-hardening.md
 [operator-best-practices-scheduler]: operator-best-practices-scheduler.md
 [maximum-pods]: concepts-network-ip-address-planning.md#maximum-pods-per-node

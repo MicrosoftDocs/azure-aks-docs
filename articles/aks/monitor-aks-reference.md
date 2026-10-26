@@ -4,8 +4,8 @@ description: This article contains important reference material you need when yo
 ms.date: 09/06/2024
 ms.custom: horz-monitor
 ms.topic: reference
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-monitoring
 ai-usage: ai-assisted
 # Customer intent: As a cloud operations engineer, I want to reference supported metrics and logs for Azure Kubernetes Service monitoring, so that I can effectively collect and analyze data to ensure optimal performance and resource management in my environments.
@@ -24,6 +24,12 @@ See [Monitor Azure Kubernetes Service (AKS)](monitor-aks.md) for details on the 
 The following table lists the metrics available for the Microsoft.ContainerService/managedClusters resource type.
 
 [!INCLUDE [horz-monitor-ref-metrics-tableheader](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
+
+> [!IMPORTANT]
+> The `pod` dimension for the AKS platform metrics `kube_pod_status_ready` and
+> `kube_pod_status_phase` will be retired on September 30, 2027. To continue
+> using the `pod` dimension in these metrics after the retirement date, use
+> [Azure Monitor managed service for Prometheus](/azure/azure-monitor/metrics/prometheus-metrics-overview).
 
 [!INCLUDE [Microsoft.ContainerService/managedClusters](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-containerservice-managedclusters-metrics-include.md)]
 

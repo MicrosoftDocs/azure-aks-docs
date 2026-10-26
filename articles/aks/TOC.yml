@@ -86,6 +86,23 @@
               href: learn/quick-kubernetes-deploy-rm-template.md
             - name: Use Terraform
               href: learn/quick-kubernetes-deploy-terraform.md
+        - name: Create a GPU Linux-based AKS cluster
+          items:
+            - name: Use the Azure CLI
+              href: learn/quick-create-gpu-linux-cluster-cli.md
+        - name: Create a Linux-based AKS Automatic cluster
+          items:
+            - name: From a code repository
+              href: automatic/quick-automatic-from-code.md
+            - name: Inside a managed virtual network
+              href: automatic/quick-automatic-managed-network.md
+            - name: Inside a custom virtual network
+              expanded: true
+              items:
+                - name: Public cluster
+                  href: automatic/quick-automatic-custom-network.md
+                - name: Private cluster
+                  href: automatic/quick-automatic-private-custom-network.md
         - name: Create an Azure Container Linux (ACL)-based AKS cluster
           items:
             - name: Use the Azure CLI
@@ -238,6 +255,8 @@
           href: aks-list-skus.md
         - name: Custom node configuration
           href: custom-node-configuration.md
+        - name: Node Hardening (preview)
+          href: node-hardening.md
         - name: Use Prepared Image Specification (PIS)
           items:
             - name: Overview
@@ -304,8 +323,34 @@
           href: start-stop-nodepools.md
         - name: Create proximity placement groups
           href: reduce-latency-ppg.md
-        - name: Troubleshoot agent node pools
-          href: troubleshoot-agent-pool.md
+    - name: Flex nodes for AKS (preview)
+      items:
+        - name: Overview
+          href: flex-nodes-for-aks-overview.md
+        - name: Plan
+          items:
+            - name: Identity and access concepts
+              href: flex-nodes-identity-access-concepts.md
+            - name: Networking concepts
+              href: flex-nodes-networking-concepts.md
+            - name: Plan a deployment
+              href: plan-flex-nodes-deployment.md
+        - name: Deploy
+          items:
+            - name: Prepare an AKS cluster
+              href: prepare-aks-cluster-for-flex-nodes.md
+            - name: Configure networking and create a flex node pool
+              href: configure-flex-nodes-networking.md
+            - name: Prepare a host and identity
+              href: prepare-flex-node-host-identity.md
+            - name: Attach a flex node
+              href: attach-flex-node-to-aks.md
+        - name: Operate
+          items:
+            - name: Manage and remove flex nodes
+              href: manage-and-remove-flex-nodes.md
+            - name: Support policy
+              href: flex-nodes-support-policy.md
     - name: Virtual nodes
       items:
         - name: Use virtual nodes
@@ -314,6 +359,8 @@
           href: virtual-nodes-cli.md
         - name: Use the Azure portal
           href: virtual-nodes-portal.md
+    - name: Virtual Nodes v2 (preview)
+      href: virtual-nodes-v2.md
     - name: Use Windows Server
       items:
         - name: Windows container considerations
@@ -376,6 +423,8 @@
     items:
     - name: Upgrade concepts
       href: upgrade-conceptual.md
+    - name: Platform-initiated upgrades
+      href: platform-initiated-upgrades.md
     - name: Maintain and upgrade cluster components
       href: upgrade-cluster-components.md
     - name: Upgrade options and recommendations
@@ -468,6 +517,8 @@
               href: aks-desktop-deploy-troubleshooting.md
             - name: Use AI with AKS desktop
               href: aks-desktop-deploy-ai-assistant.md
+            - name: Use Headlamp plugins
+              href: aks-desktop-headlamp-plugins.md
         - name: Use cluster extensions
           items:
             - name: About cluster extensions
@@ -598,6 +649,8 @@
                 href: /azure/application-gateway/for-containers/overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
               - name: Deploy Application Gateway for Containers add-on
                 href: /azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller-addon?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+              - name: Deploy ALB Controller using Terraform
+                href: deploy-application-gateway-for-containers-alb-controller-terraform.md
           - name: Use application routing add-on
             items:
               - name: Application routing add-on overview
@@ -773,6 +826,12 @@
             items:
               - name: Use cases (Preview)
                 href: cross-cluster-networking-fleet-use-cases.md
+          - name: Multi-nic pods
+            items:
+              - name: Overview
+                href: multiple-network-interfaces-for-pods-overview.md
+              - name: Configure multi-nic pods 
+                href: configure-multiple-network-interfaces-for-pods.md
       - name: Improve network fault tolerance using TCP keep-alive
         href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
 - name: Scheduling
@@ -793,6 +852,8 @@
         items:
           - name: Learn about Kueue for batch scheduling
             href: kueue-overview.md
+          - name: Define Queues with managed Kueue extension
+            href: configure-queues-with-automatic-resource-flavors.md
           - name: Schedule and deploy batch jobs with Kueue
             href: deploy-batch-jobs-with-kueue.md
           - name: Provision capacity for Kueue jobs with the cluster autoscaler
@@ -801,8 +862,8 @@
   items:
     - name: Security overview
       href: concepts-security.md
-    - name: Security baseline
-      href: /security/benchmark/azure/baselines/aks-security-baseline?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Secure your AKS deployment
+      href: secure-aks.md
     - name: Identity and access
       items:
         - name: Access and identity overview
@@ -889,6 +950,8 @@
           items:
             - name: Overview
               href: certificate-rotation.md
+            - name: Update custom roles for external-node bootstrap
+              href: update-custom-roles-external-node-certificate-bootstrap.md
             - name: Rotate certificates
               href: rotate-certificates.md
             - name: Use custom certificate authorities
@@ -917,6 +980,8 @@
               href: enable-host-encryption.md
             - name: FIPS-compliant node pools
               href: enable-fips-nodes.md
+            - name: Cluster-level FIPS (preview)
+              href: enable-fips-cluster.md
             - name: Azure Dedicated Hosts for AKS nodes
               href: use-azure-dedicated-hosts.md
             - name: Restrict access to IMDS
@@ -1016,6 +1081,8 @@
       items:
         - name: Container threat protection overview
           href: /azure/defender-for-cloud/defender-for-containers-introduction?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Enable Defender for Containers using Terraform
+          href: enable-defender-for-containers-terraform.md
         - name: Runtime alerts for Kubernetes clusters
           href: /azure/defender-for-cloud/alerts-containers?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Detect binary drift in running containers
@@ -1188,6 +1255,8 @@
               href: open-ai-quickstart.md
             - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
               href: open-ai-secure-access-quickstart.md
+        - name: Install the managed KubeRay extension (preview)
+          href: kuberay-overview.md
         - name: Run Ray AI workloads with Kueue
           items:
             - name: Overview
@@ -1278,6 +1347,8 @@
           href: nvidia-gpu-operator.md
         - name: GPU health checking with NPD
           href: gpu-health-monitoring.md
+        - name: Use Confidential GPUs
+          href: use-confidential-gpus.md
         - name: Optimize GPU workloads using profiling
           items:
             - name: Set up GPU profiling

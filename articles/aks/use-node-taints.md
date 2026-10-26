@@ -1,8 +1,8 @@
 ---
 title: Use node taints in an Azure Kubernetes Service (AKS) cluster
 description: Learn how to use taints in an Azure Kubernetes Service (AKS) cluster.
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.topic: how-to 
 ms.subservice: aks-nodes
 ms.custom: devx-track-azurecli

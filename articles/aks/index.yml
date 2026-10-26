@@ -10,8 +10,8 @@ metadata:
   ms.custom:
     - build-2024
   ms.topic: landing-page
-  author: davidsmatlak
-  ms.author: davidsmatlak
+  author: schaffererin
+  ms.author: schaffererin
   ms.date: 01/12/2024
 # linkListType: architecture | concept | deploy | download | get-started | how-to-guide | learn | overview | quickstart | reference | sample | tutorial | video | whats-new
 
@@ -49,6 +49,8 @@ landingContent:
         links:
           - text: Create a Linux cluster
             url: ./learn/quick-kubernetes-deploy-cli.md
+          - text: Create a GPU Linux cluster
+            url: ./learn/quick-create-gpu-linux-cluster-cli.md
           - text: Create a Windows cluster
             url: ./learn/quick-windows-container-deploy-cli.md
       - linkListType: tutorial

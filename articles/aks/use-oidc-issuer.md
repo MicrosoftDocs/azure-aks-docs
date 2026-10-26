@@ -1,7 +1,7 @@
 ---
 title: Use the OpenID Connect (OIDC) Issuer in Azure Kubernetes Service (AKS)
 description: Learn how to use the OpenID Connect (OIDC) issuer in Azure Kubernetes Service (AKS), including AKS Automatic where OIDC issuer is preconfigured and AKS Standard where you can enable it based on cluster version and configuration.
-author: davidsmatlak
+author: schaffererin
 ms.author: yuewu2
 ms.topic: how-to
 ms.service: azure-kubernetes-service

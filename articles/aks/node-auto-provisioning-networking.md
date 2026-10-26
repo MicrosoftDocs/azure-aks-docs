@@ -3,10 +3,11 @@ title: Understand Networking Configurations for Node Auto-Provisioning (NAP) in 
 description: Learn about networking configuration requirements and recommendations for AKS clusters using node auto-provisioning (NAP), including supported configurations, subnet behavior, RBAC setup, and CIDR considerations.
 ms.topic: overview
 ms.custom: devx-track-azurecli, aks-scaling
-ms.date: 06/13/2024
+ms.date: 09/09/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
+ai-usage: ai-assisted
 # Customer intent: As a cluster operator or developer, I want to understand the networking configuration requirements and recommendations for AKS clusters using node auto-provisioning, so that I can ensure optimal performance, security, and scalability for my workloads.
 ---
 
@@ -18,42 +19,43 @@ For an overview of node auto-provisioning in AKS, see [Overview of node auto-pro
 
 ## Supported networking configurations for NAP
 
-NAP supports the following networking configurations:
+When evaluating networking support for NAP, consider the IP address management (IPAM) mode, network plugin, network data plane, and network policy. The following table describes the options supported by NAP:
 
-- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
-- [Azure CNI Overlay Powered by Cilium](azure-cni-powered-by-cilium.md)
-- [Azure CNI](configure-azure-cni.md)
+| Configuration layer | Option | NAP support |
+| --- | --- | --- |
+| IPAM | [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) | Supported |
+| IPAM | [Azure CNI Node Subnet](configure-azure-cni.md) | Supported |
+| IPAM | Azure CNI Pod Subnet with Dynamic IP Allocation | Not supported |
+| Network plugin | Kubenet | Not supported |
+| Data plane | [Azure CNI Powered by Cilium](azure-cni-powered-by-cilium.md) | Supported with a supported Azure CNI IPAM mode |
+| Network policy | Calico | Not supported |
 
-We recommend using Azure CNI with [Cilium](azure-cni-powered-by-cilium.md). Cilium provides advanced networking capabilities and is optimized for performance with NAP.
-
-### Unsupported networking configurations for NAP
-
-NAP doesn't support the following networking configurations:
-
-- Calico network policy
-- Dynamic IP allocation
+Use Azure CNI Overlay with the Azure CNI Powered by Cilium data plane. Cilium provides advanced networking capabilities and is optimized for performance with NAP.
 
 ## Subnet configurations for NAP
 
-NAP automatically deploys, configures, and manages Karpenter on your AKS clusters and is based on the open-source [Karpenter](https://karpenter.sh) and [AKS Karpenter provider][aks-karpenter-provider] projects. You can use [`AKSNodeClass`](./node-auto-provisioning-aksnodeclass.md) resources to specify custom subnet configurations for NAP nodes in your node pools by setting the optional `vnetSubnetID` field, and Karpenter uses the subnet you specify for node provisioning. If you don't specify a subnet, Karpenter uses the default subnet configured during Karpenter installation. This default subnet is typically the same subnet specified during AKS cluster creation with the `--vnet-subnet-id` parameter in the `az aks create` command.
+Set the optional `vnetSubnetID` field in an [`AKSNodeClass`](./node-auto-provisioning-aksnodeclass.md) resource to configure the custom subnet that Karpenter uses to provision NAP nodes. If you don't specify `vnetSubnetID`, Karpenter uses the default subnet configured during installation, which is typically the subnet specified by the `--vnet-subnet-id` parameter when you create the AKS cluster.
 
-This approach allows you to have a mix of node classes, with some using custom subnets for specific workloads, and others using the cluster's default subnet configuration.
+NAP automatically deploys, configures, and manages Karpenter on your AKS cluster and is based on the open-source [Karpenter](https://karpenter.sh) and [AKS Karpenter provider][aks-karpenter-provider] projects.
+
+`AKSNodeClass` resources on your AKS cluster can each specify a different `vnetSubnetID`, which enables mixed subnet configurations across node pools. Node classes that don't specify `vnetSubnetID` use the cluster's default subnet configuration.
 
 ## Subnet drift behavior
 
 Karpenter monitors subnet configuration changes and detects drift when the `vnetSubnetID` in an `AKSNodeClass` is modified. Understanding this behavior is critical when managing custom networking configurations.
 
-**Modifying `vnetSubnetID` from one valid subnet to another valid subnet isn't a supported operation**. If you change the `vnetSubnetID` to point to a different valid subnet, Karpenter detects this as subnet drift and prevents node provisioning until the issue is resolved by reverting the `vnetSubnetID` to the original subnet. This behavior ensures that nodes are only provisioned in the intended subnets, maintaining network integrity and security. However, there are exceptions to this rule. You can only modify the `vnetSubnetID` in the following scenarios:
+For clusters that use a custom virtual network, changing `vnetSubnetID` from one valid subnet to another causes existing nodes associated with the `AKSNodeClass` to drift. Karpenter creates replacement nodes in the new subnet and gracefully disrupts the drifted nodes according to the [`NodePool` disruption budgets](./node-auto-provisioning-disruption.md#disruption-budgets).
 
-- Correcting a malformed subnet ID that prevents node provisioning.
-- Fixing an invalid subnet reference that causes configuration errors.
-- Updating a subnet identifier that points to a nonexistent or inaccessible subnet.
+Before you change `vnetSubnetID`, ensure that the cluster identity has the required permissions on the new subnet and that the subnet has enough available IP addresses for replacement nodes. Pod disruption budgets and `karpenter.sh/do-not-disrupt` annotations can delay voluntary drift replacement.
 
-## Understand AKS cluster Classless Inter-Domain Routing (CIDR) ranges
+> [!IMPORTANT]
+> AKS-managed virtual networks don't support custom subnets. Use `vnetSubnetID` only with a custom virtual network that you manage.
 
-When configuring custom networking with `vnetSubnetID`, you're responsible for understanding and managing your cluster's CIDR ranges to avoid network conflicts. Unlike traditional AKS node pools created through ARM templates, Karpenter applies custom resource definitions (CRDs) that provision nodes instantly without the extended validation that ARM provides.
+## AKS cluster CIDR ranges for NAP
 
-### CIDR considerations for custom subnet configurations
+When you configure custom networking with `vnetSubnetID`, you need to understand and manage your cluster's CIDR ranges to avoid network conflicts. Unlike traditional AKS node pools that you create through Azure Resource Manager (ARM) templates, Karpenter applies custom resource definitions (CRDs) that provision nodes instantly without the extended validation that ARM provides.
+
+### CIDR considerations for NAP custom subnet configurations
 
 When configuring `vnetSubnetID`, you must:
 
@@ -66,6 +68,8 @@ When configuring `vnetSubnetID`, you must:
 ### Common CIDR conflicts
 
 Be aware of the following common CIDR conflict scenarios when using custom subnets with NAP:
+
+The following examples show subnet CIDR ranges that conflict with the cluster pod and service CIDRs, along with a configuration that avoids those conflicts. Use these patterns to validate your subnet ranges before you configure `vnetSubnetID`.
 
 ```bash
 # Example conflict scenarios:
@@ -85,6 +89,32 @@ Be aware of the following common CIDR conflict scenarios when using custom subne
 
 When using custom subnet configurations with NAP, you need to ensure that Karpenter has the necessary permissions to read subnet information and join nodes to the specified subnets. This requires setting up appropriate RBAC permissions for the cluster's managed identity.
 
+The person running the following commands must have permission to create the required role definition and role assignments, such as the [Role Based Access Control Administrator](/azure/role-based-access-control/built-in-roles/privileged#role-based-access-control-administrator) role. Don't grant role-assignment write permissions to the cluster identity unless it needs to create role assignments for another scenario.
+
+Get the principal ID for the cluster's managed identity. Use the command that corresponds to the cluster identity type:
+
+### [System-assigned identity](#tab/system-assigned-identity)
+
+```azurecli-interactive
+CLUSTER_IDENTITY=$(az aks show \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --query identity.principalId \
+  --output tsv)
+```
+
+### [User-assigned identity](#tab/user-assigned-identity)
+
+```azurecli-interactive
+CLUSTER_IDENTITY=$(az identity show \
+  --resource-group $IDENTITY_RESOURCE_GROUP \
+  --name $IDENTITY_NAME \
+  --query principalId \
+  --output tsv)
+```
+
+---
+
 There are two main approaches to setting up these permissions: **Assign broad virtual network (VNet) permissions** or **Assign scoped subnet permissions**.
 
 ### [Assign broad virtual network (VNet) permissions](#tab/assign-broad-vnet-permissions)
@@ -92,13 +122,13 @@ There are two main approaches to setting up these permissions: **Assign broad vi
 This approach is the most permissive and grants the cluster identity permissions to read and join any subnet within the main VNet and provides network contributor access.
 
 > [!IMPORTANT]
-> Investigate the "Network Contributor" role before applying this approach to your production cluster.
+> The [Network Contributor role](/azure/role-based-access-control/built-in-roles/networking#network-contributor) grants `Microsoft.Network/*`, which allows the cluster identity to create, modify, and delete network resources within the assigned VNet scope. Review this access before using the role in production because NAP requires only subnet read and join permissions for this scenario.
 
 #### Benefits and considerations
 
-The following table outlines the benefits and considerations of assigning broad VNet permissions:
+The following table outlines the trade-offs of assigning the Network Contributor role at the VNet scope.
 
-| Benefits | Considerations |
+| Benefits of broad VNet permissions | Considerations for broad VNet permissions |
 |----------|----------------|
 | • Simplifies permission management. <br> • Eliminates the need to update permissions when adding new subnets. <br> • Works well for single-tenant environments. <br> • Functions when a subscription reaches the maximum number of custom roles. | • Provides broader permissions than strictly necessary. <br> • Might not meet strict security requirements. |
 
@@ -107,20 +137,18 @@ The following table outlines the benefits and considerations of assigning broad 
 To assign broad VNet permissions, grant the cluster's managed identity the following permissions on the VNet:
 
 ```azurecli-interactive
-# Get your cluster's managed identity
-CLUSTER_IDENTITY=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query identity.principalId -o tsv)
-
 # Get your VNet resource ID
 VNET_ID="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$VNET_RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME"
 
 # Assign Network Contributor role for subnet read/join operations
 az role assignment create \
-  --assignee $CLUSTER_IDENTITY \
+  --assignee-object-id $CLUSTER_IDENTITY \
+  --assignee-principal-type ServicePrincipal \
   --role "Network Contributor" \
   --scope $VNET_ID
 ```
 
-For a complete example of setting up custom networking and assigning broad VNet permissions, see the [Custom VNET setup - Most permissive RBAC sample script](https://gist.github.com/Bryce-Soghigian/a4259d6224db0c55081718caa7b37268).
+For a complete example of setting up custom networking and assigning broad VNet permissions, see the [Custom VNet setup - Most permissive RBAC sample script](https://gist.github.com/Bryce-Soghigian/a4259d6224db0c55081718caa7b37268).
 
 ### [Assign scoped subnet permissions](#tab/assign-scoped-subnet-permissions)
 
@@ -139,9 +167,6 @@ Assigning scoped subnet permissions offers the following benefits:
 For each subnet you want to use with Karpenter, you need to assign the following specific permissions:
 
 ```azurecli-interactive
-# Get your cluster's managed identity
-CLUSTER_IDENTITY=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --query identity.principalId -o tsv)
-
 # For each subnet, assign specific subnet permissions
 SUBNET_ID="/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$VNET_RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$SUBNET_NAME"
 
@@ -169,7 +194,8 @@ az role definition create --role-definition subnet-access-role.json
 
 # Assign the custom role to each subnet
 az role assignment create \
-  --assignee $CLUSTER_IDENTITY \
+  --assignee-object-id $CLUSTER_IDENTITY \
+  --assignee-principal-type ServicePrincipal \
   --role "Karpenter Subnet Access" \
   --scope $SUBNET_ID
 ```
@@ -182,13 +208,15 @@ For a complete example of setting up custom networking and assigning scoped subn
 
 The following example shows how to configure a custom subnet for NAP nodes using the `vnetSubnetID` field in an `AKSNodeClass` resource:
 
+Set the `spec.vnetSubnetID` field to the full Azure resource ID of the target subnet by using the format `/subscriptions/{subscriptionId}/resourceGroups/{resourceGroup}/providers/Microsoft.Network/virtualNetworks/{vnetName}/subnets/{subnetName}`.
+
 ```yaml
 apiVersion: karpenter.azure.com/v1beta1
 kind: AKSNodeClass
 metadata:
   name: custom-networking
 spec:
-  vnetSubnetID: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$SUBNET_NAME"
+  vnetSubnetID: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/$VNET_RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$SUBNET_NAME"
 ```
 
 The following example shows how to use multiple node classes with different subnet configurations:
@@ -199,19 +227,19 @@ kind: AKSNodeClass
 metadata:
   name: frontend-nodes
 spec:
-  vnetSubnetID: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$FRONTEND_SUBNET_NAME"
+  vnetSubnetID: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/$VNET_RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$FRONTEND_SUBNET_NAME"
 ---
 apiVersion: karpenter.azure.com/v1beta1
 kind: AKSNodeClass
 metadata:
   name: backend-nodes
 spec:
-  vnetSubnetID: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$BACKEND_SUBNET_NAME"
+  vnetSubnetID: "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/$VNET_RESOURCE_GROUP/providers/Microsoft.Network/virtualNetworks/$VNET_NAME/subnets/$BACKEND_SUBNET_NAME"
 ```
 
 ## Bring your own CNI (BYO CNI) support policy
 
-Karpenter for Azure allows bring your own Container Network Interface (BYO CNI) configurations, following the same support policy as AKS. This means that when using a custom CNI, troubleshooting support related to networking is out of scope of any service-level agreements or warranties.
+Karpenter for Azure allows bring your own Container Network Interface (BYO CNI) configurations, and it follows the same support policy as AKS. BYO CNI doesn't make a configuration that NAP lists as unsupported, such as kubenet or Calico, supported. When you use a custom CNI, troubleshooting support related to networking is out of scope for any service-level agreements or warranties.
 
 ### Support scope details
 

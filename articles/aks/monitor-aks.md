@@ -5,8 +5,8 @@ ms.date: 08/18/2026
 ms.custom: horz-monitor, copilot-scenario-highlight, aeo-round-2
 ms.topic: overview
 ms.service: azure-kubernetes-service
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-monitoring
 ai-usage: ai-assisted
 #Customer intent: As a cloud administrator, I want to implement comprehensive monitoring for Azure Kubernetes Service (AKS) so that I can ensure performance and reliability in my critical applications and manage resource utilization effectively.
@@ -94,11 +94,11 @@ In the Azure portal, use the **Integrations** tab, or use the Azure CLI, Terrafo
 | [Managed service for Prometheus in Azure Monitor](/azure/azure-monitor/essentials/prometheus-metrics-overview) | [Prometheus](https://prometheus.io/) is a cloud-native metrics solution from the Cloud Native Computing Foundation. It's the most common tool to use to collect and analyze metric data from Kubernetes clusters. The managed service for Prometheus in Azure Monitor is a fully managed Prometheus-compatible monitoring solution. If you don't enable the managed service for Prometheus when you create your cluster, see [Collect Prometheus metrics from an AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana) for other options to enable it.<br><br>The managed service for Prometheus in Azure Monitor stores its data in an [Azure Monitor workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-overview) that is [linked to a Grafana workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage#link-a-grafana-workspace). You can use Azure Managed Grafana to analyze the data. |
 | [Azure Managed Grafana](/azure/managed-grafana/overview) | A fully managed implementation of [Grafana](https://grafana.com/). Grafana is an open-source data visualization platform commonly used to present Prometheus data. Multiple predefined Grafana dashboards are available for monitoring Kubernetes and full-stack troubleshooting. If you don't enable Azure Managed Grafana when you create your cluster, see [Link a Grafana workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage#link-a-grafana-workspace). You can link it to your Azure Monitor workspace so that it can access Prometheus metrics from your cluster. |
 
-### AKS control plane metrics monitoring (preview)
+### AKS control plane metrics monitoring
 
-> **Prerequisites and scope**: This preview feature requires an AKS cluster that uses managed identity authentication and has the managed service for Prometheus enabled. You must also register the `AzureMonitorMetricsControlPlanePreview` feature flag. Azure Private Link isn't supported, and you can customize only the default `ama-metrics-settings-configmap.yaml` configmap file.
+> **Prerequisites and scope**: This feature requires an AKS cluster that uses managed identity authentication and has the managed service for Prometheus enabled. Azure Private Link isn't supported, and you can customize only the default `ama-metrics-settings-configmap.yaml` configmap file.
 
-AKS also exposes metrics from critical control plane components like the API server, etcd, and the scheduler through the managed service for Prometheus in Azure Monitor. Currently, this feature is in preview. For more information, see [Monitor AKS control plane metrics](./control-plane-metrics-monitor.md). A subset of control plane metrics for the API server and etcd are available free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default. You can use the metrics to create alerts.
+AKS also exposes metrics from critical control plane components like the API server, etcd, and the scheduler through the managed service for Prometheus in Azure Monitor. For more information, see [Monitor AKS control plane metrics](./control-plane-metrics-monitor.md). A subset of control plane metrics for the API server and etcd are available free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default. You can use the metrics to create alerts.
 
 [!INCLUDE [horz-monitor-resource-logs](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-resource-logs.md)]
 

@@ -73,7 +73,7 @@ az aks create \
 ```
 
 > [!IMPORTANT]
-> When you use `AllowDuringMaintenanceWindow`, ensure you configure an `aksManagedNodeOSUpgradeSchedule` maintenance window. Otherwise, disruptive operations are allowed indefinitely. For more information, see [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster][planned-maintenance].
+> When you use `AllowDuringMaintenanceWindow`, ensure you configure an `aksManagedNodeOSUpgradeSchedule` maintenance window. The maintenance configuration can define the schedule inline or link to a shared maintenance window. Otherwise, disruptive operations are allowed indefinitely. For more information, see [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster][planned-maintenance].
 
 ### Block all disruptive operations
 
@@ -174,16 +174,16 @@ az aks maintenanceconfiguration list \
         --node-disruption-policy Block
     ```
 
-## Operations that require manual node pool upgrade
+## Operations that require manual node pool upgrade on Kubernetes 1.36 and earlier
 
-Some operations that Node Disruption Policy **doesn't control** require a manual node pool upgrade after any configuration changes. These operations include:
+On Kubernetes 1.37 and later, Node Disruption Policy covers the following configuration changes. On Kubernetes 1.36 and earlier, these changes require a manual node pool upgrade:
 
 - SSH configuration changes, such as changing SSH access methods or updating SSH public keys.
 - IMDS restriction changes, such as enabling or disabling IMDS restriction.
 - Bootstrap profile ACR name changes for network isolated clusters.
 - Outbound type changes, such as changing cluster egress routing.
 
-For these operations, you must manually run the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command after making the configuration change. For example:
+On Kubernetes 1.36 and earlier, manually run the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command after making the configuration change. For example:
 
 ```azurecli-interactive
 az aks nodepool upgrade \
@@ -226,7 +226,7 @@ If an operation is blocked unexpectedly, use the following steps to troubleshoot
 
 If you set the policy to `AllowDuringMaintenanceWindow` but don't configure a maintenance window, all disruptive operations are **allowed**.
 
-Configure a maintenance window by using the [`az aks maintenanceconfiguration add`](/cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-add) command.
+Configure a maintenance window by using the [`az aks maintenanceconfiguration add`](/cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-add) command. To reuse the same schedule across multiple clusters, link `aksManagedNodeOSUpgradeSchedule` to a [shared maintenance window](/azure/aks/planned-maintenance?pivots=azure-cli#use-a-shared-maintenance-window-preview).
 
 ```azurecli-interactive
 az aks maintenanceconfiguration add \
@@ -237,7 +237,7 @@ az aks maintenanceconfiguration add \
     --day-of-week Sunday \
     --interval-weeks 1 \
     --duration 4 \
-    --start-hour 2
+    --start-time 02:00
 ```
 
 ## Related content

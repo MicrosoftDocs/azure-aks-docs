@@ -13,7 +13,7 @@ ms.topic: concept-article
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
-Platform admins who manage large numbers of clusters often have problems staging updates for multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager allows you to orchestrate updates across multiple clusters by using update runs.
+Platform admins who manage many clusters often struggle to stage node OS image or Kubernetes version upgrades safely and predictably. Azure Kubernetes Fleet Manager lets you orchestrate these upgrades across multiple clusters by using update runs.
 
 Update runs consist of stages, groups, and strategies. You can apply update runs manually for one-time updates or automatically for ongoing regular updates by using auto-upgrade profiles. All update runs, both manual and automated, honor cluster [maintenance windows][aks-maintenance-windows].
 
@@ -140,6 +140,14 @@ Update run prioritizes upgrading clusters based on planned maintenance in the fo
   3. Cluster with no maintenance window.
   4. Cluster with a closed maintenance window. 
   
+### AKS platform-initiated upgrades
+
+Fleet Manager orchestrates upgrades for member clusters within the [AKS support window][supported-kubernetes-versions]. When a cluster's Kubernetes version reaches end of life, it enters a 60-day [platform support grace period](../aks/platform-initiated-upgrades.md#platform-support-grace-period). If the cluster remains on the unsupported version after this period, AKS performs a [platform-initiated upgrade](../aks/platform-initiated-upgrades.md) directly on the member cluster.
+
+Because AKS initiates this upgrade directly, Fleet Manager update runs, update groups, and update strategies don't control its sequencing. The upgrade can also occur outside the cluster's planned maintenance window.
+
+To keep upgrades under Fleet orchestration, use update runs and [auto-upgrade profiles](#auto-upgrade-profiles-overview) to keep member clusters on supported Kubernetes versions.
+
 ## Auto-upgrade profiles overview
 
 Use Auto-upgrade Profiles to automatically trigger Update Runs when new Kubernetes or node image versions are available for AKS.

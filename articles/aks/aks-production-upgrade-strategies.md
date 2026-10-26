@@ -15,7 +15,7 @@ ms.custom: scenarios, production-ready
 Use these patterns to safely upgrade production Azure Kubernetes Service (AKS) clusters. The guidance is intended for site reliability engineers and platform teams that need to minimize downtime and control upgrade risk.
 
 > [!TIP]
-> **Getting started with production upgrades?** AKS Automatic handles most upgrade scenarios automatically with preconfigured upgrade channels, a pod readiness service-level agreement (SLA) of 99.9%, and an uptime SLA of 99.95% included by default. For new production clusters, [create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md) to benefit from hardened defaults and managed upgrades with availability protections. These SLAs cover qualifying pod-readiness operations and API server availability, not end-to-end application availability. See [Introduction to AKS Automatic](intro-aks-automatic.md) for a full comparison.
+> **Getting started with production upgrades?** AKS Automatic handles most upgrade scenarios automatically with preconfigured upgrade channels and managed upgrade defaults. For new production clusters, [create an AKS Automatic cluster](./automatic/quick-automatic-managed-network.md) to benefit from hardened defaults and managed upgrades with availability protections. For more information, see [Introduction to AKS Automatic](intro-aks-automatic.md) and [Service-level agreements for online services](https://www.microsoft.com/licensing/docs/view/Service-Level-Agreements-SLA-for-Online-Services).
 
 ## AKS production upgrade strategy overview
 
@@ -77,7 +77,7 @@ Use this table to find the AKS production upgrade guidance that matches your rol
 
 - **Challenge**: "I need to upgrade my production cluster with less than 2 minutes of downtime during business hours."
 - **Strategy**: Use blue-green deployment with intelligent traffic shifting. Blue-green deployment runs two identical production environments (blue and green). You deploy to the inactive environment, validate it, then switch traffic. If problems occur, traffic switches back to the active environment. Actual convergence time depends on the selected traffic-routing service, health probes, and client or DNS caching.
-- **With AKS Automatic**: Preconfigured automatic upgrade channels and pod readiness SLA handle most of this scenario. However, if you need more control, custom validation gates, or blue-green testing strategies beyond standard automatic upgrades, use the following guidance:
+- **With AKS Automatic**: Preconfigured automatic upgrade channels handle most of this scenario. However, if you need more control, custom validation gates, or blue-green testing strategies beyond standard automatic upgrades, use the following guidance:
 
 To learn more, see [Blue-green deployment patterns](/azure/architecture/guide/aks/blue-green-deployment-for-aks) and [Azure Traffic Manager configuration](/azure/traffic-manager/traffic-manager-configure-weighted-routing-method).
 
@@ -516,6 +516,8 @@ az aks maintenanceconfiguration add \
 
 To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Autoupgrade channels](./auto-upgrade-cluster.md#cluster-autoupgrade-channels).
 
+If you need the same emergency patching schedule across multiple clusters, link each cluster's `aksManagedNodeOSUpgradeSchedule` maintenance configuration to a [shared maintenance window](/azure/aks/planned-maintenance?pivots=azure-cli#use-a-shared-maintenance-window-preview) instead of repeating the inline schedule on each cluster.
+
 #### Step 2: Automated security scanning
 
 ```yaml
@@ -587,7 +589,7 @@ curl -X POST "$SLACK_WEBHOOK" -d "{\"text\":\"Security patches deployed to produ
 
 - **Challenge**: "I want my applications to handle cluster upgrades gracefully without affecting users."
 - **Strategy**: Use resilient application patterns with graceful degradation.
-- **With AKS Automatic**: These architectural patterns complement AKS Automatic's automatic node repair, pod readiness SLA, and automatic upgrade channels to minimize application impact during upgrades. End-to-end availability still depends on workload design, capacity, probes, PDBs, and dependencies. Implement these patterns on top of AKS Automatic to improve resilience.
+- **With AKS Automatic**: These architectural patterns complement AKS Automatic's automatic node repair and automatic upgrade channels to minimize application impact during upgrades. End-to-end availability still depends on workload design, capacity, probes, PDBs, and dependencies. Implement these patterns on top of AKS Automatic to improve resilience.
 
 To learn more, see [Application reliability patterns](/azure/architecture/framework/resiliency/reliability-patterns), [PDBs](https://kubernetes.io/docs/tasks/run-application/configure-pdb/), and [Health check best practices](/azure/architecture/patterns/health-endpoint-monitoring).
 
@@ -910,12 +912,12 @@ Implement automated alarms in Azure Monitor or Application Insights to notify on
 
 Before cutover:
 
-- [ ] Source (blue) stays running and reachable.
-- [ ] Green environment has identical or compatible service endpoints, secrets, and config.
-- [ ] Readiness and liveness probes configured and tested.
-- [ ] Monitoring and alerts in place for errors, latency, and resource pressure.
-- [ ] Scripted rollback action ready and tested.
-- [ ] Stakeholders and on-call notified and on standby.
+- ✅ Source (blue) stays running and reachable.
+- ✅ Green environment has identical or compatible service endpoints, secrets, and config.
+- ✅ Readiness and liveness probes configured and tested.
+- ✅ Monitoring and alerts in place for errors, latency, and resource pressure.
+- ✅ Scripted rollback action ready and tested.
+- ✅ Stakeholders and on-call notified and on standby.
 
 **Expected outcome**: Rapid traffic rollback and a practiced, metric-driven cutover that keeps the source intact until you choose to decommission it. The achievable recovery time and recovery point depend on traffic convergence, data replication, write coordination, and tested recovery procedures.
 

@@ -3,8 +3,8 @@ title: Troubleshoot the Agentic CLI for Azure Kubernetes Service (AKS) (preview)
 description: Learn how to troubleshoot the agentic CLI for Azure Kubernetes Service (AKS) to resolve common issues and improve performance.
 ms.topic: troubleshooting-general
 ms.date: 10/20/2025
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-developer
 zone_pivot_groups: agentic-cli-deployment-mode

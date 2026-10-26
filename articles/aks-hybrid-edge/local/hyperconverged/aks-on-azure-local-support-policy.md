@@ -54,7 +54,11 @@ AKS doesn't make any runtime or other guarantees for clusters that use unsupport
 
 For information about supported Kubernetes versions, see [Supported Kubernetes versions](../../supported-kubernetes-versions.md).
 
-AKS follows the platform version support timeframes for those products. AKS isn't supported on unsupported versions of those products. For more information, see [Azure Local supported versions information](/azure/azure-local/release-information-23h2).
+AKS follows the platform version support timeframes for those products. AKS isn't supported on unsupported versions of those products.
+
+### Azure Local version support window
+
+AKS on Azure Local is supported only on an Azure Local version that's within its six-month support window. Azure Local versions that aren't updated within six months of release are no longer supported. If your Azure Local instance is running a version outside this window, AKS clusters on that instance are considered unsupported until you update Azure Local to a supported version. For the current list of supported versions and the end-of-support policy, see [End of support for Azure Local versions](/azure/azure-local/release-information-23h2#end-of-support-for-azure-local-versions).
 
 ## Shared responsibility
 

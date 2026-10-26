@@ -2,7 +2,7 @@
 title: What is AKS Hybrid and Edge?
 description: Learn about AKS Hybrid and Edge and available deployment options.
 ms.topic: overview
-ms.date: 09/01/2026
+ms.date: 09/14/2026
 ai-usage: ai-assisted
 author: davidsmatlak
 ms.author: davidsmatlak 
@@ -43,7 +43,7 @@ Here are some common use cases for AKS Hybrid and Edge:
 
 Here are the available deployment options:
 
-- [**AKS on bare metal (preview)**](bare-metal/aks-bare-metal-overview.md): Managed from Azure, for teams that want to dedicate all server compute to workloads and avoid a virtualization layer.
+- [**AKS on bare metal (preview)**](bare-metal/aks-bare-metal-overview.md): Runs Kubernetes directly on Azure Linux or Ubuntu hosts without a hypervisor. Azure Linux targets validated Azure Local hardware, while Ubuntu targets customer-provided hardware.
 
 - [**AKS on Azure Local**](local/aks-local-overview.md): Managed from Azure, for teams running Kubernetes alongside other virtualized workloads on the same infrastructure.
 

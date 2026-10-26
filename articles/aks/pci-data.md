@@ -4,8 +4,8 @@ description: Best practices for securing data in AKS as per Requirements 3 and 4
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance

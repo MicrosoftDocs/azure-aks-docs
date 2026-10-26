@@ -1,8 +1,9 @@
 ---
 title: What is Azure Kubernetes Service on bare metal? (preview)
-description: Learn about Azure Kubernetes Service (AKS) on bare metal, a deployment option that runs Kubernetes directly on hardware without a hypervisor layer.
+description: Learn how Azure Kubernetes Service on bare metal runs Kubernetes directly on Azure Linux or Ubuntu hosts without a hypervisor.
 ms.topic: overview
-ms.date: 09/01/2026
+ms.date: 09/14/2026
+ai-usage: ai-assisted
 author: SummerSmith
 ms.author: sumsmith
 ms.custom: bare-metal
@@ -10,41 +11,53 @@ ms.custom: bare-metal
 
 # What is Azure Kubernetes Service on bare metal? (preview)
 
-> [!IMPORTANT]
-> Azure Kubernetes Service on bare metal is currently in preview. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal previews are partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-Azure Kubernetes Service (AKS) on bare metal is a deployment option that runs Kubernetes clusters directly on physical hardware without a hypervisor layer. It extends the unified AKS experience to bare metal infrastructure, giving you the same Azure management plane, APIs, and tooling you use with AKS in the cloud - while eliminating virtualization overhead.
-
+Azure Kubernetes Service (AKS) on bare metal deploys Kubernetes directly on a supported host operating system without a hypervisor. The Kubernetes control plane and worker components run on the host hardware, and Azure Arc connects the cluster and host to Azure for management.
 
 ## Key benefits
 
-- **No hypervisor overhead** - Run Kubernetes directly on hardware, dedicating all compute resources to your workloads.
-- **Unified Azure management** - Create, manage, and monitor clusters through the Azure portal, ARM templates, or Bicep - the same tools you use for AKS everywhere else.
-- **Arc-connected** - Clusters are automatically connected to Azure Arc, enabling Azure Policy, Azure Monitor, GitOps, and other Azure services.
-- **Consistent Kubernetes experience** - Same core APIs, lifecycle management, and operational tooling as AKS across cloud, hybrid, and edge.
+- **No hypervisor overhead**: Run Kubernetes directly on the host operating system and hardware.
+- **Azure-connected management**: Use Azure Arc and the AKS resource provider to manage the Kubernetes lifecycle from Azure.
+- **Consistent Kubernetes experience**: Use standard Kubernetes APIs and tools to manage workloads.
+- **Flexible infrastructure choices**: Deploy on validated Azure Local hardware with Azure Linux or on customer-provided hardware with Ubuntu.
+
+## Choose a host operating system
+
+AKS on bare metal currently supports two host operating systems:
+
+- **Azure Linux** runs on validated and supported Azure Local small form factor hardware. Use this option for a new-infrastructure deployment managed through the Azure Local platform lifecycle. Create clusters by using the Azure portal, an Azure Resource Manager template, or Bicep.
+- **Ubuntu** runs on customer-provided hardware that meets the published requirements. Use this option to add AKS to existing infrastructure without reimaging the host. You install, configure, patch, and maintain Ubuntu, while AKS manages the Kubernetes layer. Create and manage clusters by using the Azure CLI extension.
+
+The supported interfaces for cluster creation, upgrade, and deletion differ by host operating system. Follow the procedure for your host option.
+
+For a detailed comparison, see [Compare Azure Linux and Ubuntu](aks-bare-metal-compare-azure-linux-ubuntu.md).
 
 ## When to use AKS on bare metal
 
-AKS on bare metal is ideal for scenarios where:
+Use AKS on bare metal when you need to:
 
-- **Maximum performance matters** - Workloads that can't tolerate hypervisor overhead.
-- **Edge and remote locations** - Small-footprint deployments at retail stores, factories, or field sites where a full hyperconverged infrastructure isn't needed.
-- **Sovereign and regulated environments** - Deployments that must remain on-premises with full Azure management capabilities.
-- **Resource-constrained hardware** - Single-machine deployments where every CPU cycle and byte of memory counts.
+- Run workloads without hypervisor overhead.
+- Deploy Kubernetes at retail stores, factories, field sites, or other edge locations.
+- Keep workloads and data on-premises while managing the Kubernetes layer through Azure.
+- Deploy AKS to an existing Ubuntu host or deploy new validated Azure Local hardware.
 
 ## How it works
 
-AKS on bare metal deploys a Kubernetes cluster directly onto an Azure Arc-enabled machine. The deployment creates:
-- **Logical Network** — Configures networking with IP pools for the cluster (not needed for single node clusters)
-- **AKS cluster** — A fully managed Kubernetes cluster running directly on the hardware
+AKS on bare metal has three layers:
 
-You manage all resources through Azure Resource Manager and see them in the Azure portal.
+- **Azure management and Azure Arc** connect the host and Kubernetes cluster to Azure.
+- **The AKS-managed Kubernetes layer** provides the control plane and worker components.
+- **The host operating system and hardware layer** provides compute, storage, and networking.
+
+AKS manages the Kubernetes layer for both host options. Host ownership differs: Azure Linux follows the Azure Local platform lifecycle, while you maintain the Ubuntu host operating system and hardware.
 
 ## Public preview scope
 
-See the [AKS on bare metal preview limitations page](aks-bare-metal-preview-limitations.md) for an overview of what is available during public preview. 
+During public preview, capabilities and limitations can differ between Azure Linux and Ubuntu. See [AKS on bare metal preview limitations](aks-bare-metal-preview-limitations.md) before you deploy.
 
 ## Next steps
 
-- [System requirements and prerequisites](aks-bare-metal-system-requirements.md)
-- [Create a Kubernetes cluster using the Azure portal](aks-bare-metal-create-cluster-portal.md)
+- [Compare Azure Linux and Ubuntu](aks-bare-metal-compare-azure-linux-ubuntu.md).
+- [Review the Azure Linux system requirements](aks-bare-metal-system-requirements.md).
+- [Review the Ubuntu system requirements and prepare your host](aks-bare-metal-ubuntu-system-requirements.md).

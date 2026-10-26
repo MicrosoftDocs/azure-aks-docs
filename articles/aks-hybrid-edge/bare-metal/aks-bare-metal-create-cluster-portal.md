@@ -1,19 +1,19 @@
 ---
-title: Create an AKS on bare metal cluster using the Azure portal (preview)
-description: Learn how to deploy an Azure Kubernetes Service (AKS) cluster on bare metal using the Azure portal.
+title: Create AKS on bare metal on Azure Linux in the Portal
+description: Create an Azure Kubernetes Service on bare metal cluster on Azure Linux and validated Azure Local hardware by using the Azure portal.
 ms.topic: how-to
-ms.date: 09/01/2026
+ms.date: 09/14/2026
+ai-usage: ai-assisted
 author: SummerSmith
 ms.author: sumsmith
 ms.custom: bare-metal
 ---
 
-# Create an AKS on bare metal cluster using the Azure portal (preview)
+# Create an AKS on bare metal cluster on Azure Linux by using the Azure portal (preview)
 
-> [!IMPORTANT]
-> Azure Kubernetes Service on bare metal is currently in preview. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal previews are partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-This article shows you how to create an Azure Kubernetes Service (AKS) cluster on bare metal using the Azure portal.
+This article shows you how to create an Azure Kubernetes Service (AKS) on bare metal cluster on Azure Linux and validated Azure Local small form factor hardware by using the Azure portal. This procedure doesn't apply to Ubuntu hosts. To use Ubuntu, see [Create an AKS on bare metal cluster on Ubuntu with Azure CLI](aks-bare-metal-create-cluster-ubuntu-cli.md).
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ Complete all [system requirements and prerequisites](aks-bare-metal-system-requi
 On the **Basics** tab, configure the following settings:
 
 | Setting | Value |
-|---------|-------|
+| --------- | ------- |
 | Site | Select your site. This selection automatically populates your subscription. |
 | Resource group | Select or create a resource group in **East US**. |
 | Cluster name | Enter a name for your cluster. Name must be 1-27 characters long, start and end with a letter or number, and can only contain letters, numbers, hyphens, or underscores. |

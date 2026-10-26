@@ -5,8 +5,8 @@ ms.topic: concept-article
 ms.custom: aks-getting-started
 ms.date: 07/29/2026
 ms.service: azure-kubernetes-service
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 # Customer intent: As a cloud architect, I want to understand the core concepts of managed Kubernetes services so that I can effectively deploy and manage containerized applications at scale in a cloud environment.
 ---
 

@@ -2,7 +2,7 @@
 title: What's new in AKS Hybrid and Edge on Azure Local
 description: Learn about what's new in AKS Hybrid and Edge on Azure Local.
 ms.topic: overview
-ms.date: 09/01/2026
+ms.date: 10/24/2026
 author: davidsmatlak
 ms.author: davidsmatlak 
 ms.lastreviewed: 08/13/2026
@@ -22,6 +22,12 @@ This article summarizes features, improvements, and important notices for AKS on
 ## AKS Hybrid and Edge releases
 
 This section lists the new features and improvements in AKS in each release of Azure Local.
+
+### Release 2610
+
+#### Kubernetes versions in 2610
+
+The Kubernetes versions included in the 2610 release are: 1.32.10, 1.32.11, 1.33.6, 1.33.7, 1.34.3, and 1.34.4.
 
 ### Release 2607
 
@@ -94,7 +100,7 @@ The Kubernetes versions included in the 2508 release are: 1.29.12, 1.29.13, 1.30
 
 The following Kubernetes cluster deployment and management capabilities are available:
 
-- **Disk space exhaustion**: Fixed [issues due to disk space exhaustion on control plane VMs caused by accumulation of kube-apiserver audit logs](hyperconverged/kube-apiserver-log-overflow.md).  
+- **Disk space exhaustion**: Fixed issues due to disk space exhaustion on control plane VMs caused by accumulation of kube-apiserver audit logs.
 - **Cluster upgrade**: Fixed AKS cluster and node pool create, scale, and upgrade issues due to unavailability of AKS VM images.
 - **AKS Telemetry pod issue**: Fixed an issue in which the AKS telemetry pod consumed excess CPU and memory.
 - **New checks**: Added new checks during cluster and node pool operations. These improvements allow the system to proactively detect and handle scenarios where there are insufficient IP addresses in the IP pool.

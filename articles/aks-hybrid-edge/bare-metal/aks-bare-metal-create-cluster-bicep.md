@@ -10,8 +10,7 @@ ms.custom: bare-metal
 
 # Create an AKS on bare metal cluster using Bicep (preview)
 
-> [!IMPORTANT]
-> Azure Kubernetes Service on bare metal is currently in preview. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal previews are partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 This article shows you how to create an Azure Kubernetes Service (AKS) cluster on bare metal using a Bicep template.
 
@@ -25,9 +24,9 @@ Complete all [system requirements and prerequisites](aks-bare-metal-system-requi
 1. Configure the following parameters:
 
 | Parameter | Value | Notes |
-|-----------|-------|-------|
+| ----------- | ------- | ------- |
 | `location` | `eastus` | Only supported region for public preview. |
-| `clusterName` | Your cluster name | Name must be 1-27 characters long, start and end with a letter or number, and can only contain letters, numbers, hyphens, or underscores.|
+| `clusterName` | Your cluster name | Name must be 1-27 characters long, start and end with a letter or number, and can only contain letters, numbers, hyphens, or underscores. |
 | `kubernetesVersion` | `1.34.2-20260204` or `1.34.3-20260204` | Format: `Major.Minor.Patch-YYYYMMDD`. |
 | `controlPlaneIp` | IP address | If omitted, defaults to the host machine's IP address. Only specify a custom IP if you need the control plane to be reachable on a different address than the host. If provided, it must be in the same subnet as the host IP. |
 | `adminGroupObjectIds` | Microsoft Entra ID group object ID | Used for cluster admin RBAC. |

@@ -5,13 +5,16 @@ ms.topic: how-to
 ms.date: 11/06/2023
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ai-usage: ai-assisted
 # Customer intent: "As a DevOps engineer, I want to configure virtual nodes in my Kubernetes cluster, so that I can quickly scale application workloads without waiting for VM deployment."
 ---
 
 # Create and configure an Azure Kubernetes Services (AKS) cluster to use virtual nodes
+
+> [!NOTE]
+> [Virtual Nodes v2 (preview)](virtual-nodes-v2.md) is the latest serverless experience for AKS. It's delivered as a cluster extension and brings new capabilities to virtual nodes. If you plan to deploy workloads on virtual nodes, start with [Virtual Nodes v2 (preview)](virtual-nodes-v2.md).
 
 To rapidly scale application workloads in an AKS cluster, you can use virtual nodes. With virtual nodes, you have quick provisioning of pods, and only pay per second for their execution time. You don't need to wait for Kubernetes cluster autoscaler to deploy VM compute nodes to run more pods. Virtual nodes are only supported with Linux pods and nodes.
 

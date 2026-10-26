@@ -10,8 +10,7 @@ ms.custom: bare-metal
 
 # Create an AKS on bare metal cluster using an ARM template (preview)
 
- > [!IMPORTANT]
- > Azure Kubernetes Service on bare metal is currently in preview. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal previews are partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
  This article shows you how to create an Azure Kubernetes Service (AKS) cluster on bare metal using an Azure Resource Manager template (ARM template).
 
@@ -25,7 +24,7 @@ ms.custom: bare-metal
  1. Configure the following required parameters:
   
     | Parameter | Value | Notes |
-    |-----------|-------|-------|
+    | ----------- | ------- | ------- |
     | `edgeMachineName` | Edge machine name | Must match the provisioned machine in your resource group. |
     | `adminGroupObjectIds` | Microsoft Entra ID group object ID | Used for cluster admin RBAC. Must be a valid GUID. |
     | `sshPublicKey` | SSH public key | An SSH key pair was created during Edge Machine creation. Use that public key. |
@@ -33,7 +32,7 @@ ms.custom: bare-metal
  1. Optionally configure additional parameters:
 
     | Parameter | Default | Notes |
-    |-----------|---------|-------|
+    | ----------- | --------- | ------- |
     | `clusterName` | `my-aks-on-baremetal-cluster` | Name must be 1-27 characters long, start and end with a letter or number, and can only contain letters, numbers, hyphens, or underscores. |
     | `kubernetesVersion` | `1.34.3-20260204` | Format: `Major.Minor.Patch-YYYYMMDD`. |
     | `controlPlaneIp` | (auto-assigned as host IP) | If specified, must be in the same subnet as the host IP **but cannot be the same as the host IP**. If no IP is provided, it defaults to the host IP. |

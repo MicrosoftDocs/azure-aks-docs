@@ -1,19 +1,19 @@
 ---
-title: System requirements and prerequisites for AKS on bare metal (preview)
-description: Hardware, network, and Azure prerequisites for deploying Azure Kubernetes Service on bare metal.
+title: System requirements and prerequisites for AKS on bare metal Azure Linux (preview)
+description: Review Azure Local hardware, network, and Azure requirements for deploying AKS on bare metal on Azure Linux.
 ms.topic: concept-article
-ms.date: 09/01/2026
+ms.date: 09/14/2026
+ai-usage: ai-assisted
 author: SummerSmith
 ms.author: sumsmith
 ms.custom: bare-metal
 ---
 
-# System requirements and prerequisites (preview)
+# System requirements and prerequisites for AKS on bare metal Azure Linux (preview)
 
-> [!IMPORTANT]
-> Azure Kubernetes Service on bare metal is currently in preview. See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability. Azure Kubernetes Service on bare metal previews are partially covered by customer support on a best-effort basis.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-This article describes the hardware, network, and Azure requirements for deploying Azure Kubernetes Service (AKS) on bare metal.
+This article describes the requirements for deploying Azure Kubernetes Service (AKS) on bare metal on Azure Linux and validated Azure Local small form factor hardware. For customer-provided Ubuntu hardware, see [System requirements and prepare your Ubuntu host](aks-bare-metal-ubuntu-system-requirements.md).
 
 ## Hardware requirements
 
@@ -26,7 +26,7 @@ Use one of the [supported devices for small form factor deployments of Azure Loc
 The bare metal host requires outbound internet access to the following endpoints:
 
 | Endpoint | Purpose |
-|----------|---------|
+| ---------- | --------- |
 | `*.arc.azure.net` | Azure Arc connectivity |
 | `management.azure.com` | Azure Resource Manager |
 | `login.microsoftonline.com` | Microsoft Entra authentication |
@@ -47,7 +47,7 @@ You need one IP address planned before deployment:
 ### Subscription and permissions
 
 | Requirement | Details |
-|-------------|---------|
+| ------------- | --------- |
 | Azure subscription | Active subscription with billing enabled |
 | Region | **East US** (only supported region for public preview) |
 | Role | **Owner** or **Contributor + User Access Administrator** on the resource group |
@@ -120,4 +120,5 @@ To use Azure RBAC for cluster access:
 
 ## Next steps
 
-- [Create a Kubernetes cluster using the Azure portal](aks-bare-metal-create-cluster-portal.md)
+- [Create an Azure Linux cluster using the Azure portal](aks-bare-metal-create-cluster-portal.md).
+- [Compare Azure Linux and Ubuntu](aks-bare-metal-compare-azure-linux-ubuntu.md).

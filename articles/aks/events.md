@@ -2,8 +2,8 @@
 title: Use Kubernetes events for troubleshooting
 description: Learn about Kubernetes events, which provide details on pods, nodes, and other Kubernetes objects.
 ms.topic: how-to
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.subservice: aks-monitoring
 ms.date: 06/13/2024
 ms.custom: innovation-engine
