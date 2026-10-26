@@ -23,7 +23,7 @@ ACL is a secure, minimal OS including only the critical components required to r
 
 | Benefit | Description |
 | ------- | ----------- |
-| **Layered OS security** | ACL combines an immutable OS, mandatory access controls, verified boot, and trusted build processes to protect nodes from boot through runtime. For details, see [ACL security features](./azure-container-linux-security-features.md). |
+| **Layered OS security** | ACL combines an immutable OS, mandatory access controls, verified boot, and trusted build processes to protect nodes from boot through runtime. For details, see [ACL security features](/articles/azure-linux/azure-container-linux-security-features.md). |
 | **Minimal container host** | ACL includes only the components required to run containers, reducing OS complexity and simplifying node management. |
 | **Consistent node servicing** | Weekly image-based updates provide security patches and bug fixes while keeping the OS version consistent across each node image. |
 | **Open-source transparency** | Flatcar as well as many of the underlying technologies (dm-verity and SELinux) are upstream or open source, and Microsoft has tooling and contributions to support these features. |
