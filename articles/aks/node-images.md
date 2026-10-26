@@ -130,6 +130,7 @@ ACL node images are fully validated by AKS and built from Azure Linux packages w
 | **ACL with containerd and Gen 2, FIPS, Trusted Launch, and AMD64** | This image is a variant of the standard ACL node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md) and use Trusted Launch on an AMD64 VM size. Supports Generation 2 only. |
 | **ACL with containerd and Gen 2, Trusted Launch, and ARM64** | This image is a variant of the standard ACL node image for customers that enable Trusted Launch on an [Arm64](./use-arm64-vms.md) VM size. Supports Generation 2 only. |
 | **ACL with containerd and Gen 2, FIPS, Trusted Launch, and ARM64** | This image is a variant of the standard ACL node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md) and use Trusted Launch on an [Arm64](./use-arm64-vms.md) VM size. Supports Generation 2 only. |
+| **ACL with containerd and Gen 2, Trusted Launch, and CVM** | This image is a variant of the standard ACL node image for customers that use a [Confidential VM](./use-cvm.md) size. These images support Generation 2 only. | 
 
 ## Available Windows Server node images
 
