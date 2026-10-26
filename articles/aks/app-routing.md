@@ -5,7 +5,8 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli, biannual
 author: schaffererin
 ms.topic: how-to
-ms.date: 08/03/2026
+ms.date: 10/26/2026
+ai-usage: ai-assisted
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cloud engineer, I want to deploy and configure NGINX ingress on Azure Kubernetes Service using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications while ensuring secure access and integration with Azure DNS.
@@ -63,6 +64,26 @@ For other configurations, see:
     | `'` | The Ingress isn't configured. |
 
 - The add-on doesn't officially support injecting non-Microsoft-managed sidecars (for example, custom telemetry, logging, or security agents) into the ingress-nginx proxy pods that it manages. If you choose to inject your own sidecar into a managed proxy pod, Microsoft provides only best-effort support for any issues you encounter.
+
+## Multi-tenant clusters
+
+> [!IMPORTANT]
+> The managed NGINX Ingress controller doesn't isolate tenants at the namespace level. Don't use it as a security boundary between tenants that share a cluster.
+
+The managed NGINX Ingress controller is based on the upstream ingress-nginx project. The ingress-nginx project assumes that users who can create Ingress objects are cluster administrators. The project says not to use ingress-nginx in multi-tenant production clusters. For more information, see [Multi-tenant Kubernetes][ingress-nginx-multi-tenant] in the ingress-nginx FAQ.
+
+The following behaviors cross namespace boundaries:
+
+- One NGINX Ingress controller serves the Ingress objects of its Ingress class from all namespaces. The controller merges the rules of these Ingress objects into one NGINX configuration. For more information, see [How it works][ingress-nginx-how-it-works].
+- An Ingress in one namespace can add paths to a host that an Ingress in a different namespace uses. If two Ingress objects use the same host, the oldest Ingress object controls the TLS settings and server-level annotations for that host. If they also use the same path, the oldest Ingress object gets the traffic for that path.
+- The add-on allows snippet annotations, except for the blocked values in [Limitations](#limitations). Snippet annotations add NGINX configuration to the shared controller.
+- The NGINX Ingress controller can read Secrets in all namespaces. The add-on enables the [`allow-cross-namespace-resources`][ingress-nginx-cross-namespace] option. With this option, some annotations can reference a Secret or ConfigMap in a different namespace.
+- A user who can create an Ingress can use any Ingress class. A separate `NginxIngressController` for each tenant doesn't isolate tenants.
+
+To decrease this risk, use these practices:
+
+- Give permission to create or update Ingress objects only to users that you trust at the same level as cluster administrators.
+- If tenants don't trust each other, use a separate cluster for each tenant. For more information, see [Physically isolated clusters][physically-isolated-clusters].
 
 ## Enable the application routing add-on using Azure CLI
 
@@ -215,9 +236,13 @@ az aks approuting disable --name <cluster-name> --resource-group <resource-group
 [create-nginx-private-controller]: create-nginx-ingress-private-controller.md
 [managed-identity]: use-managed-identity.md
 [app-routing-gateway-api]: app-routing-gateway-api.md
+[physically-isolated-clusters]: operator-best-practices-cluster-isolation.md#physically-isolated-clusters
 
 <!-- LINKS - external -->
 [kubernetes-ingress-object-overview]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [kubernetes-nginx-ingress]: https://kubernetes.github.io/ingress-nginx/
+[ingress-nginx-multi-tenant]: https://kubernetes.github.io/ingress-nginx/faq/#multi-tenant-kubernetes
+[ingress-nginx-how-it-works]: https://kubernetes.github.io/ingress-nginx/how-it-works/#building-the-nginx-model
+[ingress-nginx-cross-namespace]: https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#allow-cross-namespace-resources
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
