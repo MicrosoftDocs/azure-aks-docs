@@ -6,7 +6,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 10/18/2024
+ms.date: 10/27/2026
 ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to configure a Static Egress Gateway in my AKS cluster, so that I can manage egress traffic with fixed source IP addresses for secure and consistent communication with external systems.
 ---
@@ -82,7 +82,41 @@ spec:
 ```
 
 > [!TIP]
-> If you don't set `publicIpPrefixId`, a public IP prefix will be created for you automatically. When running `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>`, you can see the "Egress Ip Prefix" in the status. This is the newly created public IP prefix. You can also use an existing public IP prefix by specifying its resource ID in the `publicIpPrefixId` argument. You need to grant "Network Contributor" role to AKS cluster's identity in this case.
+> If you don't set `publicIpPrefixId`, a public IP prefix is created for you automatically. Run `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>` to see the assigned prefix in the **Egress Ip Prefix** status field.
+
+### Use your own public IP prefix
+
+To use an existing public IP prefix, set `spec.publicIpPrefixId` to its Azure resource ID.
+
+#### Grant Azure access to the cluster identity
+
+Grant the AKS cluster identity the **Network Contributor** role at the existing public IP prefix's resource scope.
+
+#### Authorize the namespace on the prefix
+
+Ask the prefix administrator to set the Azure resource tag `kube-egress-gateway-allowed-namespaces` to the Kubernetes namespaces approved to use the prefix. The tag accepts comma- or semicolon-separated namespace names. For example, `team-a,team-b` authorizes configurations in those two namespaces. The value `*` authorizes all namespaces; use explicit namespace names when access should be limited.
+
+Set the tag:
+
+```azurecli-interactive
+PREFIX_ID=$(az network public-ip prefix show \
+    --resource-group <prefix-resource-group> \
+    --name <prefix-name> \
+    --query id \
+    --output tsv)
+
+az tag update \
+    --resource-id "$PREFIX_ID" \
+    --operation Merge \
+    --tags "kube-egress-gateway-allowed-namespaces=team-a,team-b"
+```
+
+Replace `team-a,team-b` with the complete list of approved namespaces, including any existing entries that should remain authorized. The merge operation preserves other resource tags, but replaces the value of this tag.
+
+> [!IMPORTANT]
+> Permission to modify this tag grants control over namespace authorization. Limit tag changes to trusted administrators. The tag doesn't grant Azure access to the cluster identity or Kubernetes access to create `StaticGatewayConfiguration` resources; configure those permissions separately.
+
+This tag applies only when you supply an existing public IP prefix through `spec.publicIpPrefixId`. It isn't required for automatically created public IP prefixes or private IP configurations with `spec.provisionPublicIps: false`.
 
 ### Static private IP support
 
@@ -126,6 +160,23 @@ spec:
 ## Monitor and Manage Gateway Configurations
 
 Once deployed, you can monitor the status of your gateway configurations through the AKS cluster. The status section in the `StaticGatewayConfiguration` resource is updated with details such as assigned IPs and WireGuard configurations.
+
+### Check BYO prefix authorization warnings
+
+A Kubernetes Warning event with reason `BYOPrefixAuthorizationRequired` on a `StaticGatewayConfiguration` indicates that its BYO prefix doesn't authorize the configuration's namespace.
+
+View events for a configuration:
+
+```bash
+kubectl describe staticgatewayconfiguration <gateway-config-name> -n <namespace>
+```
+
+List authorization warnings in a namespace:
+
+```bash
+kubectl get events -n <namespace> \
+    --field-selector involvedObject.kind=StaticGatewayConfiguration,reason=BYOPrefixAuthorizationRequired
+```
 
 ## Delete a Gateway Node pool (Optional)
 
