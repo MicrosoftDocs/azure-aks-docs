@@ -77,7 +77,7 @@ The following behaviors cross namespace boundaries:
 - One NGINX Ingress controller serves the Ingress objects of its Ingress class from all namespaces. The controller merges the rules of these Ingress objects into one NGINX configuration. For more information, see [How it works][ingress-nginx-how-it-works].
 - An Ingress in one namespace can add paths to a host that an Ingress in a different namespace uses. If two Ingress objects use the same host, the oldest Ingress object controls the TLS settings and server-level annotations for that host. If they also use the same path, the oldest Ingress object gets the traffic for that path.
 - The add-on allows snippet annotations, except for the blocked values in [Limitations](#limitations). Snippet annotations add NGINX configuration to the shared controller.
-- The NGINX Ingress controller can read Secrets in all namespaces. The add-on enables the [`allow-cross-namespace-resources`][ingress-nginx-cross-namespace] option. With this option, some annotations can reference a Secret or ConfigMap in a different namespace.
+- The NGINX Ingress controller can read Secrets in all namespaces. The add-on enables the [`allow-cross-namespace-resources`][ingress-nginx-cross-namespace] option. By using this option, some annotations can reference a Secret or ConfigMap in a different namespace.
 - A user who can create an Ingress can use any Ingress class. A separate `NginxIngressController` for each tenant doesn't isolate tenants.
 
 To decrease this risk, use these practices:
