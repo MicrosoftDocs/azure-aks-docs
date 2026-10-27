@@ -114,6 +114,7 @@ Fields present in [open source MeshConfig reference documentation][istio-meshcon
 | tcpKeepalive | Allowed | Configurable in [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings) |
 | defaultConfig | Supported | Used to configure [ProxyConfig](https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig) |
 | outboundTrafficPolicy | Supported | Also configurable in [Sidecar CR](https://istio.io/latest/docs/reference/config/networking/sidecar/#OutboundTrafficPolicy) |
+| defaultTrafficPolicy | Supported | Available starting with asm-1-31. |
 | extensionProviders | Allowed | - |
 | defaultProviders | Allowed | - |
 | accessLogFile | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs]. It is encouraged to configure access logging via the [Telemetry API][istio-telemetry]. |
@@ -136,6 +137,8 @@ Fields present in [open source MeshConfig reference documentation][istio-meshcon
 | pathNormalization | Allowed | - |
 | defaultHttpRetryPolicy | Allowed | Configurable in [VirtualService](https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPRetry) |
 | serviceSettings | Allowed | - |
+| serviceEntryVisibility | Allowed | Available starting with asm-1-31. |
+| zoneAwareLbSetting | Allowed | Available starting with asm-1-31. |
 | meshMTLS | Allowed | - |
 | tlsDefaults | Allowed | - |
 | ingressService | Allowed | Name of the Kubernetes service used for the istio ingress controller. |
@@ -153,6 +156,7 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 | proxyAdminPort | Allowed | - |
 | tracing | Allowed | It is encouraged to configure tracing via the [Telemetry API][istio-telemetry]. |
 | concurrency | Supported | - |
+| connectionSettings | Supported | Available starting with asm-1-31. |
 | envoyAccessLogService | Allowed | It is encouraged to configure tracing via the [Telemetry API][istio-telemetry]. |
 | envoyMetricsService | Allowed | It is encouraged to configure metrics collection via the [Telemetry API][istio-telemetry].
 | proxyMetadata | Allowed | - |
