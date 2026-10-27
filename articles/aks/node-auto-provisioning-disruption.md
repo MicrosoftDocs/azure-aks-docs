@@ -139,7 +139,7 @@ When using budgets, you can optionally set the `schedule` and `duration` fields 
 - **Schedule** uses cron job syntax with special macros like `@yearly`, `@monthly`, `@weekly`, `@daily`, `@hourly`. Schedules use UTC and don't support other time zones.
 - **Duration** allows compound durations like `10h5m`, `30m`, or `160h`. Duration and Schedule must be defined together.
 
-When you omit both fields, the budget is always active. When you define both fields, the budget is active from each scheduled start time for the specified duration. If multiple budgets are active, the most restrictive budget applies. For more information, see [Karpenter NodePool disruption budgets](https://karpenter.sh/docs/concepts/disruption/#nodepool-disruption-budgets).
+If you omit both fields, the budget is always active. If you define both fields, the budget is active from each scheduled start time for the specified duration. If multiple budgets are active, the most restrictive budget applies. For more information, see [Karpenter NodePool disruption budgets](https://karpenter.sh/docs/concepts/disruption/#nodepool-disruption-budgets).
 
 #### Schedule and duration examples
 
