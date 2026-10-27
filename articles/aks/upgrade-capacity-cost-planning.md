@@ -116,14 +116,14 @@ If your cluster is limited by VM SKU availability, regional capacity, or quota l
 
 Solutions include:
 
-- **Use `maxUnavailable` instead of `maxSurge`**: Upgrade using existing node capacity without provisioning new nodes. You can update this setting using the [`az aks nodepool update`](/cli/azure/aks/nodepool#az-aks-nodepool-update) command. For example:
+- **Use `maxUnavailable` fallback**: Upgrade using existing node capacity without provisioning new nodes in the event that the maxSurge value of nodes is not available. You can update this setting using the [`az aks nodepool update`](/cli/azure/aks/nodepool#az-aks-nodepool-update) command. For example:
 
     ```azurecli-interactive
     az aks nodepool update \
       --resource-group <resource-group-name> \
       --cluster-name <cluster-name> \
       --name <node-pool-name> \
-      --max-surge 0 \
+      --max-surge 1 \
       --max-unavailable 1
     ```
 
