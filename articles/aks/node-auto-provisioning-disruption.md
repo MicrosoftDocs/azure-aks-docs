@@ -136,8 +136,10 @@ When calculating if a budget blocks nodes from disruption, Karpenter counts the 
 
 When using budgets, you can optionally set the `schedule` and `duration` fields to create time-based budgets. These fields allow you to define maintenance windows or specific timeframes when disruption limits are stricter.
 
-- **Schedule** uses cron job syntax with special macros like `@yearly`, `@monthly`, `@weekly`, `@daily`, `@hourly`.
+- **Schedule** uses cron job syntax with special macros like `@yearly`, `@monthly`, `@weekly`, `@daily`, and `@hourly`. Schedules use UTC and don't support other time zones.
 - **Duration** allows compound durations like `10h5m`, `30m`, or `160h`. Duration and Schedule must be defined together.
+
+If you omit both fields, the budget is always active. If you define both fields, the budget is active from each scheduled start time for the specified duration. If multiple budgets are active, the most restrictive budget applies. For more information, see [Karpenter NodePool disruption budgets](https://karpenter.sh/docs/concepts/disruption/#nodepool-disruption-budgets).
 
 #### Schedule and duration examples
 
@@ -154,15 +156,17 @@ budgets:
 
 ##### Weekend-only disruptions
 
-Only allow disruptions on weekends:
+Only allow voluntary disruptions on weekends, from Saturday at 00:00 UTC until Monday at 00:00 UTC:
 
 ```yaml
 budgets:
-- nodes: "50%"
-  schedule: "0 0 * * 6"    # Saturday midnight
-  duration: 48h            # All weekend
-- nodes: "0"               # Block all other times
+- nodes: "50%"             # Always active
+- nodes: "0"
+  schedule: "0 0 * * 1"    # Monday at 00:00 UTC
+  duration: 120h           # Block disruptions until Saturday at 00:00 UTC
 ```
+
+The zero-node budget blocks voluntary disruptions throughout the five weekdays. On weekends, only the 50% budget is active, so up to 50% of the node pool's nodes can be disrupted at once, subject to the budget calculation described earlier. Don't use an always-active zero-node budget: it would also block weekend disruptions.
 
 ##### Gradual rollout budget
 
