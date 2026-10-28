@@ -5,7 +5,7 @@ ms.author: schaffererin
 author: schaffererin
 ms.topic: quickstart
 ms.date: 07/15/2024
-ms.custom: devx-track-terraform
+ms.custom: devx-track-terraform, aks-windows
 ms.service: azure-kubernetes-service
 content_well_notification:
   - AI-contribution

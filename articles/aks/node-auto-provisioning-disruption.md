@@ -2,8 +2,8 @@
 title: Configure Disruption Policies for Node Auto-Provisioning (NAP) Nodes in Azure Kubernetes Service (AKS)
 description: Learn how to configure node disruption policies for node auto-provisioning (NAP) nodes in Azure Kubernetes Service (AKS) to optimize resource utilization.
 ms.topic: overview
-ms.custom: devx-track-azurecli
-ms.date: 07/25/2025
+ms.custom: devx-track-azurecli, aks-scaling
+ms.date: 09/18/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -34,11 +34,11 @@ When the workloads on your nodes scale down, NAP uses disruption rules on the no
 
 ## Node disruption methods
 
-NAP automatically discovers nodes eligible for disruption and spins up replacements when needed. You can trigger disruption through automated methods like _Expiration_, _Consolidation_, and _Drift_, manual methods, or external systems.
+NAP automatically discovers nodes eligible for disruption and spins up replacements when needed. Automated graceful methods include _Consolidation_ and _Drift_. _Expiration_ is an automated forceful method. You can also trigger disruption through manual methods or external systems.
 
 ## Expiration
 
-Expiration allows you to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.disruption.expireAfter` value.
+Expiration is a forceful disruption method that you use to set a maximum age for your NAP nodes. Nodes are marked as expired and disrupted after reaching the age you specify for the node pool's `spec.disruption.expireAfter` value.
 
 ### Example expiration configuration
 
@@ -98,6 +98,9 @@ For example, if a `NodeClaim` has `node.kubernetes.io/instance-type: Standard_D2
 > [!IMPORTANT]
 > Karpenter monitors subnet configuration changes and detects drift when the `vnetSubnetID` in an `AKSNodeClass` is modified. Understanding this behavior is critical when managing custom networking configurations. For more information, see [Subnet drift behavior](./node-auto-provisioning-networking.md#subnet-drift-behavior).
 
+> [!NOTE]
+> Node-level features that you configure through the `AKSNodeClass` follow this same drift path. These features include [LocalDNS](./node-auto-provisioning-aksnodeclass.md#localdns-configuration), [artifact streaming](./node-auto-provisioning-aksnodeclass.md#artifact-streaming), [FIPS mode](./node-auto-provisioning-aksnodeclass.md#fips-compliant-node-image-configuration), and [kubelet configuration](./node-auto-provisioning-aksnodeclass.md#kubelet-configuration). Enabling or disabling these features doesn't reconfigure existing nodes in place. Karpenter replaces the nodes, rate limited by your disruption budgets and pod disruption budgets. The `tags` field is the exception, because tag changes apply to existing Azure resources without replacing the node.
+
 For more information, see [Drift Design](https://github.com/aws/karpenter-core/blob/main/designs/drift.md).
 
 ## Termination grace period
@@ -121,7 +124,11 @@ spec:
 
 ## Disruption budgets
 
-You can rate limit Karpenter's disruption by modifying the `spec.disruption.budgets` field in the node pool specification. If you leave this setting undefined, Karpenter defaults to one budget with `nodes: 10%`. Budgets consider nodes that are being deleted for any reason, and they only block Karpenter from voluntary disruptions through expiration, drift, emptiness, and consolidation.
+You can rate limit Karpenter's graceful disruption by modifying the `spec.disruption.budgets` field in the node pool specification. If you leave this setting undefined, Karpenter defaults to one budget with `nodes: 10%`. Budgets consider nodes that are being deleted for any reason, and they only block Karpenter from voluntary disruptions through drift, emptiness, and consolidation.
+
+Expiration is a forceful disruption method and isn't rate-limited by NodePool disruption budgets. Pod Disruption Budgets (PDBs) can still control application-level pod eviction during node draining unless you configure `terminationGracePeriod`, which bypasses PDBs and the `karpenter.sh/do-not-disrupt` annotation.
+
+To confine NAP disruptions to a maintenance window, set `expireAfter: Never` and rely on disruption-budget-gated drift and consolidation.
 
 When calculating if a budget blocks nodes from disruption, Karpenter counts the total nodes owned by a node pool and then subtracts nodes that are being deleted and nodes that are `NotReady`. If the budget is configured with a percentage value, such as `20%`, Karpenter calculates the number of allowed disruptions as `allowed_disruptions = roundup(total * percentage) - total_deleting - total_notready`. For multiple budgets in a node pool, Karpenter takes the minimum (most restrictive) value of each of the budgets.
 
@@ -129,8 +136,10 @@ When calculating if a budget blocks nodes from disruption, Karpenter counts the 
 
 When using budgets, you can optionally set the `schedule` and `duration` fields to create time-based budgets. These fields allow you to define maintenance windows or specific timeframes when disruption limits are stricter.
 
-- **Schedule** uses cron job syntax with special macros like `@yearly`, `@monthly`, `@weekly`, `@daily`, `@hourly`.
+- **Schedule** uses cron job syntax with special macros like `@yearly`, `@monthly`, `@weekly`, `@daily`, and `@hourly`. Schedules use UTC and don't support other time zones.
 - **Duration** allows compound durations like `10h5m`, `30m`, or `160h`. Duration and Schedule must be defined together.
+
+If you omit both fields, the budget is always active. If you define both fields, the budget is active from each scheduled start time for the specified duration. If multiple budgets are active, the most restrictive budget applies. For more information, see [Karpenter NodePool disruption budgets](https://karpenter.sh/docs/concepts/disruption/#nodepool-disruption-budgets).
 
 #### Schedule and duration examples
 
@@ -147,15 +156,17 @@ budgets:
 
 ##### Weekend-only disruptions
 
-Only allow disruptions on weekends:
+Only allow voluntary disruptions on weekends, from Saturday at 00:00 UTC until Monday at 00:00 UTC:
 
 ```yaml
 budgets:
-- nodes: "50%"
-  schedule: "0 0 * * 6"    # Saturday midnight
-  duration: 48h            # All weekend
-- nodes: "0"               # Block all other times
+- nodes: "50%"             # Always active
+- nodes: "0"
+  schedule: "0 0 * * 1"    # Monday at 00:00 UTC
+  duration: 120h           # Block disruptions until Saturday at 00:00 UTC
 ```
+
+The zero-node budget blocks voluntary disruptions throughout the five weekdays. On weekends, only the 50% budget is active, so up to 50% of the node pool's nodes can be disrupted at once, subject to the budget calculation described earlier. Don't use an always-active zero-node budget: it would also block weekend disruptions.
 
 ##### Gradual rollout budget
 
@@ -237,7 +248,7 @@ spec:
         karpenter.sh/do-not-disrupt: "true"
 ```
 
-This annotation prevents voluntary disruption for Expiration, Consolidation, and Drift. However, it doesn't prevent disruption from external systems or manual disruption through `kubectl` or `NodePool` deletion.
+This annotation prevents voluntary disruption for Consolidation and Drift. However, it doesn't prevent forceful disruption through expiration, disruption from external systems, or manual disruption through `kubectl` or `NodePool` deletion.
 
 ### Node controls
 

@@ -6,7 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
-ms.custom: 'stateful-workloads'
+ms.custom: 'stateful-workloads, aks-data-messaging'
 # Customer intent: As a Kubernetes administrator, I want to validate the resiliency of the Valkey cluster during a node pool upgrade, so that I can ensure minimal disruption and continued performance of my applications throughout the upgrade process.
 ---
 

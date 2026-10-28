@@ -1,7 +1,7 @@
 ---
 title: Create and Manage Kubernetes resources in the Azure portal with Kubernetes Center (preview)
 description: Learn how to create and manage your Kubernetes resources directly in the Azure portal using Kubernetes Center (preview), which centralizes creation, management, and monitoring of your Kubernetes clusters.
-author: Harshaa
+author: schaffererin
 ms.author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -29,7 +29,7 @@ Kubernetes Center (preview) offers several key benefits, including:
 
 To use Kubernetes Center (preview), ensure you have the following prerequisites:
 
-- An active Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free/).
+- An active Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 
 ## Access quickstarts and documentation
 

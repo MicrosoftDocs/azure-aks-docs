@@ -4,6 +4,7 @@ description: Understand Azure Kubernetes Service (AKS) usage and costs, includin
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-cost
 ms.topic: how-to
 ms.date: 01/30/2025
 # Customer intent: As a cloud architect, I want to analyze and optimize my Azure Kubernetes Service usage and costs, so that I can reduce expenses and improve resource efficiency in my deployments.

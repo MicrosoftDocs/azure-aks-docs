@@ -6,6 +6,7 @@ ms.author: schaffererin
 ms.date: 11/10/2025
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 # Customer intent: "As a cloud architect, I want to understand the operational differences between AWS and Azure for hosting web applications, so that I can make informed decisions when migrating workloads to the appropriate cloud platform."
 ---
 

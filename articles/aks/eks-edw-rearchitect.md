@@ -6,6 +6,7 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 # Customer intent: As a cloud architect, I want to rearchitect an event-driven workflow from AWS to Azure Kubernetes Service, so that I can leverage Azure services while maintaining efficiency in scaling and cost management.
 ---
 

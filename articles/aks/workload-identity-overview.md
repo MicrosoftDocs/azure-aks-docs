@@ -1,13 +1,14 @@
 ---
 title: Use a Microsoft Entra Workload ID on Azure Kubernetes Service (AKS)
-description: Learn about Microsoft Entra Workload ID for Azure Kubernetes Service (AKS) and how to migrate your application to authenticate using this identity.  
-author: davidsmatlak
-ms.author: davidsmatlak
+description: Learn about Microsoft Entra Workload ID for Azure Kubernetes Service (AKS), how workload identity is preconfigured on AKS Automatic clusters, and how to migrate your application to authenticate using this identity.
+author: shashankbarsin
+ms.author: shasb
 ms.topic: overview
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.custom: build-2023
-ms.date: 05/28/2024
+ms.date: 10/06/2026
+ai-usage: ai-assisted
 # Customer intent: As a cloud developer, I want to implement Microsoft Entra Workload ID with Azure Kubernetes Service, so that my applications can authenticate securely and access Azure resources effectively without relying on managed identities.
 ---
 
@@ -15,7 +16,13 @@ ms.date: 05/28/2024
 
 Workloads deployed on an AKS cluster require Microsoft Entra application credentials or managed identities to access Microsoft Entra protected resources, such as Azure Key Vault and Microsoft Graph. Microsoft Entra Workload ID integrates with the capabilities native to Kubernetes to federate with external identity providers, allowing you to assign workload identities to your workloads to authenticate and access other services and resources.
 
-[Microsoft Entra Workload ID][azure-ad-workload-identity] uses [Service Account Token Volume Projection][service-account-token-volume-projection] (or a _service account_), to enable pods to use a Kubernetes identity. A Kubernetes token is issued and [OpenID Connect (OIDC) federation][oidc-federation] enables Kubernetes applications to access Azure resources securely with Microsoft Entra ID, based on annotated service accounts.
+> [!NOTE]
+> Workload ID covers the **pod-to-Azure** identity scenario in AKS - how applications running in pods authenticate to Microsoft Entra-protected services. On **AKS Automatic**, workload identity with Microsoft Entra Workload ID and the OIDC cluster issuer are preconfigured by default - no cluster-level setup is required. On **AKS Standard**, you enable and configure workload identity separately. For the other identity scenarios (control-plane authentication and authorization, and cluster-to-Azure managed identities), see [Access and identity options for AKS](concepts-identity.md).
+
+> [!TIP]
+> If you're using an **AKS Automatic** cluster, workload identity with Microsoft Entra Workload ID and the OIDC cluster issuer are **preconfigured by default**. You can skip cluster-level setup and go directly to [configuring your application](#azure-identity-client-libraries) to use a workload identity. For more information about AKS Automatic's security defaults, see [What is Azure Kubernetes Service Automatic?](intro-aks-automatic.md)
+
+[Microsoft Entra Workload ID][azure-ad-workload-identity] uses [Service Account Token Volume Projection][service-account-token-volume-projection] to enable pods to use a Kubernetes identity. A Kubernetes token is issued and [OpenID Connect (OIDC) federation][oidc-federation] enables Kubernetes applications to access Azure resources securely with Microsoft Entra ID, based on annotated service accounts.
 
 You can use Microsoft Entra Workload ID with [Azure Identity client libraries](#azure-identity-client-libraries) or the [Microsoft Authentication Library][microsoft-authentication-library] (MSAL) collection, together with [application registration][azure-ad-application-registration], to seamlessly authenticate and access Azure cloud resources.
 
@@ -24,8 +31,15 @@ You can use Microsoft Entra Workload ID with [Azure Identity client libraries](#
 
 ## Prerequisites
 
+### AKS Automatic clusters
+
+On AKS Automatic clusters, workload identity and the OIDC cluster issuer are preconfigured as part of the cluster's security defaults. No cluster-level configuration is required before using workload identity in your pods. Proceed directly to [setting up your application](#azure-identity-client-libraries).
+
+### AKS Standard clusters
+
 - AKS supports Microsoft Entra Workload ID on version 1.22 and higher.
 - The Azure CLI version 2.47.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- You must enable workload identity and the OIDC issuer on your cluster before your pods can use workload identity. See [Deploy and configure workload identity on an AKS cluster][deploy-configure-workload-identity-cluster].
 
 ## Limitations
 
@@ -42,6 +56,8 @@ In the Azure Identity client libraries, choose one of the following approaches:
 - Create a `ChainedTokenCredential` instance that includes `WorkloadIdentityCredential`.
 - Use `WorkloadIdentityCredential` directly.
 
+When requesting tokens with `WorkloadIdentityCredential`, pass scopes using the Microsoft Entra ID v2 format `<resource>/.default`, such as `https://management.azure.com/.default`. A raw resource URI, such as `https://management.azure.com/`, can fail because workload identity uses the Microsoft Entra v2 token endpoint rather than the IMDS `resource` flow used by managed identity. For more information about how scopes work in the v2 token endpoint, see [Get a token](/entra/identity-platform/v2-oauth2-client-creds-grant-flow#get-a-token).
+
 The following table provides the **minimum** package version required for each language ecosystem's client library:
 
 | Ecosystem | Library | Minimum version |
@@ -56,6 +72,8 @@ The following table provides the **minimum** package version required for each l
 ## Azure Identity client library code samples
 
 The following code samples use the `DefaultAzureCredential`. This credential type uses the environment variables injected by the workload identity mutating [webhook](#webhook-certificate-auto-rotation) to authenticate with Azure Key Vault. To see samples using one of the other approaches, refer to the [ecosystem-specific client libraries](#azure-identity-client-libraries).
+
+Replace `<key-vault-url>` and `<secret-name>` with the appropriate values for your Key Vault and secret.
 
 ### [.NET](#tab/dotnet)
 
@@ -213,6 +231,17 @@ The following client libraries are the **minimum** version required:
 | JavaScript | [Microsoft Authentication Library-for-js](https://github.com/AzureAD/microsoft-authentication-library-for-js) | `ghcr.io/azure/azure-workload-identity/msal-node:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-node) | No |
 | Python | [Microsoft Authentication Library-for-python](https://github.com/AzureAD/microsoft-authentication-library-for-python) | `ghcr.io/azure/azure-workload-identity/msal-python:latest` | [Link](https://github.com/Azure/azure-workload-identity/tree/main/examples/msal-python) | No |
 
+## Locate the projected service account token
+
+When the mutating admission webhook injects the projected service account token volume into your pod, it also sets the `AZURE_FEDERATED_TOKEN_FILE` environment variable to the path of the token file.
+
+> [!IMPORTANT]
+> Read the token path from the `AZURE_FEDERATED_TOKEN_FILE` environment variable. Don't hard-code a path such as `/var/run/secrets/azure/tokens/azure-identity-token` in your application, container image, or deployment manifests. The mount path is an implementation detail of the webhook and can change. A hard-coded path also breaks when a pod projects more than one token, such as when a workload combines [identity bindings](#use-identity-bindings-and-direct-federation-in-the-same-workload) with direct federation.
+
+The Azure Identity client libraries and MSAL read `AZURE_FEDERATED_TOKEN_FILE` for you, so applications that use `DefaultAzureCredential` or `WorkloadIdentityCredential` don't need to handle the file directly. If your application reads the token itself, for example when it builds a custom client assertion, resolve the path from the environment variable at runtime.
+
+Kubernetes refreshes the projected token in place before it expires. Read the file again each time you exchange the token for a Microsoft Entra token rather than caching its contents for the lifetime of the process.
+
 ## How it works
 
 In this security model, the AKS cluster acts as the token issuer. Microsoft Entra ID uses OIDC to discover public signing keys and verify the authenticity of the service account token before exchanging it for a Microsoft Entra token. Your workload can exchange a service account token projected to its volume for a Microsoft Entra token using the Azure Identity client library or the MSAL.
@@ -230,9 +259,9 @@ The following diagram summarizes the authentication sequence using OIDC:
 
 :::image type="content" source="media/workload-identity-overview/workload-id-oidc-authentication-model.png" alt-text="Diagram of the AKS Microsoft Entra Workload ID OIDC authentication sequence." lightbox="media/workload-identity-overview/workload-id-oidc-authentication-model.png":::
 
-### Webhook certificate auto-rotation
+## Webhook certificate auto-rotation
 
-Similar to other webhook add-ons, the [cluster certificate auto-rotation][auto-rotation] operation rotates the certificate.
+Similar to other webhook add-ons, the [cluster certificate auto-rotation][auto-rotation] operation rotates the workload identity webhook certificate.
 
 ## Service account labels and annotations
 
@@ -277,6 +306,47 @@ All annotations are optional. If the annotation isn't specified, the default val
 | `azure.workload.identity/inject-proxy-sidecar` | Injects a proxy init container and proxy sidecar into the pod. The proxy sidecar is used to intercept token requests to IMDS and acquire a Microsoft Entra token on behalf of the user with federated identity credential. | false |
 | `azure.workload.identity/proxy-sidecar-port` | Represents the port of the proxy sidecar. | 8000 |
 
+## Use identity bindings and direct federation in the same workload
+
+[Identity bindings][identity-bindings-concepts] extend workload identity to support large-scale AKS environments. Instead of creating a federated identity credential (FIC) for each cluster, identity bindings let multiple clusters share a single user-assigned managed identity through one FIC. When enabled, AKS routes pod token requests through an identity binding proxy webhook that handles token exchange on behalf of the workload.
+
+A projected service account token has a single audience. When identity bindings are enabled, the identity binding webhook sets the default token referenced by `AZURE_FEDERATED_TOKEN_FILE` to the audience `api://AKSIdentityBinding`, which the identity binding proxy uses.
+
+Direct Microsoft Entra Workload ID federation (without identity bindings) requires a token with the audience `api://AzureADTokenExchange`. Reusing the identity binding token file for direct federation fails with `AADSTS700212` because the federated identity credential audience doesn't match the token audience.
+
+To use identity bindings for one managed identity and direct federation for another in the same workload, project a second service account token with the `api://AzureADTokenExchange` audience and point the direct federation code at that file:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: workload-with-ib-and-direct-fic
+  labels:
+    azure.workload.identity/use: "true"
+spec:
+  serviceAccountName: workload-sa
+  containers:
+  - name: app
+    image: <image>
+    volumeMounts:
+    - name: direct-fic-token
+      mountPath: /var/run/secrets/direct-fic
+      readOnly: true
+    env:
+    - name: DIRECT_FIC_TOKEN_FILE
+      value: /var/run/secrets/direct-fic/token
+  volumes:
+  - name: direct-fic-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          path: token
+          audience: api://AzureADTokenExchange
+          expirationSeconds: 3600
+```
+
+Use `AZURE_FEDERATED_TOKEN_FILE` for the identity binding flow and the custom token file, such as `DIRECT_FIC_TOKEN_FILE`, for the direct federated identity credential flow.
+
 ## Migrate to Microsoft Entra Workload ID
 
 You can configure clusters already running a pod-managed identity to use Microsoft Entra Workload ID using one of two ways:
@@ -290,13 +360,15 @@ The following table summarizes our migration or deployment recommendations for y
 
 | Scenario | Description |
 |--|--|
-| New or existing cluster deployment [runs a supported version][azure-identity-libraries] of Azure Identity client library | No migration steps are required.<br> Sample deployment resources: [Deploy and configure Microsoft Entra Workload ID on a new cluster][deploy-configure-workload-identity-cluster] |
-| New or existing cluster deployment runs an unsupported version of Azure Identity client library | Update container image to use a supported version of the Azure Identity SDK, or use the [migration sidecar][workload-identity-migration-sidecar]. |
+| New AKS Automatic cluster | Workload identity and the OIDC issuer are preconfigured. No cluster-level migration or configuration steps are required. Configure your application's service account and federated credential, then use the Azure Identity client library. |
+| New or existing AKS Standard cluster running a [supported version][azure-identity-libraries] of the Azure Identity client library | No migration steps are required.<br> Sample deployment resources: [Deploy and configure Microsoft Entra Workload ID on a new cluster][deploy-configure-workload-identity-cluster] |
+| New or existing cluster deployment runs an unsupported version of Azure Identity client library | Update container image to use a supported version of the Azure Identity client library, or use the [migration sidecar][workload-identity-migration-sidecar]. |
 
-## Next steps
+## Related content
 
 - To learn how to set up your pod to authenticate using a workload identity as a migration option, see [Modernize application authentication with Microsoft Entra Workload ID][workload-identity-migration-sidecar].
 - See [Deploy and configure an AKS cluster with Microsoft Entra Workload ID][deploy-configure-workload-identity-cluster], which helps you deploy a cluster and configure a sample application to use a workload identity.
+- To learn more about AKS Automatic's preconfigured security defaults, including workload identity, see [What is Azure Kubernetes Service Automatic?](./intro-aks-automatic.md)
 
 <!-- EXTERNAL LINKS -->
 [custom-resource-definition]: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
@@ -316,7 +388,8 @@ The following table summarizes our migration or deployment recommendations for y
 [openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
 [deploy-configure-workload-identity-cluster]: workload-identity-deploy-cluster.md
 [workload-identity-migration-sidecar]: workload-identity-migrate-from-pod-identity.md
-[auto-rotation]: certificate-rotation.md#certificate-autorotation
+[auto-rotation]: certificate-rotation.md#certificate-autorotation-in-aks
 [aks-virtual-nodes]: virtual-nodes.md
 [unsupported-regions-user-assigned-managed-identities]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#unsupported-regions-user-assigned-managed-identities
 [general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
+[identity-bindings-concepts]: identity-bindings-concepts.md

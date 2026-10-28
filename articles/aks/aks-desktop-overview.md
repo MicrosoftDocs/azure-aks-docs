@@ -1,67 +1,93 @@
 ---
-title: AKS desktop for Azure Kubernetes Service (AKS) (preview)
-description: Learn about AKS desktop, an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS) that accelerates time to business value.
+title: AKS Desktop for Azure Kubernetes Service (AKS)
+description: Learn what AKS desktop is, who it's for, and how it helps development teams deploy and manage applications on AKS without deep Kubernetes expertise.
 ms.subservice: aks-developer
 ms.service: azure-kubernetes-service
-ms.editor: schaffererin
-author: qpetraroia
+ms.reviewer: schaffererin
+author: danielsollondon
 ms.topic: overview
-ms.date: 11/19/2025
-ms.author: alalve
-# Customer intent: As a developer, I want to use AKS desktop to deploy and manage applications on Azure Kubernetes Service (AKS) without needing deep Kubernetes expertise, so that I can accelerate time to business value.
+ms.date: 04/16/2026
+ms.author: danis
+# Customer intent: As a cluster operator or developer, I want to provide an environment for developers or allow them to self serve deploying and managing applications on an AKS cluster. As a dev lead, developer, kubernetes operator, devops engineer, I want to share application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests. I want development teams to use AKS desktop to deploy and/or manage, troubleshoot applications on Azure Kubernetes Service (AKS) without needing deep Kubernetes expertise, so that I can accelerate time to business value.
 ---
 
-# AKS desktop for Azure Kubernetes Service (AKS) (preview)
+# AKS desktop for Azure Kubernetes Service (AKS)
 
-**Applies to**: :heavy_check_mark: [AKS Automatic clusters](intro-aks-automatic.md)
+This article provides an overview of AKS desktop: an application-focused developer portal for Azure Kubernetes Service (AKS) that simplifies application deployment and management without requiring deep Kubernetes expertise. AKS desktop is built on supported AKS features, best practices, and open-source [Headlamp](https://headlamp.dev/).
 
-AKS desktop delivers an application-focused experience for deploying and managing workloads on Azure Kubernetes Service (AKS). It accelerates time to business value by providing a guided, self-service user experience (UX) built on supported AKS features, best practices, and open-source [Headlamp](https://headlamp.dev/). AKS desktop works within your existing environment and tools, enabling team collaboration through role-based access control (RBAC) while simplifying Kubernetes management.
+To install AKS desktop, see the [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/releases).
 
-To install the preview build of AKS desktop, see the [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/releases).
+> [!IMPORTANT]
+> AKS desktop abstracts Kubernetes complexity but doesn't remove access. You can still use kubectl, YAML, or other existing tools alongside AKS desktop.
 
-## Benefits of AKS desktop
+## What is AKS desktop?
 
-AKS desktop provides the following benefits:
+Kubernetes workflows often require writing and maintaining YAML, switching between tools (kubectl, dashboards, monitoring), and an understanding of low-level infrastructure concepts.
 
-- **Simplified application deployment**: Guided deployment wizard and automatically generated Kubernetes manifests aligned to AKS best practices compatible with AKS Automatic.
-- **Application-centric management**: Focus on managing your applications rather than individual Kubernetes resources. View insights into general application health, detailed metrics and logs for monitoring, application scaling properties, and Kubernetes resource troubleshooting.
-- **Multi-cloud capabilities**: View and access Kubernetes clusters across any cloud.
-- **kubeconfig management**: Sign in to your Azure account and seamlessly merge cluster credentials into your local kubeconfig file, making it accessible for use with the CLI.
-- **User and resource management collaboration**: Use RBAC to manage user access to [Projects](#about-projects-in-aks-desktop) and clusters.
-- **Add existing clusters into AKS desktop**: Sign in and out of your Azure account and import existing AKS clusters into AKS desktop.
+AKS desktop simplifies this process using [**Projects**](#projects-in-aks-desktop), which group everything your application needs into a single, manageable unit, and provides guided workflows for deploying, monitoring, scaling, and troubleshooting applications.
 
-## AKS desktop cluster support
+:::image type="content" source="./media/aks-desktop-app/aks-desktop-app-overview.png" alt-text="Screenshot of the AKS desktop overview screen.":::
 
-AKS desktop is optimized for [AKS Automatic clusters](intro-aks-automatic.md). While AKS Standard SKU clusters work in AKS desktop, you might not see the full benefits.
+AKS desktop works within your existing environment and tools, including Visual Studio Code, GitHub, and CI/CD pipelines. It connects to your existing AKS clusters and supports multi-environment scenarios across dev, test, staging, and production, including Azure hybrid and edge deployments.
 
-## About Projects in AKS desktop
+## Key capabilities of AKS desktop
 
-The **Projects** feature simplifies Kubernetes management by grouping related resources, such as workloads, services, and configurations, into logical units. This approach streamlines navigation, improves visibility, and supports teamwork by providing an application-focused view across namespaces and clusters.
+The following table summarizes the key capabilities of AKS desktop that help development teams deploy and manage applications on AKS without deep Kubernetes expertise:
 
-In AKS desktop, AKS managed Projects are directly linked by default to an [AKS managed namespace](concepts-managed-namespaces.md), which is a way to logically isolate workloads and teams within a cluster. This feature enables administrators to enforce resource quotas, apply network policies, and manage access control at the namespace level. A Project can consist of one or more applications.
+| Capability | Description |
+| ---------- | ----------- |
+| **Application-centric management** | Focus on applications instead of individual Kubernetes resources. Projects group deployments, services, and config into a single unit. |
+| **Guided workflows** | Deploy, scale, and update applications without writing Kubernetes manifests. |
+| **Unified observability** | View logs, metrics, health status, and dependency maps in one place. |
+| **Natural language troubleshooting** (preview) | Ask questions in natural language to diagnose and resolve issues in your cluster. Uses the [AKS Agentic CLI agent](agentic-cli-for-aks-overview.md) and AKS MCP server to access live cluster state, logs, events, and metrics within your existing Role-Based Access Control (RBAC) boundaries. Use a hosted model or bring your own. |
+| **Insights** (preview) | eBPF-based deep observability using [Inspektor Gadget](https://inspektor-gadget.io/) without requiring code changes, pod restarts, or sidecars. Includes **Processes** (CPU, memory, I/O per pod), **Trace TCP** (live connection events), and **Trace DNS** (query failures, latency). |
+| **Multi-cluster & multi-environment support** | Manage applications across dev, test, staging, and production on Azure, hybrid, and edge clusters. |
+| **Role-based access control** | Delegate access at the Project level using Azure RBAC. |
+| **Existing tool integration** | Integrates with Visual Studio Code, GitHub, CI/CD pipelines, and the terminal. Existing kubectl and YAML workflows remain available. |
+| **Built on AKS best practices** | Built on supported AKS features including AKS Deployment Safeguards, Managed Prometheus, and Entra ID authentication. |
 
-For more information, see [Headlamp's open-source documentation](https://headlamp.dev/docs/latest/learn/projects).
+## Who is AKS desktop for?
 
-## About the Project Overview screen in AKS desktop
+AKS desktop is designed for development teams who want to deploy and manage applications on AKS without needing deep Kubernetes expertise. This includes:
 
-Once you deploy an application to a Project through AKS desktop, you gain access to the **Project Overview** screen. The Project Overview screen is your centralized control hub, giving you visibility, insights, and direct actions to manage, monitor, and optimize your application.
+- **DevOps and platform engineers** who want to:
+  - Provide a simplified interface for developers to manage applications and their resources.
+  - Delegate access using guardrails and RBAC.
+  - Manage multiple clusters and applications with a consistent experience.
+- **Application developers** who want to:
+  - Deploy and update applications without writing Kubernetes manifests.
+  - Debug issues using logs, metrics, live tracing, and visualizations.
+  - Observe, scale, and monitor applications in real time.
 
-:::image type="content" source="./media/aks-desktop-app/aks-desktop-app-project-overview.png" alt-text="Screenshot of the Project Overview screen in AKS desktop." lightbox="./media/aks-desktop-app/aks-desktop-app-project-overview.png":::
+## Projects in AKS desktop
 
-The following table describes the key features available in the Project Overview screen:
+Projects are the primary units for managing applications in AKS desktop. Projects group related Kubernetes resources, such as deployments, services, and configuration, into a single logical unit. For more information on Projects, see [Overview of Projects in AKS desktop](aks-desktop-projects.md).
 
-| Feature | Description |
-| ------- | ----------- |
-| **Kubernetes resources** | View all Kubernetes resources deployed in your Project, including workloads and network configuration. |
-| **Access** | Grant or remove access to your Project. |
-| **Map** | Visualize how Kubernetes resources in your Project interact, showing data flow between deployments and services. |
-| **Logs** | Access streaming logs for your application. |
-| **Metrics** | View detailed metrics such as CPU, memory, and resource usage for your application. |
-| **Scaling** | Configure application scaling using Horizontal Pod Autoscaler (HPA) or manual settings. |
-| **Environment variables** | Manage environment variables for your application. |
+## Frequently asked questions (FAQ)
+
+### I'm already using Headlamp. How is AKS desktop different?
+
+AKS desktop is built on Headlamp but includes additional features, integrations, and support specifically for AKS. AKS desktop provides a more opinionated and streamlined experience for deploying and managing applications on AKS, with features like Projects, guided workflows, unified observability, and natural language troubleshooting.
+
+### Can I manage existing applications with AKS desktop?
+
+Yes, you can import them into AKS desktop. For more information, see [Namespace labeling and access for Projects in AKS desktop](aks-desktop-projects.md#namespace-labeling-and-access-for-projects).
+
+### Can I view all the deployed resources outside of AKS desktop?
+
+Yes. Once you deploy your application, you can view it using other Kubernetes tools.
+
+### Does AKS desktop support Standard AKS clusters?
+
+AKS desktop supports Standard AKS clusters that meet specific requirements. For more information, see [AKS Standard clusters for AKS desktop](aks-desktop-install-cluster-setup.md#aks-standard-clusters).
 
 ## Related content
 
-- [Set up permissions for AKS desktop (preview)](aks-desktop-permissions.md)
-- Learn how to [Deploy an application with AKS desktop (preview)](aks-desktop-app.md)
-- [Use the cluster autoscaler in AKS](cluster-autoscaler.md)
+Get started with AKS desktop using the following resources:
+
+- [AKS desktop quickstart](aks-desktop-quickstart-auto.md)
+- [AKS desktop cluster setup and requirements](aks-desktop-install-cluster-setup.md)
+- [Set up permissions for AKS desktop](aks-desktop-permissions.md)
+- [Deploy an application with AKS desktop](aks-desktop-app.md)
+- [Troubleshoot an application using Insights (preview)](aks-desktop-deploy-troubleshooting.md)
+- [Use the AI troubleshooting assistant (preview)](aks-desktop-deploy-ai-assistant.md)

@@ -3,7 +3,7 @@ title: AKS Preview API life cycle
 description: Learn about the AKS preview API life cycle.
 ms.custom: azure-kubernetes-service,innovation-engine
 ms.topic: concept-article
-ms.date: 06/06/2024
+ms.date: 03/31/2026
 author: matthchr
 ms.author: matthchr
 
@@ -55,30 +55,15 @@ az monitor activity-log list --offset 30d --max-events 10000 --namespace microso
 
 | API version        | Announce Date     | Deprecation Date  |
 |--------------------|-------------------|-------------------|
-| 2022-09-02-preview | March 27, 2024    | June 20, 2024     |
-| 2022-10-02-preview | March 27, 2024    | June 20, 2024     |
-| 2023-01-02-preview | March 27, 2024    | June 20, 2024     |
-| 2023-02-02-preview | March 27, 2024    | June 20, 2024     |
-| 2023-03-02-preview | Oct 21, 2024      | February 3, 2025  |
-| 2023-04-02-preview | Oct 21, 2024      | February 10, 2025 |
-| 2023-05-02-preview | Oct 21, 2024      | February 17, 2025 |
-| 2023-06-02-preview | Oct 21, 2024      | February 24, 2025 |
-| 2023-07-02-preview | Oct 21, 2024      | March 3, 2025     |
-| 2023-08-02-preview | Oct 21, 2024      | March 10, 2025    |
+| 2023-10-02-preview | March 24, 2026    | July 1, 2026      |
+| 2023-11-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-01-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-02-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-03-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-04-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-05-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-06-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-07-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-08-02-preview | March 24, 2026    | July 1, 2026      |
+| 2024-09-02-preview | March 24, 2026    | July 1, 2026      |
 
-## Completed deprecations
-
-| API version        | Announce Date     | Deprecation Date  |
-|--------------------|-------------------|-------------------|
-| 2018-08-01-preview | March 7, 2023     | June 1, 2023      |
-| 2021-11-01-preview | March 23, 2023    | July 1, 2023      |
-| 2022-02-02-preview | April 27, 2023    | August 1, 2023    |
-| 2022-01-02-preview | May 3, 2023       | Sept 1, 2023      |
-| 2022-03-02-preview | May 3, 2023       | Sept 1, 2023      |
-| 2022-04-02-preview | May 3, 2023       | Sept 1, 2023      |
-| 2022-05-02-preview | May 3, 2023       | Sept 1, 2023      |
-| 2022-06-02-preview | May 3, 2023       | Sept 1, 2023      |
-| 2022-07-02-preview | November 20, 2023 | February 14, 2024 |
-| 2022-08-02-preview | March 27, 2024    | June 20, 2024     |
-| 2022-08-03-preview | March 27, 2024    | June 20, 2024     |
-| 2022-11-02-preview | March 27, 2024    | June 20, 2024     |

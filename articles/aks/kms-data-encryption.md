@@ -107,6 +107,14 @@ Enable KMS encryption with platform-managed keys on an existing AKS cluster.
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+> 
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to check if you can read and write existing secrets:
+>
+> ```bash
+> kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+> ```
+>
+> If this command fails (for example, webhook rejection or resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
@@ -171,7 +179,7 @@ For enhanced security, you can use a private key vault that has public network a
         --scope $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Create a key in the key vault.
+1. Create a key in the key vault. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     export KEY_NAME="<your-key-name>"
@@ -251,6 +259,14 @@ Enable KMS encryption with customer-managed keys using a private key vault on an
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+>
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to check if you can read and write existing secrets:
+>
+> ```bash
+> kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+> ```
+>
+> If this command fails (for example, webhook rejection or resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
@@ -323,7 +339,7 @@ With customer-managed keys, you create and manage your own Azure Key Vault and e
         --scope $KEY_VAULT_RESOURCE_ID
     ```
 
-1. Create a key in the key vault.
+1. Create a key in the key vault. Ensure `encrypt` and `decrypt` key operations are enabled.
 
     ```azurecli-interactive
     export KEY_NAME="<your-key-name>"
@@ -391,6 +407,14 @@ Enable KMS encryption with customer-managed keys on an existing AKS cluster.
 
 > [!NOTE]
 > The cluster must be running Kubernetes version 1.33 or later.
+>
+> If the `az aks update` command returns a `ReconcileAzureKeyVaultKmsError` error, run the following command to check whether existing secrets can be read and written:
+>
+> ```bash
+> kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+> ```
+>
+> If this command fails (for example, webhook rejection or resource not found), fix the issue and re-run the update command. A "The object has been modified" message requires no action — treat it as success.
 
 ```azurecli-interactive
 az aks update \
@@ -467,10 +491,12 @@ az aks update \
 With KMS data encryption, key rotation is handled differently depending on your key management option:
 
 - **Platform-managed keys**: Key rotation is automatic. No action is required.
-- **Customer-managed keys**: When you rotate the key version in Azure Key Vault, the KMS controller detects the rotation periodically (every 6 hours) and uses the new key version.
+- **Customer-managed keys**: After you rotate the key in Azure Key Vault, KMS periodically detects the new key version. Wait at least seven days between creating the new key version and deleting the old one.
 
 > [!NOTE]
 > Unlike the legacy KMS experience, with this new implementation you don't need to manually re-encrypt secrets after key rotation. The platform handles this automatically.
+>
+> Don't delete or expire the old key version right after you create the new one.
 
 ## Related content
 

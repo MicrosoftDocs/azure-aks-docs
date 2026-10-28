@@ -318,12 +318,12 @@ To dynamically provision SMB volumes, you need to install Trident version 22.10 
 
 Trident is NetApp's dynamic storage provisioner that is purpose-built for Kubernetes. Simplify the consumption of storage for Kubernetes applications using Trident's industry-standard [Container Storage Interface (CSI)](https://kubernetes-csi.github.io/docs/) driver. Trident deploys on Kubernetes clusters as pods and provides dynamic storage orchestration services for your Kubernetes workloads.
 
-Trident can be installed using the Trident operator (manually or using [Helm](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html)) or [`tridentctl`](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-tridentctl.html). To learn more about these installation methods and how they work, see the [Install Guide](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html).
+Trident can be installed using the Trident operator (manually or using [Helm](https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-operator.html)) or [`tridentctl`](https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-tridentctl.html). To learn more about these installation methods and how they work, see the [Install Guide](https://docs.netapp.com/us-en/trident/trident-get-started/quickstart.html).
 
 
 #### Install Trident using Helm   
 
-[Helm](https://helm.sh/) must be installed on your workstation to install Trident using this method. For other methods of installing Trident, see the [Trident Install Guide](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html). If you have windows worker nodes in the cluster, ensure to enable windows with any installation method. 
+[Helm](https://helm.sh/) must be installed on your workstation to install Trident using this method. For other methods of installing Trident, see the [Trident Install Guide](https://docs.netapp.com/us-en/trident/trident-get-started/quickstart.html). If you have windows worker nodes in the cluster, ensure to enable windows with any installation method. 
 
 1. To install Trident using Helm for a cluster with windows worker nodes, run the following commands:  
 
@@ -751,9 +751,9 @@ Trident supports many features with Azure NetApp Files. For more information, se
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe
 [kubectl-exec]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec
 [kubernetes-csi-driver]: https://kubernetes-csi.github.io/docs/
-[trident-install-guide]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html
-[trident-helm-chart]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html
-[tridentctl]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-tridentctl.html
+[trident-install-guide]: https://docs.netapp.com/us-en/trident/trident-get-started/quickstart.html
+[trident-helm-chart]: https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-operator.html
+[tridentctl]: https://docs.netapp.com/us-en/trident/trident-install/kubernetes-deploy-tridentctl.html
 [trident-backend-install-guide]: https://docs.netapp.com/us-en/trident/trident-use/backends.html
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 [expand-trident-volumes]: https://docs.netapp.com/us-en/trident/trident-use/vol-expansion.html

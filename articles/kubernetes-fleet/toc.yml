@@ -28,7 +28,7 @@
           href: concepts-lifecycle.md
         - name: Member cluster types
           href: concepts-member-cluster-types.md
-        - name: Use Azure RBAC to control access
+        - name: Azure RBAC and Fleet Manager
           href: concepts-rbac.md
         - name: Preview API lifecycle
           href: concepts-preview-api-lifecycle.md
@@ -36,37 +36,37 @@
           href: concepts-fleet-kubernetes-version-support.md
         - name: Fleet and Arc integration
           href: concepts-fleet-arc-integration.md
-    - name: Multi-cluster Kubernetes and node images upgrades
+    - name: Using member cluster labels
+      href: concepts-member-cluster-labels.md
+    - name: Safe multi-cluster upgrades
       href: concepts-update-orchestration.md
-    - name: Multi-cluster multi-tenancy with Managed Fleet Namespaces
+    - name: Multi-tenancy with Managed Fleet Namespaces
       href: concepts-fleet-managed-namespace.md    
-    - name: Multi-cluster workload management
+    - name: Multi-cluster Kubernetes resource management
       items:
-        - name: Multi-cluster workload management overview
-          href: concepts-multi-cluster-workload-management.md
-        - name: Managing workloads using cluster resource placement
-          items:
-          - name: Introduction to ClusterResourcePlacement
-            href: concepts-resource-propagation.md
-          - name: Introduction to ResourcePlacement
-            href: concepts-namespace-scoped-resource-propagation.md
-          - name: Defining a placement rollout strategy
-            href: concepts-rollout-strategy.md       
-          - name: Controlling eviction and disruption
-            href: concepts-eviction-disruption.md
-          - name: Placement strategy and resource snapshots
-            href: concepts-placement-snapshots.md
-          - name: Taking over existing workloads
-            href: concepts-placement-takeover.md
-          - name: Detecting and managing workload drift
-            href: concepts-placement-drift.md 
+        - name: Introduction to resource placement
+          href: concepts-resource-placement.md
+        - name: Controlling placement rollout order
+          href: concepts-rollout-strategy.md       
+        - name: Placement rollouts and resource snapshots
+          href: concepts-placement-snapshots.md
+        - name: Taking over existing resources
+          href: concepts-placement-takeover.md
+        - name: Detecting and managing resource drift
+          href: concepts-placement-drift.md 
+        - name: Controlling eviction and disruption
+          href: concepts-eviction-disruption.md
         - name: Automated deployments overview
           href: concepts-automated-deployments.md 
     - name: Multi-cluster networking 
       items:
-        - name: DNS-based load balancing across multiple clusters
+        - name: Multi-cluster networking overview
+          href: concepts-multi-cluster-networking-overview.md
+        - name: Cross-cluster networking for Fleet Manager
+          href: concepts-cross-cluster-networking.md
+        - name: Public endpoint DNS-based load balancing
           href: concepts-dns-load-balancing.md
-        - name: Layer 4 load balancing across multiple clusters
+        - name: Multi-cluster Services with layer 4 load balancing
           href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
@@ -92,24 +92,28 @@
           href: update-create-update-strategy.md
         - name: Add approvals to update groups and stages
           href: update-strategies-gates-approvals.md
+        - name: Start a group or stage at a scheduled day and time
+          href: update-strategies-gates-scheduled-start.md
         - name: Automate approvals using events
           href: howto-configure-events-for-gates.md
+        - name: Send notification emails for pending update run gates
+          href: howto-send-email-pending-gate.md
         - name: Configure monitoring and alerting of update runs
-          href: howto-monitor-update-runs.md       
+          href: howto-monitor-update-runs.md
     - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
       href: howto-migrate-updates-from-terraform.md
-    - name: Place and manage workloads on multiple clusters
+    - name: Manage Kubernetes resources on multiple clusters
       items:
-        - name: Access Fleet Manager hub cluster
-          href: access-fleet-hub-cluster-kubernetes-api.md
-        - name: Placing cluster-scoped resources
+        - name: Distribute and manage cluster-scoped resources
           href: quickstart-resource-propagation.md
-        - name: Placing namespace-scoped resources
+        - name: Distribute and manage namespace-scoped resources
           href: quickstart-namespace-scoped-resource-propagation.md
-        - name: Control cluster order for resource placement 
+        - name: Define reusable resource placement rollout strategies
+          href: howto-placement-create-rollout-strategies.md
+        - name: Use staged rollouts to control resource placements
           href: howto-staged-update-run.md
-        - name: Customize resource configurations using overrides
-          href: howto-use-overrides-customize-resources-placement.md
+        - name: Safely move running workloads between clusters
+          href: howto-move-workloads-between-clusters.md
         - name: Understanding placement status
           href: howto-understand-placement.md
         - name: Intelligent resource placement using cluster properties
@@ -118,6 +122,10 @@
           href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations
           href: use-taints-tolerations.md
+        - name: Use overrides to customize placed resources
+          href: howto-use-overrides-customize-resources-placement.md
+        - name: Access Fleet Manager hub cluster
+          href: access-fleet-hub-cluster-kubernetes-api.md
         - name: Use Automated Deployments with resource placement
           href: howto-automated-deployments.md
     - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy
@@ -126,11 +134,13 @@
           href: howto-managed-namespaces.md
         - name: View and access Managed Fleet Namespaces
           href: howto-managed-namespaces-access.md
-    - name: Load balance multi-cluster services
+    - name: Configure and operate multi-cluster networking
       items:
-        - name: Use DNS-based load balancing across multiple clusters
+        - name: Cross-cluster networking for global services
+          href: howto-configure-use-cross-cluster-networking.md
+        - name: Resilient public DNS load balancing
           href: howto-dns-load-balancing.md
-        - name: Multi-cluster Layer 4 Load Balancing
+        - name: Multi-cluster Services with layer 4 load balancing
           href: l4-load-balancing.md
 - name: Resources
   items:

@@ -5,8 +5,8 @@ description: Learn how to use Scale-down Mode in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 08/21/2023
-ms.author: qpetraroia
-author: qpetraroia
+ms.author: schaffererin
+author: schaffererin
 ms.subservice: aks-nodes
 # Customer intent: "As a Kubernetes cluster administrator, I want to configure Scale-down Mode for my AKS cluster, so that I can choose to deallocate or delete nodes efficiently based on resource needs and cost management."
 ---
@@ -84,7 +84,7 @@ az aks nodepool add --enable-cluster-autoscaler --min-count 1 --max-count 10 --m
 [plan-aks-design]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-upgrade]: upgrade-cluster.md
 [cluster-autoscaler]: cluster-autoscaler.md
-[ephemeral-os]: concepts-storage.md#ephemeral-os-disk
+[ephemeral-os]: concepts-storage.md#ephemeral-os-disks-in-aks
 [state-billing-azure-vm]: /azure/virtual-machines/states-billing
 [spot-node-pool]: spot-node-pool.md
 

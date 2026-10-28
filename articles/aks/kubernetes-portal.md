@@ -15,7 +15,7 @@ In this article, you learn how to access and manage your Azure Kubernetes Servic
 
 ## Prerequisites
 
-- An existing AKS cluster. Any cluster is supported, but if you're using Microsoft Entra integration, your cluster must use [AKS-managed Microsoft Entra integration][aks-managed-aad].
+- An existing AKS cluster. Any cluster is supported, but if you're using Microsoft Entra integration, your cluster must use [Microsoft Entra integration][aks-managed-aad].
 - If your cluster uses legacy Microsoft Entra ID, you can upgrade your cluster in the portal or with the [Azure CLI][cli-aad-upgrade]. You can also use the [Azure portal][aks-quickstart-portal] to create a new AKS cluster.
 
 ## View Kubernetes resources

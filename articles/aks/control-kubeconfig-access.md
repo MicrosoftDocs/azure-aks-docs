@@ -3,8 +3,8 @@ title: Limit access to kubeconfig in Azure Kubernetes Service (AKS)
 description: Learn how to control access to the Kubernetes configuration file (kubeconfig) for cluster administrators and cluster users
 ms.topic: how-to
 ms.subservice: aks-security
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.custom: devx-track-azurecli
 ms.date: 03/28/2023
 # Customer intent: "As a cluster administrator, I want to manage access to the kubeconfig file using role-based access control, so that I can ensure that only authorized users have the necessary permissions to interact with our Azure Kubernetes Service clusters."
@@ -162,5 +162,5 @@ For enhanced security on access to AKS clusters, [integrate Microsoft Entra auth
 [az-ad-user-show]: /cli/azure/ad/user#az-ad-user-show
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-role-assignment-delete]: /cli/azure/role/assignment#az-role-assignment-delete
-[aad-integration]: ./azure-ad-integration-cli.md
+[aad-integration]: ./entra-id-control-plane-authentication.md
 [az-ad-group-show]: /cli/azure/ad/group#az-ad-group-show

@@ -16,13 +16,16 @@ The Azure Kubernetes Service (AKS) communication manager streamlines notificatio
 
 If maintenance fails, the communication manager notifies you with the reasons for the failure. This information reduces operational hassles related to observability and follow-ups.
 
-By following the steps in this article, you can set up notifications for all types of automatic upgrades that use maintenance windows.
+By following the steps in this article, you can set up alerts for upgrade events on an AKS cluster. The queries filter scheduled events by cluster resource ID; they don't monitor Fleet Manager update runs. If you configure upgrades through a Fleet Manager auto-upgrade profile and strategy, see [Monitor update runs in Fleet Manager](../kubernetes-fleet/howto-monitor-update-runs.md).
+
+- **Auto-upgrades that you configure** on the cluster, which follow its [planned maintenance](./planned-maintenance.md) window.
+- **[Platform-initiated upgrades](./platform-initiated-upgrades.md)**, which AKS runs on clusters that stay on an unsupported Kubernetes version after the platform support grace period. These upgrades can occur outside your maintenance window.
 
 ## Prerequisites
 
 - Configure your cluster for either the [automatic upgrade channel][aks-auto-upgrade] or the [automatic upgrade channel for nodes][aks-node-auto-upgrade].
 
-- Create a [planned maintenance window][planned-maintenance] for your configuration of automatic upgrades.
+- Create a [planned maintenance window][planned-maintenance] for your configuration of automatic upgrades. The schedule can be defined inline on the cluster's maintenance configuration or linked from a shared maintenance window.
 
 ## Set up the communication manager
 

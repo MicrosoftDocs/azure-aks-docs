@@ -1,8 +1,8 @@
 ---
 title: Draft extension for Azure Kubernetes Service (AKS) (preview)
 description: How to install and use Draft on your Azure Kubernetes Service (AKS) cluster using the Draft extension.
-author: qpetraroia
-ms.author: qpetraroia
+author: schaffererin
+ms.author: schaffererin
 ms.topic: concept-article
 ms.date: 06/22/2023
 ms.subservice: aks-developer
@@ -105,7 +105,7 @@ After you create your artifacts and set up GitHub OIDC, you can use `draft gener
 
 ## Use Application Routing with Draft to make your application accessible over the internet
 
- Application Routing][app-routing] is the easiest way to get your web application up and running in Kubernetes securely. Application Routing removes the complexity of ingress controllers and certificate and DNS management, and it offers configuration for enterprises looking to bring their own. Application Routing offers a managed ingress controller based on nginx that you can use without restrictions and integrates out of the box with Open Service Mesh to secure intra-cluster communications.
+[Application Routing][app-routing] is the easiest way to get your web application up and running in Kubernetes securely. Application Routing removes the complexity of ingress controllers and certificate and DNS management, and it offers configuration for enterprises looking to bring their own. Application Routing offers a managed ingress controller based on nginx that you can use without restrictions and integrates out of the box with Open Service Mesh to secure intra-cluster communications.
 
 - Set up Draft with Application Routing using the [`az aks draft update`][az-aks-draft-update] and pass in the DNS name and Azure Key Vault-stored certificate when prompted.
 

@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 12/03/2025
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 # Customer intent: "As a DevOps engineer, I want to enable Group Managed Service Accounts for my Windows Server nodes in Azure Kubernetes Service, so that I can secure and manage access to my services effectively."
 ---
 

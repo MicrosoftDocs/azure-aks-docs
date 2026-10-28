@@ -2,10 +2,11 @@
 title: Use Azure Dedicated Hosts in Azure Kubernetes Service (AKS)
 description: Learn how to create an Azure Dedicated Hosts Group and associate it with Azure Kubernetes Service (AKS)
 ms.topic: how-to
+ms.subservice: aks-nodes
 ms.custom: devx-track-azurecli
 ms.date: 03/10/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As a cloud architect, I want to configure Azure Dedicated Hosts for my AKS cluster, so that I can ensure hardware isolation and control maintenance events for sensitive applications.
 ---
@@ -21,7 +22,7 @@ Using Azure Dedicated Hosts for nodes with your AKS cluster has the following be
 
 ## Before you begin
 
-* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * Before you start, ensure that your version of the Azure CLI is 2.39.0 or later. If it's an earlier version, [install the latest version](/cli/azure/install-azure-cli).
 
 ## Limitations

@@ -60,20 +60,20 @@ To verify that the node pool was deleted successfully, use the `kubectl get node
 
 ## Ignore PodDisruptionBudgets (PDBs) when removing an existing node pool
 
-If your cluster has PodDisruptionBudgets that are preventing the deletion of the node pool, you can ignore the PodDisruptionBudget requirements by setting `--ignore-pod-disruption-budget` to `true`. To learn more about PodDisruptionBudgets, see:
+If your cluster has PodDisruptionBudgets that are preventing the deletion of the node pool, you can ignore the PodDisruptionBudget requirements by setting `--ignore-pdb`. To learn more about PodDisruptionBudgets, see:
 
 * [Plan for availability using a pod disruption budget][pod-disruption-budget]
 * [Specifying a Disruption Budget for your Application][specify-disruption-budget]
 * [Disruptions][disruptions]
 
-1. Delete an existing node pool without following any PodDisruptionBudgets set on the cluster using the [`az aks nodepool delete`][az-aks-delete-nodepool] command with the `--ignore-pod-disruption-budget` flag set to `true`:
+1. Delete an existing node pool without following any PodDisruptionBudgets set on the cluster using the [`az aks nodepool delete`][az-aks-delete-nodepool] command with the `--ignore-pdb` flag:
 
     ```azurecli-interactive
     az aks nodepool delete \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
         --name nodepool1 \
-        --ignore-pod-disruption-budget true
+        --ignore-pdb
     ```
 
 1. To verify that the node pool was deleted successfully, use the `kubectl get nodes` command to confirm that the nodes in the node pool no longer exist.
@@ -124,7 +124,7 @@ For more information about adjusting node pool sizes in AKS, see [Resize node po
 [az-aks-delete-nodepool]: /cli/azure/aks#az-aks-nodepool-delete
 [remove-azaksnodepool]: /powershell/module/az.aks/remove-azaksnodepool
 [resize-node-pool]: ./resize-node-pool.md
-[pod-disruption-budget]: operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets
+[pod-disruption-budget]: operator-best-practices-scheduler.md#limit-disruption-impact-by-using-pod-disruption-budgets-pdbs
 [specify-disruption-budget]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 [disruptions]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
 [az-aks-nodepool-delete-machines]: /cli/azure/aks/nodepool#az-aks-nodepool-delete-machines

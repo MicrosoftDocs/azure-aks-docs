@@ -31,7 +31,7 @@ AKS releases support for new releases of Windows Server Annual Channel for Conta
 
 ## Windows Server Annual Channel vs. Long Term Servicing Channel Releases (LTSC)
 
-AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2025, Windows Server 2022, and Windows Server 2019. These come from a different release channel than Windows Server Annual Channel for Containers. To view our current recommendations, see the [Windows best practices documentation][windows-best-practices].
+AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2025 and Windows Server 2022. These come from a different release channel than Windows Server Annual Channel for Containers. To view our current recommendations, see the [Windows best practices documentation][windows-best-practices].
 
 [!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
 

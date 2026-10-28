@@ -5,6 +5,7 @@ description: Learn the basics of Kubernetes so you can start deploying and manag
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-getting-started
 ms.topic: get-started
 ms.date: 06/26/2025
 

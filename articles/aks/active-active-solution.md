@@ -4,6 +4,7 @@ description: Learn about the recommended active-active high availability solutio
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.topic: concept-article
 ms.date: 01/30/2024
 # Customer intent: "As a cloud architect, I want to implement an active-active high availability solution using multiple Azure Kubernetes Service clusters, so that I can ensure business continuity and minimal downtime in case of a regional failure."
@@ -67,7 +68,7 @@ When an entire region becomes unavailable, the pods in the cluster are no longer
 
 ### Kubernetes node pools (Regional)
 
-Occasionally, localized failure can occur to compute resources, such as power becoming unavailable in a single rack of Azure servers. To protect your AKS nodes from becoming a single point regional failure, use [Azure Availability Zones](./availability-zones.md). Availability zones ensure that AKS nodes in each availability zone are physically separated from those defined in another availability zones.
+Occasionally, localized failure can occur to compute resources, such as power becoming unavailable in a single rack of Azure servers. To protect your AKS nodes in this active-active solution from becoming a single point regional failure, use [Azure Availability Zones](./availability-zones.md). Availability zones ensure that AKS nodes in each availability zone are physically separated from those defined in another availability zone.
 
 ### Kubernetes node pools (Global)
 
@@ -75,7 +76,7 @@ In a complete regional failure, Azure Front Door routes traffic to the remaining
 
 ## Failover testing strategy
 
-While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](/azure/chaos-studio/chaos-studio-overview) offers the ability to create a chaos experiment on your cluster.
+While no mechanisms currently exist within AKS to take down an entire region of deployment for testing purposes, you can use [Azure Chaos Studio Workspaces](/azure/chaos-studio/chaos-studio-aks-guidance) to simulate an availability zone outage for your cluster's node pools.
 
 ## Next steps
 
@@ -83,4 +84,3 @@ If you're considering a different solution, see the following articles:
 
 - [Active passive disaster recovery solution overview for Azure Kubernetes Service (AKS)](./active-passive-solution.md)
 - [Passive cold solution overview for Azure Kubernetes Service (AKS)](./passive-cold-solution.md)
-

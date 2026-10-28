@@ -2,6 +2,7 @@
 title: Install the Open Service Mesh (OSM) add-on using Azure CLI
 description: Use Azure CLI to install the Open Service Mesh (OSM) add-on on an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
+ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.date: 09/25/2024
 ms.author: schaffererin
@@ -24,11 +25,11 @@ This article shows you how to install the Open Service Mesh (OSM) add-on on an A
 > | Between 1.23.5 and 1.24.0 | 1.1.3                 |
 > | Below 1.23.5              | 1.0.0                 |
 >
-> Older versions of OSM may not be available for install or be actively supported if the corresponding AKS version has reached end of life. You can check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar) for information on AKS version support windows.
+> Older versions of OSM might not be available for install or be actively supported if the corresponding AKS version reached end of life. Check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar-and-upcoming-versions) for information on AKS version support windows.
 
 ## Prerequisites
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - [Azure CLI installed](/cli/azure/install-azure-cli).
 
 ## Install the OSM add-on on your cluster

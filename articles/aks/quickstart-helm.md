@@ -2,10 +2,11 @@
 title: Develop on Azure Kubernetes Service (AKS) with Helm
 description: Use Helm with AKS and Azure Container Registry to package and run application containers in a cluster.
 ms.topic: concept-article
+ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, devx-track-azurepowershell
 ms.date: 01/25/2024
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As a developer, I want to use Helm to package and deploy applications on Azure Kubernetes Service, so that I can efficiently manage the lifecycle of my containerized applications in the cloud.
 ---
@@ -18,7 +19,7 @@ In this quickstart, you use Helm to package and run an application on AKS. For i
 
 ## Prerequisites
 
-* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * [Azure CLI][azure-cli-install] or [Azure PowerShell][azure-powershell-install] installed.
 * [Helm v3 installed][helm-install].
 
@@ -331,4 +332,5 @@ For more information about using Helm, see the [Helm documentation][helm-documen
 [helm-install]: https://helm.sh/docs/intro/install/
 [sp-delete]: kubernetes-service-principal.md#considerations-when-using-a-service-principal
 [acr-helm]: /azure/container-registry/container-registry-helm-repos
+[new-azresourcegroup]: /powershell/module/az.resources/new-azresourcegroup
 

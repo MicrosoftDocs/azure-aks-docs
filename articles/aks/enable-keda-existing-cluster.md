@@ -6,6 +6,7 @@ ms.author: schaffererin
 ms.topic: how-to
 ms.date: 09/19/2024
 ms.service: azure-kubernetes-service
+ms.custom: aks-scaling
 # Customer intent: As an Azure Kubernetes Service user, I want to enable the Kubernetes Event-driven Autoscaling (KEDA) add-on on my existing cluster, so that I can efficiently scale my applications based on demand and optimize resource management.
 ---
 
@@ -24,7 +25,7 @@ This article shows you how to enable the Kubernetes Event-driven Autoscaling (KE
 
 ## Before you begin
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - An existing AKS cluster. If you don't have an AKS cluster, create one using the steps in [Deploy an Azure Kubernetes Service (AKS) cluster](./learn/quick-kubernetes-deploy-portal.md).
 - Ensure you have firewall rules configured to allow access to the Kubernetes API server. For more information, see [Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters][aks-firewall-requirements].
 

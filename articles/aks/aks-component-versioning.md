@@ -146,7 +146,7 @@ Each component entry includes:
 [semver]: https://semver.org/
 [vhd-notes]: https://github.com/Azure/AKS/tree/master/vhd-notes
 [aks-release-notes]: https://github.com/azure/aks/releases
-[create-azure-subscription]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
+[create-azure-subscription]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 
 <!-- LINKS - Internal -->
 [aks-release-tracker]: release-tracker.md
@@ -163,5 +163,7 @@ Each component entry includes:
 [az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
 [az-aks-get-upgrades]: /cli/azure/aks#az-aks-get-upgrades
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
+[install-azure-cli]: /cli/azure/install-azure-cli
+[azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
 [aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
 [aks-upgrade-profile-api]: /rest/api/aks/managed-clusters/get-upgrade-profile

@@ -1,0 +1,32 @@
+- name: Azure Kubernetes Application Network
+  href: ./index.yml
+- name: What is Azure Kubernetes Application Network?
+  href: overview.md
+- name: Architecture overview
+  href: architecture.md
+- name: Get started
+  items:
+  - name: Create an Azure Kubernetes Application Network
+    href: get-started.md
+- name: Traffic management use cases
+  href: traffic-management-use-cases.md
+- name: Versions and upgrades
+  items:
+  - name: Supported versions
+    href: supported-versions.md
+  - name: Manage upgrades
+    href: upgrades.md
+  - name: Use planned maintenance to schedule upgrades
+    href: planned-maintenance.md
+- name: Observability
+  items:
+  - name: Overview
+    href: observability.md
+  - name: Configure and view metrics
+    href: metrics.md
+  - name: Configure and view logs
+    href: logs.md
+- name: Security
+  items:
+  - name: Overview
+    href: security.md

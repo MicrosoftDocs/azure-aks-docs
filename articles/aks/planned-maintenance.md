@@ -3,15 +3,19 @@ title: Use Planned Maintenance to Schedule and Control Upgrades for Azure Kubern
 description: Learn how to use planned maintenance to schedule and control cluster and node image upgrades in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 12/19/2025
+ms.date: 08/10/2026
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
 author: schaffererin
+ai-usage: ai-assisted
+zone_pivot_groups: cli-portal-terraform-json
 # Customer intent: "As a Kubernetes administrator, I want to configure planned maintenance for my AKS cluster, so that I can schedule and control upgrades without impacting my workloads."
 ---
 
 # Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster
+
+[!INCLUDE [platform-initiated upgrades](./includes/platform-initiated-upgrade-notice.md)]
 
 This article shows you how to use planned maintenance to schedule and control cluster and node image upgrades in Azure Kubernetes Service (AKS).
 
@@ -27,8 +31,26 @@ When you use the feature of planned maintenance in AKS, you can run both types o
 
 ## Before you begin
 
+:::zone pivot="azure-cli,azure-portal,json-file"
+
 - This article assumes that you have an existing AKS cluster. If you don't have an AKS cluster, see [Create an AKS cluster](./learn/quick-kubernetes-deploy-cli.md).
+
+:::zone-end
+
 - If you're using the Azure CLI, upgrade to the latest version using the [`az upgrade`](/cli/azure/update-azure-cli#manual-update) command.
+
+:::zone pivot="terraform"
+
+- An active Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn) before you begin.
+- Set your subscription context using the [`az account set`](/cli/azure/account#az_account_set) command. For example:
+
+    ```azurecli-interactive
+    az account set --subscription "00000000-0000-0000-0000-000000000000"
+    ```
+
+- Terraform installed locally. For installation instructions, see [Install Terraform](https://developer.hashicorp.com/terraform/install).
+
+:::zone-end
 
 ## Considerations
 
@@ -36,6 +58,7 @@ When you use planned maintenance, the following considerations apply:
 
 - AKS reserves the right to break planned maintenance windows for unplanned, reactive maintenance operations that are urgent or critical. These maintenance operations might even run during the `notAllowedTime` or `notAllowedDates` periods defined in your configuration.
 - Maintenance operations are considered _best effort only_ and aren't guaranteed to occur within a specified window.
+- [Platform-initiated upgrades](./platform-initiated-upgrades.md) can occur outside maintenance windows. If a cluster stays on an unsupported Kubernetes version after the 60-day [platform support grace period](./platform-initiated-upgrades.md#platform-support-grace-period) ends, AKS can upgrade it during or after the planned platform-initiated upgrade month. Keep your cluster on a supported version to avoid a platform-initiated upgrade outside your maintenance window.
 
 ## Schedule configuration types for planned maintenance
 
@@ -84,12 +107,12 @@ An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintena
 
 **[Deprecated]** A `default` maintenance window has the following legacy properties:
 
-|Name|Description|Default value|
-|--|--|--|
-|`timeInWeek`|In a `default` configuration, this property contains the `day` and `hourSlots` values that define a maintenance window.|Not applicable|
-|`timeInWeek.day`|The day of the week to perform maintenance in a `default` configuration.|Not applicable|
-|`timeInWeek.hourSlots`|A list of hour-long time slots to perform maintenance on a particular day in a `default` configuration.|Not applicable|
-|`notAllowedTime`|A range of dates that maintenance can't run, determined by `start` and `end` child properties. This property is applicable only when you're creating the maintenance window by using a configuration file.|Not applicable|
+| Name | Description | Default value |
+| ---- | ----------- | ------------- |
+| `timeInWeek` | In a `default` configuration, this property contains the `day` and `hourSlots` values that define a maintenance window. | Not applicable |
+| `timeInWeek.day` | The day of the week to perform maintenance in a `default` configuration. | Not applicable |
+| `timeInWeek.hourSlots` | A list of hour-long time slots to perform maintenance on a particular day in a `default` configuration. | Not applicable |
+| `notAllowedTime` | A range of dates that maintenance can't run, determined by `start` and `end` child properties. This property is applicable only when you're creating the maintenance window by using a configuration file. | Not applicable |
 
 ### Schedule types
 
@@ -97,10 +120,10 @@ Four schedule types are supported: `Daily`, `Weekly`, `AbsoluteMonthly`, and `Re
 
 The following table shows which types are available for each maintenance-configuration option:
 
-| Schedule type   | `default` | `aksManagedClusterAutoUpgradeSchedule` | `aksManagedNodeOSUpgradeSchedule` |
-|-----------------|:---------:|:--------------------------------------:|:---------------------------------:|
-| Daily           | Unsupported ❌ | Supported ✅ (after Jun 2025) | Supported ✅ |
-| Weekly          | Supported ✅ | Supported ✅ | Supported ✅ |
+| Schedule type | `default` | `aksManagedClusterAutoUpgradeSchedule` | `aksManagedNodeOSUpgradeSchedule` |
+| ------------- | --------- | -------------------------------------- | --------------------------------- |
+| Daily | Unsupported ❌ | Supported ✅ (after Jun 2025) | Supported ✅ |
+| Weekly | Supported ✅ | Supported ✅ | Supported ✅ |
 | AbsoluteMonthly | Unsupported ❌ | Supported ✅ | Supported ✅ |
 | RelativeMonthly | Unsupported ❌ | Supported ✅ | Supported ✅ |
 
@@ -152,9 +175,70 @@ A `RelativeMonthly` schedule might look like "every two months on the last Monda
 
 Valid values for `weekIndex` include `First`, `Second`, `Third`, `Fourth`, and `Last`.
 
+:::zone pivot="terraform"
+
+## Create the Terraform configuration file
+
+Terraform configuration files define the infrastructure that Terraform creates and manages.
+
+Create a file named `main.tf` and add the following code to define the Terraform version and specify the Azure provider:
+
+```Terraform
+terraform {
+ required_providers {
+   azurerm = {
+     source  = "hashicorp/azurerm"
+     version = "~>4.0"
+   }
+   azapi = {
+     source  = "azure/azapi"
+     version = "~>2.0"
+   }
+ }
+}
+provider "azurerm" {
+ features {}
+}
+provider "azapi" {}
+```
+
+## Create a resource group
+
+Add the following code to `main.tf` to create an Azure resource group. Update the `location` and `name` values to match your environment.
+
+```Terraform
+resource "azurerm_resource_group" "rg" {
+ name     = "aks-maintenance-rg"
+ location = "East US"
+}
+```
+
+## Create an AKS cluster
+
+Add the following code to `main.tf` to create an AKS cluster. Update any values as needed to match your environment.
+
+```Terraform
+resource "azurerm_kubernetes_cluster" "aks" {
+ name                = "aks-maintenance-cluster"
+ location            = azurerm_resource_group.rg.location
+ resource_group_name = azurerm_resource_group.rg.name
+ dns_prefix          = "aksmaintenance"
+ default_node_pool {
+   name       = "nodepool1"
+   node_count = 1
+   vm_size    = "Standard_DS2_v2"
+ }
+ identity {
+   type = "SystemAssigned"
+ }
+}
+```
+
+:::zone-end
+
 ## Add a maintenance window configuration
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 Add a maintenance window configuration to an AKS cluster using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command.
 
@@ -168,11 +252,13 @@ az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-n
 az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name aksManagedAutoUpgradeSchedule --schedule-type Weekly --day-of-week Friday --interval-weeks 3 --duration 8 --utc-offset +05:30 --start-time 00:00
 ```
 
-### [Azure portal](#tab/azure-portal)
+:::zone-end
+
+:::zone pivot="azure-portal"
 
 1. In the Azure portal, go to your AKS cluster resource.
 1. From the service menu, under **Settings**, select **Upgrades**.
-1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**. 
+1. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**.
 
     :::image type="content" source="./media/planned-maintenance/add-schedule-portal.png" alt-text="Screenshot that shows the option to add a schedule in the Azure portal.":::
 
@@ -188,7 +274,9 @@ az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-n
 
 1. Select **Save**.
 
-### [JSON file](#tab/json-file)
+:::zone-end
+
+:::zone pivot="json-file"
 
 You can use a JSON file to create a maintenance configuration instead of using parameters. When you use this method, you can prevent maintenance during a range of dates by specifying `notAllowedDates` for `default`, `aksManagedAutoUpgradeSchedule`, and `aksManagedNodeOSUpgradeSchedule` configurations.
 
@@ -258,11 +346,103 @@ You can use a JSON file to create a maintenance configuration instead of using p
     az aks maintenanceconfiguration add --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name aksManagedAutoUpgradeSchedule --config-file ./autoUpgradeWindow.json
     ```
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+Add the maintenance window configuration to `main.tf` using the `azapi_resource` resource.
+
+### Default maintenance configuration
+
+The following example creates a `default` maintenance configuration that schedules maintenance to run from 2:00 AM to 6:00 AM every Saturday in the `UTC-04:00` time zone:
+
+```Terraform
+resource "azapi_resource" "default_maintenance" {
+ type      = "Microsoft.ContainerService/managedClusters/maintenanceConfigurations@2025-10-01"
+ name      = "default"
+ parent_id = azurerm_kubernetes_cluster.aks.id
+ schema_validation_enabled = false
+ body = {
+   properties = {
+     maintenanceWindow = {
+       schedule = {
+         weekly = {
+           dayOfWeek     = "Saturday"
+           intervalWeeks = 1
+         }
+       }
+       durationHours = 4
+       startTime     = "02:00"
+       utcOffset     = "-04:00"
+     }
+   }
+ }
+}
+```
+
+### Autoupgrade maintenance configuration
+
+The following example creates an `aksManagedAutoUpgradeSchedule` maintenance configuration that schedules maintenance to run every Sunday from 1:00 AM to 5:00 AM in the `UTC-04:00` time zone, starting on April 20, 2026:
+
+```Terraform
+resource "azapi_resource" "auto_upgrade" {
+ type      = "Microsoft.ContainerService/managedClusters/maintenanceConfigurations@2025-10-01"
+ name      = "aksManagedAutoUpgradeSchedule"
+ parent_id = azurerm_kubernetes_cluster.aks.id
+ schema_validation_enabled = false
+ body = {
+   properties = {
+     maintenanceWindow = {
+       startDate     = "2026-04-20"
+       startTime     = "01:00"
+       durationHours = 4
+       utcOffset     = "-04:00"
+       schedule = {
+         weekly = {
+           dayOfWeek     = "Sunday"
+           intervalWeeks = 1
+         }
+       }
+     }
+   }
+ }
+}
+```
+
+### Node OS upgrade maintenance configuration
+
+The following example creates an `aksManagedNodeOSUpgradeSchedule` maintenance configuration that schedules maintenance to run every Monday from 3:00 AM to 7:00 AM in the `UTC-04:00` time zone, starting on April 21, 2026:
+
+```Terraform
+resource "azapi_resource" "node_os_upgrade" {
+ type      = "Microsoft.ContainerService/managedClusters/maintenanceConfigurations@2025-10-01"
+ name      = "aksManagedNodeOSUpgradeSchedule"
+ parent_id = azurerm_kubernetes_cluster.aks.id
+ schema_validation_enabled = false
+ body = {
+   properties = {
+     maintenanceWindow = {
+       startDate     = "2026-04-21"
+       startTime     = "03:00"
+       durationHours = 4
+       utcOffset     = "-04:00"
+       schedule = {
+         weekly = {
+           dayOfWeek     = "Monday"
+           intervalWeeks = 1
+         }
+       }
+     }
+   }
+ }
+}
+```
+
+:::zone-end
 
 ## Update an existing maintenance window
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 Update an existing maintenance configuration using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command.
 
@@ -270,10 +450,11 @@ The following example updates the `default` configuration to schedule maintenanc
 
 ```azurecli-interactive
 az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name default --schedule-type Weekly --day-of-week Friday --interval-weeks 1 --duration 4 --utc-offset +00:00 --start-time 02:00
-
 ```
 
-### [Azure portal](#tab/azure-portal)
+:::zone-end
+
+:::zone pivot="azure-portal"
 
 1. In the Azure portal, navigate to your AKS cluster resource.
 1. From the service menu, under **Settings**, select **Upgrades**.
@@ -284,7 +465,9 @@ az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluste
 1. On the **Edit maintenance schedule** pane, update the maintenance window settings as needed.
 1. Select **Save**.
 
-### [JSON file](#tab/json-file)
+:::zone-end
+
+:::zone pivot="json-file"
 
 1. Update the configuration JSON file with the new maintenance window settings.
 
@@ -320,7 +503,37 @@ az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluste
     az aks maintenanceconfiguration update --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name default --config-file ./default.json
     ```
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+If you already have an existing AKS cluster managed by Terraform, you can update the maintenance window configuration by modifying the Terraform configuration file and applying the changes using the `terraform apply` command.
+
+## Initialize Terraform
+
+Initialize Terraform in the directory containing your `main.tf` file using the [`terraform init`](https://www.terraform.io/docs/commands/init.html) command. This command downloads the Azure provider required to manage Azure resources with Terraform.
+
+```console
+terraform init
+```
+
+## Create a Terraform execution plan
+
+Create a Terraform execution plan using the [`terraform plan`](https://www.terraform.io/docs/commands/plan.html) command. This command shows you the resources that Terraform will create or modify in your Azure subscription.
+
+```console
+terraform plan
+```
+
+## Apply the Terraform configuration
+
+After reviewing and confirming the execution plan, apply the Terraform configuration using the [`terraform apply`](https://www.terraform.io/docs/commands/apply.html) command. This command creates or modifies the resources defined in your `main.tf` file in your Azure subscription.
+
+```console
+terraform apply
+```
+
+:::zone-end
 
 ## List all maintenance windows in an existing cluster
 
@@ -375,7 +588,7 @@ The following example output shows the maintenance window for `aksManagedAutoUpg
 
 ## Delete a maintenance configuration window in an existing cluster
 
-### [Azure CLI](#tab/azure-cli)
+:::zone pivot="azure-cli"
 
 Delete a maintenance configuration window in your AKS cluster using the [`az aks maintenanceconfiguration delete`][az-aks-maintenanceconfiguration-delete] command.
 
@@ -385,7 +598,9 @@ The following example deletes the `autoUpgradeSchedule` maintenance configuratio
 az aks maintenanceconfiguration delete --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name autoUpgradeSchedule
 ```
 
-### [Azure portal](#tab/azure-portal)
+:::zone-end
+
+:::zone pivot="azure-portal"
 
 1. In the Azure portal, navigate to your AKS cluster resource.
 1. From the service menu, under **Settings**, select **Cluster configuration**.
@@ -397,7 +612,9 @@ az aks maintenanceconfiguration delete --resource-group $RESOURCE_GROUP --cluste
 
     :::image type="content" source="./media/planned-maintenance/remove-schedule-portal.png" alt-text="Screenshot that shows the pane for editing a maintenance window with the button for removing a schedule in the Azure portal.":::
 
-### [JSON file](#tab/json-file)
+:::zone-end
+
+:::zone pivot="json-file"
 
 Delete a maintenance configuration window in your AKS cluster using the [`az aks maintenanceconfiguration delete`][az-aks-maintenanceconfiguration-delete] command.
 
@@ -407,7 +624,183 @@ The following example deletes the `autoUpgradeSchedule` maintenance configuratio
 az aks maintenanceconfiguration delete --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name autoUpgradeSchedule
 ```
 
----
+:::zone-end
+
+:::zone pivot="terraform"
+
+To delete a maintenance configuration, remove the corresponding block from your Terraform configuration and apply the changes using the `terraform apply` command.
+
+:::zone-end
+
+## Use a shared maintenance window (preview)
+
+By using shared maintenance windows, you can apply the same maintenance window schedule across multiple AKS maintenance configurations and managed clusters in the same region. This approach ensures that related upgrade operations follow a consistent maintenance policy.
+
+Use shared maintenance windows when you want cluster auto-upgrades and node OS auto-upgrades to use the same approved maintenance schedule instead of managing each schedule independently.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+Shared maintenance windows are available in the `2026-05-02-preview` AKS API version or later. To use these preview commands, install Azure CLI version 2.85.0 or later and version 21.0.0b13 or later of the `aks-preview` extension. You create a shared maintenance window as a standalone resource, then link it to one or more clusters by setting the `maintenanceWindowId` field in the `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintenance configuration.
+
+:::zone pivot="azure-cli,json-file"
+
+Before you use a shared maintenance window, complete the following prerequisite steps:
+
+- Install or update the `aks-preview` Azure CLI extension.
+
+```azurecli-interactive
+az extension add --upgrade --name aks-preview
+```
+
+- Register the `AKSSharedMaintenanceWindowPreview` feature flag on your subscription by using the [`az feature register`][az-feature-register] command. Feature registration is subscription-scoped, so you only need to complete it once per subscription.
+
+```azurecli-interactive
+az feature register \
+  --namespace Microsoft.ContainerService \
+  --name AKSSharedMaintenanceWindowPreview
+```
+
+- Check the registration status by using the [`az feature show`][az-feature-show] command:
+
+```azurecli-interactive
+az feature show \
+  --namespace Microsoft.ContainerService \
+  --name AKSSharedMaintenanceWindowPreview \
+  --query properties.state \
+  --output tsv
+```
+
+- Wait until the command returns `Registered` before you continue. Then refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`][az-provider-register] command:
+
+```azurecli-interactive
+az provider register --namespace Microsoft.ContainerService
+```
+
+### Create a shared maintenance window
+
+Create the shared maintenance window resource by using the [`az aks maintenancewindow create`][az-aks-maintenancewindow-create] command. For the full list of supported fields and schedule types, see [Schedule configuration types for planned maintenance](#schedule-configuration-types-for-planned-maintenance).
+
+The following example creates a shared maintenance window with a weekly schedule that runs every Friday from 1:00 AM to 5:00 AM UTC:
+
+```azurecli-interactive
+az aks maintenancewindow create \
+  --resource-group $RESOURCE_GROUP \
+  --name mySharedWindow \
+  --schedule-type Weekly \
+  --day-of-week Friday \
+  --interval-weeks 1 \
+  --duration 4 \
+  --utc-offset=+00:00 \
+  --start-time 01:00
+```
+
+The following example creates a shared maintenance window with a relative monthly schedule that runs on the last Sunday of every month from 1:00 AM to 5:00 AM UTC:
+
+```azurecli-interactive
+az aks maintenancewindow create \
+  --resource-group $RESOURCE_GROUP \
+  --name mySharedWindow \
+  --schedule-type RelativeMonthly \
+  --day-of-week Sunday \
+  --week-index Last \
+  --interval-months 1 \
+  --duration 4 \
+  --utc-offset=+00:00 \
+  --start-time 01:00
+```
+
+### Link a maintenance configuration to a shared maintenance window
+
+Set the shared maintenance window resource ID:
+
+```azurecli-interactive
+MAINTENANCE_WINDOW_ID="/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MyResourceGroup/providers/Microsoft.ContainerService/maintenanceWindows/mySharedWindow"
+```
+
+Link a maintenance configuration to the shared maintenance window by using the [`az aks maintenanceconfiguration add`][az-aks-maintenanceconfiguration-add] command:
+
+```azurecli-interactive
+az aks maintenanceconfiguration add \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME \
+  --name aksManagedAutoUpgradeSchedule \
+  --maintenance-window-id $MAINTENANCE_WINDOW_ID
+```
+
+You can also link an existing maintenance configuration to a shared maintenance window by using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command:
+
+```azurecli-interactive
+az aks maintenanceconfiguration update \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME \
+  --name aksManagedNodeOSUpgradeSchedule \
+  --maintenance-window-id $MAINTENANCE_WINDOW_ID
+```
+
+When you use `--maintenance-window-id`, the schedule is defined by the referenced shared maintenance window. Don't combine `--maintenance-window-id` with inline schedule arguments such as `--schedule-type`, `--day-of-week`, `--interval-weeks`, `--duration`, `--utc-offset`, or `--start-time`.
+
+You also can't combine `--maintenance-window-id` with `--config-file`. To link a shared maintenance window by using a JSON configuration file, set the `maintenanceWindowId` property in the file instead:
+
+```json
+{
+  "properties": {
+    "maintenanceConfigurationType": "aksManagedAutoUpgradeSchedule",
+    "maintenanceWindowId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/MyResourceGroup/providers/Microsoft.ContainerService/maintenanceWindows/mySharedWindow"
+  }
+}
+```
+
+Apply the configuration file:
+
+```azurecli-interactive
+az aks maintenanceconfiguration add \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME \
+  --name aksManagedAutoUpgradeSchedule \
+  --config-file ./linked-config.json
+```
+
+### Unlink a shared maintenance window
+
+To unlink a shared maintenance window from a maintenance configuration, update the configuration with an inline schedule and omit `--maintenance-window-id`. This action converts the configuration to a standard inline maintenance configuration.
+
+Update the configuration by using the [`az aks maintenanceconfiguration update`][az-aks-maintenanceconfiguration-update] command:
+
+```azurecli-interactive
+az aks maintenanceconfiguration update \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $CLUSTER_NAME \
+  --name aksManagedAutoUpgradeSchedule \
+  --schedule-type Weekly \
+  --day-of-week Friday \
+  --interval-weeks 1 \
+  --duration 4 \
+  --utc-offset +00:00 \
+  --start-time 01:00
+```
+
+> [!NOTE]
+> Removing the link doesn't delete the shared maintenance window resource. Other maintenance configurations that reference the same window continue to use it.
+
+To delete the shared maintenance window resource itself, use the [`az aks maintenancewindow delete`][az-aks-maintenancewindow-delete] command:
+
+```azurecli-interactive
+az aks maintenancewindow delete \
+  --resource-group $RESOURCE_GROUP \
+  --name mySharedWindow
+```
+
+> [!WARNING]
+> You can't delete a shared maintenance window while any maintenance configuration references it. Unlink all referencing maintenance configurations before you delete the window.
+
+:::zone-end
+
+:::zone pivot="azure-portal,terraform"
+
+> [!IMPORTANT]
+> Shared maintenance windows aren't supported in the Azure portal or Terraform during preview. Use the Azure CLI or REST API to create and manage shared maintenance windows.
+
+:::zone-end
 
 ## Frequently asked questions (FAQ)
 
@@ -437,9 +830,11 @@ Also, ensure that your cluster is started when the planned maintenance window st
 
 ### Why was one of my agent pools upgraded outside the maintenance window?
 
-If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is referred to as a _catch-up upgrade_. It avoids letting agent pools be upgraded with a different version from the AKS control plane.
+AKS starts upgrade-related operations only during the configured maintenance window. If an operation begins before the window closes, it can continue running until completion, even if this extends beyond the window end time.
 
-Another reason why an agent pool could be upgraded unexpectedly is when there's no defined maintenance configuration or if it was deleted. In that case, a cluster with auto-upgrade _but without a maintenance configuration_ is upgraded at random times (_fallback schedule_), which might be an undesired timeframe.
+When the window closes, AKS does not start any new upgrade operations. Any remaining upgrade work is deferred until a future eligible window.
+
+Example: If the maintenance window is 08:00-12:00 and a cluster or node pool upgrade that started before 12:00 is still in progress at 12:15, AKS lets that in-flight work finish. However, AKS does not initiate new upgrade work after 12:00.
 
 ### Are there any best practices for the maintenance configurations?
 
@@ -456,6 +851,15 @@ We don't recommend using the same maintenance configuration for multiple cluster
 ### Why did my node pools get upgraded twice during the same maintenance window?
 
 If a newer version of the node image becomes available during the maintenance window, AKS performs a second upgrade to ensure that your node pools are running the latest version. This behavior is normal and doesn't indicate an issue.
+
+### Can Azure use the AKS planned maintenance window for platform maintenance on the underlying VMSS?
+
+No. The AKS planned maintenance window is specifically intended to schedule and control AKS cluster and node image upgrades in Azure Kubernetes Service. It does not apply to Azure platform‑level maintenance on the underlying VMSS hosting the AKS node pools. They operate independently with no direct dependency between them.
+
+Azure periodically performs platform updates to enhance the reliability, performance, and security of the underlying host infrastructure for virtual machines. These updates might include patching software components, upgrading networking infrastructure, or decommissioning hardware. Platform maintenance can be either rebootless or require a reboot. 
+For maintenance events that require a reboot, customers are notified in advance through Maintenance Notifications, which include a `self‑service phase` that typically lasts up to four weeks.
+
+
 
 ## Related content
 
@@ -475,3 +879,8 @@ To get started with upgrading your AKS cluster, see [Upgrade options for AKS clu
 [az-aks-maintenanceconfiguration-list]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-list
 [az-aks-maintenanceconfiguration-show]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-show
 [az-aks-maintenanceconfiguration-delete]: /cli/azure/aks/maintenanceconfiguration#az-aks-maintenanceconfiguration-delete
+[az-aks-maintenancewindow-create]: /cli/azure/aks/maintenancewindow#az-aks-maintenancewindow-create
+[az-aks-maintenancewindow-delete]: /cli/azure/aks/maintenancewindow#az-aks-maintenancewindow-delete
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register

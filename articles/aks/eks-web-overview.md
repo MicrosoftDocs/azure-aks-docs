@@ -18,7 +18,7 @@ In this article, you learn how to replicate an Amazon Elastic Kubernetes Service
 
 This workload implements a WAF to protect a [Yelb][yelb] web-based application running in a Kubernetes cluster. Applications rely on WAFs to block unwanted traffic and protect apps from common vulnerabilities. A centralized web application firewall helps simplify security management and helps ensure better protection against threats or intrusions.
 
-For a more detailed understanding of the AWS workload, see [Protecting your Amazon EKS web apps with AWS WAF][eks-aws-waf].
+If you plan to migrate an AWS workload to Azure, see [Migrate compute from Amazon Web Services to Azure](/azure/migration/migrate-compute-from-aws), which includes [example migration scenarios](/azure/migration/migrate-compute-from-aws#migration-scenarios) that might align to your use case. For a more detailed understanding of the AWS workload, see [Protecting your Amazon EKS web apps with AWS WAF][eks-aws-waf].
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -87,7 +87,7 @@ Other contributors:
 [azure-ag]: /azure/application-gateway/for-containers/overview
 [azure-waf]: /azure/web-application-firewall/overview
 [aks]: ./what-is-aks.md
-[azure-free]: https://azure.microsoft.com/free/
+[azure-free]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [azure-built-in-roles]: /azure/role-based-access-control/built-in-roles
 [azure-cli]: /cli/azure/install-azure-cli
 [aks-preview]: /azure/aks/draft#install-the-aks-preview-azure-cli-extension

@@ -3,35 +3,36 @@ title: Secure Pod Traffic with Network Policies in Azure Kubernetes Service (AKS
 description: Learn how to implement network policies in AKS to control and secure pod traffic by restricting communication according to the principle of least privilege.
 author: schaffererin
 ms.author: schaffererin
-ms.date: 06/10/2025
+ms.date: 08/31/2026
 ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom:
   - devx-track-azurecli
   - build-2025
   - biannual
+  - aeo-round-2
+zone_pivot_groups: azure-cli-or-terraform
 # Customer intent: As a DevOps engineer, I want to implement network policies in Azure Kubernetes Service, so that I can control and secure pod traffic by restricting communication according to the principle of least privilege.
 ---
 
 # Secure traffic between pods with network policies in Azure Kubernetes Service (AKS)
 
-[!INCLUDE [azure-network-policy-manager-windows-retirement](./includes/azure-network-policy-manager-windows-retirement.md)]
-
 [!INCLUDE [azure-network-policy-manager-linux-retirement](./includes/azure-network-policy-manager-linux-retirement.md)]
 
-### Identify impacted clusters
+## Identify impacted clusters
 
 To find AKS clusters with Linux node pools using Azure Network Policy Manager (NPM), run the [Azure Resource Graph query](https://portal.azure.com/?feature.customportal=false#blade/HubsExtension/ArgQueryBlade/query/Resources%20%0A%7C%20where%20type%20%3D%3D%20%22microsoft.containerservice%2Fmanagedclusters%22%20%0A%7C%20mv-expand%20agentPool%20%3D%20properties.agentPoolProfiles%20%0A%7C%20where%20agentPool.osType%20!%3D%20%22Windows%22%20%0A%7C%20extend%20netPol%20%3D%20tolower%28tostring%28properties.networkProfile.networkPolicy%29%29%20%0A%7C%20where%20netPol%20%3D%3D%20%22azure%22%20%0A%7C%20summarize%20by%20name%2C%20location%2C%20resourceGroup%2C%20netPol) that lists all AKS clusters where `agentPool.osType != "Windows"` and `properties.networkProfile.networkPolicy == "azure"`.
 
 [!INCLUDE [kubenet-retirement](./includes/kubenet-retirement.md)]
 
-Install a network policy engine and create Kubernetes network policies to control the flow of traffic between pods in AKS clusters.
+Install a network policy engine and create Kubernetes network policies to control the flow of traffic between pods in AKS clusters by using the Azure CLI or Terraform.
 
 ## Overview of network policy
 
 By default, all pods in an AKS cluster can send and receive traffic without limitations. To improve security, you can define rules that control the flow of traffic.
 
-Network policy is a Kubernetes specification that defines access policies for communication between pods. When you use network policies, you define an ordered set of rules to send and receive traffic. You apply the rules to a collection of pods that match one or more label selectors. 
+Network policy is a Kubernetes specification that defines access policies for communication between pods. When you use network policies, you define an ordered set of rules to send and receive traffic. You apply the rules to a collection of pods that match one or more label selectors.
 
 You define the network policy rules as YAML manifests, and you can include them in wider manifests that also create a deployment or service.
 
@@ -43,33 +44,26 @@ Azure provides three network policy engines for enforcing network policies:
 - **Azure Network Policy Manager (NPM)**
 - **Calico** (an open-source network and network security solution founded by [Tigera][tigera])
 
-We recommend using Cilium, which provides robust support for Kubernetes-native policies, extended features such as [Layer 7 policy](./container-network-security-l7-policy-concepts.md) and [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md), and an eBPF-based dataplane that offers better performance, scalability, and security compared to iptables-based solutions.
+We recommend using Cilium, which provides robust support for Kubernetes-native policies, extended features such as [Layer 7 policy](./container-network-security-l7-policy-concepts.md) and [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md), and an eBPF-based dataplane that offers better performance, scalability, and security compared to _IPTables_-based solutions.
 
-To enforce the specified policies, Azure NPM uses _IPTables_ for Linux and _Host Network Service (HNS) ACLPolicies_ for Windows. Policies are translated into sets of allowed and disallowed IP pairs. These pairs are then programmed as `IPTable` or `HNS ACLPolicy` filter rules.
+To enforce the specified policies, Azure NPM uses _IPTables_ for Linux nodes. Policies are translated into sets of allowed and disallowed IP pairs. The system programs these pairs as `IPTable` filter rules.
 
 ## Differences between network policy engines: Cilium, Azure NPM, and Calico
 
 | Network policy engine | Supported platforms | Supported networking options | Kubernetes specification compliance | Other features | Support |
 | --------------------- | ------------------- | ---------------------------- | ----------------------------------- | -------------- | ------- |
 | Cilium | Linux | Azure CNI | Supports all policy types | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md) | Azure support and engineering team |
-| Azure NPM | Linux, Windows Server 2022 | Azure CNI | Supports all policy types | N/A | Azure support and engineering team |
-| Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | While Calico has many features that AKS doesn't block, AKS doesn't test or support them. For more information, see [Calico Guidance](https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate). | Azure support and engineering team |
+| Azure NPM | Linux | Azure CNI | Supports all policy types | N/A | Azure support and engineering team |
+| Calico | Linux, Windows Server 2019, Windows Server 2022 | Azure CNI (Linux, Windows Server 2019, Windows Server 2022) and kubenet (Linux) | Supports all policy types | AKS doesn't test or support features beyond enforcement of `networking.k8s.io` policies. | Azure support and engineering team |
 
-## Azure Network Policy Manager limitations (Linux)
+## Azure Network Policy Manager limitations 
 
-Azure NPM for Linux has the following limitations:
+Azure NPM has the following limitations:
 
 - Scaling beyond _250 nodes_ and _20,000 pods_ isn't supported. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, we recommend using or upgrading to [Azure CNI Powered by Cilium](./update-azure-cni.md) for your network policy engine.
 - IPv6 isn't supported. Otherwise, it fully supports the network policy specifications in Linux.
+- Starting on September 30, 2026, Azure Kubernetes Service (AKS) no longer supports Azure Network Policy Manager (NPM) on Windows nodes.
 
-## Azure Network Policy Manager limitations (Windows)
-
-Azure NPM for Windows doesn't support the following features of the network policy specifications:
-
-- Named ports.
-- Stream Control Transmission Protocol (SCTP).
-- Negative match label or namespace selectors. For example, all labels except `debug=true`.
-- `except` classless interdomain routing (CIDR) blocks (CIDR with exceptions).
 
 ## Known issues with Azure Network Policy Manager
 
@@ -79,6 +73,11 @@ If this race condition occurs for a node, the Azure NPM pod on that node enters 
 
 To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with _four or fewer_ `ipBlock` sections is less likely to hit the issue.
 
+## Calico limitations
+
+- AKS doesn't support running AKS-managed Calico alongside Calico Cloud or Calico Enterprise, as this combination can cause conflicts and unintended behavior. If you use Calico Cloud or Enterprise, Microsoft strongly recommends disabling AKS-managed Calico. Contact Tigera for support with those products.
+- AKS-managed Calico only supports `networking.k8s.io` network policies. If you intend to use `projectcalico.org/v3` policies, consider migrating to a self-hosted solution, such as Calico Cloud, Calico Enterprise, or BYOCNI.
+
 ## Load balancer services and network policies
 
 Kubernetes service routing for both inbound and outbound services often involves rewriting the source and destination IPs on traffic that's being processed, including traffic that comes into the cluster from a `LoadBalancer` service. This rewrite behavior means that the network policies might not properly process traffic being received from or sent to an external service. For more information, see the [Kubernetes Network Policies documentation][kubernetes-network-policies].
@@ -87,9 +86,23 @@ To restrict what sources can send traffic to a load balancer service, use `spec.
 
 ## Before you begin
 
+:::zone pivot="azure-cli"
+
 You need the Azure CLI version 2.0.61 or later installed and configured. Find the version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 Instead of using a system-assigned identity, you can also use a user-assigned identity. For more information, see [Use managed identities](use-managed-identity.md).
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+- [Terraform installed](https://developer.hashicorp.com/terraform/install), version 1.6 or later.
+- Azure CLI installed and authenticated. Find the version using the `az --version` command. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli]. You use the Azure CLI to connect to the cluster after Terraform creates it.
+- [kubectl](https://kubernetes.io/releases/download/) installed. You can install it locally using the [`az aks install-cli`][az-aks-install-cli] command. You use `kubectl` to verify the network policy behavior.
+
+:::zone-end
+
+:::zone pivot="azure-cli"
 
 ## Create an AKS cluster with Azure Network Policy Manager (Linux)
 
@@ -99,6 +112,12 @@ Instead of using a system-assigned identity, you can also use a user-assigned id
     export RESOURCE_GROUP=myResourceGroup
     export CLUSTER_NAME=myAKSCluster
     export LOCATION=eastus
+    ```
+
+1. Create the resource group using the [`az group create`][az-group-create] command.
+
+    ```azurecli-interactive
+    az group create --resource-group $RESOURCE_GROUP --location $LOCATION
     ```
 
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] and specify `azure` for the `network-plugin` and `network-policy`.
@@ -116,82 +135,16 @@ Instead of using a system-assigned identity, you can also use a user-assigned id
     > [!CAUTION]
     > Azure Network Policy Manager (NPM) for Linux nodes will be retired on September 30, 2028. For new deployments, we recommend using [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md) with Cilium Network Policy. To migrate existing clusters, see [Migrate from NPM to Cilium Network Policy](./migrate-from-npm-to-cilium-network-policy.md).
 
-## Create an AKS cluster with Azure Network Policy Manager (Windows Server 2022 (preview))
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-### Install the `aks-preview` Azure CLI extension
-
-1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-1. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `WindowsNetworkPolicyPreview` feature flag
-
-1. Register the `WindowsNetworkPolicyPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "WindowsNetworkPolicyPreview"
-    ```
-
-    It takes a few minutes for the status to show _Registered_.
-
-1. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "WindowsNetworkPolicyPreview"
-    ```
-
-1. When the status reflects _Registered_, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
-
-### Create administrator credentials for Windows Server containers
-
-- Create a username to use as administrator credentials for your Windows Server containers on your cluster. The following command prompts you for a username. Set it to `WINDOWS_USERNAME`.
-
-    ```bash
-    echo "Please enter the username to use as administrator credentials for Windows Server containers on your cluster: " && read WINDOWS_USERNAME
-    ```
-
-### Create the AKS cluster
-
-1. Set environment variables for the resource group name, cluster name, and location. Replace the values as needed.
-
-    ```bash
-    export RESOURCE_GROUP=myResourceGroup
-    export CLUSTER_NAME=myAKSCluster
-    export LOCATION=eastus
-    ```
-
-1. Create an AKS cluster using the [`az aks create`][az-aks-create] and specify `azure` for the `network-plugin` and `network-policy`.
-
-    ```azurecli-interactive
-    az aks create \
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --node-count 1 \
-        --windows-admin-username $WINDOWS_USERNAME \
-        --network-plugin azure \
-        --network-policy azure \
-        --generate-ssh-keys
-    ```
 
 ## Create an AKS cluster with Calico
 
-Create an AKS cluster using the [`az aks create`][az-aks-create] command and specify `--network-plugin azure` and `--network-policy calico`. Specifying `--network-policy calico` enables Calico on both Linux and Windows node pools.
+Create an AKS cluster by using the [`az aks create`][az-aks-create] command. Specify `--network-plugin azure` and `--network-policy calico`. When you specify `--network-policy calico`, you enable Calico on both Linux and Windows node pools.
 
-If you plan on adding Windows node pools to your cluster, include the `windows-admin-username` and `windows-admin-password` parameters that meet the [Windows Server password requirements][windows-server-password]. To create administrator credentials for Windows Server containers on your cluster, see [Create administrator credentials for Windows Server containers](#create-administrator-credentials-for-windows-server-containers).
+If you plan to add Windows node pools to your cluster, include the `windows-admin-username` and `windows-admin-password` parameters that meet the [Windows Server password requirements][windows-server-password]. To create a username to use as administrator credentials for your Windows Server containers on your cluster, the following command prompts you for a username. Set it to WINDOWS_USERNAME.
+
+```bash
+echo "Please enter the username to use as administrator credentials for Windows Server containers on your cluster: " && read WINDOWS_USERNAME
+```
 
 > [!IMPORTANT]
 > At this time, using Calico network policies with Windows nodes is available on new clusters using Kubernetes version 1.20 or later with Calico 3.17.2 and requires that you use Azure CNI networking. Windows nodes on AKS clusters with Calico enabled also have Floating IP enabled by default.
@@ -211,26 +164,26 @@ If you plan on adding Windows node pools to your cluster, include the `windows-a
 > - In kubenet clusters with Calico enabled, Calico is used as both a CNI and network policy engine.
 > - In Azure CNI clusters, Calico is used only for network policy enforcement, not as a CNI. This can cause a short delay between when the pod starts and when Calico allows outbound traffic from the pod.
 
-- Update an existing cluster to install Azure NPM or Calico using the [`az aks update`][az-aks-update] command and specifying `azure` or `calico` for the `--network-policy` parameter. The following example command shows how to install either Azure NPM:
+Update an existing cluster to install Azure NPM or Calico using the [`az aks update`][az-aks-update] command and specifying `azure` or `calico` for the `--network-policy` parameter. The following example command shows how to install either Azure NPM:
 
-    ```azurecli-interactive
-    az aks update
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --network-policy azure
-    ```
+```azurecli-interactive
+az aks update \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --network-policy azure
+```
 
 ## Upgrade an existing cluster with Azure NPM or Calico to Cilium
 
-To upgrade an existing cluster to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](upgrade-aks-ipam-and-dataplane.md)
+For clusters that already use Azure CNI, update the network data plane to Cilium. Kubenet clusters must first migrate to Azure CNI Overlay and then update the network data plane to Cilium as a separate operation. Review the prerequisites and follow the steps in [Upgrade an existing cluster to Azure CNI Powered by Cilium](upgrade-aks-ipam-and-dataplane.md).
 
 ## Connect to the AKS cluster
 
-- Configure `kubectl` to connect to your cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+Configure `kubectl` to connect to your cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
-    ```
+```azurecli-interactive
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+```
 
 ## Verify network policy setup
 
@@ -242,7 +195,7 @@ To begin verification of network policy, you create a sample application and set
     kubectl create namespace demo
     ```
 
-1. Create a pod named `server` to server on TCP port 80 using the `kubectl run` command.
+1. Create a pod named `server` to serve on TCP port 80 using the `kubectl run` command.
 
     ```bash
     kubectl run server -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 --labels="app=server" --port=80 --command -- /agnhost serve-hostname --tcp --http=false --port "80"
@@ -300,7 +253,7 @@ To begin verification of network policy, you create a sample application and set
 1. Apply the network policy manifest using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
-    kubectl apply –f demo-policy.yaml
+    kubectl apply -f demo-policy.yaml
     ```
 
 1. In the client shell, verify connectivity with the server using the following `/agnhost` command:
@@ -335,24 +288,236 @@ AKS only supports Calico for standard Kubernetes network policies and doesn't te
 > - The uninstall process **doesn't remove** Custom Resource Definitions (CRDs) and Custom Resources (CRs) used by Calico. These CRDs and CRs all have names ending with either _projectcalico.org_ or _tigera.io_. You can manually remove these CRDs and associated CRs _after_ successfully uninstalling Calico.
 > - The upgrade doesn't remove any network policy resources in the cluster, but the policies are no longer enforced after the uninstall process.
 
-- Remove Azure Network Policy Manager or Calico from an existing cluster using the [`az aks update`][az-aks-update] command and specifying `none` for the `--network-policy` parameter.
+Remove Azure Network Policy Manager or Calico from an existing cluster using the [`az aks update`][az-aks-update] command and specifying `none` for the `--network-policy` parameter.
 
-    ```azurecli-interactive
-    az aks update
-        --resource-group $RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --network-policy none
-    ```
+```azurecli-interactive
+az aks update \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --network-policy none
+```
+
+## Change cluster network policy
+
+The following steps show how to change a cluster's existing network policy to Calico. The procedure requires that the network policy is changed to `none` and then changed to `calico`.
+
+The commands use variables specified earlier in this article [Create an AKS cluster with Azure Network Policy Manager (Linux)](#create-an-aks-cluster-with-azure-network-policy-manager-linux). Otherwise, replace `$RESOURCE_GROUP` and `$CLUSTER_NAME` with your cluster's resource group and name.
+
+1. Run the following command to show the cluster's existing network policy.
+
+   ```azurecli-interactive
+   az aks show \
+     --resource-group $RESOURCE_GROUP \
+     --name $CLUSTER_NAME \
+     --query "networkProfile" \
+     --output table
+   ```
+
+1. Run the following command to set the network policy to `none`.
+
+   ```azurecli-interactive
+   az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --network-policy none
+   ```
+
+1. Run the following command to set the network policy to `calico`.
+
+   ```azurecli-interactive
+   az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --network-policy calico
+   ```
 
 ## Clean up resources
 
 In this article, you created a namespace and two pods and applied a network policy. If you no longer need these resources, you can delete them.
 
-- Delete the resources using the [`kubectl delete`][kubectl-delete] command.
+Delete the resources using the [`kubectl delete`][kubectl-delete] command.
+
+```bash
+kubectl delete namespace demo
+```
+
+If you followed this article's steps to create an AKS cluster, use the [`az group delete`][az-group-delete] command to delete the AKS resource group and its related resource group with a name that begins with `MC_`.
+
+```azurecli-interactive
+az group delete --resource-group $RESOURCE_GROUP --no-wait --yes
+```
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+## Create an AKS cluster with Cilium network policy using Terraform
+
+This section shows how to use Terraform to deploy an AKS cluster that uses [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md) for networking and network policy enforcement, and then use a Kubernetes `NetworkPolicy` resource to control pod-to-pod traffic.
+
+> [!NOTE]
+> The sample code for this section is located in the [Azure Terraform GitHub repo](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-network-policy-cilium). You can view the log file containing the [test results from current and previous versions of Terraform](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-network-policy-cilium/TestRecord.md).
+>
+> See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform).
+
+This sample deploys:
+
+- A resource group.
+- An AKS cluster that uses Azure CNI Overlay networking with Cilium as the network policy engine and network dataplane.
+
+1. Create a directory to test and run the sample Terraform code, and make it the current directory.
+
+1. Create a file named `main.tf`, and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-network-policy-cilium/main.tf)]
+
+1. Initialize Terraform by running the [`terraform init`][terraform-init] command. This command downloads the Azure provider required to manage Azure resources with Terraform.
+
+    ```console
+    terraform init
+    ```
+
+1. Format and validate the configuration by running the `terraform fmt` and `terraform validate` commands.
+
+    ```console
+    terraform fmt
+    terraform validate
+    ```
+
+1. Create a Terraform execution plan by running the [`terraform plan`][terraform-plan] command. This command shows you the resources that Terraform creates or modifies in your Azure subscription.
+
+    ```console
+    terraform plan
+    ```
+
+1. Apply the Terraform execution plan by running the [`terraform apply`][terraform-apply] command. This command creates the resources defined in your `main.tf` file in your Azure subscription.
+
+    ```console
+    terraform apply
+    ```
+
+## Connect to the AKS cluster using Terraform
+
+1. Install the Kubernetes command-line tool by running the [`az aks install-cli`][az-aks-install-cli] command, and then verify the installation.
+
+    ```azurecli-interactive
+    az aks install-cli
+    kubectl version --client
+    ```
+
+1. Configure `kubectl` to connect to your cluster by running the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+
+    ```azurecli-interactive
+    az aks get-credentials \
+        --resource-group rg-aks-network-policy-example \
+        --name aks-network-policy-example
+    ```
+
+1. Verify the cluster is running by running the `kubectl get nodes` command.
 
     ```bash
-    kubectl delete namespace demo
+    kubectl get nodes
     ```
+
+## Verify network policy setup using Terraform
+
+To verify the network policy setup, create a sample application and set traffic rules.
+
+1. Create a namespace named `demo` to run the sample pods by using the `kubectl create namespace` command.
+
+    ```bash
+    kubectl create namespace demo
+    ```
+
+1. Create a pod named `server` to serve on TCP port 80 by running the [`kubectl run`][kubectl-run] command.
+
+    ```bash
+    kubectl run server \
+      -n demo \
+      --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 \
+      --labels="app=server" \
+      --port=80 \
+      --command -- /agnhost serve-hostname --tcp --http=false --port "80"
+    ```
+
+1. Create a pod named `client` to run Bash by using the `kubectl run` command.
+
+    ```bash
+    kubectl run -it client \
+      -n demo \
+      --image=k8s.gcr.io/e2e-test-images/agnhost:2.33 \
+      --command -- bash
+    ```
+
+1. In a separate window, get the IP address of the `server` pod by using the `kubectl get pod` command.
+
+    ```bash
+    kubectl get pod --output=wide -n demo
+    ```
+
+    Use the `server` pod IP address when you test connectivity from the `client` shell in the next section.
+
+## Test connectivity with network policies using Terraform
+
+The sample includes a Kubernetes `NetworkPolicy` manifest that allows ingress traffic to pods labeled `app=server` only from pods labeled `app=client` on TCP port 80.
+
+1. Create a file named `network-policy.yaml`, and insert the following code:
+    :::code language="yaml" source="~/terraform_samples/quickstart/101-aks-network-policy-cilium/network-policy.yaml":::
+
+1. Apply the network policy by using the [`kubectl apply`][kubectl-apply] command.
+
+    ```bash
+    kubectl apply -f network-policy.yaml
+    ```
+
+1. In the `client` shell, test connectivity to the server by using the following `/agnhost` command:
+
+    ```bash
+    /agnhost connect <server-ip>:80 --timeout=3s --protocol=tcp
+    ```
+
+    Connectivity is blocked because the server is labeled with `app=server`, but the client isn't labeled. Your output should resemble the following example output:
+
+    ```output
+    TIMEOUT
+    ```
+
+1. Label the `client` and verify connectivity with the server by using the `kubectl label` command.
+
+    ```bash
+    kubectl label pod client -n demo app=client
+    ```
+
+1. In the `client` shell, test connectivity to the server again by using the same `/agnhost` command:
+
+    ```bash
+    /agnhost connect <server-ip>:80 --timeout=3s --protocol=tcp
+    ```
+
+    If the connection is successful, there's no output.
+
+1. Verify the network policy by using the `kubectl get networkpolicy` and `kubectl describe networkpolicy` commands.
+
+    ```bash
+    kubectl get networkpolicy -n demo
+    kubectl describe networkpolicy demo-policy -n demo
+    ```
+
+    The output shows that pods labeled `app=server` are selected, ingress traffic is allowed on TCP port 80, and only pods labeled `app=client` can initiate connections.
+
+## Clean up resources by using Terraform
+
+In this section, you created a namespace, two pods, and a network policy. If you no longer need these Kubernetes resources, delete them before you remove the underlying Azure infrastructure.
+
+Use the [`kubectl delete`][kubectl-delete] command to delete the resources.
+
+```bash
+kubectl delete namespace demo
+```
+
+> [!WARNING]
+> The following command removes the resource group, the AKS cluster, and all other resources associated with the resource group created for this sample. If you deployed other resources inside this resource group, the command deletes them too.
+
+Remove the Azure resources by using the [`terraform destroy`][terraform-destroy] command.
+
+```console
+terraform destroy
+```
+
+:::zone-end
 
 ## Related content
 
@@ -367,10 +532,15 @@ In this article, you created a namespace and two pods and applied a network poli
 [tigera]: https://www.tigera.io/
 [calico-support]: https://www.tigera.io/tigera-products/calico/
 [calico-self-managed]: https://docs.tigera.io/calico/latest/getting-started/kubernetes/managed-public-cloud/aks-migrate
+[terraform-init]: https://www.terraform.io/docs/commands/init.html
+[terraform-plan]: https://www.terraform.io/docs/commands/plan.html
+[terraform-apply]: https://www.terraform.io/docs/commands/apply.html
+[terraform-destroy]: https://www.terraform.io/docs/commands/destroy.html
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [concepts-network]: concepts-network.md
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
@@ -380,3 +550,5 @@ In this article, you created a namespace and two pods and applied a network poli
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
+[az-group-create]: /cli/azure/group#az-group-create
+[az-group-delete]: /cli/azure/group#az-group-delete

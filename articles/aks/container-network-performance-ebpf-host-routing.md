@@ -9,9 +9,7 @@ ms.topic: concept-article
 ms.date:  09/23/2025
 ---
 
-# Overview of eBPF Host Routing (Preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+# Overview of eBPF Host Routing
 
 As containerized workloads scale across distributed environments, the need for high-performance, low-latency networking becomes critical. eBPF Host Routing is a performance-focused feature within [Advanced Container Networking Services (ACNS)](advanced-container-networking-services-overview.md) that uses extended Berkeley Packet Filter (eBPF) technology to optimize traffic flow in Kubernetes clusters. Legacy routing on Kubernetes hosts introduces overhead in the form of iptables and netfilter rule processing in the host network namespace. eBPF Host Routing has benefits over legacy host routing by:
 
@@ -42,17 +40,21 @@ Use cases for eBPF Host Routing are performance-critical workloads such as high-
 
  - On clusters with eBPF host routing enabled, AKS blocks attempts to install iptables rules in the host network namespace. Trying to bypass this block may cause the cluster to be inoperational.
 
+ - Enabling eBPF Host Routing updates nodes by [rolling upgrades for node pools](./upgrade-aks-node-pools-rolling.md) to respect existing connections through node drain timeout. Nodes are labeled `kubernetes.azure.com/ebpf-host-routing=true` once eBPF Host Routing is enabled on a given node.
+
+ - Dual-stack connectivity is supported by eBPF Host Routing.
+
 ## Limitations
 
- - eBPF host routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing.
+ - eBPF Host Routing is currently incompatible with nodes running OSes other than Ubuntu 24.04, or Azure Linux 3.0. eBPF host routing is currently also not supported with Confidential VMs and Pod Sandboxing.
 
  - eBPF Host Routing can only be enabled for all nodes in a cluster. Hybrid node scenarios aren't supported.
 
  - Windows nodes aren't supported by Azure CNI Powered by Cilium, and by extension, eBPF Host Routing.
 
- - Istio add-on can't be used along with eBPF Host Routing enabled clusters.
+ - eBPF Host Routing can't be used with [Static Egress Gateway](./configure-static-egress-gateway.md).
 
- - Dual stack networking isn't supported.
+ - Istio Ambient through a self-managed installation with ACNS Performance mode isn't supported.
 
 ## Pricing
 

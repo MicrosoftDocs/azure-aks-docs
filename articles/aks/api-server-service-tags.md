@@ -6,6 +6,7 @@ ms.date: 05/19/2024
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
+ms.subservice: aks-security
 # Customer intent: As a cluster operator, I want to use service tags to specify authorized IP ranges for the API server in AKS.
 ---
 
@@ -23,7 +24,6 @@ Service tags for API server authorized IP ranges is a preview feature that allow
 
 ## Limitations
 
-- This feature isn't compatible with [API Server VNet Integration][api-server-vnet-integration].
 - Only one service tag is allowed in the `--api-server-authorized-ip-ranges` parameter. You can't specify multiple service tags.
 
 ## Install the `aks-preview` Azure CLI extension

@@ -7,6 +7,7 @@ ms.custom: devx-track-azurecli
 author: deveshdama
 ms.date: 02/12/2025
 ms.author: ddama
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes operator, I want to configure Azure Managed Prometheus to collect metrics from Istio service mesh workloads, so that I can monitor performance and ensure the reliability of my applications on Azure Kubernetes Service.
 ---
 
@@ -37,8 +38,8 @@ export AZURE_MONITOR_WORKSPACE_ID=$(az monitor account create \
     --query id -o tsv)
 ```
 
-### Enable Prometheus addon
-To collect Prometheus metrics from your Kubernetes cluster, [enable Prometheus addon][kubernetes-enable-monitoring]:
+### Enable Prometheus add-on
+To collect Prometheus metrics from your Kubernetes cluster, [enable Prometheus add-on][kubernetes-enable-monitoring]:
 
 ```azurecli-interactive
 az aks update --enable-azure-monitor-metrics --name $CLUSTER --resource-group $RESOURCE_GROUP --azure-monitor-workspace-resource-id $AZURE_MONITOR_WORKSPACE_ID

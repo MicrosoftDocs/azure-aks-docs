@@ -4,6 +4,7 @@ description: Learn how to quickly deploy a Kubernetes cluster using Terraform an
 ms.author: schaffererin
 author: schaffererin
 ms.topic: quickstart
+ms.subservice: aks-developer
 ms.date: 03/22/2024
 ms.custom: devx-track-terraform, devx-track-extended-azdevcli, devx-track-azurecli
 content_well_notification:

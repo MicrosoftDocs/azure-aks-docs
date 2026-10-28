@@ -16,7 +16,7 @@ This article describes how Azure Kubernetes Service (AKS) uses Node Problem Dete
 
 ## About GPU health monitoring in NPD
 
-AKS supports GPU health monitoring through [Node Problem Detector (NPD)](./node-problem-detector.md), enabling automatic detection and reporting of issues that affect GPU-enabled node pools on an AKS cluster. GPU health monitoring helps Kubernetes operators keep GPU nodes healthy and performant by surfacing hardware faults, communication failures, and system-level errors. NPD sets GPU-related node conditions and enable platform engineering teams to take action before issues impact application performance or availability.
+AKS supports GPU health monitoring through [Node Problem Detector (NPD)](./node-problem-detector.md), enabling automatic detection and reporting of issues that affect GPU-enabled node pools on an AKS cluster. GPU health monitoring helps Kubernetes operators keep GPU nodes healthy and performant by surfacing hardware faults, communication failures, and system-level errors. NPD sets GPU-related node conditions and enables platform engineering teams to take action before issues impact application performance or availability.
 
 These health signals are vital for ensuring optimal performance and reliability across a range of GPU workloads, including:
 
@@ -52,6 +52,20 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies
 * **InfiniBand Link Flapping**: NPD monitors for InfiniBand (IB) link flapping, or intermittent connectivity of the IB network device.
   * Link flapping shouldn't occur under normal operating conditions and might result in degraded inter-node communication for distributed workloads.
   * It can also signal physical layer issues, misconfigured firmware, or driver instability.
+
+* **GPUClockThrottling**: NPD monitors GPU clock throttling conditions that may indicate performance degradation due to thermal, power, or hardware constraints. The check queries `nvidia-smi` for active clock throttle reasons and flags problematic conditions such as:
+  * Hardware slowdown (`HW_SLOWDOWN`)
+  * Software thermal slowdown (`SW_THERMAL_SLOWDOWN`)
+  * Hardware thermal slowdown (`HW_THERMAL_SLOWDOWN`)
+  * Hardware power brake slowdown (`HW_POWER_BRAKE_SLOWDOWN`)
+
+  Normal or expected throttling states such as GPU idle, no throttling, or user-configured software power caps aren't flagged.
+
+  For more information, see [NVIDIA clock throttle reasons](https://docs.nvidia.com/deploy/nvml-api/group__nvmlClocksThrottleReasons.html).
+
+* **UnhealthyNvidiaDevicePlugin**: For [AKS-managed GPU node pools](./aks-managed-gpu-nodes.md), NPD monitors the health of the NVIDIA device plugin systemd service (`nvidia-device-plugin.service`).
+  * The NVIDIA device plugin is responsible for advertising GPU resources to the Kubernetes scheduler. If the service is not active, GPU resources might not be available for scheduling workloads.
+  * This check applies only to AKS-managed GPU node pools.
 
 * **NVIDIA GRID Driver License Check**: For NVIDIA VM SKUs that support GRID driver, this condition verifies license status of the installed GRID driver on [supported NVIDIA VM SKUs](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series).
 

@@ -3,6 +3,7 @@ title: Deploy and test highly available GitHub Actions on Azure Kubernetes Servi
 description: Learn how to deploy and test highly available GitHub Actions with Azure Files on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+ms.subservice: aks-storage
 ms.date: 06/13/2025
 author: schaffererin
 ms.author: schaffererin

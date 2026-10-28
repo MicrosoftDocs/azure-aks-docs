@@ -1,18 +1,19 @@
 ---
-title: Use the cluster autoscaler in Azure Kubernetes Service (AKS)
+title: Use the Cluster Autoscaler in Azure Kubernetes Service (AKS)
 description: Learn how to use the cluster autoscaler to automatically scale your Azure Kubernetes Service (AKS) workloads to meet application demands.
-ms.topic: concept-article
-ms.custom: devx-track-azurecli, biannual
-ms.date: 06/10/2025
+ms.service: azure-kubernetes-service
+ms.topic: how-to
+ms.custom: devx-track-azurecli, biannual, aks-scaling
+ms.date: 07/30/2026
 author: schaffererin
 ms.author: schaffererin
-
+ai-usage: ai-assisted
 # Customer intent: "As an AKS operator, I want to configure the cluster autoscaler for my Kubernetes workloads, so that I can automatically adjust the number of nodes based on application demand and optimize resource utilization."
 ---
 
 # Use the cluster autoscaler in Azure Kubernetes Service (AKS)
 
-To keep up with application demands in AKS, you might need to adjust the number of nodes that run your workloads. The cluster autoscaler component watches for pods in your cluster that can't be scheduled because of resource constraints. When the cluster autoscaler detects issues, it scales up the number of nodes in the node pool to meet the application demands. It also regularly checks nodes for a lack of running pods and scales down the number of nodes as needed.
+To keep up with application demands in AKS, you might need to adjust the number of nodes that run your workloads. The cluster autoscaler component watches for pods in your cluster that can't be scheduled because of resource constraints. When the cluster autoscaler detects issues, it scales up the number of nodes in the node pool to meet the application demands. It also regularly checks for underutilized nodes and removes them when workloads can be safely rescheduled and scale-down conditions are met.
 
 This article shows you how to enable and manage the cluster autoscaler in AKS, which is based on the [open-source Kubernetes version][kubernetes-cluster-autoscaler].
 
@@ -20,10 +21,10 @@ This article shows you how to enable and manage the cluster autoscaler in AKS, w
 
 This article requires Azure CLI version 2.0.76 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 
-## Use the cluster autoscaler on an AKS cluster
+## Enable or disable the cluster autoscaler on a cluster
 
 > [!IMPORTANT]
-> The cluster autoscaler is a Kubernetes component. Although the AKS cluster uses a virtual machine scale set for the nodes, don't manually enable or edit settings for scale set autoscaling. Let the Kubernetes cluster autoscaler manage the required scale settings. For more information, see [Can I modify the AKS resources in the node resource group?][aks-faq-node-resource-group]
+> The cluster autoscaler is a Kubernetes component. Although the AKS cluster uses Virtual Machine Scale Sets for the nodes, don't manually enable or edit settings for scale set autoscaling. Let the Kubernetes cluster autoscaler manage the required scale settings. For more information, see [Can I modify the AKS resources in the node resource group?][aks-faq-node-resource-group]
 
 ### Enable the cluster autoscaler on a new cluster
 
@@ -33,7 +34,7 @@ This article requires Azure CLI version 2.0.76 or later. Run `az --version` to f
     az group create --name myResourceGroup --location eastus
     ```
 
-2. Create an AKS cluster using the [`az aks create`][az-aks-create] command and enable and configure the cluster autoscaler on the node pool for the cluster using the `--enable-cluster-autoscaler` parameter and specifying a node `--min-count` and `--max-count`. The following example command creates a cluster with a single node backed by a virtual machine scale set, enables the cluster autoscaler, sets a minimum of one and maximum of three nodes:
+1. Create an AKS cluster using the [`az aks create`][az-aks-create] command and enable and configure the cluster autoscaler on the node pool for the cluster using the `--enable-cluster-autoscaler` parameter and specifying a node `--min-count` and `--max-count`. The following example command creates a cluster with a single node backed by a Virtual Machine Scale Set, enables the cluster autoscaler, sets a minimum of one and maximum of three nodes:
 
     ```azurecli-interactive
     az aks create \
@@ -52,68 +53,68 @@ This article requires Azure CLI version 2.0.76 or later. Run `az --version` to f
 
 ### Enable the cluster autoscaler on an existing cluster
 
-* Update an existing cluster using the [`az aks update`][az-aks-update] command and enable and configure the cluster autoscaler on the node pool using the `--enable-cluster-autoscaler` parameter and specifying a node `--min-count` and `--max-count`. The following example command updates an existing AKS cluster to enable the cluster autoscaler on the node pool for the cluster and sets a minimum of one and maximum of three nodes:
+Update an existing cluster using the [`az aks update`][az-aks-update] command and enable and configure the cluster autoscaler on the node pool using the `--enable-cluster-autoscaler` parameter and specifying a node `--min-count` and `--max-count`. The following example command updates an existing AKS cluster to enable the cluster autoscaler on the node pool for the cluster and sets a minimum of one and maximum of three nodes:
 
-    ```azurecli-interactive
-    az aks update \
-      --resource-group myResourceGroup \
-      --name myAKSCluster \
-      --enable-cluster-autoscaler \
-      --min-count 1 \
-      --max-count 3
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --enable-cluster-autoscaler \
+    --min-count 1 \
+    --max-count 3
+```
 
-    It takes a few minutes to update the cluster and configure the cluster autoscaler settings.
+It takes a few minutes to update the cluster and configure the cluster autoscaler settings.
 
 ### Disable the cluster autoscaler on a cluster
 
-* Disable the cluster autoscaler using the [`az aks update`][az-aks-update-preview] command and the `--disable-cluster-autoscaler` parameter.
+Disable the cluster autoscaler using the [`az aks update`][az-aks-update] command and the `--disable-cluster-autoscaler` parameter.
 
-    ```azurecli-interactive
-    az aks update \
-      --resource-group myResourceGroup \
-      --name myAKSCluster \
-      --disable-cluster-autoscaler
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --disable-cluster-autoscaler
+```
 
-    Nodes aren't removed when the cluster autoscaler is disabled.
+Nodes aren't removed when the cluster autoscaler is disabled.
 
 > [!NOTE]
 > You can manually scale your cluster after disabling the cluster autoscaler using the [`az aks scale`][az-aks-scale] command. If you use the horizontal pod autoscaler, it continues to run with the cluster autoscaler disabled, but pods might end up unable to be scheduled if all node resources are in use.
 
 ### Re-enable the cluster autoscaler on a cluster
 
-You can re-enable the cluster autoscaler on an existing cluster using the [`az aks update`][az-aks-update-preview] command and specifying the `--enable-cluster-autoscaler`, `--min-count`, and `--max-count` parameters.
+You can re-enable the cluster autoscaler on an existing cluster using the [`az aks update`][az-aks-update] command and specifying the `--enable-cluster-autoscaler`, `--min-count`, and `--max-count` parameters.
 
-## Use the cluster autoscaler on node pools
+## Enable or disable the cluster autoscaler on node pools
 
 ### Use the cluster autoscaler on multiple node pools
 
 You can use the cluster autoscaler with [multiple node pools][aks-multiple-node-pools] and can enable the cluster autoscaler on each individual node pool and pass unique autoscaling rules to them.
 
-* Update the settings on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
+Update the settings on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
-    ```azurecli-interactive
-    az aks nodepool update \
-      --resource-group myResourceGroup \
-      --cluster-name myAKSCluster \
-      --name nodepool1 \
-      --update-cluster-autoscaler \
-      --min-count 1 \
-      --max-count 5
-    ```
+```azurecli-interactive
+az aks nodepool update \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name nodepool1 \
+    --update-cluster-autoscaler \
+    --min-count 1 \
+    --max-count 5
+```
 
 ### Disable the cluster autoscaler on a node pool
 
-* Disable the cluster autoscaler on a node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command and the `--disable-cluster-autoscaler` parameter.
+Disable the cluster autoscaler on a node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command and the `--disable-cluster-autoscaler` parameter.
 
-    ```azurecli-interactive
-    az aks nodepool update \
-      --resource-group myResourceGroup \
-      --cluster-name myAKSCluster \
-      --name nodepool1 \
-      --disable-cluster-autoscaler
-    ```
+```azurecli-interactive
+az aks nodepool update \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name nodepool1 \
+    --disable-cluster-autoscaler
+```
 
 ### Re-enable the cluster autoscaler on a node pool
 
@@ -126,16 +127,16 @@ You can re-enable the cluster autoscaler on a node pool using the [`az aks nodep
 
 As your application demands change, you might need to adjust the cluster autoscaler node count to scale efficiently.
 
-* Change the node count using the [`az aks update`][az-aks-update] command and update the cluster autoscaler using the `--update-cluster-autoscaler` parameter and specifying your updated node `--min-count` and `--max-count`.
+Change the node count using the [`az aks update`][az-aks-update] command and update the cluster autoscaler using the `--update-cluster-autoscaler` parameter and specifying your updated node `--min-count` and `--max-count`.
 
-    ```azurecli-interactive
-    az aks update \
-      --resource-group myResourceGroup \
-      --name myAKSCluster \
-      --update-cluster-autoscaler \
-      --min-count 1 \
-      --max-count 5
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --update-cluster-autoscaler \
+    --min-count 1 \
+    --max-count 5
+```
 
 > [!NOTE]
 > The cluster autoscaler enforces the minimum count in cases where the actual count drops below the minimum due to external factors, such as during a spot eviction or when changing the minimum count value from the AKS API.
@@ -175,76 +176,106 @@ The following table lists the available settings for the cluster autoscaler prof
 | `ok-total-unready-count` | Number of allowed unready nodes, irrespective of max-total-unready-percentage. | Three nodes |
 
 > [!NOTE]
-> The ignore-daemonsets-utilization, daemonset-eviction-for-empty-nodes, and daemonset-eviction-for-occupied-nodes parameters are GA from API version 2024-05-01. If you are using the CLI to update these flags, please ensure you are using version 2.63 or later.
+> The ignore-daemonsets-utilization, daemonset-eviction-for-empty-nodes, and daemonset-eviction-for-occupied-nodes parameters are GA from API version 2024-05-01.
 
 ### Set the cluster autoscaler profile on a new cluster
 
-* Create an AKS cluster using the [`az aks create`][az-aks-create] command and set the cluster autoscaler profile using the `cluster-autoscaler-profile` parameter.
+Create an AKS cluster using the [`az aks create`][az-aks-create] command and set the cluster autoscaler profile using the `cluster-autoscaler-profile` parameter.
 
-    ```azurecli-interactive
-    az aks create \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
-        --node-count 1 \
-        --enable-cluster-autoscaler \
-        --min-count 1 \
-        --max-count 3 \
-        --cluster-autoscaler-profile scan-interval=30s \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --node-count 1 \
+    --enable-cluster-autoscaler \
+    --min-count 1 \
+    --max-count 3 \
+    --cluster-autoscaler-profile scan-interval=30s \
+    --generate-ssh-keys
+```
 
 ### Set the cluster autoscaler profile on an existing cluster
 
-* Set the cluster autoscaler on an existing cluster using the [`az aks update`][az-aks-update-preview] command and the `cluster-autoscaler-profile` parameter. The following example configures the scan interval setting as *30s*:
+Set the cluster autoscaler on an existing cluster using the [`az aks update`][az-aks-update] command and the `cluster-autoscaler-profile` parameter. The following example configures the scan interval setting as *30s*:
 
-    ```azurecli-interactive
-    az aks update \
-      --resource-group myResourceGroup \
-      --name myAKSCluster \
-      --cluster-autoscaler-profile scan-interval=30s
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --cluster-autoscaler-profile scan-interval=30s
+```
 
 ### Configure cluster autoscaler profile for aggressive scale down
+
 > [!NOTE]
 > Scaling down aggressively is not recommended for clusters experiencing frequent scale-outs and scale-ins within short intervals, as it could potentially result in extended node provisioning times under these circumstances. Increasing `scale-down-delay-after-add` can help in these circumstances by keeping the node around longer to handle incoming workloads.
 
-   ```azurecli-interactive
-    az aks update \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
-        --cluster-autoscaler-profile scan-interval=30s,scale-down-delay-after-add=0m,scale-down-delay-after-failure=1m,scale-down-unneeded-time=3m,scale-down-unready-time=3m,max-graceful-termination-sec=30,skip-nodes-with-local-storage=false,max-empty-bulk-delete=1000,max-total-unready-percentage=100,ok-total-unready-count=1000,max-node-provision-time=15m
-   ```
+The following command configures an aggressive scale-down profile. It scans the cluster every 30 seconds, resumes scale-down evaluation immediately after a node is added and one minute after a failure, makes unneeded and unready nodes eligible for scale down after three minutes, limits graceful termination to 30 seconds, permits up to 1,000 empty nodes to be deleted at once, and raises the unready-node limits to 100 percent or 1,000 nodes. It also explicitly retains the default behavior of not skipping nodes with local storage and waiting up to 15 minutes for a node to be provisioned.
+
+```azurecli-interactive
+az aks update \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --cluster-autoscaler-profile scan-interval=30s,scale-down-delay-after-add=0m,scale-down-delay-after-failure=1m,scale-down-unneeded-time=3m,scale-down-unready-time=3m,max-graceful-termination-sec=30,skip-nodes-with-local-storage=false,max-empty-bulk-delete=1000,max-total-unready-percentage=100,ok-total-unready-count=1000,max-node-provision-time=15m
+```
+
 ### Configure cluster autoscaler profile for bursty workloads
-   ```azurecli-interactive
-    az aks update \   
-        --resource-group "myResourceGroup" \
-        --name myAKSCluster \ 
-        --cluster-autoscaler-profile scan-interval=20s,scale-down-delay-after-add=10m,scale-down-delay-after-failure=1m,scale-down-unneeded-time=5m,scale-down-unready-time=5m,max-graceful-termination-sec=30,skip-nodes-with-local-storage=false,max-empty-bulk-delete=100,max-total-unready-percentage=100,ok-total-unready-count=1000,max-node-provision-time=15m
-   ```
+
+The following command configures a profile for bursty workloads. It scans the cluster every 20 seconds, pauses scale-down evaluation for 10 minutes after a node is added to retain capacity for incoming bursts, resumes evaluation one minute after a failure, makes unneeded and unready nodes eligible for scale down after five minutes, limits graceful termination to 30 seconds, permits up to 100 empty nodes to be deleted at once, and raises the unready-node limits to 100 percent or 1,000 nodes. It also explicitly retains the default behavior of not skipping nodes with local storage and waiting up to 15 minutes for a node to be provisioned.
+
+```azurecli-interactive
+az aks update \
+    --resource-group "myResourceGroup" \
+    --name myAKSCluster \
+    --cluster-autoscaler-profile scan-interval=20s,scale-down-delay-after-add=10m,scale-down-delay-after-failure=1m,scale-down-unneeded-time=5m,scale-down-unready-time=5m,max-graceful-termination-sec=30,skip-nodes-with-local-storage=false,max-empty-bulk-delete=100,max-total-unready-percentage=100,ok-total-unready-count=1000,max-node-provision-time=15m
+```
 
 ### Reset cluster autoscaler profile to default values
 
-* Reset the cluster autoscaler profile using the [`az aks update`][az-aks-update-preview] command.
+Reset the cluster autoscaler profile using the [`az aks update`][az-aks-update] command.
 
-    ```azurecli-interactive
-    az aks update \
-      --resource-group myResourceGroup \
-      --name myAKSCluster \
-      --cluster-autoscaler-profile ""
-    ```
+```azurecli-interactive
+az aks update \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --cluster-autoscaler-profile ""
+```
 
-## Retrieve cluster autoscaler logs and status 
+## Use ProvisioningRequest with the cluster autoscaler
 
-You can retrieve logs and status updates from the cluster autoscaler to help diagnose and debug autoscaler events. AKS manages the cluster autoscaler on your behalf and runs it in the managed control plane. You can enable control plane node to see the logs and operations from the cluster autoscaler.
+`ProvisioningRequest` is a custom resource that you can use to request resources for a group of related pods. The cluster autoscaler treats these pods as a single unit. Based on the provisioning class you specify, the cluster autoscaler can either reserve existing resources for the pods or scale up the cluster.
+
+> [!NOTE]
+>
+> * `ProvisioningRequest` support requires an AKS cluster running Kubernetes version 1.33 or later.
+> * Consider using an [aggressive scale-down profile](#configure-cluster-autoscaler-profile-for-aggressive-scale-down) when using `ProvisioningRequest` so unused nodes from partial or unfulfilled scale-ups are removed quickly.
+
+| Provisioning class | Description |
+|--------------------|-------------|
+| `check-capacity.autoscaling.x-k8s.io` | Checks whether the cluster has enough resources for the specified pods. If the resources are available, the cluster autoscaler reserves them for the `ProvisioningRequest` for 10 minutes to prevent other `ProvisioningRequests` from claiming the same resources. |
+| `best-effort-atomic-scale-up.autoscaling.x-k8s.io` | The cluster autoscaler makes a best-effort attempt to provision the full requested resources in a single scale-up operation. If it can't provision all of it, the `ProvisioningRequest` fails, and the cluster autoscaler retries it after a back-off period. |
+
+For an end-to-end example that demonstrates Kueue integration with the cluster autoscaler and `ProvisioningRequest`, see [Configure Kueue with the cluster autoscaler on AKS](./configure-kueue-with-cluster-autoscaler.md).
+
+## Retrieve cluster autoscaler logs and status
+
+You can retrieve logs and status updates from the cluster autoscaler to help diagnose and debug autoscaler events. AKS manages the cluster autoscaler on your behalf and runs it in the managed control plane. To collect its control plane logs, create an Azure Monitor diagnostic setting for the AKS cluster in the Azure portal or use `az monitor diagnostic-settings create`, and enable the `cluster-autoscaler` log category.
 
 ### [Azure CLI](#tab/azure-cli)
 
-1. Set up a rule for resource logs to push cluster autoscaler logs to Log Analytics using the [instructions here][aks-view-master-logs]. Make sure you check the box for `cluster-autoscaler` when selecting options for **Logs**.
-1. Select the **Log** section on your cluster.
-1. Enter the following example query into Log Analytics:
+1. Set up a rule for resource logs to push cluster autoscaler logs to Log Analytics using the [Configure resource log collection for AKS control plane][aks-view-master-logs] instructions. Make sure you check the box for `cluster-autoscaler` when selecting options for **Logs**.
+1. Select the **Logs** section on your cluster.
+1. If your diagnostic settings use Azure diagnostics mode, enter the following query into Log Analytics:
 
     ```kusto
     AzureDiagnostics
+    | where Category == "cluster-autoscaler"
+    ```
+
+    If your diagnostic settings use resource-specific mode, enter the following query instead:
+
+    ```kusto
+    AKSControlPlane
     | where Category == "cluster-autoscaler"
     ```
 
@@ -260,7 +291,7 @@ You can retrieve logs and status updates from the cluster autoscaler to help dia
     kubectl get events --field-selector source=cluster-autoscaler,type=Warning
     ```
 
-1. The cluster autoscaler also writes out the health status to a `configmap` named `cluster-autoscaler-status`. You can retrieve these logs using the following `kubectl` command:
+1. The cluster autoscaler also writes out the health status to a `configmap` named `cluster-autoscaler-status`. You can retrieve this status using the following `kubectl` command:
 
     ```bash
     kubectl get configmap -n kube-system cluster-autoscaler-status -o yaml
@@ -269,8 +300,8 @@ You can retrieve logs and status updates from the cluster autoscaler to help dia
 ### [Azure portal](#tab/azure-portal)
 
 1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
-2. In the service menu, under **Settings**, select **Node pools**.
-3. Select any of the tiles for **Autoscale events**, **Autoscale warnings**, or **Scale-up not triggered** to get more details.
+1. In the service menu, under **Settings**, select **Node pools**.
+1. Select any of the tiles for **Autoscale events**, **Autoscale warnings**, or **Scale-up not triggered** to get more details.
 
     :::image type="content" source="./media/cluster-autoscaler/main-blade-tiles-inline-ca.png" alt-text="Screenshot of the Azure portal page for a cluster's node pools." lightbox="./media/cluster-autoscaler/main-blade-tiles-inline-ca.png":::
 
@@ -278,10 +309,13 @@ You can retrieve logs and status updates from the cluster autoscaler to help dia
 
 For more information, see the [Kubernetes/autoscaler GitHub project FAQ][kubernetes-faq].
 
-## Cluster Autoscaler Metrics
-You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from the [cluster autoscaler](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
+## Cluster autoscaler metrics
 
-## Next steps
+You can use [control plane metrics (Preview)](./monitor-control-plane-metrics.md) with [Azure Monitor managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) to collect [cluster autoscaler metrics](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets). The `controlplane-cluster-autoscaler` scrape target is disabled by default, so you must enable it to collect these metrics.
+
+The available metrics include `cluster_autoscaler_unschedulable_pods_count` and `cluster_autoscaler_unneeded_nodes_count`, which show the number of pods that can't be scheduled and nodes marked as candidates for removal. You can also monitor whether the cluster is safe to autoscale with `cluster_autoscaler_cluster_safe_to_autoscale` and whether scale-down is in a cooldown period with `cluster_autoscaler_scale_down_in_cooldown`.
+
+## Related content
 
 This article showed you how to automatically scale the number of AKS nodes. You can also use the horizontal pod autoscaler to automatically adjust the number of pods that run your application. For steps on using the horizontal pod autoscaler, see [Scale applications in AKS][aks-scale-apps].
 
@@ -300,8 +334,6 @@ To further help improve cluster resource utilization and free up CPU and memory 
 [az-group-create]: /cli/azure/group#az-group-create
 
 <!-- LINKS - external -->
-[az-aks-update-preview]: https://github.com/Azure/azure-cli-extensions/tree/master/src/aks-preview
-[az-aks-nodepool-update]: https://github.com/Azure/azure-cli-extensions/tree/master/src/aks-preview#enable-cluster-auto-scaler-for-a-node-pool
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [kubernetes-faq]: https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#ca-doesnt-work-but-it-used-to-work-yesterday-why
 [kubernetes-cluster-autoscaler]: https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler
-

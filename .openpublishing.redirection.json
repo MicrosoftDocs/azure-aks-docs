@@ -1,6 +1,11 @@
 {
   "redirections": [
     {
+      "source_path": "articles/aks/manage-azure-rbac.md",
+      "redirect_url": "/azure/aks/manage-entra-id-authorization",
+      "redirect_document_id": false
+    },
+    {
       "source_path": "articles/aks/azure-ad-integration-cli.md",
       "redirect_url": "/previous-versions/azure/aks/azure-ad-integration-cli",
       "redirect_document_id": false
@@ -68,6 +73,36 @@
     {
       "source_path_from_root": "/articles/aks/aks-zone-resiliency.md",
       "redirect_url": "/azure/aks/reliability-zone-resiliency-recommendations",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/deploy-ray.md",
+      "redirect_url": "/azure/aks/ray-overview",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/deploy-ray-tuning.md",
+      "redirect_url": "/azure/aks/ray-overview",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks-hybrid-edge/local/hyperconverged/disconnected-operations-aks.md",
+      "redirect_url": "/azure/aks-hybrid-edge/local/disconnected-operations/overview",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks-hybrid-edge/local/hyperconverged/kube-apiserver-log-overflow.md",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks-hybrid-edge/local/hyperconverged/cluster-upgrade-status.md",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks-hybrid-edge/local/hyperconverged/storage-provision-issue.md",
+      "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
       "redirect_document_id": false
     }
   ]

@@ -1,12 +1,13 @@
 ---
 title: Istio service mesh Azure Kubernetes Service add-on latency comparison
-description: Istio service mesh Azure Kubernetes Service add-on latency compared across addon versions
+description: Istio service mesh Azure Kubernetes Service add-on latency compared across add-on versions
 ms.topic: concept-article
 ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 09/30/2024
 author: schaffererin
 ms.author: shalierxia
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator, I want to compare latency performance across different Istio add-on versions, so that I can optimize the service mesh configuration for my applications.
 ---
 

@@ -1,17 +1,20 @@
 ---
 title: Supported Kubernetes Versions in Azure Kubernetes Service (AKS)
 description: Learn the Kubernetes version support policy and lifecycle of clusters in Azure Kubernetes Service (AKS).
-author: davidsmatlak
-ms.author: davidsmatlak
-ms.date: 07/29/2025
-ms.topic: concept-article
+author: schaffererin
+ms.author: schaffererin
+ms.date: 09/15/2026
+ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.custom:
   - build-2025
+ai-usage: ai-assisted
 # Customer intent: "As a Kubernetes administrator, I want to understand the supported Kubernetes version lifecycle in Azure Kubernetes Service, so that I can ensure my clusters remain compliant and up-to-date with security patches and feature releases."
 ---
 
 # Supported Kubernetes versions in Azure Kubernetes Service (AKS)
+
+[!INCLUDE [platform-initiated upgrades](./includes/platform-initiated-upgrade-notice.md)]
 
 The Kubernetes community releases [minor versions](https://kubernetes.io/releases/) roughly every four months.
 
@@ -25,57 +28,58 @@ Kubernetes uses the standard [Semantic Versioning](https://semver.org/) versioni
 
 ```
 [major].[minor].[patch]
-
-Examples:
-  1.29.2
-  1.29.1
 ```
 
 Each number in the version reflects compatibility with previous versions:
 
 - **Major versions**: Introduce incompatible API changes or break backward compatibility.
-- **Minor versions**: Add new features while maintaining backward compatibility.
+- **Minor versions**: Add new features. Stable APIs generally remain compatible, but deprecated APIs and features can be removed according to the [Kubernetes Deprecation Policy](https://kubernetes.io/docs/reference/using-api/deprecation-policy/).
 - **Patch versions**: Include backward-compatible bug fixes.
 
-Always use the latest patch release for your current minor version. For example, if your production cluster is on **`1.29.1`** and **`1.29.2`** is the latest available patch version available for the _1.29_ minor version, you should upgrade to **`1.29.2`** as soon as possible to ensure your cluster is fully patched and supported.
+Always use the latest patch release for your current minor version. When a later patch becomes available for your minor version, upgrade as soon as possible to ensure your cluster is fully patched and supported.
 
-## AKS Kubernetes release calendar
+## AKS Kubernetes release calendar and upcoming versions
 
 Check the AKS Kubernetes release calendar for upcoming version releases. To see real-time updates of region release status and version release notes, visit the [AKS release status webpage][aks-release]. To learn more about the release status webpage, see [AKS release tracker][aks-tracker].
 
 > [!NOTE]
 > AKS follows a 12-month support policy for generally available (GA) Kubernetes versions. To learn more about our Kubernetes version support policy, see the [FAQ](./supported-kubernetes-versions.md#frequently-asked-questions-faq). Unless an explicit date is provided, the End of Life (EOL) date is the last day of the specified month. For example, "Mar 2026" indicates March 31, 2026.
 
+The **Platform-initiated upgrade** column shows the planned rollout month for clusters still running that version after the 60-day [platform support grace period](./platform-initiated-upgrades.md#platform-support-grace-period). The listed month is a planning estimate, not an exact upgrade date for a cluster. Upgrades can occur during or after the listed month because AKS rate-limits them by region, subscription, and version. Versions included in the initial rollout share a June 2027 rollout month. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
+
 For the past release history, see [Kubernetes history](https://github.com/kubernetes/kubernetes/releases).
 
-| Kubernetes version | Upstream release | AKS preview | AKS GA | End of life | Platform support |
-| ------------------ | ---------------- | ----------- | ------ | ----------- | ---------------- |
-| 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Until 1.33 GA |
-| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22, 2025 | Until 1.34 GA |
-| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1, 2025 | Until 1.35 GA |
-| 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
-| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Until 1.37 GA |
-| 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Until 1.38 GA |
-| 1.35 | Dec 2025 | Feb 2026 | Mar 2026 | Mar 2027 | Until 1.39 GA |
+| Kubernetes version | Upstream release | AKS preview | AKS GA | End of life | Platform support | Platform-initiated upgrade |
+| ------------------ | ---------------- | ----------- | ------ | ----------- | ---------------- | -------------------------- |
+| 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA | Jun 2027 |
+| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jul 2026 | Until 1.37 GA | Jun 2027 |
+| 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Until 1.38 GA | Jun 2027 |
+| 1.35 | Dec 2025 | Feb 2026 | Mar 2026 | Mar 2027 | Until 1.39 GA | Jun 2027 |
+| 1.36 | Apr 2026 | May 2026 | Jun 2026 | Jun 2027 | Until 1.40 GA | Sep 2027 |
+| 1.37 | Aug 2026 | Sep 2026 | Oct 2026 | Oct 2027 | Until 1.41 GA | Jan 2028 |
+| 1.38 | TBD | Nov 2026 | Feb 2027 | TBD | TBD | TBD |
 
 ### LTS versions
 
 You need to enable long-term support (LTS) to get extended support. For more information, see [Enable long-term support](/azure/aks/long-term-support#enable-long-term-support).
 
 > [!NOTE]
-> Azure Linux 2.0 goes End of Life during the LTS period of AKS v1.28–v1.31. For more information on upgrading to Azure Linux 3.0 on AKS v1.28–v1.31, read the [Azure Linux AKS LTS Releases](/azure/azure-linux/support-cycle#aks-lts-releases) section.
+> Azure Linux 2.0 goes end of life during the LTS period of AKS v1.28–v1.31. For more information on upgrading to Azure Linux 3.0 on AKS v1.28–v1.31, see the [Azure Linux AKS LTS releases](/azure/azure-linux/aks-support-cycle#aks-long-term-support-lts-releases) section.
 
-| Kubernetes version | Upstream release | AKS preview | AKS GA | End of life | LTS End of life |
-| ------------------ | ---------------- | ----------- | ------ | ----------- | --------------- |
-| 1.27 | Apr 2023 | Jun 2023 | Jul 2023 | Jul 2024 | Jul 2025 |
-| 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan 2025 | Feb 2026 |
-| 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Apr 2026 |
-| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22, 2025 | Jul 2026 |
-| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1, 2025 | Nov 2026 |
-| 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027 |
-| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Jun 2027 |
-| 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Nov 2027 |
-| 1.35 | Dec 2025 | Feb 2026 | Mar 2026 | Mar 2027 | Mar 2028 |
+| Kubernetes version | Upstream release | AKS preview | AKS GA | End of life | LTS End of life | Platform-initiated upgrade |
+| ------------------ | ---------------- | ----------- | ------ | ----------- | --------------- | -------------------------- |
+| 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Apr 2026 | Jun 2027 |
+| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22, 2025 | Jul 2026 | Jun 2027 |
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 1, 2025 | Nov 2026 | Jun 2027 |
+| 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027 | Jun 2027 |
+| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jul 2026 | Jul 2027 | Oct 2027 |
+| 1.34 | Aug 2025 | Oct 2025 | Nov 2025 | Nov 2026 | Nov 2027 | Feb 2028 |
+| 1.35 | Dec 2025 | Feb 2026 | Mar 2026 | Mar 2027 | Mar 2028 | Jun 2028 |
+| 1.36 | Apr 2026 | May 2026 | Jun 2026 | Jun 2027 | Jun 2028 | Sep 2028 |
+| 1.37 | Aug 2026 | Sep 2026 | Oct 2026 | Oct 2027 | Oct 2028 | Jan 2029 |
+| 1.38 | TBD | Nov 2026 | Feb 2027 | TBD | TBD | TBD |
+
+For LTS clusters, the platform-initiated upgrade month follows the 60-day grace period after the LTS end-of-life date. AKS upgrades these clusters to the next supported LTS version. Enrollment in LTS is never automatic. The listed month is a planning estimate, not an exact upgrade date for a cluster.
 
 ### AKS Kubernetes release schedule Gantt chart
 
@@ -87,71 +91,60 @@ The following Gantt chart displays the current releases:
 
 Note the following important changes before you upgrade to any of the available minor versions:
 
+### Kubernetes 1.37
+
+| **AKS managed add-ons (add-on)** | **OS components** | **Breaking changes from Kubernetes 1.36.0** |
+| ------------------------------- | ----------------- | ------------------------------------------- |
+| - aad-pod-identity-nmi v1.8.22-4 <br> - aci-connector-linux v1.6.4-12 <br> - addon-resizer v1.8.23-30 <br> - addon-token-adapter-linux master.260902.1 <br> - addon-token-adapter-windows master.260902.1 <br> - addon-token-reconciler master.260911.3 <br> - ai-toolchain-operator 0.6.0 <br> - aks-windows-gpu-device-plugin 0.0.19 <br> - alb-controller 1.11.5 <br> - ama-logs-linux 3.6.0 <br> - ama-logs-win win-3.6.0 <br> - apiserver-network-proxy-agent v0.32.1-14 <br> - app-routing-operator 0.2.27 <br> - appmonitoring-webhook 1.1.4 <br> - azure-cni-installer v1.8.12 <br> - azure-cni-networkmonitor v1.1.8post2 <br> - azure-cns-linux v1.8.12 <br> - azure-cns-windows v1.8.12 <br> - azure-ipam-installer v0.4.0-0 <br> - azure-monitor-metrics-cfg-reader 7.2.1-main-07-31-2026-4a713766-cfg <br> - azure-monitor-metrics-ksm v2.19.1-3 <br> - azure-monitor-metrics-linux 7.2.1-main-07-31-2026-4a713766 <br> - azure-monitor-metrics-target-allocator 7.2.1-main-07-31-2026-4a713766-targetallocator <br> - azure-monitor-metrics-windows 7.2.1-main-07-31-2026-4a713766-win <br> - azure-npm-image v1.6.48-0 <br> - azure-npm-image-windows v1.5.5 <br> - azure-policy v1.17.0-3 <br> - azure-policy-audit v1.17.0-3 <br> - azure-policy-webhook v1.17.0-3 <br> - azuredisk-csi-linux v1.34.6-1 <br> - azuredisk-csi-windows v1.34.6 <br> - azurefile-csi-linux v1.35.8-8 <br> - azurefile-csi-windows v1.35.8 <br> - blob-csi v1.27.10-7 <br> - calico-cni-image v3.8.9.3 <br> - calico-node-image v3.8.9.5 <br> - calico-pod2daemon-flexvol-image v3.8.9.1 <br> - calico-typha-image v3.8.9 <br> - certgen v0.3.2 <br> - cilium-agent v1.19.6-260831 <br> - cilium-envoy v1.31.5-250218 <br> - cilium-operator v1.19.6-260831 <br> - cloud-provider-node-manager-linux v1.36.5-2 <br> - cloud-provider-node-manager-windows v1.36.5-windows-hpc-1 <br> - cluster-health-monitor v0.0.11 <br> - cluster-proportional-autoscaler v1.9.0-23 <br> - coredns v1.14.3-21 <br> - cost-analysis-agent v0.0.29 <br> - cost-analysis-opencost v1.111.0-30 <br> - cost-analysis-prometheus v2.54.1 <br> - cost-analysis-scraper v0.0.29 <br> - cost-analysis-victoria-metrics v1.103.0-16 <br> - csi-livenessprobe v2.19.0-8 <br> - csi-node-driver-registrar v2.17.0-8 <br> - fqdn-policy v1.16.6-250129 <br> - gitops-manager-config-agent 1.7.18 <br> - gitops-manager-config-operator 1.7.18 <br> - gpu-provisioner 0.3.5 <br> - health-probe-proxy v1.36.5-2 <br> - http-application-routing-defaultbackend 1.4 <br> - http-application-routing-external-dns v0.10.2-8 <br> - http-application-routing-nginx-ingress-controller v1.2.1-11 <br> - hubble-relay v1.19.6-260811 <br> - image-cleaner v1.4.2-1 <br> - ingress-appgw 1.9.13 <br> - keda 2.20.2-5 <br> - keda-admission-webhooks 2.20.2-4 <br> - keda-metrics-apiserver 2.20.2-5 <br> - konnectivity-agent-autoscaler master.260818.7 <br> - kube-egress-gateway-cni v0.1.9 <br> - kube-egress-gateway-cni-ipam v0.1.9 <br> - kube-egress-gateway-cnimanager v0.1.9 <br> - kube-egress-gateway-daemon v0.1.9 <br> - kube-egress-gateway-daemon-init v0.1.9 <br> - kube-proxy v1.37.0-1 <br> - kube-state-metrics v2.15.0-21 <br> - kubectl v1.37.0-1 <br> - local-csi-driver v0.2.4 <br> - local-csi-driver-csi-provisioner v5.2.0 <br> - local-csi-driver-csi-resizer v1.13.2 <br> - local-csi-driver-registrar v2.13.0 <br> - metrics-server v0.8.0-24 <br> - microsoft-defender-admission-controller 0.11.23 <br> - microsoft-defender-antimalware-collector 1.0.23 <br> - microsoft-defender-low-level-collector 2.2.33 <br> - microsoft-defender-low-level-init 1.3.81 <br> - microsoft-defender-old-file-cleaner 1.1.66 <br> - microsoft-defender-pod-collector 1.0.265 <br> - microsoft-defender-security-publisher 1.1.71 <br> - microsoft-defender-sensor-release-version 0.10.43 <br> - open-policy-agent-gatekeeper v3.23.1-1 <br> - osm-bootstrap v1.2.15-11 <br> - osm-controller v1.2.15-11 <br> - osm-crds v1.2.15-11 <br> - osm-healthcheck v1.2.15-9 <br> - osm-init v1.2.15-7 <br> - osm-injector v1.2.15-11 <br> - osm-sidecar v1.38.3-4 <br> - overlay-vpa-admission-controller v1.7.1-3 <br> - overlay-vpa-recommender v1.7.1-3 <br> - overlay-vpa-updater v1.7.1-3 <br> - ratify v1.4.5-2 <br> - resourcesync-operator 1.7.18 <br> - retina-agent v1.2.7 <br> - retina-agent-enterprise v0.3.0 <br> - retina-agent-init-enterprise v0.3.0 <br> - retina-agent-win v1.2.7 <br> - retina-init v1.2.7 <br> - retina-operator v0.3.0 <br> - secrets-store-csi-driver v1.5.6-2 <br> - secrets-store-csi-driver-windows v1.5.6-2 <br> - secrets-store-driver-registrar-linux v2.18.0-2 <br> - secrets-store-driver-registrar-windows v2.18.0-2 <br> - secrets-store-livenessprobe-linux v2.20.0-2 <br> - secrets-store-livenessprobe-windows v2.20.0-2 <br> - secrets-store-provider-azure v1.8.2-9 <br> - secrets-store-provider-azure-windows v1.8.2-9 <br> - sgx-attestation 3.3.8 <br> - sgx-plugin 1.0.7 <br> - sgx-webhook 1.2.9 <br> - tigera-operator v1.40.2 <br> - tunnel-front master.260519.2 <br> - tunnel-openvpn-front master.260519.2 <br> - windows-gmsa-webhook-image v0.14.1 <br> - workload-identity-webhook v1.5.1-20 | - **Linux - Ubuntu 24.04** <br> - acr-mirror 1.0.0 <br> - aks-secure-tls-bootstrap-client 1.1.4-ubuntu24.04u2 <br> - azure-acr-credential-provider-pmc not published for 1.37 yet <br> - blobfuse2 2.5.5 <br> - containerd 2.3.3-ubuntu24.04u2 <br> - containernetworking-plugins 1.9.0-ubuntu24.04u1 <br> - datacenter-gpu-manager-4-core 1:4.5.3-1 <br> - datacenter-gpu-manager-4-proprietary 1:4.5.3-1 <br> - dcgm-exporter 4.8.2-ubuntu24.04u10 <br> - dra-driver-nvidia-gpu 0.4.1-ubuntu24.04u5 <br> - inspektor-gadget 0.55.1-ubuntu24.04u2 <br> - kubectl 1.37.x <br> - kubelet 1.37.x <br> - kubernetes-cri-tools 1.34.0-ubuntu24.04u21 <br> - node-exporter 1.12.1-ubuntu24.04u7 <br> - nvidia-device-plugin 0.19.3-ubuntu24.04u6 <br> - runc 1.4.3-ubuntu24.04u2 <br> - **Linux - AzureLinux 3.0** <br> - acr-mirror 1.0.0 <br> - aks-secure-tls-bootstrap-client 1.1.4-2.azl3 <br> - aznfs 3.0.15-1 <br> - azure-acr-credential-provider-pmc not published for 1.37 yet <br> - containerd 2.2.4-6.azl3 <br> - containernetworking-plugins 1.9.0-1.azl3 <br> - dra-driver-nvidia-gpu 0.4.1-5.azl3 <br> - inspektor-gadget 0.55.1-2.azl3 <br> - kubectl 1.37.x <br> - kubelet 1.37.x <br> - kubernetes-cri-tools 1.34.0-21.azl3 <br> - node-exporter 1.12.1-7.azl3 <br> - nvidia-container-toolkit 1.17.8 <br> - nvidia-device-plugin 0.19.3-6.azl3 <br> - **Windows - Windows2022** <br> - containerd v2.0.4-azure | - On Kubernetes 1.37 and later, [Azure Monitor managed service for Prometheus](/azure/azure-monitor/containers/prometheus-metrics-scrape-crd#basic-authentication-and-bearer-tokens) (`ama-metrics`) uses namespace-scoped access to Kubernetes secrets for `PodMonitor` and `ServiceMonitor` configurations. If your `ServiceMonitor` or `PodMonitor` uses `basicAuth`, you must configure namespace-scoped secrets access before upgrading to Kubernetes 1.37. |
+
+### Kubernetes 1.36
+
+| **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.35.0** |
+| ------------------------------- | ------------------------ | ----------------- | ------------------------------------------- |
+| - azuredisk-csi-linux v1.34.4 <br> - azuredisk-csi-windows v1.34.4 <br> - azurefile-csi-linux v1.35.4 <br> - azurefile-csi-windows v1.35.4 <br> - blob-csi v1.27.6 <br> - coredns v1.14.3-3 <br> - cilium-agent v1.19.6-260811 <br> - cilium-operator v1.19.6-260811 <br> - tigera-operator v1.40.2 <br> - cloud-provider-node-manager-linux v1.36.1-2 <br> - cloud-provider-node-manager-windows v1.36.1-windows-hpc-1 <br> - metrics-server v0.8.0-13 <br> - keda 2.19.0-6 <br> - azure-policy v1.15.5-1 <br> - open-policy-agent-gatekeeper v3.22.2-3 <br> - workload-identity-webhook v1.5.1-11 <br> - secrets-store-provider-azure v1.8.1-2 <br> - microsoft-defender-low-level-collector 2.2.18 <br> - image-cleaner v1.4.1-3 <br> - overlay-vpa v1.6.0-5 <br> - app-routing-operator 0.2.24 <br> - karpenter 1.12.2-aks | - cluster-autoscaler v1.35.0-aks-4 <br> - cloud-provider-controller-manager v1.36.1-2 <br> - csi-attacher v4.11.0 <br> - csi-provisioner v6.1.1 <br> - csi-resizer v2.1.0 <br> - csi-snapshotter v8.5.0 <br> - snapshot-controller v8.5.0 <br> - kube-state-metrics v2.15.0-12 | - **Linux - Ubuntu 24.04** <br> - containerd 2.3.1-ubuntu24.04u2 <br> - runc 1.4.3-ubuntu24.04u1 <br> - **Linux - AzureLinux 3.0** <br> - containerd 2.2.4-2.azl3 <br> - **Windows - Windows2022** <br> - containerd v2.0.4-azure.1 | - cloud-provider-node-manager-linux v1.35.5-2 -> v1.36.1-2 <br> - cloud-provider-node-manager-windows v1.35.5-windows-hpc-1 -> v1.36.1-windows-hpc-1 <br> - coredns v1.13.1-12 -> v1.14.3-3 <br> - keda 2.17.3-7 -> 2.19.0-6 <br> - keda-admission-webhooks 2.17.3-7 -> 2.19.0-5 <br> - keda-metrics-apiserver 2.17.3-7 -> 2.19.0-7 <br> - microsoft-defender-low-level-collector 2.1.115 -> 2.2.18 <br> - overlay-vpa-admission-controller v1.5.1-8 -> v1.6.0-5 <br> - overlay-vpa-recommender v1.5.1-7 -> v1.6.0-4 <br> - overlay-vpa-updater v1.5.1-8 -> v1.6.0-4 <br> - cloud-provider-controller-manager v1.35.5-2 -> v1.36.1-2 |
+
+### Kubernetes 1.35
+
+| **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.34.0** |
+| ------------------------------- | ------------------------ | ----------------- | ------------------------------------------- |
+| - azuredisk-csi-linux v1.34.2 <br> - azuredisk-csi-windows v1.34.2 <br> - azurefile-csi-linux v1.35.1 <br> - azurefile-csi-windows v1.35.1 <br> - blob-csi v1.27.3 <br> - coredns v1.13.1-6 <br> - cilium-agent v1.18.12-260811 <br> - cilium-operator v1.18.12-260811 <br> - tigera-operator v1.40.2 <br> - cloud-provider-node-manager-linux v1.35.1-1 <br> - cloud-provider-node-manager-windows v1.35.1 <br> - metrics-server v0.8.0-8 <br> - keda 2.17.2-3 <br> - azure-policy 1.15.5 <br> - open-policy-agent-gatekeeper v3.20.1-6 <br> - workload-identity-webhook v1.5.1-6 <br> - secrets-store-provider-azure v1.7.2 <br> - microsoft-defender-low-level-collector 2.1.109 <br> - image-cleaner v1.4.0-10 <br> - overlay-vpa v1.5.1-5 <br> - app-routing-operator 0.2.19 <br> - karpenter 1.7.0-aks | - cluster-autoscaler v1.35.0-aks-2 <br> - cloud-provider-controller-manager v1.35.1-1 <br> - csi-attacher v4.11.0 <br> - csi-provisioner v6.1.1 <br> - csi-resizer v2.1.0 <br> - csi-snapshotter v8.5.0 <br> - snapshot-controller v8.5.0 <br> - kube-state-metrics v2.15.0-10 | - **Linux - Ubuntu 22.04** <br> - containerd 1.7.29-ubuntu22.04u1 <br> - kubectl 1.35.x-ubuntu22.04u4 <br> - kubelet 1.35.x-ubuntu22.04u4 <br> - runc 1.3.3-ubuntu22.04u1 <br> - **Linux - AzureLinux 3.0** <br> - containerd 2.0.0-14.azl3 <br> - kubectl 1.35.x-azl3 <br> - kubelet 1.35.x-azl3 <br> - **Windows - Windows2022** <br> - containerd v2.0.4-azure.1 | - azuredisk-csi v1.33.8 -> v1.34.2 <br> - azurefile-csi v1.34.4 -> v1.35.1 <br> - cloud-provider-node-manager-linux v1.34.6-1 -> v1.35.1-1 <br> - cloud-provider-node-manager-windows v1.34.3 -> v1.35.1 <br> - cloud-provider-controller-manager v1.34.6-1 -> v1.35.1-1 <br> - cluster-autoscaler v1.34.1-aks-4 -> v1.35.0-aks-2 <br> - tigera-operator v1.38.8 -> v1.40.2 <br> - microsoft-defender-low-level-collector 2.0.242 -> 2.1.109 <br> - csi-attacher v4.10.0 -> v4.11.0 <br> - csi-resizer v2.0.0 -> v2.1.0 <br> - csi-snapshotter v8.4.0 -> v8.5.0 <br> - snapshot-controller v8.4.0 -> v8.5.0 <br> - csi-livenessprobe v2.17.0 -> v2.18.0 <br> - csi-node-driver-registrar v2.15.0 -> v2.16.0 |
+
 ### Kubernetes 1.34
 
-| **AKS managed add-ons (addon)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.33.0** |
+| **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.33.0** |
 | ------------------------------- | ------------------------ | ----------------- | ------------------------------------------- |
-| aci-connector-linux 1.6.2 | addon-override-manager master.251002.2 | **Linux - Ubuntu 22.04** | kube-egress-gateway-daemon v0.0.21 → v0.1.3 |
-| addon-resizer v1.8.23-7 | apiserver-network-proxy-server v0.31.4-3 | azure-acr-credential-provider-pmc 1.34.1-ubuntu22.04u3 | kube-egress-gateway-daemon-init v0.0.21 → v0.1.3 |
-| ai-toolchain-operator 0.6.0 | app-routing-operator 0.2.12 | containerd 1.7.29-ubuntu22.04u1 | kube-egress-gateway-cnimanager v0.0.21 → v0.1.3 |
-| aks-windows-gpu-device-plugin 0.0.19 | automatic-authz-webhook master.251112.4 | datacenter-gpu-manager-4-core 1:4.4.1-1 | kube-egress-gateway-cni v0.0.21 → v0.1.3 |
-| ama-logs-linux 3.1.31 | ccp-webhook master.251105.4 | datacenter-gpu-manager-4-proprietary 1:4.4.1-1 | kube-egress-gateway-cni-ipam v0.0.21 → v0.1.3 |
-| ama-logs-win win-3.1.31 | cluster-autoscaler v1.33.1-aks-3 | kubectl 1.34.1-ubuntu22.04u4 | cloud-provider-node-manager-windows v1.33.3 → v1.34.0 |
-| app-routing-operator 0.0.3 | cost-analysis-scraper v0.0.25 | kubelet 1.34.1-ubuntu22.04u4 | cloud-provider-node-manager-linux v1.33.3 → v1.34.0 |
-| azure-monitor-metrics-cfg-reader 6.24.0-main | customer-net-probe master.250827.1 | kubernetes-cri-tools 1.32.0-ubuntu22.04u3 | metrics-server v0.7.2-10 → v0.8.0-4 |
-| azure-monitor-metrics-ksm v2.17.0 | envoy v1.35.6-master.251017.3 | nvidia-device-plugin 0.18.0-ubuntu22.04u2 | overlay-vpa v1.2.1-1 → v1.5. |
-| azure-monitor-metrics-linux 6.24.0-main | ingress-dispatcher v1.35.6-master.251017.3 | runc 1.3.3-ubuntu22.04u1 | coredns v1.12.1-7 → v1.13.1-2 |
-| azure-monitor-metrics-target-allocator | jwt-authenticator-egress master.250904.1 | **Linux - AzureLinux 3.0** | kube-egress-gateway-controller v0.0.21 → v0.1.3 |
-| azure-monitor-metrics-windows | kube-state-metrics v2.15.0-4 | azure-acr-credential-provider-pmc 1.34.1-1.azl3 | |
-| azure-npm-image v1.6.34 | kubeguard-guard v0.16.23 | containerd 2.0.0-14.azl3 | |
-| azure-npm-image-windows v1.5.5 | private-connect-balancer master.250731.2 | datacenter-gpu-manager-4-core 1:4.4.1-1 | |
-| azure-policy 1.15.1 | private-connect-router master.251105.2 | datacenter-gpu-manager-4-proprietary 1:4.4.1-1 | |
-| azure-policy-audit 1.15.1 | gpu-provisioner 0.3.7 (plugin) | dcgm-exporter 4.6.0-1.azl3 | |
-| azure-policy-webhook 1.15.1 | karpenter 1.6.5-aks (plugin) | kubectl 1.34.1-4.azl3 | |
-| certgen v0.1.9 | kms-controller master.250811.2 (plugin) | kubelet 1.34.1-4.azl3 | |
-| cilium-agent 1.14.10-1 | kms-operator master.250814.1 (plugin) | kubernetes-cri-tools 1.32.0-3.azl3 | |
-| cilium-envoy v1.31.5-250218 | kms-plugin-v2-plus master.251114.2 (plugin) | nvidia-container-toolkit 1.17.3 | |
-| cilium-operator-generic 1.14.10 | kube-egress-gateway-controller v0.1.3 | nvidia-device-plugin 0.18.0-2.azl3 | |
-| cloud-provider-node-manager-linux v1.34.0 | kubelet-serving-csr-approver v0.0.7 | **Windows - Windows2022** | |
-| cloud-provider-node-manager-windows v1.34.0 | live-patching-controller v0.0.16 | containerd v2.0.4-azure.1 | |
-| ... | secure-tls-bootstrap-server v0.0.9 | | |
+| - aci-connector-linux 1.6.2 <br> - addon-resizer v1.8.23-7 <br> - ai-toolchain-operator 0.6.0 <br> - aks-windows-gpu-device-plugin 0.0.19 <br> - ama-logs-linux 3.1.31 <br> - ama-logs-win 3.1.31 <br> - app-routing-operator 0.0.3 <br> - azure-monitor-metrics-cfg-reader 6.24.0-main <br> - azure-monitor-metrics-ksm v2.17.0 <br> - azure-monitor-metrics-linux 6.24.0-main <br> - azure-monitor-metrics-target-allocator <br> - azure-monitor-metrics-windows <br> - azure-npm-image v1.6.34 <br> - azure-npm-image-windows v1.5.5 <br> - azure-policy 1.15.1 <br> - azure-policy-audit 1.15.1 <br> - azure-policy-webhook 1.15.1 <br> - certgen v0.1.9 <br> - cilium-agent v1.18.12-260811 <br> - cilium-envoy v1.34.10-251105 <br> - cilium-operator-generic v1.18.6 <br> - cloud-provider-node-manager-linux v1.34.0 <br> - cloud-provider-node-manager-windows v1.34.0 <br> - ... | - addon-override-manager master.251002.2 <br> - apiserver-network-proxy-server v0.31.4-3 <br> - app-routing-operator 0.2.12 <br> - automatic-authz-webhook master.251112.4 <br> - ccp-webhook master.251105.4 <br> - cluster-autoscaler v1.33.1-aks-3 <br> - cost-analysis-scraper v0.0.25 <br> - customer-net-probe master.250827.1 <br> - envoy v1.35.6-master.251017.3 <br> - ingress-dispatcher v1.35.6-master.251017.3 <br> - jwt-authenticator-egress master.250904.1 <br> - kube-state-metrics v2.15.0-4 <br> - kubeguard-guard v0.16.23 <br> - private-connect-balancer master.250731.2 <br> - private-connect-router master.251105.2 <br> - gpu-provisioner 0.3.7 (plugin) <br> - karpenter 1.6.5-aks (plugin) <br> - kms-controller master.250811.2 (plugin) <br> - kms-operator master.250814.1 (plugin) <br> - kms-plugin-v2-plus master.251114.2 (plugin) <br> - kube-egress-gateway-controller v0.1.3 <br> - kubelet-serving-csr-approver v0.0.7 <br> - live-patching-controller v0.0.16 <br> - secure-tls-bootstrap-server v0.0.9 | - **Linux - Ubuntu 22.04** <br> - azure-acr-credential-provider-pmc 1.34.1-ubuntu22.04u3 <br> - containerd 1.7.29-ubuntu22.04u1 <br> - datacenter-gpu-manager-4-core 1:4.4.1-1 <br> - datacenter-gpu-manager-4-proprietary 1:4.4.1-1 <br> - kubectl 1.34.1-ubuntu22.04u4 <br> - kubelet 1.34.1-ubuntu22.04u4 <br> - kubernetes-cri-tools 1.32.0-ubuntu22.04u3 <br> - nvidia-device-plugin 0.18.0-ubuntu22.04u2 <br> - runc 1.3.3-ubuntu22.04u1 <br> - **Linux - AzureLinux 3.0** <br> - azure-acr-credential-provider-pmc 1.34.1-1.azl3 <br> - containerd 2.0.0-14.azl3 <br> - datacenter-gpu-manager-4-core 1:4.4.1-1 <br> - datacenter-gpu-manager-4-proprietary 1:4.4.1-1 <br> - dcgm-exporter 4.6.0-1.azl3 <br> - kubectl 1.34.1-4.azl3 <br> - kubelet 1.34.1-4.azl3 <br> - kubernetes-cri-tools 1.32.0-3.azl3 <br> - nvidia-container-toolkit 1.17.3 <br> - nvidia-device-plugin 0.18.0-2.azl3 <br> - **Windows - Windows2022** <br> - containerd v2.0.4-azure.1 | - kube-egress-gateway-daemon v0.0.21 -> v0.1.3 <br> - kube-egress-gateway-daemon-init v0.0.21 -> v0.1.3 <br> - kube-egress-gateway-cnimanager v0.0.21 -> v0.1.3 <br> - kube-egress-gateway-cni v0.0.21 -> v0.1.3 <br> - kube-egress-gateway-cni-ipam v0.0.21 -> v0.1.3 <br> - cloud-provider-node-manager-windows v1.33.3 -> v1.34.0 <br> - cloud-provider-node-manager-linux v1.33.3 -> v1.34.0 <br> - metrics-server v0.7.2-10 -> v0.8.0-4 <br> - overlay-vpa v1.2.1-1 -> v1.5 <br> - coredns v1.12.1-7 -> v1.13.1-2 <br> - kube-egress-gateway-controller v0.0.21 -> v0.1.3 |
 
 ### Kubernetes 1.33
 
-| **AKS managed add-ons (addon)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.33.0** |
+| **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes from Kubernetes 1.32.0** |
 | ------------------------------- | ------------------------ | ----------------- | ------------------------------------------- |
-| - aci-connector-linux 1.6.2 <br> - addon-resizer v1.8.23-2 <br> - ai-toolchain-operator 0.4.5 <br> - aks-windows-gpu-device-plugin 0.0.19 <br> - ama-logs-linux 3.1.26 <br> - ama-logs-win win-3.1.26 <br> - app-routing-operator 0.0.3 <br> - azure-monitor-metrics-cfg-reader 6.16.0-main-04-15-2025-d78050c6-cfg <br> - azure-monitor-metrics-ksm v2.15.0-4 <br> - azure-monitor-metrics-linux 6.16.0-main-04-15-2025-d78050c6 <br> - azure-monitor-metrics-target-allocator 6.16.0-main-04-15-2025-d78050c6-targetallocator <br> - azure-monitor-metrics-windows 6.16.0-main-04-15-2025-d78050c6-win <br> - azure-npm-image v1.5.45 <br> - azure-npm-image-windows v1.5.5 <br> - azure-policy 1.10.1 <br> - azure-policy-webhook 1.10.0 <br> - certgen v0.1.9 <br> - cilium-agent 1.14.10-1 <br> - cilium-envoy v1.31.5-250218 <br> - cilium-operator-generic 1.14.10 <br> - cloud-provider-node-manager-linux v1.33.0 <br> - cloud-provider-node-manager-windows v1.33.0 <br> - cluster-proportional-autoscaler v1.9.0-1 <br> - container-networking-cilium-agent v1.16.6-250129 <br> - container-networking-cilium-operator-generic v1.16.6-250129 <br> - coredns v1.12.1-1 <br> - cost-analysis-agent v0.0.23 <br> - cost-analysis-opencost v1.111.0 <br> - cost-analysis-prometheus v2.54.1 <br> - cost-analysis-victoria-metrics v1.103.0 <br> - extension-config-agent 1.23.3 <br> - extension-manager 1.23.3 <br> - fqdn-policy v1.16.6-250129 <br> - gpu-provisioner 0.3.3 <br> - health-probe-proxy v1.29.1 <br> - hubble-relay v1.15.0 <br> - image-cleaner v1.3.1 <br> - ingress-appgw 1.8.1 <br> - ip-masq-agent-v2 v0.1.15-2 <br> - ipv6-hp-bpf v0.0.1 <br> - keda v2.16.1 <br> - keda-admission-webhooks v2.16.1 <br> - keda-metrics-apiserver v2.16.1 <br> - kube-egress-gateway-cni v0.0.20 <br> - kube-egress-gateway-cni-ipam v0.0.20 <br> - kube-egress-gateway-cnimanager v0.0.20 <br> - kube-egress-gateway-daemon v0.0.20 <br> - kube-egress-gateway-daemon-init v0.0.20 <br> - metrics-server v0.7.2-6 <br> - microsoft-defender-admission-controller 20250325.2 <br> - microsoft-defender-low-level-collector 2.0.205 <br> - microsoft-defender-low-level-init 1.3.81 <br> - microsoft-defender-old-file-cleaner 1.0.214 <br> - microsoft-defender-pod-collector 1.0.177 <br> - microsoft-defender-security-publisher 1.0.211 <br> - open-policy-agent-gatekeeper v3.18.2-1 <br> - osm-bootstrap v1.2.9 <br> - osm-controller v1.2.9 <br> - osm-crds v1.2.9 <br> - osm-healthcheck v1.2.9 <br> - osm-init v1.2.9 <br> - osm-injector v1.2.9 <br> - osm-sidecar v1.32.2-hotfix.20241216 <br> - overlay-vpa 1.2.1 <br> - overlay-vpa-webhook-generation master.250430.1 <br> - ratify-base v1.2.3 <br> - retina-agent v0.0.31 <br> - retina-agent-enterprise v0.1.9 <br> - retina-agent-win v0.0.31 <br> - retina-operator v0.1.9 <br> - secrets-store-csi-driver v1.4.8 <br> - secrets-store-csi-driver-windows v1.4.8 <br> - secrets-store-driver-registrar-linux v2.11.1 <br> - secrets-store-driver-registrar-windows v2.11.1 <br> - secrets-store-livenessprobe-linux v2.13.1 <br> - secrets-store-livenessprobe-windows v2.13.1 <br> - secrets-store-provider-azure v1.6.2 <br> - secrets-store-provider-azure-windows v1.6.2 <br> - sgx-attestation 3.3.1 <br> - sgx-plugin 1.0.0 <br> - sgx-webhook 1.2.2 <br> - tigera-operator v1.36.7 <br> - windows-gmsa-webhook-image v0.12.1-2 <br> - workload-identity-webhook v1.5.0 | - addon-override-manager master.250116.1 <br> - apiserver-network-proxy-server v0.30.3-hotfix.20240819 <br> - app-routing-operator 0.2.5 <br> - ccp-webhook master.250509.3 <br> - cluster-autoscaler v1.32.1-aks <br> - cost-analysis-scraper v0.0.23 <br> - customer-net-probe master.250430.1 <br> - envoy v1.31.5-master.241218.3 <br> - ingress-dispatcher v1.31.5-master.250126.7 <br> - kube-state-metrics v2.15.0-4 <br> - gpu-provisioner 0.3.3 <br> - karpenter 0.7.3-aks <br> - kube-egress-gateway-controller v0.0.20 <br> - kubelet-serving-csr-approver v0.0.7 <br> - live-patching-controller v0.0.8 | - **Linux - Ubuntu 22.04** <br>   - containerd 1.7.27-ubuntu22.04u1 <br>   - kubernetes-cri-tools 1.32.0-ubuntu22.04u3 <br> - runc 1.2.6-ubuntu22.04u1 <br> - **Linux - AzureLinux 3.0** <br> - containerd 2.0.0-4.azl3 <br> - nvidia-container-toolkit 1.17.3 <br> - **Windows - Windows2022** <br> - containerd v1.7.20-azure.1 | - coredns v1.11.3-7 → v1.12.1-1 <br> - cloud-provider-node-manager-windows v1.32.5 → v1.33.0 <br> - cloud-provider-node-manager-linux v1.32.5 → v1.33.0 |
+| - aci-connector-linux 1.6.2 <br> - addon-resizer v1.8.23-2 <br> - ai-toolchain-operator 0.4.5 <br> - aks-windows-gpu-device-plugin 0.0.19 <br> - ama-logs-linux 3.1.26 <br> - ama-logs-win 3.1.26 <br> - app-routing-operator 0.0.3 <br> - azure-monitor-metrics-cfg-reader 6.16.0-main-04-15-2025-d78050c6-cfg <br> - azure-monitor-metrics-ksm v2.15.0-4 <br> - azure-monitor-metrics-linux 6.16.0-main-04-15-2025-d78050c6 <br> - azure-monitor-metrics-target-allocator 6.16.0-main-04-15-2025-d78050c6-targetallocator <br> - azure-monitor-metrics-windows 6.16.0-main-04-15-2025-d78050c6-win <br> - azure-npm-image v1.5.45 <br> - azure-npm-image-windows v1.5.5 <br> - azure-policy 1.10.1 <br> - azure-policy-webhook 1.10.0 <br> - certgen v0.1.9 <br> - cilium-agent v1.17.18-260811 <br> - cilium-envoy v1.34.10-251105 <br> - cilium-operator-generic v1.17.18-260811 <br> - cloud-provider-node-manager-linux v1.33.0 <br> - cloud-provider-node-manager-windows v1.33.0 <br> - cluster-proportional-autoscaler v1.9.0-1 <br> - container-networking-cilium-agent v1.17.18-260811 <br> - container-networking-cilium-operator-generic v1.17.18-260811 <br> - coredns v1.12.1-1 <br> - cost-analysis-agent v0.0.23 <br> - cost-analysis-opencost v1.111.0 <br> - cost-analysis-prometheus v2.54.1 <br> - cost-analysis-victoria-metrics v1.103.0 <br> - extension-config-agent 1.23.3 <br> - extension-manager 1.23.3 <br> - fqdn-policy v1.16.6-250129 <br> - gpu-provisioner 0.3.3 <br> - health-probe-proxy v1.29.1 <br> - hubble-relay v1.15.0 <br> - image-cleaner v1.3.1 <br> - ingress-appgw 1.8.1 <br> - ip-masq-agent-v2 v0.1.15-2 <br> - ipv6-hp-bpf v0.0.1 <br> - keda v2.16.1 <br> - keda-admission-webhooks v2.16.1 <br> - keda-metrics-apiserver v2.16.1 <br> - kube-egress-gateway-cni v0.0.20 <br> - kube-egress-gateway-cni-ipam v0.0.20 <br> - kube-egress-gateway-cnimanager v0.0.20 <br> - kube-egress-gateway-daemon v0.0.20 <br> - kube-egress-gateway-daemon-init v0.0.20 <br> - metrics-server v0.7.2-6 <br> - microsoft-defender-admission-controller 20250325.2 <br> - microsoft-defender-low-level-collector 2.0.205 <br> - microsoft-defender-low-level-init 1.3.81 <br> - microsoft-defender-old-file-cleaner 1.0.214 <br> - microsoft-defender-pod-collector 1.0.177 <br> - microsoft-defender-security-publisher 1.0.211 <br> - open-policy-agent-gatekeeper v3.18.2-1 <br> - osm-bootstrap v1.2.9 <br> - osm-controller v1.2.9 <br> - osm-crds v1.2.9 <br> - osm-healthcheck v1.2.9 <br> - osm-init v1.2.9 <br> - osm-injector v1.2.9 <br> - osm-sidecar v1.32.2-hotfix.20241216 <br> - overlay-vpa 1.2.1 <br> - overlay-vpa-webhook-generation master.250430.1 <br> - ratify-base v1.2.3 <br> - retina-agent v0.0.31 <br> - retina-agent-enterprise v0.1.9 <br> - retina-agent-win v0.0.31 <br> - retina-operator v0.1.9 <br> - secrets-store-csi-driver v1.4.8 <br> - secrets-store-csi-driver-windows v1.4.8 <br> - secrets-store-driver-registrar-linux v2.11.1 <br> - secrets-store-driver-registrar-windows v2.11.1 <br> - secrets-store-livenessprobe-linux v2.13.1 <br> - secrets-store-livenessprobe-windows v2.13.1 <br> - secrets-store-provider-azure v1.6.2 <br> - secrets-store-provider-azure-windows v1.6.2 <br> - sgx-attestation 3.3.1 <br> - sgx-plugin 1.0.0 <br> - sgx-webhook 1.2.2 <br> - tigera-operator v1.36.7 <br> - windows-gmsa-webhook-image v0.12.1-2 <br> - workload-identity-webhook v1.5.0 | - addon-override-manager master.250116.1 <br> - apiserver-network-proxy-server v0.30.3-hotfix.20240819 <br> - app-routing-operator 0.2.5 <br> - ccp-webhook master.250509.3 <br> - cluster-autoscaler v1.32.1-aks <br> - cost-analysis-scraper v0.0.23 <br> - customer-net-probe master.250430.1 <br> - envoy v1.31.5-master.241218.3 <br> - ingress-dispatcher v1.31.5-master.250126.7 <br> - kube-state-metrics v2.15.0-4 <br> - gpu-provisioner 0.3.3 <br> - karpenter 0.7.3-aks <br> - kube-egress-gateway-controller v0.0.20 <br> - kubelet-serving-csr-approver v0.0.7 <br> - live-patching-controller v0.0.8 | - **Linux - Ubuntu 22.04** <br>   - containerd 1.7.27-ubuntu22.04u1 <br>   - kubernetes-cri-tools 1.32.0-ubuntu22.04u3 <br> - runc 1.2.6-ubuntu22.04u1 <br> - **Linux - AzureLinux 3.0** <br> - containerd 2.0.0-4.azl3 <br> - nvidia-container-toolkit 1.17.3 <br> - **Windows - Windows2022** <br> - containerd v1.7.20-azure.1 | - coredns v1.11.3-7 → v1.12.1-1 <br> - cloud-provider-node-manager-windows v1.32.5 → v1.33.0 <br> - cloud-provider-node-manager-linux v1.32.5 → v1.33.0 |
 
 ### Kubernetes 1.32
 
-| **AKS managed add-ons (addon)** | **AKS components (ccp)** | **OS components** | **Breaking changes** |
+| **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes** |
 | ------------------------------- | ------------------------ | ----------------- | -------------------- |
-| - Azure Policy 1.8.0 <br> - Metrics-Server 0.6.3 <br> - App routing operator v0.2.3 <br> - KEDA 2.14.1 <br> - Open Service Mesh v1.2.9 <br> - Core DNS V1.9.4 <br> - Overlay VPA 1.0.0 <br> - Azure-Keyvault-SecretsProvider v1.4.5 <br> - Application Gateway Ingress Controller (AGIC) 1.7.2 <br> - Image Cleaner v1.3.1 <br> - Azure Workload identity v1.3.0 <br> - MDC Defender Low Level Collector 2.0.186 <br> - open-policy-agent-gatekeeper v3.17.1 <br> - Retina v0.0.17 | - Cilium v1.17.0 <br> - Cluster Autoscaler v1.30.6-aks <br> - Tigera-Operator v1.34.7 | - OS Image Ubuntu 22.04 Cgroups V2 <br> - ContainerD 1.7.23-ubuntu22.04u1 for Linux and v1.6.35+azure for Windows <br> - Azure Linux 3.0 <br> - Cgroups V2 <br> - ContainerD 1.7.13-3.azl | - [Calico v1.34.7](https://github.com/tigera/operator/releases/tag/v1.34.7) |
+| - Azure Policy 1.8.0 <br> - Metrics-Server 0.6.3 <br> - App routing operator v0.2.3 <br> - KEDA 2.14.1 <br> - Open Service Mesh v1.2.9 <br> - Core DNS V1.9.4 <br> - Overlay VPA 1.0.0 <br> - Azure-Keyvault-SecretsProvider v1.4.5 <br> - Application Gateway Ingress Controller (AGIC) 1.7.2 <br> - Image Cleaner v1.3.1 <br> - Azure Workload identity v1.3.0 <br> - Microsoft Defender Low Level Collector 2.0.186 <br> - open-policy-agent-gatekeeper v3.17.1 <br> - Retina v0.0.17 | - Cilium v1.17.9 <br> - Cluster Autoscaler v1.30.6-aks <br> - Tigera-Operator v1.34.7 | - OS Image Ubuntu 22.04 Cgroups V2 <br> - ContainerD 1.7.23-ubuntu22.04u1 for Linux and v1.6.35+azure for Windows <br> - Azure Linux 3.0 <br> - Cgroups V2 <br> - ContainerD 1.7.13-3.azl | - [Calico v1.34.7](https://github.com/tigera/operator/releases/tag/v1.34.7) |
 
 ### Kubernetes 1.31
 
-| **AKS managed add-ons (addon)** | **AKS components (ccp)** | **OS components** | **Breaking changes** |
+| **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes** |
 | ------------------------------- | ------------------------ | ----------------- | -------------------- |
-| - Azure Policy 1.8.0 <br> - Metrics-Server 0.6.3 <br> - App routing operator v0.2.3 <br> - KEDA 2.14.1 <br> - Open Service Mesh v1.2.9 <br> - Core DNS V1.9.4 <br> - Overlay VPA 1.0.0 <br> - Azure-Keyvault-SecretsProvider v1.4.5 <br> - Application Gateway Ingress Controller (AGIC) 1.7.2 <br> - Image Cleaner v1.3.1 <br> - Azure Workload identity v1.3.0 <br> - MDC Defender Low Level Collector 2.0.186 <br> - open-policy-agent-gatekeeper v3.17.1 <br> - Retina v0.0.17 | - Cilium v1.16.6 <br> - Cluster Autoscaler v1.30.6-aks <br> - Tigera-Operator v1.30.11 | - OS Image Ubuntu 22.04 Cgroups V2 <br> - ContainerD 1.7.23-ubuntu22.04u1 for Linux and v1.6.35+azure for Windows <br> - Azure Linux 3.0 <br> - Cgroups V2 <br> - ContainerD 1.7.13-3.azl | - [Calico v1.30.11](https://github.com/tigera/operator/releases/tag/v1.30.11) |
+| - Azure Policy 1.8.0 <br> - Metrics-Server 0.6.3 <br> - App routing operator v0.2.3 <br> - KEDA 2.14.1 <br> - Open Service Mesh v1.2.9 <br> - Core DNS V1.9.4 <br> - Overlay VPA 1.0.0 <br> - Azure-Keyvault-SecretsProvider v1.4.5 <br> - Application Gateway Ingress Controller (AGIC) 1.7.2 <br> - Image Cleaner v1.3.1 <br> - Azure Workload identity v1.3.0 <br> - Microsoft Defender Low Level Collector 2.0.186 <br> - open-policy-agent-gatekeeper v3.17.1 <br> - Retina v0.0.17 | - Cilium v1.16.19 <br> - Cluster Autoscaler v1.30.6-aks <br> - Tigera-Operator v1.30.11 | - OS Image Ubuntu 22.04 Cgroups V2 <br> - ContainerD 1.7.23-ubuntu22.04u1 for Linux and v1.6.35+azure for Windows <br> - Azure Linux 3.0 <br> - Cgroups V2 <br> - ContainerD 1.7.13-3.azl | - [Calico v1.30.11](https://github.com/tigera/operator/releases/tag/v1.30.11) |
 
 ### Kubernetes 1.30
 
-| **AKS managed add-ons (addon)** | **AKS components (ccp)** | **OS components** | **Breaking changes** |
+| **AKS managed add-ons (add-on)** | **AKS components (ccp)** | **OS components** | **Breaking changes** |
 | ------------------------------- | ------------------------ | ----------------- | -------------------- |
-| - Azure Policy 1.3.0 <br> - App routing operator v0.2.3 <br> - Metrics-Server 0.6.3 <br> - KEDA 2.11.2 <br> - Open Service Mesh 1.2.7 <br> - Core DNS V1.9.4 <br> - Overlay VPA 0.13.0 <br> - Azure-Keyvault-SecretsProvider 1.4.1 <br> - Application Gateway Ingress Controller (AGIC) 1.7.2 <br> - Image Cleaner v1.2.3 <br> - Azure Workload identity v1.2.0 <br> - MDC Defender Security Publisher 1.0.68 <br> - MDC Defender Old File Cleaner 1.3.68 <br> - MDC Defender Pod Collector 1.0.78 <br> - MDC Defender Low Level Collector 2.0.186 <br> - Microsoft Entra Pod Identity 1.8.13.6 <br> - GitOps 1.8.1 <br> - CSI Secrets Store Driver 1.3.4-1 <br> - [azurefile-csi-driver 1.29.3](azure-files-csi.md#prerequisites) | - Cilium v1.14.9 <br> - CNI v1.4.43.1 (Default)/v1.5.11 (Azure CNI Overlay) <br> - Cluster Autoscaler 1.27.3 <br> - Tigera-Operator 1.30.7 | - OS Image Ubuntu 22.04 Cgroups V2 <br> - ContainerD 1.7.5 for Linux and 1.7.1 for Windows <br> - Azure Linux 2.0 <br> - Cgroups V2 <br> - ContainerD 1.6 | - Tigera-Operator 1.30.7 |
+| - Azure Policy 1.3.0 <br> - App routing operator v0.2.3 <br> - Metrics-Server 0.6.3 <br> - KEDA 2.11.2 <br> - Open Service Mesh 1.2.7 <br> - Core DNS V1.9.4 <br> - Overlay VPA 0.13.0 <br> - Azure-Keyvault-SecretsProvider 1.4.1 <br> - Application Gateway Ingress Controller (AGIC) 1.7.2 <br> - Image Cleaner v1.2.3 <br> - Azure Workload identity v1.2.0 <br> - Microsoft Defender Security Publisher 1.0.68 <br> - Microsoft Defender Old File Cleaner 1.3.68 <br> - Microsoft Defender Pod Collector 1.0.78 <br> - Microsoft Defender Low Level Collector 2.0.186 <br> - Microsoft Entra pod-managed identity 1.8.13.6 <br> - GitOps 1.8.1 <br> - CSI Secrets Store Driver 1.3.4-1 <br> - [azurefile-csi-driver 1.29.3](https://github.com/kubernetes-sigs/azurefile-csi-driver/releases/tag/v1.29.3) | - Cilium v1.14.20 <br> - CNI v1.4.43.1 (Default)/v1.5.11 (Azure CNI Overlay) <br> - Cluster Autoscaler 1.27.3 <br> - Tigera-Operator 1.30.7 | - OS Image Ubuntu 22.04 Cgroups V2 <br> - ContainerD 1.7.5 for Linux and 1.7.1 for Windows <br> - Azure Linux 2.0 <br> - Cgroups V2 <br> - ContainerD 1.6 | - Tigera-Operator 1.30.7 |
 
-### Kubernetes 1.29
-
-| **AKS managed add-ons (addon)** | **AKS components (ccp)** | **OS components** | **Breaking changes** |
-| ------------------------------- | ------------------------ | ----------------- | -------------------- |
-| - Azure Policy 1.3.0 <br> - csi-provisioner v4.0.0 <br> - App routing operator v0.2.1 <br> - csi-attacher v4.5.0 <br> - csi-snapshotter v6.3.3 <br> - snapshot-controller v6.3.3 <br> - Metrics-Server 0.6.3 <br> - KEDA 2.11.2 <br> - Open Service Mesh 1.2.7 <br> - Core DNS V1.9.4 <br> - Overlay VPA 0.13.0 <br> - Azure-Keyvault-SecretsProvider 1.4.1 <br> - Application Gateway Ingress Controller (AGIC) 1.7.2 <br> - Image Cleaner v1.2.3 <br> - Azure Workload identity v1.2.0 <br> - MDC Defender Security Publisher 1.0.68 <br> - MDC Defender Old File Cleaner 1.3.68 <br> - MDC Defender Pod Collector 1.0.78 <br> - MDC Defender Low Level Collector 2.0.186 <br> - Microsoft Entra Pod Identity 1.8.13.6 <br> - GitOps 1.8.1 <br> - CSI Secrets Store Driver 1.3.4-1 <br> - azurefile-csi-driver 1.29.3 | - Cilium v1.14.9 <br> - CNI v1.4.43.1 (Default)/v1.5.11 (Azure CNI Overlay) <br> - Cluster Autoscaler 1.27.3 <br> - Tigera-Operator 1.30.7 | - OS Image Ubuntu 22.04 Cgroups V2 <br> - ContainerD 1.7.5 for Linux and 1.7.1 for Windows <br> - Azure Linux 2.0 <br> - Cgroups V2 <br> - ContainerD 1.6 | - Tigera-Operator 1.30.7 <br> - csi-provisioner v4.0.0 <br> - csi-attacher v4.5.0 <br> - csi-snapshotter v6.3.3 <br> - snapshot-controller v6.3.3 |
-
-## Alias minor version
+## Alias minor version in AKS
 
 > [!NOTE]
 > Alias minor version requires Azure CLI version 2.37 or above and API version 20220401 or above. Use `az upgrade` to install the latest version of the CLI.
 
-You can create an AKS cluster without specifying a patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. For example, if you create a cluster with **`1.29`** and **`1.29.2`** is the latest GA would patch available, your cluster is created with **`1.29.2`**. If you want to upgrade your patch version in the same minor version, use [autoupgrade](./auto-upgrade-cluster.md).
+You can create an AKS cluster without specifying a patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. If you want to upgrade your patch version in the same minor version, use [autoupgrade](./auto-upgrade-cluster.md).
 
 To see what patch you're on, run the `az aks show --resource-group myResourceGroup --name myAKSCluster` command. In the output, the `currentKubernetesVersion` property shows the whole Kubernetes version. For example:
 
@@ -161,15 +154,13 @@ To see what patch you're on, run the `az aks show --resource-group myResourceGro
   "autoScalerProfile": null,
   "autoUpgradeProfile": null,
   "azurePortalFqdn": "myaksclust-myresourcegroup.portal.hcp.eastus.azmk8s.io",
-  "currentKubernetesVersion": "1.29.2",
+  "currentKubernetesVersion": "<major>.<minor>.<patch>",
 }
 ```
 
 ## Kubernetes version support policy
 
 AKS defines a generally available (GA) version as a version available in all regions and enabled in all SLO or SLA measurements. AKS supports three GA minor versions of Kubernetes:
-
-AKS supports three GA minor versions:
 
 - The latest GA version (_N_).
 - The two previous minor versions (_N-1_ and _N-2_).
@@ -190,7 +181,7 @@ For example, on the day that AKS introduces version 1.29, support is provided fo
 | ----------------- | ------------------------ |
 | 1.29 | 1.29, 1.28, 1.27 |
 
-When a new minor version is introduced, the oldest minor version is deprecated and removed. For example, let's say the current supported minor version list is _1.29_, _1.28_, and _1.27_. When AKS releases 1.30, all the 1.27 versions go out of support 30 days later.
+When a new minor version is introduced, the oldest minor version is deprecated and removed. For example, let's say the current supported minor version list is _1.29_, _1.28_, and _1.27_. When AKS releases 1.30, all the 1.27 versions go out of support 30 days later and enter [platform support](#platform-support-policy).
 
 AKS might support any number of **patches** based on upstream community release availability for a given minor version. AKS reserves the right to deprecate any of these patches at any given time due to a CVE or potential bug concern. We encourage you to use the latest patch for a minor version.
 
@@ -199,6 +190,8 @@ AKS might support any number of **patches** based on upstream community release 
 Platform support policy is a reduced support plan for certain unsupported Kubernetes versions. During platform support, customers only receive support from Microsoft for AKS/Azure platform related issues. Any issues related to Kubernetes functionality and components aren't supported.
 
 Platform support policy applies to clusters in an _N-3_ version (where _N_ is the latest supported AKS GA minor version), before the cluster drops to _N-4_. For example, Kubernetes v1.26 is considered platform support when v1.29 is the latest GA version. Let's say you're running an _N-2_ version. The moment that version becomes _N-3_, it also ends its official support, and you enter into the platform support policy.
+
+Platform support gives you a **60-day grace period** to upgrade on your own terms. When the grace period ends, AKS automatically upgrades the cluster to a supported version. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
 
 AKS relies on the releases and patches from [Kubernetes](https://kubernetes.io/releases/), which is an open-source project that only supports a sliding window of three minor versions. AKS can only guarantee [full support](#kubernetes-version-support-policy) while those versions are being serviced upstream. Since there's no more patches being produced upstream, AKS can either leave those versions unpatched or fork. Due to this limitation, platform support doesn't support anything from relying on Kubernetes upstream.
 
@@ -230,6 +223,16 @@ The following table outlines support guidelines for community support compared t
 > [!NOTE]
 > The table is subject to change and outlines common support scenarios. Any scenarios related to Kubernetes functionality and components aren't supported for _N-3_. For further support, see [Support and troubleshooting for AKS](./aks-support-help.md).
 
+### Platform-initiated upgrades
+
+AKS upgrades clusters that remain on an unsupported Kubernetes version after the platform support grace period ends. This policy ensures that no cluster stays indefinitely on a version that no longer receives security patches.
+
+AKS upgrades the cluster to the lowest supported version within its current support tier: community-support clusters move to the lowest supported community minor version, and LTS clusters move to the applicable LTS version. AKS doesn't enroll clusters in LTS and doesn't change your billing tier.
+
+Unlike a manual upgrade, a cluster auto-upgrade, or a Fleet Manager update run, a platform-initiated upgrade doesn't follow your maintenance window and doesn't run the deprecated API check. Keeping your cluster on a supported version is the only way to avoid a platform-initiated upgrade.
+
+For the full policy, including how you're notified and how to prepare, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
+
 ### Supported `kubectl` versions
 
 You can use a `kubectl` version that is one minor version older or newer than your kube-apiserver version. For more information, see the [Kubernetes support policy for kubectl](https://kubernetes.io/docs/setup/release/version-skew-policy/#kubectl).
@@ -260,7 +263,7 @@ For more information on LTS, see [Long term support for Azure Kubernetes Service
 
 ## Release and deprecation process
 
-You can reference upcoming version releases and deprecations on the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar).
+For upcoming version releases and deprecations, see the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar-and-upcoming-versions).
 
 For new **minor** versions of Kubernetes:
 
@@ -271,13 +274,13 @@ For new **minor** versions of Kubernetes:
   > [!NOTE]
   > To view or change your subscription administrators, see [manage Azure subscriptions](/azure/cost-management-billing/manage/add-change-subscription-administrator#assign-a-subscription-administrator).
 
-- You have **30 days** from version removal to upgrade to a supported minor version release to continue receiving support.
+- You have a **60-day** platform support grace period after the published end-of-life date to upgrade to a supported minor version. Regional version removal can happen at a different time from the published date. If the cluster stays on an unsupported version after the grace period, AKS upgrades it automatically. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
 
 For new **patch** versions of Kubernetes:
 
 - Because of the urgent nature of patch versions, they can be introduced into the service as they become available. Once available, patches have a two month minimum lifecycle.
 - In general, AKS doesn't broadly communicate the release of new patch versions. However, AKS constantly monitors and validates available CVE patches to support them in AKS in a timely manner. If a critical patch is found or user action is required, AKS notifies you to upgrade to the newly available patch.
-- You have **30 days** from a patch release's removal from AKS to upgrade into a supported patch and continue receiving support. However, you'll **no longer be able to create clusters or node pools once the version is deprecated/removed**.
+- You have **60 days** from a patch release's removal from AKS to upgrade into a supported patch and continue receiving support. However, you'll **no longer be able to create clusters or node pools once the version is deprecated or removed**.
 
 ### Supported versions policy exceptions
 
@@ -287,7 +290,7 @@ Specific patch releases might be skipped or rollout accelerated, depending on th
 
 ## Azure portal and CLI versions
 
-If you deploy an AKS cluster with Azure portal, Azure CLI, Azure PowerShell, the cluster defaults to the _N-1_ minor version and latest patch. For example, if AKS supports _1.29.2_, _1.29.1_, _1.28.7_, _1.28.6_, _1.27.11_, and _1.27.10_, the default version selected is _1.28.7_.
+If you deploy an AKS cluster by using Azure portal, Azure CLI, or Azure PowerShell, the cluster defaults to the _N-1_ minor version and latest patch.
 
 To find out what versions are currently available for your subscription and region, use the command based on your preferred tool:
 
@@ -315,31 +318,37 @@ Get-AzAksVersion -Location eastus
 
 The AKS team announces new Kubernetes version release dates in our documentation, on [GitHub](https://github.com/Azure/AKS/releases), and via email to subscription administrators with clusters nearing end of support. AKS also uses [Azure Advisor](/azure/advisor/advisor-overview) to alert you inside the Azure portal if you're out of support and inform you of deprecated APIs that can affect your application or development process.
 
+A cluster running an unsupported version also reports a **Degraded** status in Azure Resource Health and shows a banner on the cluster resource in the Azure portal, naming when AKS upgrades the cluster. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
+
 ### How often should I expect to upgrade Kubernetes versions to stay in support?
 
 Starting with Kubernetes 1.19, the [open source community expanded support to one year](https://kubernetes.io/blog/2020/08/31/kubernetes-1-19-feature-one-year-support/). AKS commits to enabling patches and support matching the upstream commitments. For AKS clusters on 1.19 and greater, you can upgrade at a minimum of once a year to stay on a supported version.
 
 ### What happens when you upgrade a Kubernetes cluster with a minor version that isn't supported?
 
-If you're on the _N-3_ version or older, it means you're outside of support and need to upgrade. If your upgrade from version _N-3_ to _N-2_ succeeds, you're back within our support policies. For example:
+If your version falls out of support per the [supported Kubernetes versions list](#aks-kubernetes-release-calendar-and-upcoming-versions), you need to upgrade. You can upgrade from unsupported versions to supported versions. For example:
 
-- If the oldest supported AKS minor version is _1.27_ and you're on _1.26_ or older, you're outside of support.
-- If you successfully upgrade from _1.26_ to _1.27_ or higher, you're back within our support policies.
+- If the lowest supported AKS minor version is _1.33_ and you're on _1.32_ or older, you're outside of support.
+- If you successfully upgrade from _1.32_ to _1.33_ or higher, you're back within the support policies.
 
-Downgrades aren't supported.
+Downgrades or rollback to an unsupported version aren't supported. The further the cluster version is from the lowest supported version, the more [removed APIs](./stop-cluster-upgrade-api-breaking-changes.md) and [incompatible self-managed add-ons](./platform-initiated-upgrades.md#prepare-before-aks-starts-the-upgrade) you might need to address before upgrading.
+
+If you don't upgrade, AKS upgrades the cluster for you when the [platform support](#platform-support-policy) grace period ends. AKS moves the cluster one minor version at a time until it reaches a supported version. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
 
 ### What does it mean to be "outside of support"?
 
 "Outside of support" means:
 
 - The version you're running is outside of the supported versions list.
-- You'll be asked to upgrade the cluster to a supported version when requesting support, unless you're within the 30-day grace period after version deprecation.
+- You're asked to upgrade the cluster to a supported version when requesting support, unless you're within the 60-day [platform support](#platform-support-policy) grace period after version deprecation.
 
 Additionally, AKS doesn't make any runtime or other guarantees for clusters outside of the supported versions list.
 
 ### Can you stay on a Kubernetes version forever?
 
-If a cluster is out of support for more than three minor versions and carries security risks, Azure  proactively contacts you. They advise you to upgrade your cluster. If you don't take further action, Azure reserves the right to automatically upgrade your cluster on your behalf.
+No. A cluster that stays on an unsupported version no longer receives security patches, so AKS upgrades it automatically when the 60-day [platform support](#platform-support-policy) grace period ends. Azure also notifies you through Azure Resource Health, Azure Advisor, and email before the upgrade runs.
+
+You keep control by keeping the cluster on either a supported community minor version or a [long-term support (LTS)](./long-term-support.md) version that you explicitly enroll in. There's no opt-out. For more information, see [Platform-initiated upgrades](./platform-initiated-upgrades.md).
 
 ### What happens if you scale a Kubernetes cluster with a minor version that isn't supported?
 
@@ -347,7 +356,7 @@ For minor versions not supported by AKS, scaling in or out should continue to wo
 
 ### What version does the control plane support if the node pool isn't in one of the supported AKS versions?
 
-The control plane must be within a window of versions from all node pools. For details on upgrading the control plane or node pools, visit documentation on [upgrading node pools](manage-node-pools.md#upgrade-a-cluster-control-plane-with-multiple-node-pools).
+The control plane and all node pools must remain within the supported version skew window. Starting with Kubernetes 1.28, the control plane can be up to three minor versions ahead of node pools. For details, see the [Kubernetes version upgrade rules](./upgrade-aks-control-plane.md#kubernetes-version-upgrade-rules).
 
 ### What is the allowed difference in versions between the control plane and node pools?
 
@@ -355,23 +364,30 @@ The [version skew policy](https://kubernetes.io/releases/version-skew-policy/) n
 
 ### Can I skip multiple AKS versions during a cluster upgrade?
 
-If you upgrade a supported AKS cluster, Kubernetes minor versions can't be skipped. Kubernetes control planes [version skew policy](https://kubernetes.io/releases/version-skew-policy/) doesn't support minor version skipping. For example, upgrades between:
+Yes, you can skip minor versions in some cases. However, if you upgrade the control plane independently from the node pools, you must satisfy Kubernetes [version skew policies](https://kubernetes.io/releases/version-skew-policy/). The Kubernetes version skew policy currently supports only N-3, so the control plane and agent pools must be within N-3 of each other.
 
-| From | To | Supported? |
-| ---- | -- | ---------- |
-| 1.28.x | 1.29.x | Yes |
-| 1.27.x | 1.28.x | Yes |
-| 1.27.x | 1.29.x | No |
+- **LTS**: A version with the AKS Long-Term Support plan enabled. See [LTS versions](#lts-versions).
+- **Unsupported LTS**: An LTS-enabled version that is past its LTS end-of-life date in the [LTS versions](#lts-versions) table.
+- **Supported non-LTS**: A version that isn't LTS but is still listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar-and-upcoming-versions).
+- **Unsupported non-LTS**: A version that isn't LTS and is no longer listed as supported in the [AKS Kubernetes release calendar](#aks-kubernetes-release-calendar-and-upcoming-versions).
 
-For control plane version upgrades, you can go up to three minor versions for community supported versions in sequential fashion.
+| Starting version | Target version | Can skip multiple minors? | Constraint | Support statement |
+| --- | --- | --- | --- | --- |
+| LTS | Higher LTS | Yes | Target must be listed by AKS and satisfy version skew and validation checks. | Supported |
+| Unsupported LTS | Supported LTS | Conditional | Target must be listed by AKS and satisfy validation checks. | Unsupported recovery path |
+| Unsupported non-LTS | LTS | Conditional | LTS target must be listed by AKS and satisfy validation checks. Control-plane-only upgrades aren't supported; a full cluster upgrade is required. | Unsupported recovery path |
+| Unsupported non-LTS | Lowest supported community version | Yes | Use the oldest supported GA target offered by AKS. Control-plane-only upgrades aren't supported; a full cluster upgrade is required. | Unsupported recovery path |
+| Supported non-LTS | Higher community version | No | Upgrade one minor version at a time. | Supported |
 
-To upgrade from _1.27.x_ -> _1.29.x_, you need to first upgrade from _1.27.x_ -> _1.28.x_, and then you can upgrade from _1.28.x_ -> _1.29.x_.
+Examples:
 
-Starting from version 1.28, agent pool versions can be up to three versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). If your version is behind the minimum supported version, you might have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is _1.23.x_ and you intend to upgrade to a minimum supported version of _1.27.x_, you might need to upgrade sequentially four times from _1.23.x_ in order to get to _1.27.x_.
+- If your cluster is on **1.29 LTS** and you want to move to **1.32 LTS**, you can skip multiple minor versions as long as **1.32 LTS** is still offered by AKS and the upgrade satisfies version skew and validation checks.
+- If your cluster is on **1.28 non-LTS**, you can move to AKS LTS **1.30 LTS** by using the unsupported recovery path, as long as the target version is listed by AKS, satisfies validation checks, and you run a full cluster upgrade rather than `control-plane-only`.
+- If your cluster is on supported non-LTS **1.33** and you want to move to supported non-LTS **1.35**, you can't skip directly from **1.33** to **1.35**. You must upgrade one minor version at a time, such as **1.33** to **1.34**, and then **1.34** to **1.35**.
 
-You can also upgrade agent pool versions to the control plane minor version. In the previous example, you can upgrade the agent pool version twice: once from _1.23.x_ to _1.25.x_ (when the control plane version is at _1.25.x_) and then from _1.25.x_ to _1.27.x_ (when control plane version is at _1.27.x_). When you upgrade in-place, the same rules applicable to control plane upgrades apply.
+In the preceding table, `Unsupported recovery path` indicates that the upgrade path is executed in a manner that can't be guaranteed safe and is therefore considered outside of support. AKS allows the upgrade to proceed, but it isn't supported and might carry risks.
 
-If you're performing an upgrade from an _unsupported version_, the upgrade occurs without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported versions_ have the flexibility of decoupling control plane upgrades with node pool upgrades. However, if your version is out of date, we recommend that you recreate the cluster.
+To choose the correct path, check available targets by running `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`. Review the preceding table, and then consider the risk of upgrading versus recreating the cluster and migrating workloads.
 
 ### Can I create a new 1.xx.x cluster during the platform support window?
 
@@ -386,13 +402,14 @@ Yes, you can add agent pools as long as they're compatible with the control plan
 For information on AKS cluster upgrades, see:
 
 - [Upgrade an Azure Kubernetes Service (AKS) cluster][aks-upgrade]
+- [Platform-initiated upgrades in AKS](./platform-initiated-upgrades.md)
 - [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager][fleet-multi-cluster-upgrade]
 
 <!-- LINKS - External -->
 [aks-release]: https://releases.aks.azure.com/
 
 <!-- LINKS - Internal -->
-[aks-upgrade]: upgrade-cluster.md
+[aks-upgrade]: upgrade-options.md
 [preview-terms]: https://azure.microsoft.com/support/legal/preview-supplemental-terms/
 [aks-tracker]: release-tracker.md
 [fleet-multi-cluster-upgrade]: /azure/kubernetes-fleet/update-orchestration

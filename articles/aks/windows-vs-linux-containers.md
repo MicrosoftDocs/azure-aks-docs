@@ -3,7 +3,7 @@ title: Windows Container Considerations in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: See the Windows container considerations with Azure Kubernetes Service (AKS).
 ms.topic: overview
-ms.custom: linux-related-content
+ms.custom: linux-related-content, aks-windows
 ms.date: 07/07/2025
 ms.author: schaffererin
 author: schaffererin
@@ -24,6 +24,8 @@ Some of the major differences include:
 [!INCLUDE [windows server 2019 retirement](./includes/windows-server-2019-retirement.md)]
 
 [!INCLUDE [windows server 2022 retirement](./includes/windows-server-2022-retirement.md)]
+
+[!INCLUDE [windows annual channel retirement](./includes/windows-annual-channel-retirement.md)]
 
 This article covers important considerations to keep in mind when using Windows containers instead of Linux containers in Kubernetes. For an in-depth comparison of Windows and Linux containers, see [Comparison with Linux][comparison-with-linux].
 

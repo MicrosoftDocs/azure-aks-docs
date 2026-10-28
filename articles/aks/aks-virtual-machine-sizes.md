@@ -3,6 +3,7 @@ title: Virtual Machine (VM) Sizes, Generations, and Features for Azure Kubernete
 description: Learn about VM fundamentals on AKS, like different VM sizes, generations, features, how to check for available VM sizes, why some VM sizes might not be available, and what happens when a VM size retires.
 ms.topic: overview
 ms.service: azure-kubernetes-service
+ms.subservice: aks-nodes
 ms.date: 08/05/2025
 ms.author: schaffererin
 author: schaffererin
@@ -47,7 +48,7 @@ AKS also supports the following VM types and features:
 - [Arm-based processor (Arm64) VMs](./use-arm64-vms.md)
 - [GPU-optimized VMs](/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated)
 - [Trusted Launch](./use-trusted-launch.md)
-- [Federal Information Process Standard (FIPS)](./enable-fips-nodes.md)
+- [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md)
 
 ### Default behavior for supported VM sizes
 

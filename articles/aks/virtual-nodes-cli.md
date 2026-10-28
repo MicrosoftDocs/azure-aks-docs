@@ -5,11 +5,12 @@ description: Learn how to use Azure CLI to create an Azure Kubernetes Services (
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.date: 08/28/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 ms.custom: references_regions, devx-track-azurecli
 ms.subservice: aks-nodes
+ai-usage: ai-assisted
 # Customer intent: "As a cloud engineer, I want to configure an Azure Kubernetes Service cluster with virtual nodes using Azure CLI, so that I can enable seamless communication between active pods in Azure Container Instances and AKS for improved resource scaling and efficient workload management."
 ---
 
@@ -112,7 +113,7 @@ An Azure resource group is a logical group in which Azure resources are deployed
 
 For more information on managed identities, see [Use managed identities](use-managed-identity.md).
 
-## Enable the virtual nodes addon
+## Enable the virtual nodes add-on
 
 > [!NOTE]
 > If you have an existing Azure Kubernetes Service Cluster created that uses Azure CNI for the Advanced Networking you should be able to enable virtual nodes as an add-on using the CLI.
@@ -126,6 +127,16 @@ For more information on managed identities, see [Use managed identities](use-man
         --addons virtual-node \
         --subnet-name myVirtualNodeSubnet
     ```
+
+## Grant permission to the managed identity
+Grant the *Network Contributor* role on the subnet used by virtual nodes to the managed identity for the virtual node add-on named *aciconnectorlinux-\<aks-cluster-name>*.
+
+```azurecli-interactive
+NODE_RG=$(az aks show --resource-group myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv)
+PRINCIPAL_ID=$(az identity show --resource-group $NODE_RG --name aciconnectorlinux-myAKSCluster --query principalId -o tsv)
+VIRTUAL_NODE_SUBNET_ID=$(az network vnet subnet show --resource-group myResourceGroup --vnet-name <VNET_NAME> --name myVirtualNodeSubnet --query id -o tsv)
+az role assignment create --assignee $PRINCIPAL_ID --role "Network Contributor" --scope $VIRTUAL_NODE_SUBNET_ID
+```
 
 ## Connect to the cluster
 
@@ -319,4 +330,3 @@ Virtual nodes are often one component of a scaling solution in AKS. For more inf
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [virtual-nodes-aks]: virtual-nodes.md
 [virtual-nodes-networking-aci]: /azure/container-instances/container-instances-virtual-network-concepts
-

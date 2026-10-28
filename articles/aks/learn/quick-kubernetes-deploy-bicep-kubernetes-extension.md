@@ -4,6 +4,7 @@ description: Learn how to quickly deploy a Kubernetes cluster using the Bicep Ku
 author: schaffererin
 
 ms.topic: quickstart
+ms.subservice: aks-developer
 ms.custom: devx-track-bicep
 ms.date: 01/11/2024
 ms.author: schaffererin

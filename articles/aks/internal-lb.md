@@ -1,16 +1,13 @@
 ---
-title: Create an internal load balancer
-titleSuffix: Azure Kubernetes Service
+title: Create an Internal Load Balancer in Azure Kubernetes Service (AKS)
 description: Learn how to create and use an internal load balancer to expose your services with Azure Kubernetes Service (AKS).
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 03/25/2025
-
-
+ms.date: 07/31/2026
+ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an internal Azure load balancer for enhanced security and without an external endpoint.
-
 ---
 
 # Use an internal load balancer with Azure Kubernetes Service (AKS)
@@ -21,10 +18,10 @@ You can create and use an internal load balancer to restrict access to your appl
 
 ## Before you begin
 
-* This article assumes that you have an existing AKS cluster. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* You need the Azure CLI version 2.0.59 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* If you want to use an existing subnet or resource group, the AKS cluster identity needs permission to manage network resources. For information, see [Configure Azure CNI networking in AKS][advanced-networking]. If you're configuring your load balancer to use an [IP address in a different subnet][different-subnet], ensure the AKS cluster identity also has `Read` access to that subnet.
-  * For more information on permissions, see [Delegate AKS access to other Azure resources][aks-sp].
+- This article assumes that you have an existing AKS cluster. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
+- You need the Azure CLI version 2.0.59 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- If you want to use an existing subnet or resource group, the AKS cluster identity needs permission to manage network resources. For information, see [Configure Azure CNI networking in AKS][advanced-networking]. If you're configuring your load balancer to use an [IP address in a different subnet][different-subnet], ensure the AKS cluster identity also has `Read` access to that subnet.
+  - For more information on permissions, see [Delegate AKS access to other Azure resources][aks-sp].
 
 ## Create an internal load balancer
 
@@ -45,15 +42,15 @@ You can create and use an internal load balancer to restrict access to your appl
         app: internal-app
     ```
 
-2. Deploy the internal load balancer using the [`kubectl apply`][kubectl-apply] command. This command creates an Azure load balancer in the node resource group connected to the same virtual network as your AKS cluster.
+1. Deploy the internal load balancer using the [`kubectl apply`][kubectl-apply] command. This command creates an Azure load balancer in the node resource group connected to the same virtual network as your AKS cluster.
 
-    ```azurecli-interactive
+    ```bash
     kubectl apply -f internal-lb.yaml
     ```
 
-3. View the service details using the `kubectl get service` command.
+1. View the service details using the `kubectl get service` command.
 
-    ```azurecli-interactive
+    ```bash
     kubectl get service internal-app
     ```
 
@@ -66,7 +63,7 @@ You can create and use an internal load balancer to restrict access to your appl
 
 ## Specify an IP address
 
-When you specify an IP address for the load balancer, the specified IP address must reside in the same virtual network as the AKS cluster, but it can't already be assigned to another resource in the virtual network. For example, you shouldn't use an IP address in the range designated for the Kubernetes subnet within the AKS cluster. Using an IP address that's already assigned to another resource in the same virtual network can cause issues with the load balancer.
+When you specify an IP address for the load balancer, the IP address must be available within the subnet used by the load balancer. By default, the load balancer uses the same subnet as the AKS cluster. Don't use an Azure-reserved IP address, an IP address already assigned to another resource, or an IP address from the Kubernetes service CIDR.
 
 You can use the [`az network vnet subnet list`][az-network-vnet-subnet-list] Azure CLI command or the [`Get-AzVirtualNetworkSubnetConfig`][get-azvirtualnetworksubnetconfig] PowerShell cmdlet to get the subnets in your virtual network.
 
@@ -75,7 +72,7 @@ For more information on subnets, see [Add a node pool with a unique subnet][uniq
 If you want to use a specific IP address with the load balancer, you have two options: **set service annotations** or **add the *LoadBalancerIP* property to the load balancer YAML manifest**.
 
 > [!IMPORTANT]
-> Adding the *LoadBalancerIP* property to the load balancer YAML manifest is deprecating following [upstream Kubernetes](https://github.com/kubernetes/kubernetes/pull/107235). While current usage remains the same and existing services are expected to work without modification, we **highly recommend setting service annotations** instead. For more information about service annotations, see [Azure LoadBalancer supported annotations](https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/#loadbalancer-annotations).
+> Adding the `LoadBalancerIP` property to the load balancer YAML manifest is being deprecated following [upstream Kubernetes](https://github.com/kubernetes/kubernetes/pull/107235). While current usage remains the same and existing services are expected to work without modification, we **highly recommend setting service annotations** instead. For more information about service annotations, see [Azure Load Balancer supported annotations](https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/#loadbalancer-annotations).
 
 ### [Set service annotations](#tab/set-service-annotations)
 
@@ -97,9 +94,22 @@ If you want to use a specific IP address with the load balancer, you have two op
         app: internal-app
     ```
 
-### [Add the *LoadBalancerIP* property to the load balancer YAML manifest](#tab/add-load-balancer-ip-property)
+1. View the service details using the `kubectl get service` command.
 
-1. Add the *Service.Spec.LoadBalancerIP* property to the load balancer YAML manifest. This field is deprecating following [upstream Kubernetes](https://github.com/kubernetes/kubernetes/pull/107235), and it can't support dual-stack. Current usage remains the same and existing services are expected to work without modification.
+    ```bash
+    kubectl get service internal-app
+    ```
+
+    The IP address in the `EXTERNAL-IP` column should reflect your specified IP address, as shown in the following example output:
+
+    ```output
+    NAME           TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+    internal-app   LoadBalancer   10.0.184.168   10.240.0.25   80:30225/TCP   4m
+    ```
+
+### [Add the `LoadBalancerIP` property to the load balancer YAML manifest](#tab/add-load-balancer-ip-property)
+
+1. Add the `Service.Spec.LoadBalancerIP` property to the load balancer YAML manifest. This field is being deprecated following [upstream Kubernetes](https://github.com/kubernetes/kubernetes/pull/107235), and it can't support dual-stack. Current usage remains the same and existing services are expected to work without modification.
 
     ```yaml
     apiVersion: v1
@@ -117,11 +127,9 @@ If you want to use a specific IP address with the load balancer, you have two op
         app: internal-app
     ```
 
----
+1. View the service details using the `kubectl get service` command.
 
-2. View the service details using the `kubectl get service` command.
-
-    ```azurecli-interactive
+    ```bash
     kubectl get service internal-app
     ```
 
@@ -132,16 +140,28 @@ If you want to use a specific IP address with the load balancer, you have two op
     internal-app   LoadBalancer   10.0.184.168   10.240.0.25   80:30225/TCP   4m
     ```
 
-For more information on configuring your load balancer in a different subnet, see [Specify a different subnet][different-subnet].
+---
 
-## Connect Azure Private Link service to internal load balancer
+For more information on configuring your load balancer in a different subnet, see [Specify a different subnet](#specify-a-different-subnet).
 
-### Before you begin
+## Connect Azure Private Link Service to an AKS internal load balancer
 
-* You need Kubernetes version 1.22.x or later.
-* You need an existing resource group with a virtual network and subnet. This resource group is where you [create the private endpoint](#create-a-private-endpoint-to-the-private-link-service). If you don't have these resources, see [Create a virtual network and subnet][aks-vnet-subnet].
+### Private Link Service requirements
 
-### Create a Private Link service connection
+- Your cluster must run a [supported Kubernetes version in AKS](supported-kubernetes-versions.md).
+- Your AKS cluster must use a Standard Load Balancer with the `nodeIPConfiguration` backend pool type. Private Link Service doesn't support Basic Load Balancer or the IP-based `nodeIP` backend pool type. For more information, see [Private Link Service limitations](/azure/private-link/private-link-service-overview#limitations).
+- You need an existing resource group with a virtual network and subnet. This resource group is where you [create the private endpoint](#create-a-private-endpoint-to-the-private-link-service). If you don't have these resources, see [Create a virtual network and subnet][aks-vnet-subnet].
+
+> [!IMPORTANT]
+> Private Link Service has the following restrictions:
+>
+> - Private Link Service supports IPv4 traffic only and supports only the TCP and UDP transport protocols.
+> - If the service uses `externalTrafficPolicy: Local`, the Private Link Service subnet must be different from the pod subnet. To use the same subnet, set `externalTrafficPolicy` to `Cluster`.
+> - If you enable PROXY protocol and use `externalTrafficPolicy: Local`, you must configure a custom health probe because the default health probe fails.
+>
+> For more information, see [Private Link Service limitations](/azure/private-link/private-link-service-overview#limitations) and [Azure Private Link Service integration restrictions](https://cloud-provider-azure.sigs.k8s.io/topics/pls-integration/#restrictions).
+
+### Create a Private Link Service connection
 
 1. Create a service manifest named `internal-lb-pls.yaml` with the service type `LoadBalancer` and the `azure-load-balancer-internal` and `azure-pls-create` annotations. For more options, refer to the [Azure Private Link Service Integration](https://kubernetes-sigs.github.io/cloud-provider-azure/topics/pls-integration/) design document.
 
@@ -161,15 +181,15 @@ For more information on configuring your load balancer in a different subnet, se
         app: internal-app
     ```
 
-2. Deploy the internal load balancer using the [`kubectl apply`][kubectl-apply] command. This command creates an Azure load balancer in the node resource group connected to the same virtual network as your AKS cluster. It also creates a Private Link Service object that connects to the frontend IP configuration of the load balancer associated with the Kubernetes service.
+1. Deploy the internal load balancer using the [`kubectl apply`][kubectl-apply] command. This command creates an Azure load balancer in the node resource group connected to the same virtual network as your AKS cluster. It also creates a Private Link Service object that connects to the frontend IP configuration of the internal load balancer associated with the Kubernetes service object.
 
-    ```azurecli-interactive
+    ```bash
     kubectl apply -f internal-lb-pls.yaml
     ```
 
-3. View the service details using the `kubectl get service` command.
+1. View the service details using the `kubectl get service` command.
 
-    ```azurecli-interactive
+    ```bash
     kubectl get service internal-app
     ```
 
@@ -180,7 +200,7 @@ For more information on configuring your load balancer in a different subnet, se
     internal-app   LoadBalancer   10.125.17.53  10.125.0.66   80:30430/TCP   64m
     ```
 
-4. View the details of the Private Link Service object using the [`az network private-link-service list`][az-network-private-link-service-list] command.
+1. View the details of the Private Link Service object using the [`az network private-link-service list`][az-network-private-link-service-list] command.
 
     ```azurecli-interactive
     # Create a variable for the node resource group
@@ -200,29 +220,32 @@ For more information on configuring your load balancer in a different subnet, se
     pls-xyz   pls-xyz.abc123-defg-4hij-56kl-789mnop.eastus2.azure.privatelinkservice
     ```
 
-### Create a Private Endpoint to the Private Link service
+### Create a Private Endpoint to the Private Link Service
 
 A Private Endpoint allows you to privately connect to your Kubernetes service object via the Private Link Service you created.
 
-* Create the private endpoint using the [`az network private-endpoint create`][az-network-private-endpoint-create] command.
+Create the private endpoint using the [`az network private-endpoint create`][az-network-private-endpoint-create] command. Replace `pls-xyz` with the Private Link Service name returned in the previous step.
 
-    ```azurecli-interactive
-    # Create a variable for the private link service
+Set `--resource-group` to the target resource group where you want to create the private endpoint. Set `--vnet-name` and `--subnet` to the virtual network and subnet that contain the private endpoint. Set `--private-connection-resource-id` to the Private Link Service resource ID retrieved in `AKS_PLS_ID`.
 
-    AKS_PLS_ID=$(az network private-link-service list -g $AKS_MC_RG --query "[].id" -o tsv)
+```azurecli-interactive
+# Create variables for the Private Link Service
 
-    # Create the private endpoint
+AKS_PLS_NAME=pls-xyz
+AKS_PLS_ID=$(az network private-link-service show -g $AKS_MC_RG --name $AKS_PLS_NAME --query id -o tsv)
 
-    $ az network private-endpoint create \
-        -g myOtherResourceGroup \
-        --name myAKSServicePE \
-        --vnet-name myOtherVNET \
-        --subnet pe-subnet \
-        --private-connection-resource-id $AKS_PLS_ID \
-        --connection-name connectToMyK8sService
-    ```
+# Create the private endpoint
 
-### PLS Customizations via Annotations
+az network private-endpoint create \
+    -g myOtherResourceGroup \
+    --name myAKSServicePE \
+    --vnet-name myOtherVNET \
+    --subnet pe-subnet \
+    --private-connection-resource-id $AKS_PLS_ID \
+    --connection-name connectToMyK8sService
+```
+
+### Private Link Service customizations via annotations
 
 You can use the following annotations to customize the PLS resource:
 
@@ -230,24 +253,25 @@ You can use the following annotations to customize the PLS resource:
 |------------|-------|-------------|----------|---------|
 | `service.beta.kubernetes.io/azure-pls-create` | `"true"` | Boolean indicating whether a PLS needs to be created. | Required | |
 | `service.beta.kubernetes.io/azure-pls-name` | `<PLS name>` | String specifying the name of the PLS resource to be created. | Optional | `"pls-<LB frontend config name>"` |
-| `service.beta.kubernetes.io/azure-pls-resource-group` | `Resource Group name` | String specifying the name of the Resource Group where the PLS resource is created | Optional | `MC_ resource` |
+| `service.beta.kubernetes.io/azure-pls-resource-group` | `Resource Group name` | String specifying the name of the Resource Group where the PLS resource is created | Optional | `MC_resource` |
 | `service.beta.kubernetes.io/azure-pls-ip-configuration-subnet` |`<Subnet name>` | String indicating the subnet to which the PLS is deployed. This subnet must exist in the same virtual network as the backend pool. PLS NAT IPs are allocated within this subnet. | Optional | If `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`, this ILB subnet is used. Otherwise, the default subnet from config file is used. |
 | `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count` | `[1-8]` | Total number of private NAT IPs to allocate. | Optional | 1 |
 | `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address` | `"10.0.0.7 ... 10.0.0.10"` | A space separated list of static **IPv4** IPs to be allocated. (IPv6 isn't supported right now.) Total number of IPs shouldn't be greater than the ip count specified in `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count`. If there are fewer IPs specified, the rest are dynamically allocated. The first IP in the list is set as `Primary`. |  Optional | All IPs are dynamically allocated. |
-| `service.beta.kubernetes.io/azure-pls-proxy-protocol` | `"true"` or `"false"` | Boolean indicating whether the TCP PROXY protocol should be enabled on the PLS to pass through connection information, including the link ID and source IP address. The backend service MUST support the PROXY protocol or the connections fails. | Optional | `false` |
-| `service.beta.kubernetes.io/azure-pls-visibility` | `"sub1 sub2 sub3 … subN"` or `"*"` | A space separated list of Azure subscription IDs for which the private link service is visible. Use `"*"` to expose the PLS to all subs (Least restrictive). | Optional | Empty list `[]` indicating role-based access control only: This private link service is only available to individuals with role-based access control permissions within your directory. (Most restrictive) |
-| `service.beta.kubernetes.io/azure-pls-auto-approval` | `"sub1 sub2 sub3 … subN"` | A space separated list of Azure subscription IDs. This allows PE connection requests from the subscriptions listed to the PLS to be automatically approved. This only works when visibility is set to `"*"`. |  Optional | `[]` |
+| `service.beta.kubernetes.io/azure-pls-fqdns` | `"fqdn1 fqdn2"` | A space separated list of fully qualified domain names associated with the PLS. | Optional | `[]` |
+| `service.beta.kubernetes.io/azure-pls-proxy-protocol` | `"true"` or `"false"` | Boolean indicating whether the TCP PROXY protocol should be enabled on the PLS to pass through connection information, including the link ID and source IP address. The backend service MUST support the PROXY protocol or the connection fails. | Optional | `false` |
+| `service.beta.kubernetes.io/azure-pls-visibility` | `"sub1 sub2 sub3 … subN"` or `"*"` | A space separated list of Azure subscription IDs for which the Private Link Service is visible. Use `"*"` to expose the PLS to all subs (Least restrictive). | Optional | Empty list `[]` indicating role-based access control only: This Private Link Service is only available to users with the required Azure RBAC permissions, including authorized users across tenants. (Most restrictive) |
+| `service.beta.kubernetes.io/azure-pls-auto-approval` | `"sub1 sub2 sub3 … subN"` | A space separated list of Azure subscription IDs whose PE connection requests to the PLS are automatically approved. The auto-approval list must be a subset of the visibility list. |  Optional | `[]` |
 
-## Use private networks
+## Use an internal load balancer with private networks
 
 When you create your AKS cluster, you can specify advanced networking settings. These settings allow you to deploy the cluster into an existing Azure virtual network and subnets. For example, you can deploy your AKS cluster into a private network connected to your on-premises environment and run services that are only accessible internally.
 
 For more information, see [configure your own virtual network subnets with Kubenet][use-kubenet] or [with Azure CNI][advanced-networking].
 
-You don't need to make any changes to the previous steps to deploy an internal load balancer that uses a private network in an AKS cluster. The load balancer is created in the same resource group as your AKS cluster, but it's instead connected to your private virtual network and subnet, as shown in the following example:
+You don't need to make any changes to the previous steps to deploy an internal load balancer that uses a private network in an AKS cluster. The load balancer is created in the node resource group for your AKS cluster and connected to your private virtual network and subnet, as shown in the following example:
 
-```azurecli-interactive
-$ kubectl get service internal-app
+```bash
+kubectl get service internal-app
 
 NAME           TYPE           CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
 internal-app   LoadBalancer   10.1.15.188   10.0.0.35     80:31669/TCP   1m
@@ -259,34 +283,36 @@ internal-app   LoadBalancer   10.1.15.188   10.0.0.35     80:31669/TCP   1m
 >
 > If you want to define a [custom role](/azure/role-based-access-control/custom-roles-cli) instead, you need the following permissions:
 >
-> * `Microsoft.Network/virtualNetworks/subnets/join/action`
-> * `Microsoft.Network/virtualNetworks/subnets/read`
+> - `Microsoft.Network/virtualNetworks/subnets/join/action`
+> - `Microsoft.Network/virtualNetworks/subnets/read`
 >
 > For more information, see [Add, change, or delete a virtual network subnet](/azure/virtual-network/virtual-network-manage-subnet).
 
 ### Specify a different subnet
 
-* Add the `azure-load-balancer-internal-subnet` annotation to your service to specify a subnet for your load balancer. The subnet specified must be in the same virtual network as your AKS cluster. When deployed, the load balancer `EXTERNAL-IP` address is part of the specified subnet.
+Add the `azure-load-balancer-internal-subnet` annotation to your service to specify a subnet for your load balancer. The subnet specified must be in the same virtual network as your AKS cluster. When deployed, the load balancer `EXTERNAL-IP` address is part of the specified subnet.
 
-    ```yaml
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: internal-app
-      annotations:
-        service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-        service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "apps-subnet"
-    spec:
-      type: LoadBalancer
-      ports:
-      - port: 80
-      selector:
-        app: internal-app
-    ```
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal-app
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "apps-subnet"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: internal-app
+```
+
+Set the `service.beta.kubernetes.io/azure-load-balancer-internal-subnet` annotation value to the subnet name string, such as `"apps-subnet"`.
 
 ## Delete the load balancer
 
-The load balancer is deleted when all of its services are deleted.
+The load balancer is deleted when you delete all of its Kubernetes services.
 
 As with any Kubernetes resource, you can directly delete a service, such as `kubectl delete service internal-app`, which also deletes the underlying Azure load balancer.
 

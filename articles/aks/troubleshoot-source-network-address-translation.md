@@ -3,9 +3,10 @@ title: Troubleshoot SNAT Port Exhaustion for a Standard Load Balancer in Azure K
 description: Learn how to troubleshoot SNAT port exhaustion issues for a Standard Load Balancer in Azure Kubernetes Service (AKS).
 ms.topic: troubleshooting-general
 ms.date: 01/23/2024
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: schaffererin
+author: schaffererin
 ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
 # Customer intent: As a cluster operator or developer using AKS with a Standard Load Balancer, I want to troubleshoot SNAT port exhaustion issues to ensure reliable outbound connectivity for my applications.
 ---
 

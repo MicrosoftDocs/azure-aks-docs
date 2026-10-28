@@ -7,6 +7,7 @@ ms.date: 06/06/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-ai-ml
 # Customer intent: As a data engineer, I want to deploy data and machine learning pipelines using Flyte on Azure Kubernetes Service, so that I can streamline workflow automation and focus on delivering business value without managing infrastructure.
 ---
 
@@ -155,7 +156,7 @@ To start building and deploying data and machine learning pipelines, see the fol
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [flyte]: https://www.union.ai/docs/flyte/user-guide/
-[azure-free]: https://azure.microsoft.com/free
+[azure-free]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [install-azure-cli]: /cli/azure/install-azure-cli
 [install-helm]: https://helm.sh/docs/intro/install/
 [install-kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/

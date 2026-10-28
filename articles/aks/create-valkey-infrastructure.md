@@ -7,7 +7,7 @@ ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
-ms.custom: 'stateful-workloads'
+ms.custom: 'stateful-workloads, aks-data-messaging'
 # Customer intent: As a cloud architect, I want to set up the infrastructure for a Valkey cluster on a Kubernetes service, so that I can deploy and manage stateful applications efficiently in a scalable environment.
 ---
 
@@ -300,7 +300,7 @@ _Microsoft maintains this article. The following contributors originally wrote i
 
 <!-- Internal links -->
 [valkey-solution-overview]: ./valkey-overview.md
-[azure-free-account]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
+[azure-free-account]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-group-create]: /cli/azure/group#az-group-create
 [az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create

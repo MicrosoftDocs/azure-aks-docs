@@ -2,7 +2,7 @@
 title: Use Container Storage Interface (CSI) Drivers on Azure Kubernetes Service (AKS)
 description: Learn about and deploy the Container Storage Interface (CSI) drivers for Azure Disks, Azure Files, and Azure Blob storage on your Azure Kubernetes Service (AKS) cluster to enable flexible and efficient storage solutions for your containerized applications.
 ms.topic: how-to
-ms.date: 03/14/2024
+ms.date: 08/03/2026
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -18,16 +18,14 @@ The Container Storage Interface (CSI) is a standard for exposing arbitrary block
 The CSI storage driver support on AKS allows you to natively use **Azure Disks**, **Azure Files**, or **Azure Blob storage** as persistent storage for your applications running on AKS.
 
 > [!TIP]
-> If you want a fully managed solution for block-level access to data, consider using [Azure Container Storage][azure-container-storage] instead of CSI drivers. Azure Container Storage integrates with Kubernetes, allowing dynamic and automatic provisioning of persistent volumes. Azure Container Storage supports Azure Disks, Ephemeral Disks, and Azure Elastic SAN (preview) as backing storage, offering flexibility and scalability for stateful applications running on Kubernetes clusters.
+> If you want a fully managed solution for block-level access to data, consider using [Azure Container Storage][azure-container-storage] instead of CSI drivers. Azure Container Storage integrates with Kubernetes so you can dynamically provision persistent volumes for stateful applications on Kubernetes clusters.
 
 :::zone pivot="azure-disks,azure-files"
 
 > [!IMPORTANT]
-> Starting with Kubernetes version 1.26, in-tree persistent volume types `kubernetes.io/azure-disk` and `kubernetes.io/azure-file` are deprecated and will no longer be supported. _In-tree drivers_ refer to the storage drivers that are part of the core Kubernetes code opposed to the CSI drivers, which are plug-ins.
+> Starting with Kubernetes version 1.21, AKS uses CSI drivers by default and enables CSI migration. Existing persistent volumes that use the in-tree `kubernetes.io/azure-disk` and `kubernetes.io/azure-file` drivers continue to function through CSI migration. _In-tree drivers_ are storage drivers that are part of the core Kubernetes code, whereas CSI drivers are plug-ins.
 >
-> Removing these drivers following their deprecation isn't planned, however you should migrate to the corresponding CSI drivers `disk.csi.azure.com` and `file.csi.azure.com`. To review the migration options for your storage classes and upgrade your cluster to use Azure Disks and Azure Files CSI drivers, see [Migrate from in-tree to CSI drivers][migrate-from-in-tree-csi-drivers].
->
-> If you created in-tree driver storage classes, those storage classes continue to work since CSI migration is turned on after upgrading your cluster to 1.21.x. If you want to use CSI features, you need to perform the migration.
+> Starting with Kubernetes version 1.26, AKS no longer supports creating volumes using the in-tree drivers for Azure Disks and Azure Files. Migrate to the corresponding `disk.csi.azure.com` and `file.csi.azure.com` CSI drivers. To review the migration options for your storage classes, see [Migrate from in-tree to CSI drivers][migrate-from-in-tree-csi-drivers].
 
 :::zone-end
 
@@ -39,7 +37,7 @@ The Azure Disks CSI driver is a [CSI specification](https://github.com/container
 
 ## Features of Azure Disks CSI driver
 
-In addition to in-tree driver features, Azure Disk CSI driver supports the following features:
+In addition to in-tree driver features, Azure Disks CSI driver supports the following features:
 
 - Performance improvements during concurrent disk attach and detach operations.
   - In-tree drivers attach or detach disks in serial, while CSI drivers attach or detach disks in batch. There's significant improvement when there are multiple disks attaching to one node.
@@ -52,7 +50,7 @@ In addition to in-tree driver features, Azure Disk CSI driver supports the follo
 - [Resize persistent volumes without downtime](./create-volume-azure-disk.md#resize-a-persistent-volume-without-downtime-with-azure-disks).
 
 > [!NOTE]
-> Depending on the virtual machine (VM) SKU you're using, the Azure Disk CSI driver might have a per-node volume limit. For some powerful VMs (for example, 16 cores), the limit is _64 volumes per node_. To identify the limit per VM SKU, review the **Max data disks** column for each VM SKU offered. For a list of VM SKUs offered and their corresponding detailed capacity limits, see [General purpose virtual machine sizes][general-purpose-machine-sizes].
+> Depending on the virtual machine (VM) SKU you're using, the Azure Disks CSI driver might have a per-node volume limit. For some powerful VMs (for example, 16 cores), the limit is _64 volumes per node_. To identify the limit per VM SKU, review the **Max data disks** column for each VM SKU offered. For a list of VM SKUs offered and their corresponding detailed capacity limits, see [General purpose virtual machine sizes][general-purpose-machine-sizes].
 
 :::zone-end
 
@@ -80,8 +78,13 @@ Applications can access data on the object storage using BlobFuse or Network Fil
 
 ## Features of Azure Blob storage CSI driver
 
-- Two built-in storage classes: _azureblob-fuse-premium__ and _azureblob-nfs-premium_.
-- BlobFuse and Network File System (NFS) version 3.0 protocol.
+The Azure Blob storage CSI driver provides the following features:
+
+| Feature | Details |
+| --- | --- |
+| Built-in storage classes | `azureblob-fuse-premium` and `azureblob-nfs-premium` |
+| Mount method | BlobFuse |
+| Network protocol | Network File System (NFS) 3.0 |
 
 :::zone-end
 
@@ -112,23 +115,23 @@ CSI storage drivers support the following scenarios:
 
 ## Enable Azure Disks CSI storage driver on an existing AKS cluster
 
-- Enable the Azure Disks CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-disk-driver` parameter. The following example enables the Azure Disks CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
+Enable the Azure Disks CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-disk-driver` parameter. The following example enables the Azure Disks CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
 
-    > [!NOTE]
-    > You can enable the [snapshot controller][snapshot-controller] at the same time as the Azure Disks CSI driver, which allows you to create snapshots of your persistent volumes. To enable the snapshot controller, include the `--enable-snapshot-controller` parameter in the command.
+> [!NOTE]
+> You can enable the [snapshot controller][snapshot-controller] at the same time as the Azure Disks CSI driver, which allows you to create snapshots of your persistent volumes. To enable the snapshot controller, include the `--enable-snapshot-controller` parameter in the command.
 
-    ```azurecli-interactive
-    az aks update --name myAKSCluster --resource-group myResourceGroup --enable-disk-driver
-    ```
+```azurecli-interactive
+az aks update --name myAKSCluster --resource-group myResourceGroup --enable-disk-driver
+```
 
-    It takes a few minutes to enable the Azure Disks CSI driver. After the command is completed, you can verify that the driver is enabled by checking that `blobCsiDriver` is set to `true` in the output. For example:
+It takes a few minutes to enable the Azure Disks CSI driver. After the command finishes, you can verify that the driver is enabled by checking that `diskCSIDriver` is set to `true` in the output. For example:
 
-    ```output
-    "storageProfile": {
-        "blobCsiDriver": {
-          "enabled": true
-        },
-    ```
+```output
+"storageProfile": {
+    "diskCSIDriver": {
+        "enabled": true
+    },
+```
 
 :::zone-end
 
@@ -136,23 +139,23 @@ CSI storage drivers support the following scenarios:
 
 ## Enable Azure Files CSI storage driver on an existing AKS cluster
 
-- Enable the Azure Files CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-file-driver` parameter. The following example enables the Azure Files CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
+Enable the Azure Files CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-file-driver` parameter. The following example enables the Azure Files CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
 
-    > [!NOTE]
-    > You can enable the [snapshot controller][snapshot-controller] at the same time as the Azure Files CSI driver, which allows you to create snapshots of your persistent volumes. To enable the snapshot controller, include the `--enable-snapshot-controller` parameter in the command.
+> [!NOTE]
+> You can enable the [snapshot controller][snapshot-controller] at the same time as the Azure Files CSI driver, which allows you to create snapshots of your persistent volumes. To enable the snapshot controller, include the `--enable-snapshot-controller` parameter in the command.
 
-    ```azurecli-interactive
-    az aks update --name myAKSCluster --resource-group myResourceGroup --enable-file-driver
-    ```
+```azurecli-interactive
+az aks update --name myAKSCluster --resource-group myResourceGroup --enable-file-driver
+```
 
-    It takes a few minutes to enable the Azure Files CSI driver. After the command is completed, you can verify that the driver is enabled by checking that `fileCsiDriver` is set to `true` in the output. For example:
+It takes a few minutes to enable the Azure Files CSI driver. After the command is completed, you can verify that the driver is enabled by checking that `fileCsiDriver` is set to `true` in the output. For example:
 
-    ```output
-    "storageProfile": {
-        "fileCsiDriver": {
-          "enabled": true
-        },
-    ```
+```output
+"storageProfile": {
+    "fileCsiDriver": {
+        "enabled": true
+    },
+```
 
 :::zone-end
 
@@ -160,23 +163,20 @@ CSI storage drivers support the following scenarios:
 
 ## Enable Azure Blob storage CSI storage driver on an existing AKS cluster
 
-- Enable the Azure Blob storage CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-blob-driver` parameter. The following example enables the Azure Blob storage CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
+Enable the Azure Blob storage CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-blob-driver` parameter. The following example enables the Azure Blob storage CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
 
-    > [!NOTE]
-    > You can enable the [snapshot controller][snapshot-controller] at the same time as the Azure Blob storage CSI driver, which allows you to create snapshots of your persistent volumes. To enable the snapshot controller, include the `--enable-snapshot-controller` parameter in the command.
+```azurecli-interactive
+az aks update --name myAKSCluster --resource-group myResourceGroup --enable-blob-driver
+```
 
-    ```azurecli-interactive
-    az aks update --name myAKSCluster --resource-group myResourceGroup --enable-blob-driver
-    ```
+It takes a few minutes to enable the Azure Blob storage CSI driver. After the command is completed, you can verify that the driver is enabled by checking that `blobCsiDriver` is set to `true` in the output. For example:
 
-    It takes a few minutes to enable the Azure Blob storage CSI driver. After the command is completed, you can verify that the driver is enabled by checking that `blobCsiDriver` is set to `true` in the output. For example:
-
-    ```output
-    "storageProfile": {
-        "blobCsiDriver": {
-          "enabled": true
-        },
-    ```
+```output
+"storageProfile": {
+    "blobCsiDriver": {
+        "enabled": true
+    },
+```
 
 :::zone-end
 
@@ -184,29 +184,29 @@ CSI storage drivers support the following scenarios:
 
 ## Disable Azure Disks CSI storage driver on an existing AKS cluster
 
-- Disable the Azure Disks CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--disable-disk-driver` parameter. The following example disables the Azure Disks CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
+Disable the Azure Disks CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--disable-disk-driver` parameter. The following example disables the Azure Disks CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
 
-    > [!NOTE]
-    > You can disable the [snapshot controller][snapshot-controller] by including the `--disable-snapshot-controller` parameter in the command.
+> [!NOTE]
+> You can disable the [snapshot controller][snapshot-controller] by including the `--disable-snapshot-controller` parameter in the command.
 
-    ```azurecli-interactive
-    az aks update --name myAKSCluster --resource-group myResourceGroup --disable-disk-driver
-    ```
+```azurecli-interactive
+az aks update --name myAKSCluster --resource-group myResourceGroup --disable-disk-driver
+```
 
 :::zone-end
 
 :::zone pivot="azure-files"
 
-### Disable Azure Files CSI storage driver on an existing AKS cluster
+## Disable Azure Files CSI storage driver on an existing AKS cluster
 
-- Disable the Azure Files CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--disable-file-driver` parameter. The following example disables the Azure Files CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
+Disable the Azure Files CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--disable-file-driver` parameter. The following example disables the Azure Files CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
 
-    > [!NOTE]
-    > You can disable the [snapshot controller][snapshot-controller] by including the `--disable-snapshot-controller` parameter in the command.
+> [!NOTE]
+> You can disable the [snapshot controller][snapshot-controller] by including the `--disable-snapshot-controller` parameter in the command.
 
-    ```azurecli-interactive
-    az aks update --name myAKSCluster --resource-group myResourceGroup --disable-file-driver
-    ```
+```azurecli-interactive
+az aks update --name myAKSCluster --resource-group myResourceGroup --disable-file-driver
+```
 
 :::zone-end
 
@@ -214,14 +214,11 @@ CSI storage drivers support the following scenarios:
 
 ## Disable Azure Blob storage CSI storage driver on an existing AKS cluster
 
-- Disable the Azure Blob storage CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--disable-blob-driver` parameter. The following example disables the Azure Blob storage CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
+Disable the Azure Blob storage CSI driver on an existing cluster using the [`az aks update`][az-aks-update] command with the `--disable-blob-driver` parameter. The following example disables the Azure Blob storage CSI driver on an existing cluster named _myAKSCluster_ in the resource group _myResourceGroup_:
 
-    > [!NOTE]
-    > You can disable the [snapshot controller][snapshot-controller] by including the `--disable-snapshot-controller` parameter in the command.
-
-    ```azurecli-interactive
-    az aks update --name myAKSCluster --resource-group myResourceGroup --disable-blob-driver
-    ```
+```azurecli-interactive
+az aks update --name myAKSCluster --resource-group myResourceGroup --disable-blob-driver
+```
 
 :::zone-end
 
@@ -252,6 +249,7 @@ CSI storage drivers support the following scenarios:
 :::zone-end
 
 <!--- LINKS --->
+[az-aks-update]: /cli/azure/aks#az-aks-update
 [snapshot-controller]: https://kubernetes-csi.github.io/docs/snapshot-controller.html
 [install-azure-cli]: /cli/azure/install-azure-cli
 [migrate-from-in-tree-csi-drivers]: csi-migrate-in-tree-volumes.md

@@ -3,9 +3,10 @@ title: Use Pod Security Admission in Azure Kubernetes Service (AKS)
 description: Learn how to enable and use Pod Security Admission with Azure Kubernetes Service (AKS).
 ms.custom: azure-kubernetes-service
 ms.topic: how-to
+ms.subservice: aks-security
 ms.date: 09/12/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: As a Kubernetes administrator, I want to implement Pod Security Admission policies in my AKS cluster, so that I can enforce security standards and ensure that only compliant pods are deployed in designated namespaces.
 ---
@@ -18,7 +19,7 @@ Pod Security Admission is a built-in policy solution for single cluster implemen
 
 ## Before you begin
 
-- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+- An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - [Azure CLI installed](/cli/azure/install-azure-cli).
 - An existing AKS cluster running Kubernetes version 1.23 or higher.
 

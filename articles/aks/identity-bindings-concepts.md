@@ -1,24 +1,22 @@
 ---
-title: Identity bindings for Azure Kubernetes Service (AKS) (preview)
+title: Identity bindings for Azure Kubernetes Service (AKS)
 description: Learn about identity bindings on AKS and how they extend Microsoft Entra workload identity for large scale scenarios that exceed federated identity credential limits.
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 02/26/2026
-ms.custom: preview
+ms.date: 09/02/2026
+ai-usage: ai-assisted
 author: shashankbarsin
 ms.author: shasb
 ms.reviewer: schaffererin
 # Customer intent: "As an operator of large AKS environments, I need a scalable way to map a user-assigned managed identity to many clusters and many service accounts without hitting federated identity credential limits so workloads can securely obtain Microsoft Entra tokens."
 ---
 
-# Identity bindings for Azure Kubernetes Service (AKS) (preview)
+# Identity bindings for Azure Kubernetes Service (AKS)
 
-Identity binding is a preview feature for Azure Kubernetes Service (AKS) that extends the existing [workload identity feature][workload-identity-overview] to address scale limitations around federated identity credentials (FICs) on user-assigned managed identities (UAMIs). With [workload identity for AKS][workload-identity-overview], a single UAMI can't have more than **20 FICs**. Large Kubernetes platform deployments might span more than 20 clusters (each cluster has a unique issuer) or have many `<namespace, service-account>` combinations that require mapping to the same UAMI, exhausting the FIC quota.
+Identity binding is a feature for Azure Kubernetes Service (AKS) that extends the existing [workload identity feature][workload-identity-overview] to address scale limitations around federated identity credentials (FICs) on user-assigned managed identities (UAMIs). With [workload identity for AKS][workload-identity-overview], a single UAMI can't have more than **20 FICs**. Large Kubernetes platform deployments might span more than 20 clusters (each cluster has a unique issuer) or have many `<namespace, service-account>` combinations that require mapping to the same UAMI, exhausting the FIC quota.
 
 Identity bindings address this limitation by allowing multiple AKS clusters to share the same UAMI using a single FIC per UAMI. This approach significantly increases scalability and simplifies operations for large-scale AKS environments that require Microsoft Entra authentication.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## What is an identity binding?
 
@@ -47,14 +45,14 @@ The following table outlines the minimum package versions and how to enable iden
 
 | Language | Package | Minimum Version | How to enable |
 | -------- | ------- | --------------- | ------------- |
-| .NET | [Azure.Identity][dotnet-azure-identity] | **v1.18.0-beta.3** only | `WorkloadIdentityCredential` identity binding mode is disabled by default. Set `WorkloadIdentityCredentialOptions.IsAzureProxyEnabled` to `true`. |
+| .NET | [Azure.Identity][dotnet-azure-identity]<br>or<br>[Azure.Core][dotnet-azure-core] | **v1.18.0-beta.3** only<br>or<br>**v1.55.0** or later | `WorkloadIdentityCredential` identity binding mode is disabled by default. Set `WorkloadIdentityCredentialOptions.IsAzureProxyEnabled` to `true`. |
 | Go | [azidentity][go-azidentity] | **v1.14.0-beta.3** or later | Set `WorkloadIdentityCredentialOptions.EnableAzureProxy` to `true`. |
 | Java | [azure-identity][java-azure-identity] | **v1.19.0-beta.2** or later | Call `enableAzureProxy()` on `WorkloadIdentityCredentialBuilder`. |
 | JavaScript | [@azure/identity][javascript-azure-identity] | **4.14.0-beta.2** or later | Set `enableAzureProxy` to `true` in `WorkloadIdentityCredentialOptions`. |
 | Python | [azure-identity][python-azure-identity] | **1.26.0b2** or later | Set `enable_azure_proxy=True` in `WorkloadIdentityCredential`. |
 
 > [!NOTE]
-> For .NET, identity bindings support is available exclusively in **Azure.Identity v1.18.0-beta.3**. No earlier or later version currently includes this feature.
+> For .NET, identity bindings support is available exclusively in **Azure.Identity v1.18.0-beta.3** or, as an alternative, in **Azure.Core v1.55.0** or later. No other version of Azure.Identity currently includes this feature.
 
 ## Frequently asked questions (FAQs)
 
@@ -100,6 +98,7 @@ Identity bindings aren't yet supported on clusters configured with [API server v
 [identity-bindings-how-to]: identity-bindings.md
 [workload-identity-overview]: workload-identity-overview.md
 [dotnet-azure-identity]: /dotnet/api/overview/azure/identity-readme
+[dotnet-azure-core]: /dotnet/api/overview/azure/core-readme
 [java-azure-identity]: /java/api/overview/azure/identity-readme
 [javascript-azure-identity]: /javascript/api/overview/azure/identity-readme
 [python-azure-identity]: /python/api/overview/azure/identity-readme

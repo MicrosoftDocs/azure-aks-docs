@@ -4,9 +4,10 @@ description: This article contains important reference material you need when yo
 ms.date: 09/06/2024
 ms.custom: horz-monitor
 ms.topic: reference
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-monitoring
+ai-usage: ai-assisted
 # Customer intent: As a cloud operations engineer, I want to reference supported metrics and logs for Azure Kubernetes Service monitoring, so that I can effectively collect and analyze data to ensure optimal performance and resource management in my environments.
 ---
 
@@ -23,6 +24,12 @@ See [Monitor Azure Kubernetes Service (AKS)](monitor-aks.md) for details on the 
 The following table lists the metrics available for the Microsoft.ContainerService/managedClusters resource type.
 
 [!INCLUDE [horz-monitor-ref-metrics-tableheader](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
+
+> [!IMPORTANT]
+> The `pod` dimension for the AKS platform metrics `kube_pod_status_ready` and
+> `kube_pod_status_phase` will be retired on September 30, 2027. To continue
+> using the `pod` dimension in these metrics after the retirement date, use
+> [Azure Monitor managed service for Prometheus](/azure/azure-monitor/metrics/prometheus-metrics-overview).
 
 [!INCLUDE [Microsoft.ContainerService/managedClusters](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-containerservice-managedclusters-metrics-include.md)]
 
@@ -68,12 +75,12 @@ The following table lists the metrics available for the Microsoft.Compute/virtua
 
 ## Minimal ingestion profile for control plane Metrics in Managed Prometheus
 
-Azure Monitor metrics addon collects many Prometheus metrics by default. `Minimal ingestion profile` is a setting that helps reduce ingestion volume of metrics, as only metrics used by default dashboards, default recording rules and default alerts are collected. This section describes how this setting is configured specifically for control plane metrics. This section also lists metrics collected by default when `minimal ingestion profile` is enabled.
+Azure Monitor metrics add-on collects many Prometheus metrics by default. `Minimal ingestion profile` is a setting that helps reduce ingestion volume of metrics, as only metrics used by default dashboards, default recording rules and default alerts are collected. This section describes how this setting is configured specifically for control plane metrics. This section also lists metrics collected by default when `minimal ingestion profile` is enabled.
 
 > [!NOTE]
-> For addon based collection, `Minimal ingestion profile` setting is enabled by default. The discussion here is focused on control plane metrics. The current set of default targets and metrics is listed [here](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal).
+> For add-on-based collection, `Minimal ingestion profile` setting is enabled by default. The discussion here is focused on control plane metrics. The current set of default targets and metrics is listed [here](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal).
 
-Following targets are **enabled/ON** by default - meaning you don't have to provide any scrape job configuration for scraping these targets, as metrics addon scrapes these targets automatically by default:
+Following targets are **enabled/ON** by default - meaning you don't have to provide any scrape job configuration for scraping these targets, as metrics add-on scrapes these targets automatically by default:
 
 - `controlplane-apiserver` (job=`controlplane-apiserver`)
 - `controlplane-etcd` (job=`controlplane-etcd`)

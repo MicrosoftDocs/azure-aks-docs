@@ -3,7 +3,7 @@ title: "Quickstart: Create an Azure Kubernetes Fleet Manager and join member clu
 description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI.
 author: sjwaight
 ms.author: simonwaight
-ms.date: 02/23/2026
+ms.date: 07/24/2026
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: quickstart
 ms.custom:
@@ -216,15 +216,17 @@ Retrieve the resource identifier for the API subnet to use later.
 API_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-name ${FLEET} -n ${VNET-API-SUBNET-NAME} -o tsv --query id)
 ```
 
-6. Finally, create the new hub cluster, providing the necessary arguments to enable API VNet integration  
+1. Finally, create the new hub cluster, providing the necessary arguments to enable API VNet integration and a private hub cluster. 
 
 ```azurecli-interactive
- az fleet create \
+az fleet create \
     --resource-group ${GROUP} \
     --name ${FLEET} \
     --location ${LOCATION}  \
     --enable-hub \
     --enable-managed-identity \
+    --enable-private-cluster \
+    --enable-vnet-integration \
     --agent-subnet-id ${CLUSTER_SUBNET_ID} \
     --apiserver-subnet-id ${API_SUBNET_ID} \
     --assign-identity ${UAMI_ID}
@@ -234,14 +236,14 @@ API_SUBNET_ID=$(az network vnet subnet show --resource-group ${GROUP} --vnet-nam
 
 ## Join member clusters
 
-Fleet Manager supports joining existing AKS clusters or Arc-enabled Kubernetes clusters (Preview) as member clusters.
+Fleet Manager supports joining AKS or Arc-enabled Kubernetes clusters as member clusters.
 
 1. Set the following environment variables for member clusters:
 
     ```azurecli-interactive
     export MEMBER_NAME_1=flt-member-cluster-1
 
-   # For an AKS cluster
+    # For an AKS cluster
     export MEMBER_CLUSTER_ID_1=/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${GROUP}/providers/Microsoft.ContainerService/managedClusters/${MEMBER_NAME_1}
 
     # For an Arc-enabled cluster

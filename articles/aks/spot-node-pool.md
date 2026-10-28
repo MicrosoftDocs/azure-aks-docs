@@ -238,7 +238,7 @@ In this article, you learned how to add a Spot node pool to an AKS cluster. For 
 [pricing-spot]: /azure/virtual-machine-scale-sets/use-spot#pricing
 [pricing-windows]: https://azure.microsoft.com/pricing/details/virtual-machine-scale-sets/windows/
 [spot-toleration]: #verify-the-spot-node-pool
-[taints-tolerations]: operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations
+[taints-tolerations]: operator-best-practices-advanced-scheduler.md#what-are-taints-and-tolerations
 [use-multiple-node-pools]: create-node-pools.md
 [vmss-spot]: /azure/virtual-machine-scale-sets/use-spot
 [upgrade-cluster]: upgrade-cluster.md

@@ -59,3 +59,6 @@
   - name: Azure Kubernetes Service
     tocHref: /azure/copilot/
     topicHref: /azure/aks/index
+  - name: Azure Kubernetes Service
+    tocHref: /azure/aks/aksarc/
+    topicHref: /azure/aks/index

@@ -2,7 +2,7 @@
 title: "Intelligent Cross-Cluster Kubernetes Resource Placement Using Azure Kubernetes Fleet Manager"
 description: Learn how to use Azure Kubernetes Fleet Manager to intelligently place your workloads on target member clusters based on cost and resource availability.
 ms.topic: how-to
-ms.date: 12/04/2025
+ms.date: 07/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -21,7 +21,7 @@ Fleet Manager supports intelligent placement for both cluster-scoped (`ClusterRe
 * Cost of compute/memory in target member clusters
 * Resource (CPU/memory) availability in target member clusters
 
-For more information about the concepts in this article, see [cluster-scoped resource placement](./concepts-resource-propagation.md) and [namespace-scoped resource placement](./concepts-namespace-scoped-resource-propagation.md).
+For more information about the concepts in this article, see [cluster-scoped resource placement](./concepts-resource-placement.md) and [namespace-scoped resource placement](./concepts-namespace-scoped-resource-propagation.md).
 
 ## Prerequisites
 
@@ -128,7 +128,7 @@ Next, publish a workload to the hub cluster so that it can be placed onto member
    kubectl create namespace test-app 
    ```
 
-1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources-using-envelope-objects), you can deploy them without change.
+1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-placement.md#using-envelope-resources), you can deploy them without change.
 
    1. Save the following YAML into a file named `sample-workload.yaml`:
 
@@ -179,7 +179,7 @@ With the workload definition deployed, it's now possible to test the intelligent
 
 ## Test workload placement policies
 
-You can use the following samples as guides to writing your own resource placement objects. For more information, see the [cluster-scoped resource placement documentation](./concepts-resource-propagation.md) and [namespace-scoped resource placement documentation](./concepts-namespace-scoped-resource-propagation.md).
+You can use the following samples as guides to writing your own resource placement objects. For more information, see the [cluster-scoped resource placement documentation](./concepts-resource-placement.md) and [namespace-scoped resource placement documentation](./concepts-namespace-scoped-resource-propagation.md).
 
 Each example shows both `ClusterResourcePlacement` (for cluster-scoped resources and entire namespaces) and `ResourcePlacement` (for specific namespace-scoped resources) variants.
   
@@ -190,7 +190,7 @@ Each example shows both `ClusterResourcePlacement` (for cluster-scoped resources
 
 This example shows a property sorter that uses the `Descending` order. This order means that Fleet Manager prefers clusters with higher node counts.
 
-The cluster with the highest node count receives a weight of 20, and the cluster with the lowest receives a weight of 0. Other clusters receive proportional weights calculated via the [weight calculation formula](./concepts-resource-propagation.md#how-property-ranking-works).
+The cluster with the highest node count receives a weight of 20, and the cluster with the lowest receives a weight of 0. Other clusters receive proportional weights calculated via the [weight calculation formula](./concepts-resource-placement.md#how-property-ranking-works).
 
 #### ClusterResourcePlacement example
 
@@ -383,20 +383,19 @@ You can view the status of a placement using either the Azure portal or the kube
 
 For details on how to view placement progress:
 
-* For `ClusterResourcePlacement`, see [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters).
-* For `ResourcePlacement`, see [Use ResourcePlacement to place namespace-scoped resources](./quickstart-namespace-scoped-resource-propagation.md#use-resourceplacement-to-place-namespace-scoped-resources).
+* For `ClusterResourcePlacement`, see [Use Azure Kubernetes Fleet Manager resource placement to deploy cluster-scoped resources across multiple clusters](./quickstart-resource-propagation.md).
+* For `ResourcePlacement`, see [Use ResourcePlacement to place namespace-scoped resources](./quickstart-namespace-scoped-resource-propagation.md).
 
-## Clean up resources
+## Delete placed resources
 
-To remove a resource placement:
+To remove a resource placement and the resources on member clusters, see:
 
-* For `ClusterResourcePlacement`, see [Clean up resources](./quickstart-resource-propagation.md#clean-up-resources).
-* For `ResourcePlacement`, see [Clean up resources](./quickstart-namespace-scoped-resource-propagation.md#clean-up-resources).
+* For cluster-scoped resources, see [delete the placement to remove resources](./quickstart-resource-propagation.md#delete-the-placement-to-remove-resources).
+* For namespace-scoped resources, see [delete the placement to remove resources](./quickstart-namespace-scoped-resource-propagation.md#delete-the-placement-to-remove-resources).
 
 ## Next steps
 
-* [Cluster-scoped resource placement using ClusterResourcePlacement](./concepts-resource-propagation.md)
-* [Namespace-scoped resource placement using ResourcePlacement](./concepts-namespace-scoped-resource-propagation.md)
+* [Introducing Fleet Manager intelligent resource placement](./concepts-resource-placement.md)
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md)
 * [Use namespace-scoped resource placement to deploy workloads across multiple clusters](./quickstart-namespace-scoped-resource-propagation.md)
 * [Define a rollout strategy for a resource placement](./concepts-rollout-strategy.md)

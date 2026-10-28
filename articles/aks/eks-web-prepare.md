@@ -6,6 +6,7 @@ ms.author: schaffererin
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
+ms.custom: aks-migration
 # Customer intent: As a cloud engineer, I want to deploy a web application workload from AWS to Azure Kubernetes Service (AKS) so that I can leverage Azure's infrastructure for hosting, scaling, and securing my application efficiently.
 ---
 
@@ -241,7 +242,7 @@ Other contributors:
 [secret-provider-class]: /azure/aks/hybrid/secrets-store-csi-driver
 [azure-sample]: https://github.com/Azure-Samples/aks-web-application-replicate-from-aws
 [eks-web-deploy]: ./eks-web-deploy.md
-[azure-free]: https://azure.microsoft.com/free/
+[azure-free]: https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn
 [azure-built-in-roles]: /azure/role-based-access-control/built-in-roles
 [azure-cli]: /cli/azure/install-azure-cli
 [aks-preview]: /azure/aks/draft#install-the-aks-preview-azure-cli-extension

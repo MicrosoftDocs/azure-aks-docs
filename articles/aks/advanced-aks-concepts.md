@@ -4,6 +4,7 @@ description: Learn the advanced features of Azure Kubernetes Service (AKS) so yo
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-getting-started
 ms.topic: get-started
 ms.date: 01/21/2026
 # Customer intent: As an experienced user, I want to get started with advanced Azure Kubernetes Service (AKS) concepts so that I can optimize my containerized applications.

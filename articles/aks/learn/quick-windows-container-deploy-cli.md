@@ -2,8 +2,8 @@
 title: Deploy a Windows Server Container on an Azure Kubernetes Service (AKS) Cluster using Azure CLI
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in a Windows Server container in Azure Kubernetes Service (AKS) using Azure CLI.
 ms.topic: quickstart
-ms.custom: devx-track-azurecli, innovation-engine
-ms.date: 07/03/2025
+ms.custom: devx-track-azurecli, innovation-engine, aks-windows
+ms.date: 07/13/2026
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -25,46 +25,9 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-- This article requires version 2.0.64 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+- This article requires version 2.87.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 - Make sure that the identity you're using to create your cluster has the appropriate minimum permissions. For more information about access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [`az account set`](/cli/azure/account#az-account-set) command. For more information, see [How to manage Azure subscriptions – Azure CLI](/cli/azure/manage-azure-subscriptions-azure-cli?tabs=bash#change-the-active-subscription).
-- If you're using `--os-sku Windows2025`, you need to install the `aks-preview` extension and register the preview flag. The minimum version is 18.0.0b40.
-
-### Install the `aks-preview` extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
-
-  ```azurecli-interactive
-  az extension add --name aks-preview
-  ```
-
-1. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Windows Server 2025 requires a minimum of 18.0.0b40**.
-
-  ```azurecli-interactive
-  az extension update --name aks-preview
-  ```
-
-### Register the `AksWindows2025Preview` feature flag
-
-1. Register the `AksWindows2025Preview` feature flag using the [`az feature register`][az-feature-register] command.
-
-  ```azurecli-interactive
-  az feature register --name AksWindows2025Preview --namespace Microsoft.ContainerService
-  ```
-
-1. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show _Registered_.
-
-  ```azurecli-interactive
-  az feature show --name AksWindows2025Preview --namespace Microsoft.ContainerService
-  ```
-
-1. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Create a resource group
 
@@ -126,6 +89,7 @@ Use the following steps to create the AKS cluster with Azure CLI:
     az aks create \
         --resource-group $MY_RESOURCE_GROUP_NAME \
         --name $MY_AKS_CLUSTER \
+        --kubernetes-version 1.33 \
         --node-count 2 \
         --enable-addons monitoring \
         --generate-ssh-keys \
@@ -153,24 +117,22 @@ To create a Windows node pool, you need to specify a supported `OsType` and `OsS
 
 | `OsType` | `OsSku` | Default | Supported K8s versions | Details |
 |--|--|--|--|--|
-| `windows` | `Windows2025` | Currently in preview. Not default. | 1.32+ | Updated defaults: `containerd` 2.0, Generation 2 image is used by default. |
-| `windows` | `Windows2022` | Default in K8s 1.25-1.35 | Not available in K8s 1.36+ | Retires in March 2027. Updated defaults: FIPS is enabled by default. |
-| `windows` | `Windows2019` | Default in K8s 1.24 and below | Not available in K8s 1.33+ | Retires in March 2026. |
+| `windows` | `Windows2025` | Default in K8s 1.36+ | 1.32+ | Updated defaults: `containerd` 2.0, Generation 2 image is used by default. FIPS is required - include `--enable-fips-image` when you create the node pool. |
+| `windows` | `Windows2022` | Default in K8s 1.25-1.35 | Not available in K8s 1.37+ | Retires in June 2028. Updated defaults: FIPS is enabled by default. |
 
-Windows Server 2022 is the default operating system for Kubernetes versions 1.25-1.35. Windows Server 2019 is the default OS for earlier versions. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
-
-[!INCLUDE [windows server 2019 retirement](../includes/windows-server-2019-retirement.md)]
+Windows Server 2025 is the default operating system for Kubernetes version 1.36 and later. Windows Server 2022 is the default for Kubernetes versions 1.25-1.35. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
 
 [!INCLUDE [windows server 2022 retirement](../includes/windows-server-2022-retirement.md)]
 
-- Add a Windows node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with a specified `OsType` and `OsSku`. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster.
+- Add a Windows node pool by using the [`az aks nodepool add`][az-aks-nodepool-add] command with a specified `OsType` and `OsSku`. If you don't specify a particular OS SKU, Azure creates the new node pool with the default SKU for the version of Kubernetes used by the cluster. Windows Server 2025 node pools require a FIPS-enabled image, so the following command includes `--enable-fips-image`.
 
     ```azurecli-interactive
     az aks nodepool add \
       --resource-group $MY_RESOURCE_GROUP_NAME \
       --cluster-name $MY_AKS_CLUSTER \
       --os-type Windows \
-      --os-sku Windows2022 \
+      --os-sku Windows2025 \
+      --enable-fips-image \
       --name npwin \
       --node-count 1
     ```
@@ -199,9 +161,9 @@ You use [kubectl][kubectl], the Kubernetes command-line client, to manage your K
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION      CONTAINER-RUNTIME
-    aks-nodepool1-20786768-vmss000000   Ready    agent   22h   v1.27.7   10.224.0.4    <none>        Ubuntu 22.04.3 LTS               5.15.0-1052-azure   containerd://1.7.5-1
-    aks-nodepool1-20786768-vmss000001   Ready    agent   22h   v1.27.7   10.224.0.33   <none>        Ubuntu 22.04.3 LTS               5.15.0-1052-azure   containerd://1.7.5-1
-    aksnpwin000000                      Ready    agent   20h   v1.27.7   10.224.0.62   <none>        Windows Server 2022 Datacenter   10.0.20348.2159     containerd://1.6.21+azure
+    aks-nodepool1-20786768-vmss000000   Ready    agent   22h   v1.33.12   10.224.0.4    <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure   containerd://1.7.33-1
+    aks-nodepool1-20786768-vmss000001   Ready    agent   22h   v1.33.12   10.224.0.33   <none>        Ubuntu 22.04.5 LTS               5.15.0-1116-azure   containerd://1.7.33-1
+    aksnpwin000000                      Ready    agent   20h   v1.33.12   10.224.0.62   <none>        Windows Server 2025 Datacenter   10.0.26100.32995    containerd://2.0.4+azure
     ```
 
     > [!NOTE]

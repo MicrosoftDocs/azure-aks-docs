@@ -6,7 +6,7 @@ ms.author: schaffererin
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
-ms.custom: 
+ms.custom: aks-migration
     - migration
     - aws-to-azure
     - eks-to-aks

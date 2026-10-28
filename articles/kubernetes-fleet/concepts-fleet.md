@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager fleets and member clusters"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager and member clusters.
-ms.date: 12/10/2025
+ms.date: 04/01/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -29,11 +29,11 @@ When Fleet Manager is configured with a hub cluster, a `MemberCluster` Kubernete
 
 ### Labels
 
-When Fleet Manager is configured with a hub cluster, Member clusters can have service-defined and user-defined labels associated with them, which are used to select clusters for workload placement. When you define a [ClusterResourcePlacement](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
+When Fleet Manager is configured with a hub cluster, Member clusters can have service-defined and user-defined labels associated with them, which are used to select clusters for workload placement. When you apply a [resource placement](./concepts-resource-placement.md), you can use label selectors to target specific member clusters based on their labels. This allows you to deploy workloads only to clusters that match certain criteria, such as region, environment, team, or other custom attributes.
 
-By default, Fleet populates these [service-defined labels](./concepts-resource-propagation.md#labels) on each member cluster.
+By default, Fleet populates these [service-defined labels](./concepts-resource-placement.md#member-cluster-labels) on each `MemberCluster` resource on the hub cluster.
 
-Member labels should be modified using the Azure CLI or REST API. They may not be modified directly on the `MemberCluster` resource on the hub cluster.
+Member labels should be modified using the Azure CLI (`az fleet member update`) or REST API. They may not be modified directly on the `MemberCluster` resource on the hub cluster.
 
 ### Taints
 
@@ -43,7 +43,7 @@ When Fleet Manager is configured with a hub cluster, member clusters support the
 * `value`: The value of the taint.
 * `effect`: The effect of the taint, such as `NoSchedule`.
 
-Once a `MemberCluster` is tainted, it lets the KubeFleet scheduler know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#using-clusterresourceplacement-to-deploy-cluster-scoped-resources) or [ResourcePlacement](./concepts-namespace-scoped-resource-propagation.md) to the `MemberCluster`.
+Once a `MemberCluster` is tainted with `NoSchedule` it lets the Fleet Manager scheduler know that the cluster shouldn't receive resources as part of [resource placements](./concepts-resource-placement.md) from the hub cluster.
 
 ## Next steps
 

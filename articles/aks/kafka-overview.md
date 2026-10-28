@@ -83,7 +83,7 @@ For simpler use cases or when operational overhead is a concern, consider fully 
 
 ### Azure Disk Storage
 
-For Kafka deployments on AKS, we use the Azure Disk CSI driver which provides persistent volumes backed by Azure Managed Disks. Strimzi leverages [(Just a Bunch of Disks (JBOD)](https://strimzi.io/docs/operators/latest/deploying#considerations-for-data-storage-str) configuration to manage data persistence.
+For Kafka deployments on AKS, we use the Azure Disk CSI driver which provides persistent volumes backed by Azure managed disks. Strimzi leverages [(Just a Bunch of Disks (JBOD)](https://strimzi.io/docs/operators/latest/deploying#considerations-for-data-storage-str) configuration to manage data persistence.
 
 To ensure high availability across infrastructure failures, storage classes should be configured with Premium SSD v2 disks distributed across availability zones using the `WaitForFirstConsumer` volume binding mode. This ensures pods are scheduled in zones where their persistent volumes can be created. Premium SSD v2 can deliver the latency, high IOPS, and consistent throughput required by IO-intensive Kafka workloads at an optimized cost structure.
 

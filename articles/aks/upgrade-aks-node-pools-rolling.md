@@ -4,7 +4,7 @@ description: Learn how to configure and customize rolling upgrades for Azure Kub
 ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 12/09/2025
+ms.date: 05/29/2026
 author: kaarthis
 ms.author: schaffererin
 # Customer intent: "As a cluster operator, I want to configure rolling upgrades for my AKS node pools so that I can upgrade nodes with minimal workload disruption."
@@ -19,6 +19,17 @@ A rolling upgrade strategy upgrades nodes one at a time (or a few at a time), mi
 - Ensure your control plane is already upgraded to the target Kubernetes version. You can't upgrade node pools to a version higher than the control plane. For more information, see [Upgrade the AKS cluster control plane](./upgrade-aks-control-plane.md).
 - If you're using the Azure CLI, this article requires Azure CLI version 2.34.1 or later. Use the `az --version` command to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 - You need the `Microsoft.ContainerService/managedClusters/agentPools/write` RBAC role permission to configure rolling upgrades for AKS node pools.
+- If you're upgrading an AKS Standard node pool to Kubernetes 1.37 or later, review its LocalDNS profile. A node pool without an explicit profile can have LocalDNS enabled during the upgrade. If you use custom virtual network DNS, verify that the DNS server and complete network path support both TCP and UDP port 53. For more information, see [Configure LocalDNS in AKS](./localdns-custom.md).
+
+> [!IMPORTANT]
+> LocalDNS activation changes the DNS forwarding path used by workloads. Test both UDP and TCP DNS resolution from an AKS node before upgrading:
+>
+> ```bash
+> dig +udp @<custom-dns-ip> <fqdn>
+> dig +tcp @<custom-dns-ip> <fqdn>
+> ```
+>
+> If TCP fails, correct the custom DNS server or network rules before upgrading, or explicitly set LocalDNS to `Disabled`.
 
 ## Overview of rolling upgrade behavior
 
@@ -40,6 +51,7 @@ During a rolling upgrade, AKS performs the following operations for each node in
 > - Node surges require subscription quota for the requested max surge count for each upgrade operation. For example, a cluster that has five node pools, each with a count of four nodes, has a total of 20 nodes. If each node pool has a max surge value of 50%, extra compute and IP quota of 10 nodes (_two_ nodes × _five_ pools) is required to complete the upgrade.
 > - The max surge setting on a node pool is persistent. Subsequent Kubernetes upgrades or node version upgrades use this setting. You can change the max surge value for your node pools at any time. For production node pools, we recommend a max surge setting of 33%.
 > - If you're using Azure CNI, validate there are available IPs in the subnet to [satisfy IP requirements of Azure CNI](./configure-azure-cni.md).
+> - Azure Virtual Machine Scale Sets (VMSS) allow a maximum of 1,000 instances per scale set. If a node pool's current size plus the calculated surge count would exceed 1,000 instances, AKS rejects the upgrade before it starts.
 
 AKS configures upgrades to surge with one extra node by default. A default value of _one_ for the max surge setting enables AKS to minimize workload disruption by creating an extra node before the cordon/drain of existing applications to replace an older versioned node. You can customize the max surge value per node pool. When you increase the max surge value, the upgrade process completes faster, but you might experience more disruptions during the upgrade process.
 
@@ -52,7 +64,9 @@ AKS accepts both integer values and a percentage value for max surge. For exampl
 | Integer | `5` | Five extra nodes to surge |
 | Percentage | `50%` | Surge value of half the current node count in the pool |
 
-Max surge percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value.
+Max surge can be set to an integer or a percentage. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. 
+
+If scaling to the max surge value isn't possible due to quota or capacity limitations, for agent pools with Kubernetes version >= 1.35, AKS automatically attempts a surge of 1 as a fallback. If the surge of 1 succeeds, the upgrade proceeds with 1 surge node.
 
 #### Set max surge value
 
@@ -78,12 +92,11 @@ az aks nodepool update \
 
 > [!IMPORTANT]
 >
-> - You must set max surge to `0` in order to set a max unavailable value. The two values can't both be active at the same time.
 > - Max unavailable doesn't create surge nodes during the upgrade process. Instead, AKS cordons _n_ nodes (the max unavailable value) at a time and evicts the pods to other nodes in the agent pool. This might cause workload disruptions if the pods can't be scheduled.
 > - Max unavailable might cause more failures due to unsatisfied Pod Disruption Budgets (PDBs) since there are fewer resources for pods to be scheduled on. For more information, see [Troubleshooting for Pod Disruption Budgets][pdb-troubleshooting].
 > - You can't set max unavailable on system node pools.
 
-AKS can also configure upgrades to not use a surge node and upgrade the nodes in place. The max unavailable value determines how many nodes can be simultaneously cordoned and drained from the existing node pool nodes.
+AKS can also configure upgrades to not use a surge node and upgrade the nodes in place. The max unavailable value determines how many nodes can be simultaneously cordoned and drained from the existing node pool nodes. Using max unavailable for an in-place upgrade is recommended when obtaining additional quota or capacity is not possible for the upgrade surge.
 
 AKS accepts both integer values and a percentage value for max unavailable. For example:
 
@@ -92,7 +105,9 @@ AKS accepts both integer values and a percentage value for max unavailable. For 
 | Integer | `5` | Five nodes are cordoned from the existing nodes |
 | Percentage | `50%` | Half the current node count in the pool will be unavailable |
 
-Max unavailable percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count.
+The default value of `maxUnavailable` is `0`. When `maxUnavailable` is `0`, AKS requires `maxSurge` to be greater than `0`. For more details, see the [AgentPoolUpgradeSettings API reference](/rest/api/aks/agent-pools/create-or-update?tabs=HTTP#agentpoolupgradesettings).
+
+Like max surge, if the max unavailable value is higher than the number of nodes remaining to be upgraded in the current operation, the number of nodes remaining to be upgraded is used for the max unavailable value instead. This condition can occur, for example, when an upgrade operation resumes after only some nodes in the pool were previously upgraded.
 
 #### Set max unavailable value
 
@@ -124,6 +139,40 @@ az aks nodepool upgrade \
     --max-unavailable 5
 ```
 
+### MaxUnavailable fallback (preview)
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+When both `maxSurge` and `maxUnavailable` are greater than 0, AKS uses a fallback strategy during upgrades:
+
+1. **Attempt full surge**: AKS first attempts to surge using the configured `maxSurge` value.
+2. **Fall back to surge of 1**: If the full surge isn't possible due to quota or capacity limitations, AKS attempts a surge of 1 node instead (for agent pools with Kubernetes version >= 1.35).
+3. **Fall back to in-place upgrade**: If AKS fails to get a surge node, it falls back to an in-place upgrade using `maxUnavailable`, cordoning and draining existing nodes without adding new ones.
+
+This fallback approach ensures upgrades can proceed even when capacity is constrained, while still preferring the less disruptive surge-based approach when resources are available.
+
+The aks-preview Azure CLI extension is required to use MaxUnavailable fallback. `maxSurge` and `maxUnavailable` can be used together for fallback behavior or individually.
+
+#### Set both max surge and max unavailable values
+
+```azurecli-interactive
+# Configure fallback: try surge first, fall back to in-place upgrade if capacity is unavailable
+az aks nodepool add \
+    --name <node-pool-name> \
+    --resource-group <resource-group-name> \
+    --cluster-name <cluster-name> \
+    --max-surge 33% \
+    --max-unavailable 3
+
+# Update an existing node pool with fallback configuration
+az aks nodepool update \
+    --name <node-pool-name> \
+    --resource-group <resource-group-name> \
+    --cluster-name <cluster-name> \
+    --max-surge 33% \
+    --max-unavailable 3
+```
+
 ### Customize node drain timeout
 
 You might have long-running workloads on certain pods that you can't reschedule to another node during runtime. For example, a memory-intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS respects in the upgrade workflow.
@@ -137,7 +186,7 @@ If the drain timeout value elapses and pods are still running, the upgrade opera
 
 #### Set node drain timeout value
 
-Set node drain timeout (in minutes) for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command with the `--drain-time-out` parameter.
+Set node drain timeout (in minutes) for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command with the `--drain-timeout` parameter.
 
 ```azurecli-interactive
 # Set drain timeout for a new node pool
@@ -145,14 +194,14 @@ az aks nodepool add \
     --name <node-pool-name> \
     --resource-group <resource-group-name> \
     --cluster-name <cluster-name> \
-    --drain-time-out 100
+    --drain-timeout 100
 
 # Update drain timeout for an existing node pool
 az aks nodepool update \
     --name <node-pool-name> \
     --resource-group <resource-group-name> \
     --cluster-name <cluster-name> \
-    --drain-time-out 45
+    --drain-timeout 45
 ```
 
 ### Customize node soak time
@@ -232,3 +281,4 @@ The following table outlines recommended node pool upgrade settings for producti
 
 <!-- LINKS - external -->
 [kubernetes-drain]: https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
+[azure-cli-install]: /cli/azure/install-azure-cli

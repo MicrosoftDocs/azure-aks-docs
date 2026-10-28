@@ -4,6 +4,7 @@ description: Learn about a passive-cold disaster solution overview for Azure Kub
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.custom: aks-reliability
 ms.topic: concept-article
 ms.date: 01/30/2024
 # Customer intent: "As an IT architect, I want to implement a passive-cold disaster recovery solution in Azure Kubernetes Service, so that I can ensure business continuity and minimize application downtime during regional outages."
@@ -71,7 +72,7 @@ In a complete regional failure, Azure Front Door routes traffic to the remaining
 
 ## Failover testing strategy
 
-While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](/azure/chaos-studio/chaos-studio-overview) offers the ability to create a chaos experiment on your cluster.
+While no mechanisms currently exist within AKS to take down an entire region of deployment for testing purposes, you can use [Azure Chaos Studio Workspaces](/azure/chaos-studio/chaos-studio-aks-guidance) to simulate an availability zone outage for your cluster's node pools.
 
 ## Next steps
 

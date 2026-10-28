@@ -3,6 +3,7 @@ title: Use Generation 2 (Gen 2) Virtual Machines (VMs) on Azure Kubernetes Servi
 description: Learn how to check available Gen 2 VM sizes, create AKS node pools with Gen 2 VMs, migrate from Gen 1 to Gen 2 VMs on AKS, and verify VM generation.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+ms.subservice: aks-nodes
 ms.date: 08/05/2025
 ms.author: schaffererin
 author: schaffererin

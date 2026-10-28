@@ -10,10 +10,7 @@ ms.date: 05/02/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Deploy WireGuard encryption with Advanced Container Networking Services (Preview)
-> [!IMPORTANT]
-> WireGuard encryption with Advanced Cluster Networking Services is currently in PREVIEW.  
-> See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
+# Deploy WireGuard encryption with Advanced Container Networking Services
 
 This article shows you how to deploy WireGuard encryption with Advanced Container Networking Services in Azure Kubernetes Service (AKS) clusters.
 
@@ -27,35 +24,6 @@ This article shows you how to deploy WireGuard encryption with Advanced Containe
 - WireGuard encryption is only supported with the Azure CNI powered by Cilium. If you're using any other network plugin, WireGuard encryption isn't supported. See [Configure Azure CNI Powered by Cilium](/azure/aks/azure-cni-powered-by-cilium).
 - WireGuard establishes encrypted tunnels over UDP port 51871, which is exposed on each AKS node. Ensure UDP port 51871 is allowed between all node IPs, especially if your environment uses firewalls.
 
-### Install the `aks-preview` Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command.
-
- The minimum version of the aks-preview Azure CLI extension is `14.0.0b6`
-
-```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-# Update the extension to make sure you have the latest version installed
-az extension update --name aks-preview
-```
-
-### Register the `AdvancedNetworkingWireGuardPreview` feature flag
-
-Register the `AdvancedNetworkingWireGuardPreview` feature flag using the  [`az feature register`](/cli/azure/feature#az-feature-register) command.
-
-```azurecli-interactive 
-az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingWireGuardPreview"
-```
-Verify successful registration using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the registration to complete.
-
-```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingWireGuardPreview"
-```
-
-Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
 ### Enable Advanced Container Networking Services and WireGuard
 
@@ -71,7 +39,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
-> WireGuard is disabled by default even after enabling ACNS. To enable WireGuard set the encryption type by using the flag `--acns-transit-encryption-type wireguard`.
+> WireGuard is disabled by default even after enabling Advanced Container Networking Services. To enable WireGuard set the encryption type by using the flag `--acns-transit-encryption-type wireguard`.
 
 
 ```azurecli-interactive
@@ -107,7 +75,7 @@ The [`az aks update`](/cli/azure/aks#az-aks-update) command with the Advanced Co
 > [!NOTE]
 > Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services. 
 >
-> WireGuard is disabled by default even after enabling ACNS. To enable WireGuard set the encryption type by using the flag `--acns-transit-encryption-type wireguard`.
+> WireGuard is disabled by default even after enabling Advanced Container Networking Services. To enable WireGuard set the encryption type by using the flag `--acns-transit-encryption-type wireguard`.
 
 ```azurecli-interactive
 az aks update \
@@ -211,7 +179,7 @@ This output shows the current state of WireGuard encryption on the node.
 
 ## Disabling WireGuard on an existing cluster
 
-WireGuard can be disabled independently without affecting other ACNS features. To disable it, set the flag `--acns-transit-encryption-type=none`.
+WireGuard can be disabled independently without affecting other Advanced Container Networking Services features. To disable it, set the flag `--acns-transit-encryption-type=none`.
 
 ```azurecli-interactive
 az aks update \

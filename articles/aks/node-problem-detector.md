@@ -2,9 +2,11 @@
 title:  Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes
 description: Learn about how AKS uses Node Problem Detector to expose issues with the node.
 ms.topic: concept-article
+ms.subservice: aks-monitoring
 ms.date: 05/31/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
+ai-usage: ai-assisted
 
 # Customer intent: As a Kubernetes administrator, I want to utilize Node Problem Detector to monitor node health and detect issues, so that I can maintain cluster stability and promptly address any underlying problems affecting performance.
 ---
@@ -34,11 +36,13 @@ Node conditions indicate a permanent problem that makes the node unavailable. AK
 |CustomPluginMonitor|NVLinkStatusInactive|NVLinkStatusInactive| GPU only |
 |CustomPluginMonitor|XIDErrors|XID errors present in kernel log| GPU only |
 |CustomPluginMonitor|IBLinkFlapping|Intermittent InfiniBand device connectivity| GPU only |
+|CustomPluginMonitor|GPUClockThrottling|Problematic GPU clock throttling detected| GPU only |
+|CustomPluginMonitor|UnhealthyNvidiaDevicePlugin|NVIDIA device plugin service is not active| GPU only (managed GPU) |
 |SystemLogMonitor|KernelDeadlock|DockerHung| General purpose |
 |SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly| General purpose |
 
 > [!NOTE]
-> The `GPU only` node conditions currently apply to AKS node pools with `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size, and are supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
+> The `GPU only` node conditions apply to all GPU node pools that use AKS-managed GPU drivers (node pools not created with `--gpu-driver none`). The `GPU only (managed GPU)` conditions apply only to node pools with the [fully managed GPU experience](./aks-managed-gpu-nodes.md) enabled. GPU health monitoring is supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
 
 ## Events
 
@@ -134,7 +138,7 @@ These events are also available in [Container Insights](/azure/azure-monitor/con
 
 NPD also exposes Prometheus metrics based on the node problems, which you can use for monitoring and alerting. These metrics are exposed on port 20257 of the Node IP and Prometheus can scrape them.
 
-The following example YAML shows a scrape config you can use with the [Azure Managed Prometheus add on as a DaemonSet](/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration#advanced-setup-configure-custom-prometheus-scrape-jobs-for-the-daemonset):
+The following example YAML shows a scrape config you can use with the [Azure Managed Prometheus add-on as a DaemonSet](/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration#advanced-setup-configure-custom-prometheus-scrape-jobs-for-the-daemonset):
 
 ```yaml
 kind: ConfigMap

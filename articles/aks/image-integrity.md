@@ -25,7 +25,7 @@ In these application environments, using signed container images helps verify th
 
 ## Prerequisites
 
-* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * [Azure CLI][azure-cli-install] or [Azure PowerShell][azure-powershell-install].
 * `aks-preview` CLI extension version 0.5.96 or later.
 * Ensure that the Azure Policy add-on for AKS is enabled on your cluster. If you don't have this add-on installed, see [Install Azure Policy add-on for AKS](/azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks).

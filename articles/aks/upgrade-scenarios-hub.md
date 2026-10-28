@@ -30,7 +30,7 @@ For more information, see these related articles:
 
 - To upgrade your production AKS clusters, see [AKS production upgrade strategies](aks-production-upgrade-strategies.md).
 - To get upgrade patterns for AKS clusters with stateful workloads, see [Stateful workload upgrade patterns](stateful-workload-upgrades.md).
-- To check for and apply basic upgrades to your AKS cluster, see [Upgrade an Azure Kubernetes Service (AKS) cluster](upgrade-aks-cluster.md).
+- To check for and apply basic upgrades to your AKS cluster, see [Upgrade an Azure Kubernetes Service (AKS) cluster](tutorial-kubernetes-upgrade-cluster.md).
 
 ---
 
@@ -45,7 +45,7 @@ What's your primary concern? Select your answer from the following table.
 | New Kubernetes version risk | Safety-first approach | [Safe version intake](aks-production-upgrade-strategies.md#scenario-3-safe-kubernetes-version-intake) |
 | Security compliance | Response required for common vulnerabilities and exposures  | [Fast security patching](aks-production-upgrade-strategies.md#scenario-4-fastest-security-patch-deployment) |
 | Database/stateful apps | Running databases | [Stateful workload patterns](stateful-workload-upgrades.md) |
-| Architecture planning | Design for upgrades | [Seamless architecture](aks-production-upgrade-strategies.md#scenario-5-application-architecture-for-seamless-upgrades) |
+| Architecture planning | Design for upgrades | [Resilient architecture](aks-production-upgrade-strategies.md#scenario-5-application-architecture-for-resilient-upgrades) |
 
 ## Emergency upgrade (30-90 minutes)
 
@@ -70,8 +70,8 @@ Find your ideal approach based on business constraints.
 
 ### Core upgrade mechanics
 
-- [Basic cluster upgrade process](upgrade-aks-cluster.md)
-- [Node pool upgrade strategies](upgrade-cluster.md)
+- [Basic cluster upgrade process](tutorial-kubernetes-upgrade-cluster.md)
+- [Node pool upgrade strategies](upgrade-aks-node-pools-rolling.md)
 - [Auto-upgrade configuration](auto-upgrade-cluster.md)
 
 ### Production-ready strategies
@@ -91,7 +91,7 @@ Find your ideal approach based on business constraints.
 Immediate actions that you can take:
 
 - **Pre-upgrade health check:** Run [cluster diagnostics](aks-diagnostics.md).
-- **Backup validation:** Verify your [disaster recovery](ha-dr-overview.md) setup.
+- **Backup validation:** Verify your [disaster recovery](reliability-multi-region-deployment-models.md) setup.
 - **Monitoring setup:** Enable [upgrade notifications](aks-communication-manager.md).
 - **Team preparation:** Review [support policies](support-policies.md).
 
@@ -99,7 +99,7 @@ Immediate actions that you can take:
 
 If you're new to AKS upgrades, follow this learning sequence:
 
-1. **Learn:** Learn about [Kubernetes concepts](core-aks-concepts.md) and read the [Upgrade overview](upgrade-cluster.md).
+1. **Learn:** Learn about [Kubernetes concepts](core-aks-concepts.md) and read the [Upgrade overview](upgrade-conceptual.md).
 1. **Practice:** Take the tutorial on how to [upgrade an AKS cluster](tutorial-kubernetes-upgrade-cluster.md).
 1. **Production:** Use the [production strategies](aks-production-upgrade-strategies.md).
 1. **Optimize:** Find out about [stateful patterns](stateful-workload-upgrades.md).
@@ -116,4 +116,4 @@ If you're new to AKS upgrades, follow this learning sequence:
 ## Related content
 
 - For more help, choose your scenario from the preceding options or start with [Production upgrade strategies](aks-production-upgrade-strategies.md).
-- For more information, see [AKS support options](aks-support-help.md) or the [Troubleshooting guide](./upgrade-cluster.md#common-upgrade-scenarios-and-recommendations).
+- For more information, see [AKS support options](aks-support-help.md) or the [AKS troubleshooting guide](/azure/aks/troubleshooting).

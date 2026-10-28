@@ -5,6 +5,7 @@ ms.reviewer: schaffererin
 ms.service: service-connector
 ms.topic: include
 ms.date: 09/01/2024
+ai-usage: ai-assisted
 # Customer intent: "As a DevOps engineer, I want to connect an AKS cluster to Azure Key Vault using the Secrets Store CSI Driver, so that I can securely manage and access secrets from the key vault in my containerized applications."
 ---
 
@@ -12,10 +13,10 @@ Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an 
 
 > [!div class="checklist"]
 >
-> * Create an AKS cluster and an Azure Key Vault.
+> * Register the required Azure resource providers.
 > * Create a connection between the AKS cluster and the Azure Key Vault with Service Connector.
 > * Create a `SecretProviderClass` CRD and a `Pod` that consumes the CSI provider to test the connection.
-> * Clean up resources.
+> * Verify that the pod can access the key vault secret.
 
 ## Prerequisites
 
@@ -78,6 +79,7 @@ You can create a service connection to Azure Key Vault using the Azure portal or
         --vault <key-vault-name> \
         --enable-csi \
         --client-type none
+   ```
 
 ---
 
@@ -101,7 +103,7 @@ You can create a service connection to Azure Key Vault using the Azure portal or
 
    * Replace `<AZURE_KEYVAULT_NAME>` with the name of the key vault you created and connected.
    * Replace `<AZURE_KEYVAULT_TENANTID>` with the tenant ID of the key vault.
-   * Replace `<AZURE_KEYVAULT_CLIENTID>` with identity client ID of the `azureKeyvaultSecretsProvider` addon.
+   * Replace `<AZURE_KEYVAULT_CLIENTID>` with identity client ID of the `azureKeyvaultSecretsProvider` add-on.
    * Replace `<KEYVAULT_SECRET_NAME>` with the key vault secret you created. For example, `ExampleSecret`.
 
 1. Deploy the `SecretProviderClass` CRD using the `kubectl apply` command.

@@ -2,8 +2,8 @@
 title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
 ms.topic: how-to
-ms.custom: devx-track-azurecli
-ms.date: 07/25/2025
+ms.custom: devx-track-azurecli, aks-scaling
+ms.date: 09/18/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -20,14 +20,26 @@ This article explains how to configure `AKSNodeClass` resources to define Azure-
 
 `AKSNodeClass` resources enable you to configure Azure-specific settings for NAP. Each [`NodePool` resource](./node-auto-provisioning-node-pools.md) must reference an `AKSNodeClass` using `spec.template.spec.nodeClassRef`. You can have multiple `NodePools` that point to the same `AKSNodeClass`, allowing you to share common Azure configurations across different node pools.
 
+> [!IMPORTANT]
+> Changing a setting on an existing `AKSNodeClass` doesn't reconfigure running nodes in place. NAP marks the nodes provisioned from the previous configuration as _drifted_ and replaces them, subject to the disruption controls on the referencing `NodePool` resources. The `tags` field is the only exception, because tag changes apply to existing Azure resources without replacing the node. To learn more, see [Drift](./node-auto-provisioning-disruption.md#drift) and [Disruption budgets](./node-auto-provisioning-disruption.md#disruption-budgets). Before you modify an `AKSNodeClass` that production workloads use, review this guidance.
+
 ## Image family configuration
 
-The `imageFamily` field dictates the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default is `Ubuntu2204`. GPUs are supported with both image families on compatible VM sizes.
+The `imageFamily` field sets the default VM image and bootstrapping logic for nodes provisioned through the `AKSNodeClass`. If you don't specify an image family, the default OS version according to your Kubernetes version is used. GPUs are supported with both image families on compatible VM sizes. For more information about the default OS version per Kubernetes version, see the [AKS OS Version documentation](./upgrade-os-version.md).
 
 ### Supported image families
 
-- **`Ubuntu`**: Ubuntu 22.04 Long Term Support (LTS) is the default Linux distribution for AKS nodes.
-- **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux)
+- **`Ubuntu`**: Ubuntu is the default Linux distribution for AKS nodes.
+  - OS version defaults change based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes versions 1.25 to 1.33. Ubuntu 24.04 is default for Kubernetes versions 1.34 and later.
+- **`AzureLinux`**: Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more information, see the [Azure Linux documentation](/azure/aks/use-azure-linux).
+- **`AzureContainerLinux`**: Azure Container Linux is supported with AKS 1.34 and later. Use a generation 2 VM and explicitly enable both Trusted Launch settings, even when you don't otherwise require them:
+  - Set `security.trustedLaunch.vtpm` to `true`.
+  - Set `security.trustedLaunch.secureBoot` to `true`.
+  - If you set `osDiskSizeGB`, use a value of at least 60.
+  - Don't combine this image family with settings that its image doesn't support. See [Azure Container Linux on AKS](./azure-container-linux-overview.md) for details.
+- **`Windows2022`**: Windows Server 2022 is in preview. It requires AMD64 architecture and isn't supported with the Cilium data plane. Windows2022 doesn't support FIPS or Trusted Launch. Don't configure `linuxOSConfig`, enable artifact streaming, or set LocalDNS to a mode other than `Disabled`.
+- **`Windows2025`**: Windows Server 2025 is in preview. It requires AMD64 architecture and isn't supported with the Cilium data plane. FIPS is required and is enabled effectively even when `fipsMode` is omitted. Don't configure `linuxOSConfig`, enable artifact streaming, or set LocalDNS to a mode other than `Disabled`.
+
 
 #### Example image family configuration
 
@@ -37,8 +49,69 @@ The following example configures the `AKSNodeClass` to use the `AzureLinux` imag
 spec:
   imageFamily: AzureLinux
 ```
+
+#### Azure Container Linux configuration
+
+The following example uses Azure Container Linux with the required Trusted Launch settings. It omits `osDiskSizeGB` so that the platform selects a supported disk size.
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: azure-container-linux
+spec:
+  imageFamily: AzureContainerLinux
+  security:
+    trustedLaunch:
+      vtpm: true
+      secureBoot: true
+```
+
+#### Windows OS support (preview)
+
+>[!NOTE]
+> AKS preview features are available on a self-service, opt-in basis. Previews are provided "as is" and "as available," and they're excluded from the service-level agreements and limited warranty. AKS previews are partially covered by customer support on a best-effort basis. As such, these features aren't meant for production use. For more information, see the following support articles:
+>
+> - [AKS support Policies](./support-policies.md)
+> - [Azure support FAQ](./faq.yml)
+
+NAP supports `Windows2022` and `Windows2025` images. 
+
+- **`Windows2022`**: Windows Server 2022 is in preview. It requires AMD64 architecture and isn't supported with the Cilium data plane. Windows2022 doesn't support FIPS or Trusted Launch. Don't configure `linuxOSConfig`, enable artifact streaming, or set LocalDNS to a mode other than `Disabled`.
+- **`Windows2025`**: Windows Server 2025 is in preview. It requires AMD64 architecture and isn't supported with the Cilium data plane. FIPS is required and is enabled effectively even when `fipsMode` is omitted. Don't configure `linuxOSConfig`, enable artifact streaming, or set LocalDNS to a mode other than `Disabled`.
+
+**Windows2022 configuration**
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: windows-2025
+spec:
+  imageFamily: Windows2025
+```
+
+**Windows2025 Configuration**
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: windows-2025
+spec:
+  imageFamily: Windows2025
+  security:
+    trustedLaunch:
+      vtpm: true
+      secureBoot: true
+```
+
+> [!IMPORTANT]
+> Windows image families are preview functionality. Use a Windows `NodePool` that selects `kubernetes.io/os: windows` and `kubernetes.io/arch: amd64`, and ensure that the workloads also select Windows nodes. For details, see [Configure node pools for node auto-provisioning on AKS](./node-auto-provisioning-node-pools.md).
+>
+
 #### FIPS compliant node image configuration
-You can enable Federal Information Process Standard (FIPS) compliant node images also. For more in FIPS in AKS, visit our [FIPS documentation](./enable-fips-nodes.md)
+You can also enable Federal Information Processing Standards (FIPS) compliant node images. For more information about FIPS in AKS, see [FIPS documentation](./enable-fips-nodes.md).
 
 The `fipsMode` field is set by default to Disabled, and can be set to the following options:
 - FIPS - select FIPS-compliant node images
@@ -50,6 +123,80 @@ The following example configures the 'AKSNodeClass' to select FIPS-compliant nod
 spec:
   fipsMode: FIPS
 ```
+
+## Instance-level public IP configuration
+
+You can assign a public IPv4 address to each NAP-provisioned node by setting `nodePublicIP.enabled` to `true`. You can optionally specify `ipTags` or `prefixIDs`. Use one or the other, not both.
+
+### Use instance-level public IP with prefixes
+
+Optionally, specify one IPv4 public IP prefix using `prefixIDs`. The prefix must be in the same region as the cluster. For a zonal prefix, constrain the corresponding `NodePool` to the same availability zone. You can't specify `ipTags` and `prefixIDs` together - use only one.
+
+The cluster identity needs permission to use the public IP prefix, if specified, and to create and manage the node public IP resources. For complete setup, network security, and verification guidance, see [Use node public IPs](./use-node-public-ips.md).
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: public-ip-nodes
+spec:
+  nodePublicIP:
+    enabled: true
+    # Optional. Specify at most one IPv4 public IP prefix resource ID.
+    prefixIDs:
+      - /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Network/publicIPPrefixes/<prefix-name>
+```
+
+### Use instance-level public IP with IP tags an internet routing preference
+
+The following example shows how to use instance-level public IP with an IP tag: 
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: public-ip-nodes
+spec:
+  nodePublicIP:
+    enabled: true
+    ipTags:
+      - ipTagType: RoutingPreference
+        tag: Internet
+    # Optional. Specify at most one IPv4 public IP prefix resource ID.
+    prefixIDs:
+      - /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Network/publicIPPrefixes/<prefix-name>
+```
+
+
+## Artifact streaming
+
+[Artifact Streaming](./artifact-streaming-overview.md) allows you to stream container images from Azure Container Registry (ACR) to Azure Kubernetes Service (AKS). AKS only pulls the necessary layers for initial pod startup, reducing the time it takes to deploy your workloads.
+### Prerequisites
+
+- Artifact Streaming requires that you have a Premium tier ACR integrated with your AKS cluster. 
+- Artifact Streaming must be enabled in ACR.
+
+See [Artifact Streaming](./artifact-streaming.md) documentation for instructions on enabling Artifact Streaming in ACR.
+
+### Enable artifact streaming in NAP clusters
+
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable artifact streaming by using the `spec.artifactStreaming.enabled` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set this field to `true` to enable artifact streaming for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+
+```yaml
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: my-node-class
+spec:
+  # Enables artifact streaming; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: 
+      true
+```
+
+>[!NOTE]
+> To use artifact streaming on AKS NAP managed nodes, you must also enable artifact streaming in Azure Container Registry (ACR). If you don't set this option in ACR, the field defaults to false.  
 
 ## Virtual network (VNet) subnet configuration
 
@@ -120,7 +267,7 @@ spec:
           operator: Gt
           values: ["128"]  # Require ephemeral disk larger than 128 GB
       nodeClassRef:
-        apiVersion: karpenter.azure.com/v1beta1
+        group: karpenter.azure.com
         kind: AKSNodeClass
         name: my-node-class
 ---
@@ -176,43 +323,107 @@ spec:
     mode: Required
     vnetDNSOverrides:
       - zone: "."
-        cacheDuration: "30s"
-        forwardDestination: VnetDNS
-        forwardPolicy: Random
-        maxConcurrent: 80
-        protocol: ForceTCP
-        queryLogging: Log
-        serveStale: Immediate
-        serveStaleDuration: "100s"
-      - zone: "cluster.local"
-        cacheDuration: "40s"
+        cacheDuration: "3600s"
         forwardDestination: VnetDNS
         forwardPolicy: Sequential
-        maxConcurrent: 70
+        maxConcurrent: 1000
         protocol: PreferUDP
         queryLogging: Error
-        serveStale: Disable
-        serveStaleDuration: "30s"
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
     kubeDNSOverrides:
       - zone: "."
-        cacheDuration: "30s"
-        forwardDestination: ClusterCoreDNS
-        forwardPolicy: RoundRobin
-        maxConcurrent: 100
-        protocol: PreferUDP
-        queryLogging: Log
-        serveStale: Immediate
-        serveStaleDuration: "60s"
-      - zone: "cluster.local"
-        cacheDuration: "10s"
+        cacheDuration: "3600s"
         forwardDestination: ClusterCoreDNS
         forwardPolicy: Sequential
-        maxConcurrent: 50
+        maxConcurrent: 1000
         protocol: PreferUDP
         queryLogging: Error
-        serveStale: Disable
-        serveStaleDuration: "30s"
-``` 
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+```
+
+### Update the LocalDNS configuration on an existing AKSNodeClass
+
+The `localDNS` setting participates in drift detection like other `AKSNodeClass` settings. When you change `spec.localDNS` on an `AKSNodeClass` that existing nodes already reference, NAP applies the change through the standard [Drift](./node-auto-provisioning-disruption.md#drift) mechanism. NAP doesn't reimage existing nodes.
+
+The following behavior applies when you change the LocalDNS mode or overrides, such as changing `mode` from `Disabled` to `Required`:
+
+- **New nodes**: Every node that NAP provisions after you update the `AKSNodeClass` uses the new LocalDNS configuration.
+- **Existing nodes**: NAP marks the existing `NodeClaim` objects as _drifted_ because their recorded configuration no longer matches the `AKSNodeClass`. NAP launches a replacement node that uses the new LocalDNS configuration, then cordons, drains, and removes the drifted node.
+- **No reimage**: Enabling LocalDNS on an AKS managed node pool reimages every node in the pool. NAP replaces the node instead. Either way, pods on the affected nodes are evicted and rescheduled, so plan for the same workload impact.
+
+> [!IMPORTANT]
+> Setting `mode` to `Preferred` or `Disabled` also changes the resolved `AKSNodeClass` configuration and drifts existing nodes. Any change within the `localDNS` section, including the `vnetDNSOverrides` and `kubeDNSOverrides` values, causes node replacement.
+
+#### When replacement starts
+
+Drift evaluation and replacement begin as soon as you apply the updated `AKSNodeClass`. Replacement follows the standard NAP disruption lifecycle, so the rate and timing depend on the disruption controls that you configure on the `NodePool` resources referencing the `AKSNodeClass`.
+
+#### How NAP orchestrates replacement
+
+Drift caused by a LocalDNS change honors the standard NAP disruption controls described in the following table:
+
+| Control | Effect on LocalDNS-induced replacement |
+| --- | --- |
+| [Disruption budgets](./node-auto-provisioning-disruption.md#disruption-budgets) (`spec.disruption.budgets`) | Rate limits how many nodes NAP replaces at once. If you don't define budgets, NAP defaults to one budget of `nodes: 10%`, so it disrupts a maximum of 10 percent of the node pool's nodes concurrently. |
+| [Budget `schedule` and `duration`](./node-auto-provisioning-disruption.md#schedule-and-duration-fields) | Confines replacement to a maintenance window. Set `nodes: "0"` outside the window to block replacement. |
+| Pod disruption budgets (PDBs) | Apply during node drain. NAP waits instead of evicting pods that violate a PDB. |
+| `karpenter.sh/do-not-disrupt` annotation | Excludes annotated pods and nodes from voluntary disruption, including drift. |
+| [`terminationGracePeriod`](./node-auto-provisioning-disruption.md#termination-grace-period) | Caps drain time. This setting bypasses PDBs and the `karpenter.sh/do-not-disrupt` annotation when the period elapses. |
+
+Replacement is neither fully serial nor fully parallel. NAP provisions replacement capacity before it removes a drifted node, but it can replace multiple nodes that reference the same `AKSNodeClass` concurrently, up to the limit that your disruption budgets set.
+
+> [!WARNING]
+> If you don't define disruption budgets on your node pools and don't define pod disruption budgets for your workloads, changing `localDNS` on a busy `AKSNodeClass` can disrupt up to 10 percent of your nodes at a time with no application-level protection, which can cause workload downtime. Define PDBs for critical workloads and set a conservative disruption budget before you change `localDNS` on a production cluster.
+
+#### Reduce availability risk when you enable LocalDNS
+
+1. Confirm that your custom DNS servers answer queries over both UDP and TCP port 53 from the node subnet. For more information, see [Validate custom DNS before enabling LocalDNS](./localdns-custom.md#validate-custom-dns-before-enabling-localdns).
+2. Define pod disruption budgets for every critical workload.
+3. Set a conservative disruption budget on the affected `NodePool` resources before you change the `AKSNodeClass`, as shown in the following example:
+
+    ```yaml
+    apiVersion: karpenter.sh/v1
+    kind: NodePool
+    metadata:
+      name: default
+    spec:
+      disruption:
+        budgets:
+        - nodes: "1"   # Replace one node at a time
+    ```
+
+4. Apply the `localDNS` change to a nonproduction `AKSNodeClass` first. Alternatively, create an `AKSNodeClass` that has LocalDNS enabled and migrate workloads to a `NodePool` that references it.
+5. Monitor replacement progress by listing the node claims. Replacement is complete when no node claim reports the `Drifted` status condition.
+
+    ```bash
+    # List node claims and watch replacements appear as drifted nodes are removed
+    kubectl get nodeclaims
+
+    # Inspect the status conditions on a specific node claim
+    kubectl describe nodeclaim <nodeclaim-name>
+    ```
+
+6. Confirm that LocalDNS is active on the replacement nodes. For more information, see [Verify LocalDNS operation](./localdns-custom.md#verify-localdns-operation).
 
 ## Kubelet configuration
 
@@ -285,6 +496,160 @@ spec:
 - `containerLogMaxFiles`: Maximum number of container log files to retain.
 - `podPidsLimit`: Maximum number of processes allowed in any pod.
 
+## Linux custom OS configuration settings
+
+The `LinuxOSConfig` section allows you to configure various kubelet parameters that affect node behavior. These parameters are typical custom OS arguments, so the NAP simply passes them through to the kubelet on the node.
+
+For more information about custom Linux OS configuration settings, default values, and considerations, see the [custom node configuration parameters reference](./custom-node-configuration-reference.md#linux-custom-os-configuration-parameters).
+
+> [!IMPORTANT]
+> **Configure Linux OS settings carefully**, and test any changes in nonproduction environments first.
+
+###  Linux file handle limits settings
+
+Use the following settings to set the file system settings.
+
+```yaml 
+spec:
+  linuxOSConfig: 
+    # Sysctl Settings  
+    sysctls:  
+      # File System Settings  
+      fsFileMax: 2000000               # Range: 8192-12000500  Default: Max of available range
+      fsInotifyMaxUserWatches: 1000000 # Range: 781250-2097152 Default: 1048576
+      fsAioMaxNr: 1000000              # Range: 65536-6553500  Default: 65536
+      fsNrOpen: 1000000                # Range: 8192-20000500  Default: 1048576
+```
+
+### Linux socket and network tuning settings
+
+Use the following settings to set the TCP and network setting.
+
+```yaml 
+spec:
+  linuxOSConfig:
+      # Network Settings  
+      netCoreSomaxconn: 65535          # Range: 4096-3240000  Default: 16384
+      netCoreNetdevMaxBacklog: 5000    # Range: 1000-3240000  Default: 1000
+      netCoreRmemMax: 134217728        # Range: 212992-134217728  Default: 1048576
+      netCoreOptmemMax: 102400         # Range: 20480-4194304     Default: 131072 
+      netCoreWmemMax: 134217728        # Range: 212992-134217728  Default: 212992
+      netCoreRmemDefault: 212992       # Range: 212992-134217728  
+      netCoreWmemDefault: 212992       # Range: 212992-134217728  
+      netIPv4IPLocalPortRange: "1024 65535" # Format: "first last", first: 1024-60999, last: 32768-65535  
+
+      # Neighbor Table GC Thresholds  
+      netIPv4NeighDefaultGcThresh1: 1024   # Range: 128-80000  Default: 4096
+      netIPv4NeighDefaultGcThresh2: 2048   # Range: 512-80000  Default: 8192
+      netIPv4NeighDefaultGcThresh3: 4096   # Range: 1024-80000  Default: 16384
+      # Note: thresh1 <= thresh2 <= thresh3  
+
+      # Connection Tracking  
+      netNetfilterNfConntrackBuckets: 131072  # Range: 65536-524288   Default: dynamically calculated 
+      netNetfilterNfConntrackMax: 262144       # Range: 131072-2097152 Default: dynamically calculated 
+```
+
+### Linux worker limit settings
+
+Use the following settings to set the kernel setting.
+
+```yaml 
+spec:
+  linuxOSConfig:
+      # Kernel Settings  
+      kernelThreadsMax: 100000         # Range: 20-513785  Default: Dynamically calculated
+```
+
+### Linux virtual memory settings
+
+Use the following options to tune the operation of the Linux virtual memory subsystem of the Linux kernel and the writeout of dirty data to disk.
+
+```yaml 
+spec:
+  linuxOSConfig:
+      # Memory Management  
+      vmMaxMapCount: 262144          # Range: 65530-262144 Default: Max of available range
+      vmVfsCachePressure: 100        # Range: 0-100  Default: 100
+      vmSwappiness: 60               # Range: 0-100  Default: 60
+
+      # Swap File Configuration  
+      swapFileSize: "2Gi"             # Default: (not set) | Pattern: quantity with units Note: Requires kubelet.failSwapOn: false  
+
+      # Transparent Huge Pages  
+      transparentHugePageEnabled: "madvise"    # Values: [always, madvise, never]  Default: always
+      transparentHugePageDefrag: "defer+madvise" # Values: [always, defer, defer+madvise, madvise, never]  Default: madvise
+```
+
+## GPU settings
+
+Use the following field to enable custom GPU driver installation, such as with the NVIDIA GPU Operator.
+
+```yaml 
+spec:
+  gpu:
+    mode: 
+      # acceptable values: [driver, none] default(or if not specified): driver
+      # none skips gpu driver installation, driver has NAP manage the GPU driver installation  
+      none
+```
+
+### Managed GPU 
+
+The `gpu.mode` field controls GPU driver installation. It accepts `Driver` or `None` and defaults to `Driver`. Set `None` to skip driver installation, for example, when using the NVIDIA GPU Operator.
+
+To opt in to the managed NVIDIA GPU experience, use `mode: Driver` and set `nvidia.managementMode: Managed`. Managed GPU is supported for Linux NVIDIA GPU nodes using the AKS Machine API provision mode. The default NVIDIA management mode is `Unmanaged`.
+
+```yaml
+spec:
+  gpu:
+    mode: Driver
+    nvidia:
+      managementMode: Managed
+```
+
+For a complete NAP-managed GPU example and verification steps, see [AKS-managed GPU nodes](./aks-managed-gpu-nodes.md).
+
+
+## Security settings
+
+### Encryption at host
+
+The following field specifies whether host-level encryption is enabled for provisioned nodes. When you set this field to `true`, NAP includes only instance options that support encryption at host.
+
+```yaml 
+spec:
+  security:
+    encryptionatHost: 
+      # acceptable values: [true, false] default(or if not specified): false  
+      false
+```
+
+For more information about host-based encryption, see [Encryption at Host documentation](./enable-host-encryption.md).
+
+### Custom-managed keys and disk encryption sets
+
+NAP supports clusters that use customer-managed keys and disk encryption sets. Enable these options at the cluster level. They don't have `AKSNodeClass` fields that you need to set. Ensure that your cluster identity has the proper [role-based access control (RBAC)](./aks-desktop-permissions.md):
+
+- The cluster identity has `Reader` access to the Disk Encryption Set.
+- The Disk Encryption set resource has `Key Vault Crypto Service Encryption User` access to the Azure Key Vault. 
+
+For information on customer-managed keys and disk encryption sets enabled during cluster creation, see [Customer-Managed Keys documentation](./azure-disk-customer-managed-keys.md).
+
+### Enable trusted launch in NAP clusters
+
+Clusters with [Node Auto Provisioning (NAP)](./node-auto-provisioning.md) enabled can enable trusted launch by using the `spec.security.trustedLaunch` field of the [AKSNodeClass CRD](./node-auto-provisioning-aksnodeclass.md). Set the `secureBoot` and `vTPM` fields to `true` to enable trusted launch for any new or existing NAP-managed nodes associated with this AKSNodeClass CRD.
+
+
+```yaml
+spec:
+  security:
+  # Enables trusted lunch
+  # Valid values: true, false; defaults to false if not specified
+     trustedLaunch:
+       secureBoot: true
+       vTPM: true   
+```
+
 ## Azure resource tags configuration
 
 You can specify Azure resource tags that apply to all VM instances created using a particular `AKSNodeClass` resource. Tags are useful for cost tracking, resource organization, and compliance requirements.
@@ -319,7 +684,7 @@ spec:
   template:
     spec:
       nodeClassRef:
-        apiVersion: karpenter.azure.com/v1beta1
+        group: karpenter.azure.com
         kind: AKSNodeClass
         name: comprehensive-example
 ---
@@ -330,7 +695,7 @@ metadata:
 spec:
   # Image family configuration
   # Default: Ubuntu
-  # Valid values: Ubuntu, AzureLinux
+  # Valid values: Ubuntu, AzureLinux, AzureContainerLinux
   imageFamily: Ubuntu
 
   # FIPS compliant mode - allows support for FIPS-compliant node images
@@ -338,12 +703,58 @@ spec:
   # Valid values: FIPS, Disabled
   fipsMode: Disabled
 
+  # Artifact Streaming- allows use of artifact streaming feature; To use this feature container images must also enable artifact streaming on ACR
+  # Valid values: true, false; defaults to false if not specified
+  artifactStreaming:
+    enabled: true
+
   # LocalDNS mode - allows use of LocalDNS feature
   # Default: Disabled
   # Valid values: Preferred, Required, Disabled
-  LocalDNS:
+  # vnetDNSOverrides and kubeDNSOverrides are both required, even when mode is Disabled
+  # Each list must include the "." and "cluster.local" zones, and each zone must set all nine fields
+  localDNS:
     mode: Disabled
-    # additional details on vnetDNSOverrides and kubeDNSOverrides can be added here
+    # vnetDNSOverrides apply to DNS traffic from pods with dnsPolicy:default and from kubelet
+    vnetDNSOverrides:
+      - zone: "."
+        cacheDuration: "3600s"
+        forwardDestination: VnetDNS   # the "." zone can't forward to ClusterCoreDNS in vnetDNSOverrides
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS   # cluster.local can't forward to VnetDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+    # kubeDNSOverrides apply to DNS traffic from pods with dnsPolicy:ClusterFirst
+    kubeDNSOverrides:
+      - zone: "."
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: PreferUDP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
+      - zone: "cluster.local"
+        cacheDuration: "3600s"
+        forwardDestination: ClusterCoreDNS
+        forwardPolicy: Sequential
+        maxConcurrent: 1000
+        protocol: ForceTCP
+        queryLogging: Error
+        serveStale: Immediate
+        serveStaleDuration: "3600s"
 
   # Virtual network subnet configuration (optional)
   # If not specified, uses the default --vnet-subnet-id from Karpenter installation
@@ -361,6 +772,14 @@ spec:
   # - Other configurations: 110 pods
   # Range: 10-250
   maxPods: 30
+
+  # GPU driver installation (optional)
+  # Default: driver - NAP manages gpu driver installation
+  # none skips gpu driver installation
+  # Valid values: driver, none
+  gpu:
+    mode: 
+      driver
 
   # Azure resource tags (optional)
   # Applied to all VM instances created with this AKSNodeClass
@@ -413,6 +832,17 @@ spec:
     # Pod process limits
     # Default: -1 (unlimited)
     podPidsLimit: 4096
+
+  security:
+  # Enables trusted lunch
+  # Valid values: true, false; default(or if not specified): false  
+     trustedLaunch:
+      secureBoot: true
+      vTPM: true
+  # Encryption at host
+     encryptionatHost: 
+      # acceptable values: [true, false] default(or if not specified): false  
+      false
 ```
 
 ## Next steps

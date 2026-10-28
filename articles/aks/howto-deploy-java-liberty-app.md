@@ -6,7 +6,7 @@ author: KarlErickson
 ms.author: karler
 ms.reviewer: edburns
 ms.topic: how-to
-ms.date: 11/14/2024
+ms.date: 03/26/2026
 ms.subservice: aks-developer
 keywords: java, jakartaee, javaee, microprofile, open-liberty, websphere-liberty, aks, kubernetes
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-liberty, devx-track-javaee-liberty-aks, devx-track-javaee-websphere, build-2023, devx-track-extended-java

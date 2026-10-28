@@ -4,11 +4,11 @@ description: Understand the advanced configuration options that are supported wi
 ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
-ms.date: 11/21/2023
+ms.date: 10/26/2026
 zone_pivot_groups: app-routing-nginx-configuration
-ms.author: davidsmatlak
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
-author: davidsmatlak
+author: schaffererin
 # Customer intent: As a Kubernetes administrator, I want to configure multiple NGINX ingress controllers with the application routing add-on, so that I can manage traffic to my applications using different load balancer settings and optimize my ingress resources.
 ---
 
@@ -59,7 +59,7 @@ The following table lists properties you can set to configure an `NginxIngressCo
 | &emsp;&emsp;`namespace`                | string  | Secret namespace.                                                                                                                          | Yes      |                                       |
 | `httpDisabled`                         | boolean | Flag to disable HTTP traffic to the controller.                                                                                            | No       |                                       |
 | `ingressClassName`                     | string  | IngressClass name used by the controller.                                                                                                  | Yes      | `nginx.approuting.kubernetes.azure.com` |
-| `loadBalancerAnnotations`              | object  | A map of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](configure-load-balancer-standard.md#customizations-via-kubernetes-annotations). | No       |                                       |
+| `loadBalancerAnnotations`              | object  | A map of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](configure-load-balancer-standard.md#customize-the-load-balancer-using-kubernetes-annotations). | No       |                                       |
 | `scaling`                              | object  | Configuration for scaling the controller. Contains nested properties:                                                                       | No       |                                       |
 | &emsp;`maxReplicas`                    | integer | Upper limit for replicas.                                                                                                                  | No       | `100`                                 |
 | &emsp;`minReplicas`                    | integer | Lower limit for replicas.                                                                                                                  | No       | `2`                                   |
@@ -141,6 +141,9 @@ The `webAppRouting` profile has an optional `nginx` configuration with a `defaul
 ---
 
 ## Create another public facing NGINX ingress controller
+
+> [!NOTE]
+> A separate NGINX ingress controller doesn't isolate tenants. Any user who can create an Ingress can use any Ingress class. For more information, see [Multi-tenant clusters][app-routing-multi-tenant].
 
 1. Copy the following YAML manifest into a new file named `nginx-public-controller.yaml` and save the file to your local computer.
 
@@ -645,6 +648,7 @@ Learn about monitoring the ingress-nginx controller metrics included with the ap
 [az-network-public-ip-create]: /cli/azure/network/public-ip#az-network-public-ip-create
 [az-group-create]: /cli/azure/group#az-group-create
 [app-routing-add-on-basic-configuration]: app-routing.md
+[app-routing-multi-tenant]: app-routing.md#multi-tenant-clusters
 [az-aks-approuting-update]: /cli/azure/aks/approuting#az-aks-approuting-update
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials

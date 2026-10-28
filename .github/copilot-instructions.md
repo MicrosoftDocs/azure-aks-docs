@@ -54,4 +54,15 @@ Below are instructions specific to this repository. These may be updated by repo
 
 <!--- Add additional repository level instructions below. Do NOT update this line or above. --->
 
+### Terminology: add-on
+
+Use `add-on` (singular) and `add-ons` (plural) in visible prose when describing AKS managed product capabilities.
+
+Do not change:
+- Azure CLI commands, flags, and command groups (`az aks addon`, `--addon`, `--enable-addons`)
+- API fields and JSON paths (`addonProfiles`)
+- Component names (`addon-resizer`, `addon-override-manager`)
+- URL slugs, file paths, media paths, link reference IDs, code blocks, code spans, and output examples
+
+Before changing a heading, search for inbound links to its generated anchor.
 

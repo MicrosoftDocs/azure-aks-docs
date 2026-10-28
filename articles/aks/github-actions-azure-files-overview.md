@@ -3,6 +3,7 @@ title: Solution overview for deploying highly available GitHub Actions on Azure 
 description: In this article, we provide an overview of deploying highly available GitHub Actions on Azure Kubernetes Service (AKS) using Azure Files.
 ms.topic: overview
 ms.service: azure-kubernetes-service
+ms.subservice: aks-storage
 ms.date: 06/13/2025
 author: schaffererin
 ms.author: schaffererin

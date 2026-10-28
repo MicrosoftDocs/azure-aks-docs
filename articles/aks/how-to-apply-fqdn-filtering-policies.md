@@ -24,20 +24,7 @@ This article shows you how to set up Advanced Container Networking Services with
 
 ## Limitations:
 
-* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you can't use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
-- Supported Pattern:
-
-    `*.example.com` - This allows traffic to all subdomains under example.com.
-
-    `app*.example.com` - This rule is more specific and only allows traffic to subdomains that start with "app" under example.com
-
-- Unsupported Pattern
-    
-    `*` This attempt to match any domain name, which isn't supported.
-
-* FQDN filtering is currently not supported with node-local DNS.
 * Kubernetes service names aren't supported.
-* Other L7 policies aren't supported.
 * FQDN pods might exhibit performance degradation when handling more than 1,000 requests per second.
 * If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP, HTTPS, Kafka, and gRPC) will be blocked.
 * Alpine-based container images might encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
@@ -279,3 +266,6 @@ If you don't plan on using this application, delete the other resources you crea
 In this how-to article, you learned how to install and enable security features with Advanced Container Networking Services for your AKS cluster.
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
+
+<!-- LINKS -->
+[kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply

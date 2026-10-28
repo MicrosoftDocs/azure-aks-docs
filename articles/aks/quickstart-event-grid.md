@@ -2,10 +2,10 @@
 title: Subscribe to Azure Kubernetes Service events with Azure Event Grid
 description: Use Azure Event Grid to subscribe to Azure Kubernetes Service events
 ms.topic: how-to
-ms.custom: devx-track-azurepowershell, devx-track-azurecli
+ms.custom: devx-track-azurepowershell, devx-track-azurecli, aks-getting-started
 ms.date: 06/22/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+author: schaffererin
+ms.author: schaffererin
 
 # Customer intent: "As a cloud developer, I want to subscribe to Azure Kubernetes Service events using Event Grid, so that I can monitor and react to important changes in my containerized applications seamlessly."
 ---
@@ -18,7 +18,7 @@ In this quickstart, you create an AKS cluster and subscribe to AKS events.
 
 ## Prerequisites
 
-* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+* An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 * [Azure CLI][azure-cli-install] or [Azure PowerShell][azure-powershell-install] installed.
 
 > [!NOTE]
@@ -32,7 +32,7 @@ Create an AKS cluster using the [az aks create][az-aks-create] command. The foll
 
 ```azurecli-interactive
 az group create --name MyResourceGroup --location eastus
-az aks create --resource-group yResourceGroup --name MyAKS --location eastus  --node-count 1 --generate-ssh-keys
+az aks create --resource-group MyResourceGroup --name MyAKS --location eastus  --node-count 1 --generate-ssh-keys
 ```
 
 ### [Azure PowerShell](#tab/azure-powershell)

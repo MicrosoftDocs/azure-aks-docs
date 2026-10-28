@@ -4,6 +4,7 @@ description: Learn how to deploy and use wasmCloud on an Azure Kubernetes Servic
 author: protochron
 ms.author: schaffererin
 ms.topic: how-to
+ms.custom: aks-data-messaging
 ms.date: 11/07/2024
 # Customer intent: As a cloud developer, I want to deploy wasmCloud on Azure Kubernetes Service so that I can efficiently manage and run distributed WebAssembly applications in a containerized environment.
 ---

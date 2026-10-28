@@ -6,7 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 09/15/2025
 author: schaffererin
 ms.author: schaffererin
-ms.custom: 'stateful-workloads'
+ms.custom: 'stateful-workloads, aks-data-messaging'
 # Customer intent: "As a DevOps engineer, I want to validate the resiliency of the Valkey cluster on Azure Kubernetes Service using Locust, so that I can ensure it can recover and maintain performance under simulated failure conditions."
 ---
 

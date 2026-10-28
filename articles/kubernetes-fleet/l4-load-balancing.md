@@ -2,7 +2,7 @@
 title: "How to set up multi-cluster Layer 4 load balancing across Azure Kubernetes Fleet Manager member clusters (preview)"
 description: Learn how to use Azure Kubernetes Fleet Manager to set up multi-cluster Layer 4 load balancing across workloads deployed on multiple member clusters.
 ms.topic: how-to
-ms.date: 03/20/2024
+ms.date: 05/14/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -12,6 +12,8 @@ ms.custom:
 ---
 
 # Set up multi-cluster layer 4 load balancing across Azure Kubernetes Fleet Manager member clusters (preview)
+
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 For applications deployed across multiple clusters, admins often want to route incoming traffic to them across clusters.
 
@@ -57,7 +59,7 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
 >
 > * The steps in this how-to guide refer to a sample application for demonstration purposes only. You can substitute this workload for any of your own existing Deployment and Service objects.
 >
-> * These steps deploy the sample workload from the Fleet cluster to member clusters using Kubernetes configuration propagation. Alternatively, you can choose to deploy these Kubernetes configurations to each member cluster separately, one at a time.
+> * These steps deploy the sample workload from the Fleet Manager hub cluster to member clusters using Fleet Manager resource placement. Alternatively, you can choose to deploy these Kubernetes configurations to each member cluster separately, one at a time.
 
 1. Create a namespace on the fleet cluster:
 
@@ -221,3 +223,8 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
     ```bash
     KUBECONFIG=aks-member-2 kubectl get pods -n kuard-demo -o wide
     ```
+
+## Next steps
+
+* [Overview of Fleet Manager multi-cluster networking](./concepts-multi-cluster-networking-overview.md).
+* [Fleet Manager Frequently Asked Questions (FAQs)](./faq.md).

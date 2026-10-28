@@ -14,7 +14,7 @@ ms.service: azure-kubernetes-fleet-manager
 Fleet administrators can monitor the status of long-running update runs by configuring alerts in Azure Monitor. Fleet update run resource changes are ingested into [Azure Resource Graph][resource-graph], allowing administrators to configure alerts and automations via Azure Monitor and Log Analytics.
 
 Data about manual or auto-upgrade update runs are stored in Azure Resource Graph, giving administrators the opportunity to query based on Fleet name, [update run status][rest-api-statuses], update stages, and cluster name.
- 
+
 Regardless of which Azure Subscription or Region your fleet's member clusters are located in, the update run data is always in the Azure Resource Graph of the Azure Subscription of the Fleet Manager resource.
 
 In order to query your update run data, you need to use queries written using the [Kusto Query Language (KQL)][kusto-query-docs].
@@ -25,13 +25,13 @@ To learn how to work with Azure Resource Graph and Fleet update run data, let's 
 
 1. Start by opening the [Azure Resource Graph Explorer](https://portal.azure.com/#view/HubsExtension/ArgQueryBlade) in the Azure portal.
 
-1. Select **Table** and then expand **aksresources**. Fleet Manager's resources have the prefix `microsoft.containerservice/fleets`.
+1. Select **Table** and then expand **aksresources**. Fleet Manager's resources have the prefix `Microsoft.ContainerService/fleets`.
 
     :::image type="content" source="./media/monitor-update-runs/monitor-update-run-azure-resource-graph-explorer.png" alt-text="Screenshot of the Azure Resource Graph Explorer with the aksresources Table expanded." lightbox="./media/monitor-update-runs/monitor-update-run-azure-resource-graph-explorer.png":::
 
 1. In the **Table** pane, select **aksresources** to add it to the explorer query box.
 
-1. Now select **microsoft.containerservices/fleets/updateruns**. Your explorer query box should look like the following KQL sample.
+1. Now select `Microsoft.ContainerService/fleets/updateruns`. Your explorer query box should look like the following KQL sample.
 
     ```kusto
     aksresources
@@ -60,7 +60,7 @@ You can add a manual filter to your explorer query to select your Fleet Manager 
 
 Now that you know how to find update runs associated with your Fleet Manager you can add further filters so results are based on the state of the update run.
 
-1. Update your explorer query by expanding the `microsoft.containerservice/fleets/updateruns` node, followed by `status` and `status`. 
+1. Update your explorer query by expanding the `Microsoft.ContainerService/fleets/updateruns` node, followed by `status` and `status`.
 
 1. Select `state` so that the property is added to your explorer query.
 
@@ -76,8 +76,47 @@ Now that you know how to find update runs associated with your Fleet Manager you
     ```
 
 1. Replace the `INSERT_VALUE_HERE` placeholder with an appropriate [update run status][rest-api-statuses] value. For example, to receive only failed update runs set this value to `Failed`.
-   
+
 1. Run the query and you receive only update runs for your Fleet Manager that have a matching status.
+
+## Validate outcomes, not just lifecycle state
+
+If you use `maxAllowedFailures`, don't rely on the update run, stage, or group state alone. `Completed` only means the configured failure threshold wasn't exceeded when Fleet Manager made its scheduling decisions. It doesn't guarantee a minimum success rate.
+
+The `FailureCount` fields represent counts of failed member updates:
+
+- **`UpdateRun.FailureCount`**: Total failed member updates across all stages and groups.
+- **`Stage.FailureCount`**: Total failed member updates across all groups within the stage.
+- **`Group.FailureCount`**: Total failed member updates within that group.
+
+Always review these counts together with `members.status.state`, failure conditions, and member `message` values.
+
+For example, suppose you roll out a node image update to a stage with 10 member clusters and configure `maxAllowedFailures` to `"20%"`. The stage might finish in `Completed` state with `FailureCount = 2`. In that case, use the following query to identify which two member clusters failed, review their failure messages, and decide whether the rollout outcome is acceptable or whether you need to retry or investigate further.
+
+The following query expands the hierarchy so that you can validate actual rollout outcomes, not just lifecycle states:
+
+```kusto
+aksresources
+| where type == "microsoft.containerservice/fleets/updateruns"
+| where id contains ('Microsoft.ContainerService/fleets/your-fleet-name')
+| extend parsedProps = parse_json(properties)
+| mv-expand stages = parsedProps.status.stages
+| mv-expand groups = stages.groups
+| mv-expand members = groups.members
+| project updateRun = tostring(id),
+          runState = tostring(parsedProps.status.status.state),
+          runFailureCount = toint(parsedProps.status.status.failureCount),
+          stageName = tostring(stages.name),
+          stageState = tostring(stages.status.state),
+          stageFailureCount = toint(stages.status.failureCount),
+          groupName = tostring(groups.name),
+          groupState = tostring(groups.status.state),
+          groupFailureCount = toint(groups.status.failureCount),
+          memberName = tostring(members.name),
+          memberState = tostring(members.status.state),
+          memberMessage = tostring(members.message)
+| order by updateRun asc, stageName asc, groupName asc, memberName asc
+```
 
 ## Advanced filtering
 
@@ -87,9 +126,9 @@ The following advanced Kusto query options make it easier to use further update 
 
 - [mv-expand][kusto-mv-expand] can be used to unpack the stages, groups, and member clusters in an update run record.
 - [json_parse][kusto-json-parse] can be used to make it easier to reference JSON objects without using nested arrays.
- 
-In the following sample query we can determine which member cluster in the `canary` group of the `prod` stage failed. If no cluster in this group/stage failed then no rows are returned. 
-  
+
+In the following sample query we can determine which member cluster in the `canary` group of the `prod` stage failed. If no cluster in this group/stage failed then no rows are returned.
+
 ```kusto
 aksresources
 | where type == "microsoft.containerservice/fleets/updateruns"
@@ -103,7 +142,7 @@ aksresources
 | project stageName = stages.name, groupName = groups.name, memberName = members.name, memberState = members.status.state, memberStartTime = members.status.startTime
 ```
 
-## Building alerts 
+## Building alerts
 
 Now that you understand the Azure Resource Graph data available you can use [Azure Monitor alert rules][monitor-log-search] with log search to define when you wish to receive alerts.
 
@@ -121,7 +160,12 @@ Now that you understand the Azure Resource Graph data available you can use [Azu
 
     :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-03.png" alt-text="Screenshot showing the Condition tab loaded and custom log search selected in the signal name drop-down." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-03.png":::
 
-1. In the **Logs** blade, enter the Resource Graph query you wish to use to trigger an alert. For our sample we alert on any failed update run and include the update run start time.
+1. In **Logs**, enter the Resource Graph query you want to use to trigger an alert. You might want one of these alert patterns:
+
+    - Alert only on update runs whose final state is `Failed`.
+    - Alert on update runs where failures occurred, even if the final state is `Completed`. A `Completed` state with `FailureCount > 0` usually means `maxAllowedFailures` was configured and the run stayed within that tolerance.
+
+    The following sample catches both patterns.
 
     > [!NOTE]
     > For Azure Monitor log search queries you must prefix the `aksresources` table with `arg("").`. The remaining syntax is unchanged from the queries used earlier in this article.
@@ -131,8 +175,13 @@ Now that you understand the Azure Resource Graph data available you can use [Azu
     | where type == "microsoft.containerservice/fleets/updateruns"
     | where id contains ('Microsoft.ContainerService/fleets/your-fleet-name')
     | extend parsedProps = parse_json(properties)
-    | where parsedProps.status.status.state == "Failed"
-    | project id, startTime = parsedProps.status.status.startTime
+    | extend state = tostring(parsedProps.status.status.state),
+             failureCount = toint(parsedProps.status.status.failureCount)
+    | where state == "Failed" or failureCount > 0
+    | project id,
+              state,
+              failureCount,
+              startTime = parsedProps.status.status.startTime
     ```
 
 1. Once you're happy with the results being returned by the query, select **Continue Editing Alert** to close the **Logs** blade. The query is automatically inserted into the **Search query** box. You can continue to edit it here if you wish.
@@ -151,16 +200,17 @@ Now that you understand the Azure Resource Graph data available you can use [Azu
 
 1. Select the **Tags** tab to add any tags you wish, before selecting **Review + create** to create the new alert rule.
 
-The next time the alert rule is triggered, the selected alert groups will be activated and your chosen notifications and integrations will be invoked.  
+The next time the alert rule is triggered, the selected alert groups will be activated and your chosen notifications and integrations will be invoked.
 
 
-## Sample update run JSON properties result 
+## Sample update run JSON properties result
 
 The following sample represents the `properties` payload held in Azure Resource Graph for each update run. You can use this structure to inform how you build you alerting queries or dashboards.
 
 ```json
 {
     "status": {
+        "failureCount": 0,
         "status": {
             "state": "Pending",
             "startTime": "2025-03-05T13:17:18.277945575Z"
@@ -177,6 +227,9 @@ The following sample represents the `properties` payload held in Azure Resource 
         },
         "stages": [
             {
+                "failureCount": 0,
+                "maxAllowedFailures": 0,
+                "maxConcurrency": 50,
                 "status": {
                     "state": "Pending",
                     "startTime": "2025-03-05T13:17:19.51815878Z"
@@ -184,6 +237,9 @@ The following sample represents the `properties` payload held in Azure Resource 
                 "name": "prod",
                 "groups": [
                     {
+                        "failureCount": 0,
+                        "maxAllowedFailures": 0,
+                        "maxConcurrency": 1,
                         "status": {
                             "completedTime": "2025-03-05T13:48:59.049364234Z",
                             "state": "Completed",
@@ -215,6 +271,9 @@ The following sample represents the `properties` payload held in Azure Resource 
                         ]
                     },
                     {
+                        "failureCount": 0,
+                        "maxAllowedFailures": 0,
+                        "maxConcurrency": 1,
                         "status": {
                             "state": "Pending",
                             "startTime": "2025-03-05T13:17:19.51826128Z"
@@ -237,6 +296,9 @@ The following sample represents the `properties` payload held in Azure Resource 
                         ]
                     },
                     {
+                        "failureCount": 0,
+                        "maxAllowedFailures": 0,
+                        "maxConcurrency": 1,
                         "status": {
                             "state": "Pending",
                             "startTime": "2025-03-05T13:17:19.518346681Z"
