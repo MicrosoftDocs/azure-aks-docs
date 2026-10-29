@@ -2,7 +2,7 @@
 title: Install the managed KubeRay extension on Azure Kubernetes Service (AKS) (preview)
 description: Learn how to install, verify, update, and remove the managed KubeRay extension on Azure Kubernetes Service (AKS).
 ms.topic: how-to
-ms.date: 10/14/2026
+ms.date: 10/27/2026
 author: alyssa1303
 ms.author: alyssavu
 ms.service: azure-kubernetes-service
@@ -17,7 +17,7 @@ ai-usage: ai-generated
 
 The managed KubeRay extension for Azure Kubernetes Service (AKS) is in preview. It installs and manages the [KubeRay](https://docs.ray.io/en/latest/cluster/kubernetes/getting-started.html) operator and the Ray custom resource definitions (CRDs) on your cluster: `RayCluster`, `RayJob`, `RayCronJob`, and `RayService`.
 
-This article shows you how to install, verify, update, and remove the extension by using the Azure CLI. You manage your Ray workloads and their runtime images separately.
+This article shows you how to install, verify, update, and remove the extension by using the Azure CLI. You also deploy a sample Ray workload to confirm that the operator manages Ray resources as expected.
 
 ## Prerequisites
 
@@ -185,6 +185,143 @@ kubectl get crds \
 ```
 
 If provisioning or readiness checks fail, see [Troubleshoot the managed KubeRay extension](/troubleshoot/azure/azure-kubernetes/extensions/troubleshoot-kuberay-extension-errors).
+
+## Run a sample Ray workload
+
+Deploy a CPU-only `RayCluster` and submit a `RayJob` to confirm that the KubeRay operator can reconcile Ray resources and run distributed tasks. The sample uses one head pod and one worker pod.
+
+Set the sample resource names and Ray image:
+
+```bash
+RAY_NAMESPACE="kuberay-sample"
+RAY_CLUSTER_NAME="sample-raycluster"
+RAY_JOB_NAME="sample-rayjob"
+RAY_VERSION="2.58.0"
+RAY_IMAGE="mcr.microsoft.com/aks/ai-runtime/ray@sha256:e9a329eef15e5a13d50c3186c2b8036cd3728c6e218da860de23e8494b99ddd3"
+```
+
+Create a namespace and deploy the `RayCluster`:
+
+```bash
+kubectl create namespace "$RAY_NAMESPACE"
+
+kubectl apply -f - <<YAML
+apiVersion: ray.io/v1
+kind: RayCluster
+metadata:
+  name: ${RAY_CLUSTER_NAME}
+  namespace: ${RAY_NAMESPACE}
+spec:
+  rayVersion: "${RAY_VERSION}"
+  headGroupSpec:
+    rayStartParams:
+      num-cpus: "0"
+      dashboard-host: "0.0.0.0"
+    template:
+      spec:
+        containers:
+        - name: ray-head
+          image: ${RAY_IMAGE}
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2Gi
+            limits:
+              cpu: "1"
+              memory: 4Gi
+  workerGroupSpecs:
+  - groupName: cpu-workers
+    replicas: 1
+    minReplicas: 1
+    maxReplicas: 1
+    rayStartParams:
+      num-cpus: "1"
+    template:
+      spec:
+        containers:
+        - name: ray-worker
+          image: ${RAY_IMAGE}
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: "1"
+              memory: 2Gi
+YAML
+```
+
+Wait for the `RayCluster` to report `ready`, and then confirm that the head and worker pods are running:
+
+```bash
+kubectl wait \
+  --for=jsonpath='{.status.state}'=ready \
+  raycluster/"$RAY_CLUSTER_NAME" \
+  --namespace "$RAY_NAMESPACE" \
+  --timeout=10m
+
+kubectl get raycluster,pods --namespace "$RAY_NAMESPACE"
+```
+
+Submit an HTTP-mode `RayJob` to the existing cluster. The job runs four remote tasks on the worker and prints a success marker after validating their results:
+
+```bash
+kubectl apply -f - <<YAML
+apiVersion: ray.io/v1
+kind: RayJob
+metadata:
+  name: ${RAY_JOB_NAME}
+  namespace: ${RAY_NAMESPACE}
+spec:
+  jobId: ${RAY_JOB_NAME}
+  submissionMode: HTTPMode
+  clusterSelector:
+    ray.io/cluster: ${RAY_CLUSTER_NAME}
+  entrypoint: >-
+    python3 -c "import ray; ray.init(address='auto'); square=ray.remote(lambda x: x*x);
+    values=ray.get([square.remote(i) for i in range(4)]);
+    assert values == [0, 1, 4, 9], values;
+    print('KUBERAY_SAMPLE_OK', values, flush=True)"
+  shutdownAfterJobFinishes: false
+YAML
+```
+
+Wait for the job to succeed:
+
+```bash
+kubectl wait \
+  --for=jsonpath='{.status.jobStatus}'=SUCCEEDED \
+  rayjob/"$RAY_JOB_NAME" \
+  --namespace "$RAY_NAMESPACE" \
+  --timeout=10m
+```
+
+Read the Ray driver log from the head pod:
+
+```bash
+HEAD_POD="$(kubectl get pods \
+  --namespace "$RAY_NAMESPACE" \
+  --selector="ray.io/cluster=$RAY_CLUSTER_NAME,ray.io/node-type=head" \
+  --output jsonpath='{.items[0].metadata.name}')"
+
+kubectl exec \
+  --namespace "$RAY_NAMESPACE" \
+  "$HEAD_POD" \
+  --container ray-head \
+  -- sh -c 'grep -h "KUBERAY_SAMPLE_OK" /tmp/ray/session_latest/logs/job-driver-*.log'
+```
+
+The expected output is:
+
+```output
+KUBERAY_SAMPLE_OK [0, 1, 4, 9]
+```
+
+This output confirms that the operator created the Ray cluster, submitted the job, and ran tasks on the worker. Delete the sample resources when you're finished:
+
+```bash
+kubectl delete namespace "$RAY_NAMESPACE"
+```
 
 ## Update the managed KubeRay extension
 
