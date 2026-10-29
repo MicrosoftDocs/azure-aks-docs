@@ -5,7 +5,7 @@ ms.subservice: aks-networking
 ms.custom: build-2024, quarterly
 ms.topic: how-to
 ms.author: schaffererin
-ms.date: 06/18/2026
+ms.date: 10/09/2026
 author: schaffererin
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -48,8 +48,9 @@ The following network and FQDN/application rules are required for an AKS cluster
 * AKS uses an admission controller to inject the FQDN as an environment variable to all deployments under kube-system and gatekeeper-system. This ensures all system communication between nodes and API server uses the API server FQDN and not the API server IP.  You can get the same behavior on your own pods, in any namespace, by annotating the pod spec with an annotation named `kubernetes.azure.com/set-kube-service-host-fqdn`. If that annotation is present, AKS will set the KUBERNETES_SERVICE_HOST variable to the domain name of the API server instead of the in-cluster service IP. This is useful in cases where the cluster egress is via a layer 7 firewall.
 * If you have an app or solution that needs to talk to the API server, you must either add an **additional** network rule to allow **TCP communication to port 443 of your API server's IP** **OR** , if you have a layer 7 firewall configured to allow traffic to the API Server's domain name, set `kubernetes.azure.com/set-kube-service-host-fqdn` in your pod specs.
 * On rare occasions, if there's a maintenance operation, your API server IP might change. Planned maintenance operations that can change the API server IP are always communicated in advance.
-* You might notice traffic towards "md-*.blob.storage.azure.net" endpoint. This endpoint is used for internal components of Azure Managed Disks. Blocking access to this endpoint from your firewall should not cause any issues.
-* You might notice traffic towards "umsa*.blob.core.windows.net" endpoint. This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. You can find more details on [VM Extensions](/azure/virtual-machines/extensions/features-linux?tabs=azure-cli#network-access).
+* You might notice traffic towards the `md-*.blob.storage.azure.net` and `umsa*.blob.core.windows.net` endpoints. Neither endpoint is a required AKS egress dependency, and you can block both:
+    * `md-*.blob.storage.azure.net` is used by internal components of Azure Managed Disks.
+    * `umsa*.blob.core.windows.net` stores manifests for the Azure Linux VM Agent and VM extensions. The specific storage endpoints that the agent contacts can vary and change over time. If these endpoints are unreachable, the VM Agent falls back to the Azure fabric controller over the host IP `168.63.129.16`, and extension provisioning still succeeds. The agent retries the blob endpoint before it falls back, which can add a short delay to node bootstrapping. For more information, see [VM extensions](/azure/virtual-machines/extensions/features-linux?tabs=azure-cli#network-access).
 
 
 ### Azure Global required network rules
