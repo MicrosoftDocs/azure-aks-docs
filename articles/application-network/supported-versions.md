@@ -5,7 +5,7 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: concept-article
-ms.date: 10/29/2026
+ms.date: 10/30/2026
 ai-usage: ai-assisted
 ---
 
@@ -27,8 +27,8 @@ The following table lists Azure Kubernetes Application Network versions, their c
 | 1.2 (retired)               | 1.27          | May 2026             | 1.30, 1.31, 1.32, 1.33, 1.34, 1.35 | None                          |
 | 1.3 (retired)               | 1.28          | Sept 2026            | 1.30, 1.31, 1.32, 1.33, 1.34, 1.35 | None                          |
 | 1.4                         | 1.29          | Not confirmed        | 1.31, 1.32, 1.33, 1.34, 1.35, 1.36 | None                          |
-| 1.5                         | 1.30          | ~Dec 2026 (expected) | 1.32, 1.33, 1.34, 1.35, 1.36       | `Stable`                      |
-| 1.6                         | 1.31          | Not confirmed        | 1.32, 1.33, 1.34, 1.35, 1.36       | `Rapid`                       |
+| 1.5                         | 1.30          | ~Dec 2026 (expected) | 1.32, 1.33, 1.34, 1.35, 1.36, 1.37 | `Stable`                      |
+| 1.6                         | 1.31          | Not confirmed        | 1.32, 1.33, 1.34, 1.35, 1.36, 1.37 | `Rapid`                       |
 
 End-of-life dates marked *expected* are estimates of *earliest possible* retirement, not confirmed dates.
 
