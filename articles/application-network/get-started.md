@@ -5,7 +5,7 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: get-started
-ms.date: 11/04/2025
+ms.date: 10/29/2026
 ---
 
 # Get started with Azure Kubernetes Application Network for AKS (preview)
@@ -133,6 +133,8 @@ If you have an existing cluster that already meets these requirements, you can s
 
 When you join a member cluster to Azure Kubernetes Application Network, you can specify one of the following upgrade modes for that cluster: **fully-managed** or **self-managed**. The upgrade mode determines how minor version upgrades of Azure Kubernetes Application Network are applied to the member cluster. If you don't specify an upgrade mode during member join, it defaults to `SelfManaged`. For more information about upgrade modes, see [Configure upgrades for Azure Kubernetes Application Network members](./upgrades.md).
 
+For multi-cluster deployments, [choose your connectivity topology](./multi-cluster-connectivity.md) before joining members. Network names describe whether members share direct pod-IP connectivity or communicate through east-west gateways.
+
 > [!NOTE]
 > You can't change a member's parent Application Network, location, subscription, or resource group after you join it. To change any of these, remove the member and rejoin it with the new values.
 
@@ -234,6 +236,7 @@ Deleting an Azure Kubernetes Application Network resource automatically removes 
 To learn more about Azure Kubernetes Application Network, see the following articles:
 
 - [Azure Kubernetes Application Network architecture](./architecture.md)
+- [Configure multi-cluster connectivity](./multi-cluster-connectivity.md)
 - [Overview of Azure Kubernetes Application Network observability](./observability.md)
 - [Overview of Azure Kubernetes Application Network security](./security.md)
 

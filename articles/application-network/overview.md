@@ -5,8 +5,9 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: overview
-ms.date: 11/04/2025
+ms.date: 10/29/2026
 ms.custom: references_regions
+ai-usage: ai-assisted
 ---
 
 # Overview of Azure Kubernetes Application Network for AKS (preview)
@@ -44,7 +45,11 @@ This design separates the data plane from individual workloads, improving effici
 
 ## Supported scenarios
 
-Application Network supports single-cluster AKS deployments running **Linux-based node pools**. It's ideal for applications that require secure, in-cluster communication and simplified mesh management without managing sidecars or control plane components.
+Application Network supports **single-cluster and multi-cluster AKS deployments** running **Linux-based node pools**. Connect multiple clusters to the same Application Network for service-to-service communication within and across member clusters, without managing sidecars or control plane components.
+
+For multi-cluster deployments, choose a topology that matches your network reachability. Members in the same mesh network require direct pod-IP connectivity; members in different networks communicate through east-west gateways. Application Network doesn't create the underlying connectivity for either path. For configuration steps, see [Configure multi-cluster connectivity](./multi-cluster-connectivity.md).
+
+Joining a cluster doesn't automatically enroll all application workloads or export every service. Enroll the intended workloads in ambient mode and configure global services as described in the [traffic management walkthrough](./traffic-management-use-cases.md).
 
 ## Limitations
 
@@ -76,6 +81,7 @@ To learn more about Azure Kubernetes Application Network, see the following arti
 
 - [Get started with Azure Kubernetes Application Network for AKS](./get-started.md)
 - [Azure Kubernetes Application Network architecture](./architecture.md)
+- [Configure multi-cluster connectivity](./multi-cluster-connectivity.md)
 - [Overview of Azure Kubernetes Application Network observability](./observability.md)
 - [Overview of Azure Kubernetes Application Network security](./security.md)
 - [Azure Kubernetes Application Network supported versions](./supported-versions.md)

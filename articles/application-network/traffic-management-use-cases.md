@@ -5,7 +5,7 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: how-to
-ms.date: 03/19/2026
+ms.date: 10/29/2026
 ---
 
 # Traffic management use cases for Azure Kubernetes Application Network (preview)
@@ -26,7 +26,7 @@ This article provides step-by-step instructions on how to implement these traffi
 Before you begin, ensure you have the following prerequisites in place:
 
 - An [existing Azure Kubernetes Application Network resource](./get-started.md#create-an-azure-kubernetes-application-network-resource).
-- Two [existing AKS clusters](./get-started.md#create-an-aks-cluster) with network reachability between their east-west gateways. You can achieve this using [Azure virtual network (VNet) peering](/azure/virtual-network/virtual-network-peering-overview), [VNet to VNet VPN connection](/azure/vpn-gateway/vpn-gateway-howto-vnet-vnet-resource-manager-portal), or another supported connectivity model.
+- Two [existing AKS clusters](./get-started.md#create-an-aks-cluster) configured for [multi-cluster connectivity](./multi-cluster-connectivity.md). Members in different mesh networks need to reach remote east-west gateways; members in the same network need direct pod-IP reachability.
   - Both clusters must be [joined as members to your Azure Kubernetes Application Network](./get-started.md#join-an-aks-cluster-as-a-member-of-azure-kubernetes-application-network).
 - The Istio CLI, [istioctl](https://istio.io/latest/docs/setup/install/istioctl/), installed. To select the correct version of istioctl, refer to the [supported Istio version](./supported-versions.md) for your Application Network. You can install istioctl using the following command:
 
