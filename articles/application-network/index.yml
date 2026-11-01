@@ -10,7 +10,7 @@ metadata:
   ms.topic: landing-page
   author: kochhars
   ms.author: kochhars
-  ms.date: 03/02/2026
+  ms.date: 10/29/2026
 # linkListType: architecture | concept | deploy | download | get-started | how-to-guide | learn | overview | quickstart | reference | sample | tutorial | video | whats-new
 
 landingContent:
@@ -33,6 +33,8 @@ landingContent:
         links:
           - text: Create an Azure Kubernetes Application Network
             url: get-started.md
+          - text: Configure multi-cluster connectivity
+            url: multi-cluster-connectivity.md
           - text: Explore traffic management use cases
             url: traffic-management-use-cases.md
 

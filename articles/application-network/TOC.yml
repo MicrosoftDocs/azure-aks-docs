@@ -8,6 +8,8 @@
   items:
   - name: Create an Azure Kubernetes Application Network
     href: get-started.md
+  - name: Configure multi-cluster connectivity
+    href: multi-cluster-connectivity.md
 - name: Traffic management use cases
   href: traffic-management-use-cases.md
 - name: Versions and upgrades
