@@ -104,6 +104,26 @@
       "source_path": "articles/aks-hybrid-edge/local/hyperconverged/storage-provision-issue.md",
       "redirect_url": "/azure/aks-hybrid-edge/local/hyperconverged/aks-arc-known-issues",
       "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks/kueue-overview.md",
+      "redirect_url": "/azure/aks/managed-kueue-extension-overview",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "articles/aks/configure-queues-with-automatic-resource-flavors.md",
+      "redirect_url": "/azure/aks/install-the-managed-kueue-extension-on-aks",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "articles/aks/deploy-batch-jobs-with-kueue.md",
+      "redirect_url": "/azure/aks/schedule-and-deploy-batch-jobs-with-managed-kueue-extension-on-aks",
+      "redirect_document_id": true
+    },
+    {
+      "source_path": "articles/aks/configure-kueue-with-cluster-autoscaler.md",
+      "redirect_url": "/azure/aks/use-managed-kueue-extension-with-the-cluster-autoscaler-on-aks",
+      "redirect_document_id": true
     }
   ]
 }
