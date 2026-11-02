@@ -375,5 +375,5 @@ This article focused on advanced Kubernetes scheduler features. For more informa
 [use-multiple-node-pools]: create-node-pools.md
 [taint-node-pool]: manage-node-pools.md#specify-a-taint-label-or-tag-for-a-node-pool
 [use-gpus-aks]: gpu-cluster.md
-[kueue-on-aks]: kueue-overview.md
+[kueue-on-aks]: managed-kueue-extension-overview.md
 [config-scheduler-aks]: concepts-scheduler-configuration.md

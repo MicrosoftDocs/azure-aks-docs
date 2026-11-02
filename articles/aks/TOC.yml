@@ -850,14 +850,14 @@
             href: configure-node-binpack-scheduler.md
       - name: Kueue
         items:
-          - name: Learn about Kueue for batch scheduling
-            href: kueue-overview.md
-          - name: Define Queues with managed Kueue extension
-            href: configure-queues-with-automatic-resource-flavors.md
-          - name: Schedule and deploy batch jobs with Kueue
-            href: deploy-batch-jobs-with-kueue.md
-          - name: Provision capacity for Kueue jobs with the cluster autoscaler
-            href: configure-kueue-with-cluster-autoscaler.md
+          - name: Kueue overview
+            href: managed-kueue-extension-overview.md
+          - name: Install the managed Kueue extension (preview)
+            href: install-the-managed-kueue-extension-on-aks.md
+          - name: Schedule and deploy batch jobs with managed Kueue
+            href: schedule-and-deploy-batch-jobs-with-managed-kueue-extension-on-aks.md
+          - name: Use managed Kueue with the cluster autoscaler
+            href: use-managed-kueue-extension-with-the-cluster-autoscaler-on-aks.md
 - name: Security
   items:
     - name: Security overview
@@ -1259,24 +1259,6 @@
               href: open-ai-quickstart.md
             - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
               href: open-ai-secure-access-quickstart.md
-        - name: Install the managed KubeRay extension (preview)
-          href: kuberay-overview.md
-        - name: Run Ray AI workloads with Kueue
-          items:
-            - name: Overview
-              href: ray-overview.md
-            - name: Deploy infrastructure
-              href: deploy-ray-infrastructure.md
-            - name: Configure Kueue queues
-              href: configure-ray-kueue-queues.md
-            - name: Fine-tune Aurora weather model
-              href: ray-finetune-aurora.md
-            - name: Train an LLM
-              href: ray-train-llm.md
-            - name: Run batch inference
-              href: ray-batch-inference.md
-            - name: Serve a model online
-              href: ray-online-serving.md
         - name: AI toolchain operator (KAITO)
           items:
             - name: Deploy an AI model using the Azure CLI
@@ -1295,6 +1277,34 @@
               href: ai-toolchain-operator-mcp.md
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
+    - name: Ray and KubeRay
+      items:
+        - name: Overview
+          href: ray-overview.md
+        - name: Install the managed KubeRay extension (preview)
+          href: kuberay-overview.md
+        - name: Prepare infrastructure
+          href: deploy-ray-infrastructure.md
+        - name: Configure Kueue queues
+          href: configure-ray-kueue-queues.md
+        - name: Fine-tune Aurora weather model
+          href: ray-finetune-aurora.md
+        - name: Train an LLM
+          href: ray-train-llm.md
+        - name: Run batch inference
+          href: ray-batch-inference.md
+        - name: Serve a model online
+          href: ray-online-serving.md
+    - name: Kueue
+      items:
+        - name: Kueue overview
+          href: managed-kueue-extension-overview.md
+        - name: Install the managed Kueue extension (preview)
+          href: install-the-managed-kueue-extension-on-aks.md
+        - name: Schedule and deploy batch jobs with managed Kueue
+          href: schedule-and-deploy-batch-jobs-with-managed-kueue-extension-on-aks.md
+        - name: Use managed Kueue with the cluster autoscaler
+          href: use-managed-kueue-extension-with-the-cluster-autoscaler-on-aks.md
     - name: Agents and MCP servers
       items:
         - name: Agentic CLI for AKS
