@@ -5,7 +5,7 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: overview
-ms.date: 10/29/2026
+ms.date: 10/30/2026
 ms.custom: references_regions
 ai-usage: ai-assisted
 ---
@@ -56,7 +56,7 @@ Joining a cluster doesn't automatically enroll all application workloads or expo
 Application Network currently has the following limitations:
 
 - Application Network requires AKS version 1.30 or higher. Refer to [Application Network supported versions](./supported-versions.md) for each AKS version's specific compatibility information.
-- AKS [private clusters](../aks/private-clusters.md) aren't currently supported.
+- AKS [private clusters](../aks/private-clusters.md) require service enablement and `Microsoft.AppLink/PrivatePath` registration. To check eligibility and subnet requirements, see [Connect private AKS clusters][appnet-private-connectivity]. Public AKS clusters can't use the private-connect path. Ordinary public-cluster onboarding stays the same.
 - Linux only. Windows node pools aren't supported.
 - Switching between upgrade modes `SelfManaged` and `FullyManaged` isn't supported.
 - Currently supported only in the following regions:
@@ -80,9 +80,13 @@ Application Network currently has the following limitations:
 To learn more about Azure Kubernetes Application Network, see the following articles:
 
 - [Get started with Azure Kubernetes Application Network for AKS](./get-started.md)
+- [Connect private AKS clusters to Application Network][appnet-private-connectivity]
 - [Azure Kubernetes Application Network architecture](./architecture.md)
 - [Configure multi-cluster connectivity](./multi-cluster-connectivity.md)
 - [Overview of Azure Kubernetes Application Network observability](./observability.md)
 - [Overview of Azure Kubernetes Application Network security](./security.md)
 - [Azure Kubernetes Application Network supported versions](./supported-versions.md)
 - [Configure Azure Kubernetes Application Network upgrades](./upgrades.md)
+
+<!--- LINKS --->
+[appnet-private-connectivity]: ./private-connectivity.md
