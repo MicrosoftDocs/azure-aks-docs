@@ -20,7 +20,7 @@ This article provides an overview of AKS desktop: an application-focused develop
 
 ## Install AKS desktop
 
-If you have [Azure CLI](/cli/azure/install-azure-cli) version 2.91.0 or later, you can install AKS desktop using the `az aks install-desktop` command. You can also download and install it from the [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/releases).
+If you have [Azure CLI](/cli/azure/install-azure-cli) version 2.91.0 or later, you can install AKS desktop by using the `az aks install-desktop` command. You can also download and install it from the [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/releases).
 
 > [!NOTE]
 > AKS desktop supports the following operating systems (OS): Windows (x64), Linux (x64 and arm64), and macOS (x64 and arm64).
