@@ -1,7 +1,7 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 10/21/2026
+ms.date: 11/03/2026
 author: bcho
 ms.author: bahe
 ms.topic: concept-article
@@ -23,6 +23,33 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
 - Azure Kubernetes Service add-ons (AKS add-ons)
+
+---
+
+## AKS-2026-0008 AKS advisory for CVE-2026-111497
+
+**Published date**: November 3, 2026
+
+### Description
+
+CVE-2026-111497 affects the Brotli decoder. Applications that decompress malicious Brotli data can expose memory, crash, or allow remote code execution.
+
+### Affected components
+
+- **AKS node OS:** Node components don't decompress untrusted Brotli data, so the installed library isn't exposed through this path.
+- **AKS-managed Istio:** The add-on uses an unaffected Envoy version. No action is needed for this CVE.
+- **Customer-managed workloads:** Applications, runtimes, and proxies might be affected if they use a vulnerable Brotli decoder.
+
+### Resolutions
+
+Rebuild affected container images with patched libraries and runtimes. Update affected customer-managed proxies. Redeploy the updated workloads. Updating the node OS doesn't fix packages inside containers.
+
+AKS expects Ubuntu node OS security patches to reach all regions by November 12, 2026. Track availability in the [AKS release tracker](https://releases.aks.azure.com/UbuntuSecurityPatch). Enable [automatic node OS updates](../auto-upgrade-node-os-image.md) or [upgrade node images manually](../upgrade-node-image.md) when updates are available.
+
+### References
+
+- [Brotli vulnerability and Ubuntu fixes](https://ubuntu.com/security/CVE-2026-111497).
+- [Upstream Istio advisory](https://istio.io/latest/news/security/istio-security-2026-007/).
 
 ---
 
