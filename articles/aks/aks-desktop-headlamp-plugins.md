@@ -26,7 +26,7 @@ The catalog distinguishes plugins that pass Microsoft accessibility and localiza
 ## Prerequisites
 
 - Confirm that your organization allows third-party plugins and external integrations.
-- [Install or update to AKS desktop v0.10.0 or later](https://github.com/Azure/aks-desktop#installation).
+- [Install or update to AKS desktop v0.10.0 or later](aks-desktop-overview.md#install-aks-desktop).
 - [Connect AKS desktop to the Kubernetes cluster](aks-desktop-install-cluster-setup.md) where you want to use the plugin.
 - Review the plugin notes, required cluster components, supported versions, network requirements, and publisher before installation.
 - Confirm that your Kubernetes identity has only the permissions required for the plugin workflow. For more information, see [Set up permissions and role-based access control (RBAC) in AKS desktop](aks-desktop-permissions.md).

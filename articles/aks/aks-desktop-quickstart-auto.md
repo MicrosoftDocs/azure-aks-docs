@@ -22,7 +22,7 @@ This guide walks you through deploying a TypeScript application using AKS deskto
 - An Azure subscription. If you don't have one, create a [free Azure account](https://azure.microsoft.com/pricing/purchase-options/azure-account?cid=msft_learn).
 - Azure CLI version 2.64.0 or later. Check your version using the [`az --version`](/cli/azure/reference-index#az-version) command. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 - The `aks-preview` Azure CLI extension. Install it using the `az extension add --name aks-preview` command. For more information, see [Manage Azure CLI extensions](/cli/azure/azure-cli-extensions-overview).
-- [AKS desktop](https://github.com/Azure/aks-desktop/releases) installed. AKS desktop supports the following operating systems (OS): Windows, Linux, and Mac.
+- [AKS desktop](aks-desktop-overview.md#install-aks-desktop) installed.
 - If using an existing cluster, the cluster needs to be Microsoft Entra ID authenticated. To ensure your cluster is Microsoft Entra ID authenticated, use an [AKS Automatic cluster](intro-aks-automatic.md). You also need the [Azure Kubernetes Service RBAC Cluster Admin role](manage-azure-rbac.md#aks-built-in-roles) or equivalent permissions on the target cluster.
 
 ## Create Azure resources

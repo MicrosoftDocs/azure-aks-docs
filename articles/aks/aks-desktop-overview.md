@@ -15,10 +15,15 @@ ms.author: danis
 
 This article provides an overview of AKS desktop: an application-focused developer portal for Azure Kubernetes Service (AKS) that simplifies application deployment and management without requiring deep Kubernetes expertise. AKS desktop is built on supported AKS features, best practices, and open-source [Headlamp](https://headlamp.dev/).
 
-To install AKS desktop, see the [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/releases).
-
 > [!IMPORTANT]
 > AKS desktop abstracts Kubernetes complexity but doesn't remove access. You can still use kubectl, YAML, or other existing tools alongside AKS desktop.
+
+## Install AKS desktop
+
+If you have [Azure CLI](/cli/azure/install-azure-cli) version 2.91.0 or later, you can install AKS desktop by using the `az aks install-desktop` command. You can also download and install it from the [AKS desktop GitHub repository](https://github.com/Azure/aks-desktop/releases).
+
+> [!NOTE]
+> AKS desktop supports the following operating systems (OS): Windows (x64), Linux (x64 and arm64), and macOS (x64 and arm64).
 
 ## What is AKS desktop?
 

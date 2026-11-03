@@ -21,7 +21,7 @@ This article walks you through enabling Insights and using it to diagnose common
 
 ## Prerequisites
 
-- **AKS desktop** installed and signed in to your AKS cluster. See [Set up an AKS cluster for AKS desktop](aks-desktop-install-cluster-setup.md) or [Deploy applications with AKS Automatic using AKS desktop](aks-desktop-quickstart-auto.md).
+- **[AKS desktop](aks-desktop-overview.md#install-aks-desktop)** installed and signed in to your AKS cluster. See [Set up an AKS cluster for AKS desktop](aks-desktop-install-cluster-setup.md) or [Deploy applications with AKS Automatic using AKS desktop](aks-desktop-quickstart-auto.md).
 - **Cluster admin** or equivalent Role-Based Access Control (RBAC) permissions on the target AKS cluster. Installing Inspektor Gadget requires creating a `ClusterRole`, `ClusterRoleBinding`, and a privileged `DaemonSet`.
 - Your cluster nodes must run **Linux** with kernel version **≥ 5.4**. Windows node pools aren't supported.
 - If your cluster uses Azure Policy or OPA Gatekeeper with restricted pod security, add an exemption for the `gadget` namespace to allow privileged pods.
