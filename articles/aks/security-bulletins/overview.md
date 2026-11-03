@@ -49,10 +49,10 @@ Node OS update availability:
 | Update | Version | Availability |
 | --- | --- | --- |
 | Azure Linux 3.0 node image (VHD) | `202610.23.0` | Includes the fix. Available in all regions listed in the [Azure Linux release tracker](https://releases.aks.azure.com/AzureLinux). |
-| Ubuntu 22.04/24.04 node image (VHD) | `202610.30.0` | Includes the fix. Regional availability isn't confirmed yet. Track the [Ubuntu node image rollout](https://releases.aks.azure.com/Ubuntu). |
-| Ubuntu security patch | `20261028T000000Z` | Rolling out. AKS expects availability in all regions by November 12, 2026. Track the [Ubuntu security patch rollout](https://releases.aks.azure.com/UbuntuSecurityPatch). |
+| Ubuntu 22.04/24.04 node image (VHD) | `202610.30.0` (planned) | Not yet available. Monitor the [Ubuntu node image release tracker](https://releases.aks.azure.com/Ubuntu) for regional availability. |
+| Ubuntu [`SecurityPatch` channel](../auto-upgrade-node-os-image.md#available-node-os-upgrade-channels) | `20261028T000000Z` | Rolling out. AKS expects availability in all regions by November 12, 2026. Track the [Ubuntu security patch rollout](https://releases.aks.azure.com/UbuntuSecurityPatch). |
 
-Use the `SecurityPatch` [node OS upgrade channel](../auto-upgrade-node-os-image.md) for Ubuntu security patches. Use `NodeImage` or [upgrade node images manually](../upgrade-node-image.md) to apply a VHD when available in your region.
+Enable the [`SecurityPatch` node OS upgrade channel](../auto-upgrade-node-os-image.md#set-the-node-os-autoupgrade-channel-on-an-existing-cluster) to receive Ubuntu security patches. Use `NodeImage` or [upgrade node images manually](../upgrade-node-image.md) to apply a VHD when available in your region.
 
 ### References
 
