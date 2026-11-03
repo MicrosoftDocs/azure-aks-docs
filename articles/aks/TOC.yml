@@ -309,6 +309,8 @@
           href: node-pool-unique-subnet.md
         - name: Node pool snapshot
           href: node-pool-snapshot.md
+        - name: Use managed support for DRANET
+          href: managed-support-for-dranet.md
         - name: Add a Virtual Machines node pool
           href: virtual-machines-node-pools.md
         - name: Availability Sets deprecation
