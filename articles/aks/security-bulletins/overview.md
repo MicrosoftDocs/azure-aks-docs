@@ -44,7 +44,15 @@ CVE-2026-111497 affects the Brotli decoder. Applications that decompress malicio
 
 Rebuild affected container images with patched libraries and runtimes. Update affected customer-managed proxies. Redeploy the updated workloads. Updating the node OS doesn't fix packages inside containers.
 
-AKS expects Ubuntu node OS security patches to reach all regions by November 12, 2026. Track availability in the [AKS release tracker](https://releases.aks.azure.com/UbuntuSecurityPatch). Enable [automatic node OS updates](../auto-upgrade-node-os-image.md) or [upgrade node images manually](../upgrade-node-image.md) when updates are available.
+Node OS update availability:
+
+| Update | Version | Availability |
+| --- | --- | --- |
+| Azure Linux 3.0 node image (VHD) | `202610.23.0` | Includes the fix. Available in all regions listed in the [Azure Linux release tracker](https://releases.aks.azure.com/AzureLinux). |
+| Ubuntu 22.04/24.04 node image (VHD) | `202610.30.0` | Includes the fix. Regional availability isn't confirmed yet. Track the [Ubuntu node image rollout](https://releases.aks.azure.com/Ubuntu). |
+| Ubuntu security patch | `20261028T000000Z` | Rolling out. AKS expects availability in all regions by November 12, 2026. Track the [Ubuntu security patch rollout](https://releases.aks.azure.com/UbuntuSecurityPatch). |
+
+Use the `SecurityPatch` [node OS upgrade channel](../auto-upgrade-node-os-image.md) for Ubuntu security patches. Use `NodeImage` or [upgrade node images manually](../upgrade-node-image.md) to apply a VHD when available in your region.
 
 ### References
 
