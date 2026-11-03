@@ -309,6 +309,8 @@
           href: node-pool-unique-subnet.md
         - name: Node pool snapshot
           href: node-pool-snapshot.md
+        - name: Use managed support for DRANET
+          href: managed-support-for-dranet.md
         - name: Add a Virtual Machines node pool
           href: virtual-machines-node-pools.md
         - name: Availability Sets deprecation
@@ -1199,6 +1201,32 @@
           href: azure-files-aks.md
         - name: Deploy JupyterHub on AKS with Azure Files
           href: deploy-jupyterhub-aks-terraform.md
+        - name: Azure Managed Lustre for AKS
+          items:
+            - name: What is Azure Managed Lustre?
+              href: azure-managed-lustre-introduction.md
+            - name: Install the Azure Managed Lustre CSI driver
+              href: azure-managed-lustre-install.md
+            - name: Provision volumes statically
+              href: azure-managed-lustre-static-provisioning.md
+            - name: Provision volumes dynamically
+              href: azure-managed-lustre-dynamic-provisioning.md
+            - name: Upgrade or uninstall the Azure Managed Lustre CSI driver
+              href: azure-managed-lustre-uninstall.md
+            - name: AKS CLI options (preview)
+              items:
+                - name: Install with AKS CLI options (preview)
+                  href: azure-managed-lustre-install-cli-preview.md
+                - name: Upgrade or uninstall with AKS CLI options (preview)
+                  href: azure-managed-lustre-upgrade-uninstall-cli-preview.md
+            - name: CSI driver compatibility and troubleshooting
+              href: azure-managed-lustre-overview.md
+            - name: Plan network architecture
+              href: azure-managed-lustre-network-planning.md
+            - name: Dynamic provisioning reference
+              href: azure-managed-lustre-dynamic-provisioning-reference.md
+            - name: Driver image verification
+              href: azure-managed-lustre-image-security.md
         - name: Azure NetApp Files for AKS
           items:
             - name: Configure Azure NetApp Files for AKS
