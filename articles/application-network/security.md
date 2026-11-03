@@ -5,7 +5,8 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: overview
-ms.date: 11/05/2025
+ms.date: 10/29/2026
+ai-usage: ai-assisted
 ---
 
 # Overview of Azure Kubernetes Application Network security (preview)
@@ -33,7 +34,7 @@ Application Network currently allows both encrypted and unencrypted traffic. Thi
 mTLS in Azure Kubernetes Application Network helps you:
 
 - **Protect data in transit**: All service-to-service traffic can be encrypted automatically (FIPS-compliant).
-- **Verify service identity**: Each workload has a unique Application Network-managed root and intermediate certificate.
+- **Verify service identity**: Each Application Network has a unique root CA, and each member has a dedicated intermediate CA chained to that root. Workloads prove their identities with short-lived workload certificates signed by their member's intermediate CA.
 - **Simplify operations**: Application Network handles certificate issuance, rotation, and revocation for users.
 
 ## Certificate management
@@ -48,7 +49,7 @@ The following diagram illustrates the certificate hierarchy in Application Netwo
 
 ### Certificate hierarchy and lifecycle
 
-When an Application Network resource is created, a **root CA** is provisioned to serve as the trust anchor for the Application Network. When an AKS cluster joins the Application Network as a member, Application Network issues an **intermediate certificate** for that member signed by the Application Network root CA. Each connected AKS cluster uses its Application Network-managed intermediate certificate to issue short-lived **workload certificates** to workloads in that cluster.
+When an Application Network resource is created, a unique **root CA** is provisioned as its trust anchor. Each Application Network member receives a dedicated **intermediate CA** signed by that root CA. The member's intermediate CA issues short-lived **workload certificates** to workloads in its connected AKS cluster.
 
 All workload certificates inherit trust from the Application Network root CA, maintaining a unified trust boundary across the resource. The rotation of root and intermediate certificates is handled transparently for users without causing any downtime or traffic disruptions. This managed hierarchy ensures consistent, verifiable trust across all clusters in an Application Network while automatically maintaining the validity of each certificate.
 
@@ -59,7 +60,7 @@ From any member cluster, you can get the root CA certificate from config map `is
 | **Certificate type**     | **Scope**                            | **Validity period** | **Rotation period** | **Purpose**                                                                                           |
 | ------------------------ | ------------------------------------ | ------------------- | ------------------- | ----------------------------------------------------------------------------------------------------- |
 | **Root CA**              | Azure Kubernetes Application Network | 12 months           | 6 months            | Establishes the trust boundary for all clusters connected to the Azure Kubernetes Application Network |
-| **Intermediate CA**      | Cluster                              | 90 days             | 45 days             | Issues workload certificates for workloads within that cluster                                        |
+| **Intermediate CA**      | Application Network member           | 90 days             | 45 days             | Issues workload certificates for workloads associated with that member                                |
 | **Workload certificate** | Workload                             | 24 hours            | 12 hours            | Authenticates workloads and secures service-to-service communication                                  |
 
 ## Workload identity and authorization
@@ -95,7 +96,7 @@ spec:
   - from:
     - source:
         principals:
-        - cluster.local/ns/default/sa/myApp-gateway // see SPIFFE format above
+        - cluster.local/ns/default/sa/myapp-gateway  # See SPIFFE format above.
 ```
 
 ### Policy design guidance

@@ -76,7 +76,7 @@ Each member has a mesh network identity. Members with the same network name requ
 
 The control plane connects to the member cluster's Kubernetes API server, watches for service and configuration changes, and pushes xDS updates to ztunnel and waypoint proxies. When multiple members exist, Application Network synchronizes discovery for participating global services so the control planes can configure cross-cluster communication.
 
-Certificate management provisions a root CA when the Application Network resource is created and issues intermediate CAs for each member cluster. Workload certificates are issued with a 24-hour validity period and rotated automatically every 12 hours. The entire certificate lifecycle, from root CA through intermediate and workload certificates, is managed without manual intervention.
+Certificate management provisions a unique root CA when the Application Network resource is created and issues a dedicated intermediate CA for each Application Network member. Workload certificates are issued with a 24-hour validity period and rotated automatically every 12 hours. The entire certificate lifecycle, from root CA through intermediate and workload certificates, is managed without manual intervention.
 
 For the full certificate hierarchy and rotation schedule, see the [Overview of Azure Kubernetes Application Network security](./security.md).
 
