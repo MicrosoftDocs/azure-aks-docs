@@ -1,7 +1,7 @@
 ---
 title: "Controlling eviction and disruption budgets for Azure Kubernetes Fleet Manager cluster resource placement"
 description: This article describes how to manage evictions and voluntary disruption for workloads placed by Fleet Manager's cluster resource placement.
-ms.date: 07/28/2026
+ms.date: 10/09/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -9,20 +9,18 @@ ms.topic: concept-article
 # Customer intent: As a Kubernetes administrator, I want to manage the eviction and disruption budgets of resources in my cluster, so that I can ensure key workloads remain stable while removing unnecessary resources as needed.
 ---
 
-# Controlling eviction and disruption budgets for Azure Kubernetes Fleet Manager cluster resource placement (preview)
+# Controlling eviction and disruption for Azure Kubernetes Fleet Manager cluster resource placement
 
 **Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
-Administrators using Fleet Manager's cluster resource placement (CRP) can find they need to remove resources previously placed on member clusters, while ensuring that key resource placements aren't disrupted.
+Administrators who use Fleet Manager's cluster resource placement (CRP) might need to remove resources that they previously placed on member clusters. They also need to ensure that they don't disrupt key resource placements.
 
-In this article, we explore how you can use Fleet Manager's `ClusterResourcePlacementEviction` and `ClusterResourcePlacementDisruptionBudget` objects to achieve these goals. 
+This article explains how to use Fleet Manager's `ClusterResourcePlacementEviction` and `ClusterResourcePlacementDisruptionBudget` objects to achieve these goals. 
 
 > [!NOTE]
-> If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
+> If you're not already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
-
-## Evict placed resources (preview)
+## Evict placed resources
 
 A `ClusterResourcePlacementEviction` object is used to remove resources from a member cluster once the resources are propagated from the Fleet Manager hub cluster.
 
@@ -39,7 +37,7 @@ Eviction can be used with cluster resource placement's `PickAll` and `PickN` pol
 Consider the following sample CRP.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp-app-sample
@@ -68,7 +66,7 @@ Let's say the placement picked two clusters named `member-cluster-01` and `membe
 1. Create a `NoSchedule` taint to block placement requests for the member cluster. You can read more about using taints on the [taints documentation][fleet-taints].
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: MemberCluster
     metadata:
       name: member-cluster-02
@@ -87,7 +85,7 @@ Let's say the placement picked two clusters named `member-cluster-01` and `membe
 1. Next, create, and apply a `ClusterResourcePlacementEviction`.
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacementEviction
     metadata:
       name: eviction-sample
@@ -111,16 +109,16 @@ Let's say the placement picked two clusters named `member-cluster-01` and `membe
     
 Now that you understand how to force the removal of placed resources from clusters, let's see how you can protect key resources from eviction.
 
-## Protect against eviction (preview)
+## Protect against eviction
 
-The `ClusterResourcePlacementDisruptionBudget` object protects against voluntary disruptions which occur when a `ClusterResourcePlacementEviction` object is applied against a placed resource. [Involuntary disruptions](#involuntary-disruption) aren't protected against.
+The `ClusterResourcePlacementDisruptionBudget` object protects against voluntary disruptions that occur when you apply a `ClusterResourcePlacementEviction` object to a placed resource. It doesn't protect against [involuntary disruptions](#involuntary-disruption).
 
 For the sample cluster resource placement shown earlier in this article, you can define a placement disruption budget object as follows.
 
 The name of the disruption budget must match the CRP.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacementDisruptionBudget
 metadata:
   name: crp-app-sample
@@ -128,14 +126,14 @@ spec:
   minAvailable: 1
 ```
 
-You can specify one of the following two mutually exclusive fields in the spec:
+Specify one of the following two mutually exclusive fields in the spec:
 
 - **maxUnavailable:**  the maximum number of clusters in which a placement can be unavailable due to any form of disruptions.
 - **minAvailable:** the minimum number of clusters in which placements are available despite any form of disruptions.
 
-Both fields can be either an absolute number of clusters as an integer or as a percentage of the total number of clusters in the fleet.
+Both fields can be either an absolute number of clusters as an integer or a percentage of the total number of clusters in the fleet.
 
-When specifying a disruption budget for a particular `ClusterResourcePlacement` policy, you can refer to the following support matrix:
+When specifying a disruption budget for a particular `ClusterResourcePlacement` policy, refer to the following support matrix:
 
 | CRP policy   | `minAvailable` (integer) | `minAvailable` (%) | `maxUnavailable` (integer) | `MaxUnavailable` (%) |
 |--------------|--------------------------|--------------------|----------------------------|----------------------|
@@ -148,20 +146,20 @@ When specifying a disruption budget for a particular `ClusterResourcePlacement` 
 
 ### Validate that eviction is blocked
 
-You can check that a configured disruption budget blocked an eviction as follows. 
+Check that a configured disruption budget blocked an eviction. 
 
 ```bash
 kubectl get crpe eviction-sample
 ```
 
-Notice the `EXECUTED` field displays `False`, indicating the eviction wasn't applied.
+The `EXECUTED` field displays `False`, which means the eviction wasn't applied.
 
 ```output
 NAME            VALID   EXECUTED
 test-eviction   True    False
 ```
 
-To confirm the disruption budget blocked the eviction, issue the same `kubectl` command and add `-o yaml`. The `message` value shows the disruption budget blocked the eviction.
+To confirm the disruption budget blocked the eviction, run the same `kubectl` command and add `-o yaml`. The `message` value shows the disruption budget blocked the eviction.
 
 ```yaml
 status:
@@ -183,12 +181,12 @@ status:
 
 ### Involuntary disruption
 
-Placement disruption budgets **do not protect against involuntary disruption**. Examples of involuntary disruption include: 
+Placement disruption budgets **don't protect against involuntary disruption**. Examples of involuntary disruption include: 
 
-* Removal of resources from a member cluster by the Fleet Manager scheduler due to scheduling policy changes.
-* Manual deletion of workload resources running on a member cluster (not via eviction or updated CRP).
-* Manual deletion of a `ClusterResourceBinding` object which is an internal resource representing the placement of resources on a member cluster.
-* Workloads failing to run properly on a member cluster due to misconfiguration or cluster related issues.
+* The Fleet Manager scheduler removes resources from a member cluster due to scheduling policy changes.
+* You manually delete workload resources running on a member cluster (not through eviction or updated CRP).
+* You manually delete a `ClusterResourceBinding` object, which is an internal resource that represents the placement of resources on a member cluster.
+* Workloads don't run properly on a member cluster due to misconfiguration or cluster-related issues.
 
 ## Next steps
 

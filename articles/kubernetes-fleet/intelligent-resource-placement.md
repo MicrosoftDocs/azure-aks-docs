@@ -221,7 +221,7 @@ spec:
 #### ResourcePlacement example
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: rp-demo
@@ -283,7 +283,7 @@ spec:
 #### ResourcePlacement example
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: rp-demo
@@ -348,7 +348,7 @@ spec:
 #### ResourcePlacement example
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: rp-demo
