@@ -40,6 +40,8 @@
       href: concepts-member-cluster-labels.md
     - name: Safe multi-cluster upgrades
       href: concepts-update-orchestration.md
+    - name: Fleet-scale GitOps
+      href: concepts-gitops-fleet-scale.md  
     - name: Multi-tenancy with Managed Fleet Namespaces
       href: concepts-fleet-managed-namespace.md    
     - name: Multi-cluster Kubernetes resource management
@@ -47,7 +49,9 @@
         - name: Introduction to resource placement
           href: concepts-resource-placement.md
         - name: Controlling placement rollout order
-          href: concepts-rollout-strategy.md       
+          href: concepts-rollout-strategy.md
+        - name: Use annotations to distribute resources
+          href: concepts-placement-annotation-based.md
         - name: Placement rollouts and resource snapshots
           href: concepts-placement-snapshots.md
         - name: Taking over existing resources
@@ -55,7 +59,7 @@
         - name: Detecting and managing resource drift
           href: concepts-placement-drift.md 
         - name: Controlling eviction and disruption
-          href: concepts-eviction-disruption.md
+          href: concepts-placement-eviction-disruption.md
         - name: Automated deployments overview
           href: concepts-automated-deployments.md 
     - name: Multi-cluster networking 
@@ -128,6 +132,14 @@
           href: access-fleet-hub-cluster-kubernetes-api.md
         - name: Use Automated Deployments with resource placement
           href: howto-automated-deployments.md
+    - name: Deliver applications at scale with GitOps
+      items:
+        - name: GitOps with Fleet Manager and Flux
+          href: howto-gitops-fleet-flux.md
+        - name: Deploy Helm charts with Fleet Manager and Flux
+          href: howto-gitops-fleet-flux-helm.md
+        - name: Deploy OCI Artifacts with Fleet Manager and Flux
+          href: howto-gitops-fleet-flux-open-container-artifacts.md
     - name: Use Managed Fleet Namespaces for multi-cluster multi-tenancy
       items:
         - name: Create and configure Managed Fleet Namespaces

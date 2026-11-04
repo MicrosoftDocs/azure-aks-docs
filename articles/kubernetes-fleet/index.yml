@@ -24,8 +24,10 @@ landingContent:
             url: concepts-member-cluster-labels.md
           - text: Safe updates across multiple member clusters
             url: concepts-update-orchestration.md
-          - text: Kubernetes resource placement and management
+          - text: Multi-cluster Kubernetes resource placement
             url: concepts-resource-placement.md
+          - text: Fleet-scale GitOps
+            url: concepts-gitops-fleet-scale.md
           - text: Multi-cluster networking overview
             url: concepts-multi-cluster-networking-overview.md
           - text: Frequently asked questions

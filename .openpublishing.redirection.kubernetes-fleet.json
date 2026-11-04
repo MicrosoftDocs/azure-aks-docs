@@ -54,6 +54,16 @@
       "source_path_from_root": "/articles/kubernetes-fleet/concepts-multi-cluster-workload-management.md",
       "redirect_url": "/azure/kubernetes-fleet/concepts-resource-placement",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/kubernetes-fleet/concepts-eviction-disruption.md",
+      "redirect_url": "/azure/kubernetes-fleet/concepts-placement-eviction-disruption",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/kubernetes-fleet/concepts-rollout-strategy.md",
+      "redirect_url": "/azure/kubernetes-fleet/concepts-placement-rollout-strategy",
+      "redirect_document_id": false
     }
   ]
 }

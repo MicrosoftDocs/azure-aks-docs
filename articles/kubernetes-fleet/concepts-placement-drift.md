@@ -1,15 +1,16 @@
 ---
-title: "Detecting and managing workload drift with Azure Kubernetes Fleet Manager resource placement"
+title: "Managing workload drift with Azure Kubernetes Fleet Manager resource placement"
 description: This article describes how to use the applyStrategy property to control how Fleet Manager identifies and handles drift in workloads managed by resource placement.
-ms.date: 07/28/2026
+ms.date: 10/09/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+zone_pivot_groups: cluster-namespace-scope
 # Customer intent: "As a Kubernetes administrator, I want to manage workload drift using resource placement strategies, so that I can ensure consistent application configurations across multiple clusters and prevent potential outages during deployments."
 ---
 
-# Detecting and managing workload drift with Azure Kubernetes Fleet Manager resource placement (preview)
+# Managing workload drift with Azure Kubernetes Fleet Manager resource placement 
 
 **Applies to**: :heavy_check_mark: Fleet Manager with hub cluster
 
@@ -20,20 +21,20 @@ In this article, we look at how you can use an `applyStrategy` property in a res
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's resource placement concepts, read the [cluster-scoped resource placement overview][learn-conceptual-crp] and the [namespace-scoped resource placement overview][learn-conceptual-rp] before reading this article.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
-
 ## Detect differences across a fleet
 
 This section provides an overview of the `ReportDiff` apply mode, which can be used to evaluate configuration state of placed workload across a fleet at any time. 
 
 Using the `ReportDiff` mode, Fleet Manager checks for configuration differences between the [hub cluster][fleet-hub-cluster] workload definition and corresponding placed workloads on the member clusters, reporting the results in the resource placement status.
 
+:::zone target="docs" pivot="cluster-scope"
+
 ### ClusterResourcePlacement example
 
 In the following sample, Fleet Manager reports differences for the namespace `web` for any member cluster with the placed namespace. 
 
 ```yml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp-reportdiff-sample
@@ -62,12 +63,16 @@ Apply the `ClusterResourcePlacement` to your Fleet Manager hub cluster.
 kubectl apply -f crp-reportdiff-sample.yaml
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"  
+
 ### ResourcePlacement example
 
 In the following sample, Fleet Manager reports differences for a deployment in the `web` namespace.
 
 ```yml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: rp-reportdiff-sample
@@ -95,27 +100,37 @@ Apply the `ResourcePlacement` to your Fleet Manager hub cluster.
 kubectl apply -f rp-reportdiff-sample.yaml
 ```
 
+:::zone-end
+
 ### Report on drifted clusters
 
 Using the following commands you can determine which clusters have configuration drift. The [jq command](https://github.com/jqlang/jq) is used to format the output.
+
+:::zone target="docs" pivot="cluster-scope"  
 
 **For ClusterResourcePlacement:**
 
 Replace `crp-reportdiff-sample` with the name of your `ClusterResourcePlacement`.
 
 ```bash
-kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io crp-reportdiff-sample -o jsonpath='{.status.placementStatuses}' \
+kubectl get clusterresourceplacement.v1.placement.kubernetes-fleet.io crp-reportdiff-sample -o jsonpath='{.status.placementStatuses}' \
     | jq '[.[] | select (.diffedPlacements != null)] | map({clusterName, diffedPlacements})'
 ```
+
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope"  
 
 **For ResourcePlacement:**
 
 Replace `rp-reportdiff-sample` with the name of your `ResourcePlacement` and `web` with your namespace.
 
 ```bash
-kubectl get resourceplacement.v1beta1.placement.kubernetes-fleet.io rp-reportdiff-sample -n web -o jsonpath='{.status.placementStatuses}' \
+kubectl get resourceplacement.v1.placement.kubernetes-fleet.io rp-reportdiff-sample -n web -o jsonpath='{.status.placementStatuses}' \
     | jq '[.[] | select (.diffedPlacements != null)] | map({clusterName, diffedPlacements})'
 ```
+
+:::zone-end
 
 The command results in a response containing JSON similar to the following snippet. In this sample, we can see that someone has directly overwritten the owner label on this cluster. 
 
@@ -188,12 +203,14 @@ You can use an optional `comparisonOption` property to fine-tune how `whenToAppl
 
 * `FullComparison`: all fields on the workload definition on the Fleet hub cluster must be present on the selected member cluster. If the target cluster has any extra unmanaged fields, then it fails comparison.
 
+:::zone target="docs" pivot="cluster-scope" 
+
 ### ClusterResourcePlacement example
 
 In the following sample, if a change is found in any field (managed or unmanaged), the placement fails.
 
 ```yml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
   name: crp-deploy-drift-sample
@@ -217,12 +234,16 @@ spec:
       unavailablePeriodSeconds: 1                
 ```
 
+:::zone-end
+
+:::zone target="docs" pivot="namespace-scope" 
+
 ### ResourcePlacement example
 
 In the following sample, if a change is found in any field (managed or unmanaged), the placement fails.
 
 ```yml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: rp-deploy-drift-sample
@@ -244,6 +265,8 @@ spec:
       maxUnavailable: 100%
       unavailablePeriodSeconds: 1                
 ```
+
+:::zone-end
 
 ### Placement behavior summary
 
