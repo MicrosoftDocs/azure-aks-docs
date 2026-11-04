@@ -68,7 +68,7 @@ Enable the [`SecurityPatch` node OS upgrade channel](../auto-upgrade-node-os-ima
 
 ### Description
 
-This bulletin covers two vulnerabilities in the Linux kernel's IPv4 networking subsystem that affect AKS Linux nodes.
+This security bulletin covers two vulnerabilities in the Linux kernel's IPv4 networking subsystem that affect AKS Linux nodes.
 
 CVE-2026-98432 is a use-after-free vulnerability in the code that sets up incoming IPv4 TCP connections. This vulnerability can let an unauthenticated remote attacker run commands as root on Linux servers with a multipath TCP (MPTCP) listener.
 
@@ -90,9 +90,9 @@ This advisory applies to AKS node images.
 
 **Resolutions**
 
-**Azure Linux:** The fix is in kernel `6.6.159.1-1`, which ships in VHD `202610.23.0`. This image is available in all regions listed in the [Azure Linux release tracker](https://releases.aks.azure.com/AzureLinux). [Upgrade your node images](../upgrade-node-image.md) to apply the fix. Consider the [`SecurityPatch` node OS upgrade channel](../auto-upgrade-node-os-image.md#available-node-os-upgrade-channels) to receive security fixes faster.
+- **Azure Linux:** The fix is in kernel `6.6.159.1-1`, which ships in VHD `202610.23.0`. This image is available in all regions listed in the [Azure Linux release tracker](https://releases.aks.azure.com/AzureLinux). [Upgrade your node images](../upgrade-node-image.md) to apply the fix. Consider the [`SecurityPatch` node OS upgrade channel](../auto-upgrade-node-os-image.md#available-node-os-upgrade-channels) to receive security fixes faster.
 
-**Ubuntu:** AKS is waiting for official kernel fixes from Ubuntu. A VHD containing the official fixes is tentatively expected after November 15, 2026. An interim fix from Ubuntu's `-proposed` repository is planned for this week's VHD release. Monitor the [Ubuntu node image release tracker](https://releases.aks.azure.com/Ubuntu) for availability.
+- **Ubuntu:** AKS is waiting for official kernel fixes from Ubuntu. A VHD containing the official fixes is tentatively expected after November 15, 2026. An interim fix from Ubuntu's `-proposed` repository is planned for this week's VHD release. Monitor the [Ubuntu node image release tracker](https://releases.aks.azure.com/Ubuntu) for availability.
 
 The interim fix doesn't cover:
 
