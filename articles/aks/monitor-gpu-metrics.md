@@ -3,7 +3,7 @@ title: GPU observability in Azure Kubernetes Service (AKS)
 description: This article shows how to monitor key utilization and performance NVIDIA DCGM GPU metrics on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 5/1/2026
+ms.date: 10/14/2026
 author: sachidesai
 ms.author: sachidesai
 # Customer intent: "As a Kubernetes administrator, I want to learn about NVIDIA GPU metrics so that I can optimize resource utilization and ensure the performance of GPU-enabled workloads in my AKS cluster."
@@ -11,21 +11,19 @@ ms.author: sachidesai
 
 # Learn about NVIDIA GPU metrics to optimize GPU performance and utilization on Azure Kubernetes Service (AKS)
 
-Efficient placement and optimization of GPU workloads often requires visibility into resource utilization and performance. Managed GPU metrics on AKS (preview) provide automated collection and exposure of GPU utilization, memory, and performance data across NVIDIA GPU-enabled node pools. This enables platform administrators to optimize cluster resources and developers to tune and debug workloads with limited manual instrumentation.
+Efficient placement and optimization of GPU workloads often requires visibility into resource utilization and performance. Managed GPU metrics on AKS provide automated collection and exposure of GPU utilization, memory, and performance data across NVIDIA GPU-enabled node pools. This capability enables platform administrators to optimize cluster resources and developers to tune and debug workloads with limited manual instrumentation.
 
-In this article, you learn about GPU metrics collected by the NVIDIA Data Center GPU Manager [(DCGM) exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) with [a fully managed GPU-enabled node pool (preview)](./aks-managed-gpu-nodes.md) in Azure Kubernetes Service (AKS).
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+In this article, you learn about GPU metrics collected by the NVIDIA Data Center GPU Manager [(DCGM) exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) with [a managed GPU-enabled node pool](./aks-managed-gpu-nodes.md) in Azure Kubernetes Service (AKS).
 
 ## Prerequisites
 
-- An AKS cluster with [a fully managed GPU-enabled node pool (preview)](./aks-managed-gpu-nodes.md) and ensure that the GPUs are schedulable.
+- An AKS cluster with [a managed GPU-enabled node pool](./aks-managed-gpu-nodes.md) and ensure that the GPUs are schedulable.
 - A [sample GPU workload](./use-nvidia-gpu.md#run-a-gpu-enabled-workload) deployed to your node pool.
 - [Azure Managed Prometheus](/azure/azure-monitor/containers/kubernetes-monitoring-enable?tabs=cli#enable-with-cli) enabled on your AKS cluster.
 
 ## Verify that managed GPU components are installed
 
-After creating your managed NVIDIA GPU node pool (preview) following [these instructions](./aks-managed-gpu-nodes.md), confirm that the GPU software components were installed with the [az aks nodepool show](/cli/azure/aks/nodepool#az-aks-nodepool-show) command:
+After creating your managed NVIDIA GPU node pool following [these instructions](./aks-managed-gpu-nodes.md), confirm that the GPU software components were installed by using the [az aks nodepool show](/cli/azure/aks/nodepool#az-aks-nodepool-show) command:
 
 ```azurecli-interactive
 az aks nodepool show \
