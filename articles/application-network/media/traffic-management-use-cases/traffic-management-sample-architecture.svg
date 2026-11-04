@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="880" viewBox="0 0 1400 880" role="img" aria-labelledby="title desc">
+  <title id="title">Bookinfo services across two AKS clusters</title>
+  <desc id="desc">The productpage workload in cluster 1 calls details and the global reviews service. The reviews service has candidate backends reviews-v1 in cluster 1 and reviews-v2 and reviews-v3 in cluster 2. Reviews versions 2 and 3 call ratings-v1 in cluster 2. Arrows show logical service calls, not every proxy hop.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#0876c9"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#007c91"/>
+    </marker>
+    <marker id="arrow-slate" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#607386"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #182a3a; }
+      .eyebrow { font-size: 15px; font-weight: 700; letter-spacing: 1.3px; fill: #526273; }
+      .heading { font-size: 25px; font-weight: 700; }
+      .subheading { font-size: 19px; font-weight: 700; }
+      .body { font-size: 17px; }
+      .small { font-size: 15px; fill: #45596b; }
+      .cluster { fill: #f7f9fb; stroke: #aebdca; stroke-width: 2; }
+      .workload { fill: #fff; stroke: #0876c9; stroke-width: 2; }
+      .service { fill: #edf6fc; stroke: #0876c9; stroke-width: 2; stroke-dasharray: 7 5; }
+      .local-line { fill: none; stroke: #007c91; stroke-width: 3; }
+      .global-line { fill: none; stroke: #607386; stroke-width: 2.5; stroke-dasharray: 7 6; }
+    </style>
+  </defs>
+  <rect width="1400" height="880" fill="#fff"/>
+  <text x="60" y="52" class="eyebrow">BOOKINFO SAMPLE</text>
+  <text x="60" y="84" class="heading">Logical service calls across two AKS clusters</text>
+
+  <rect x="60" y="154" width="610" height="620" rx="12" class="cluster"/>
+  <text x="88" y="194" class="eyebrow">CLUSTER 1</text>
+  <text x="632" y="194" class="small" text-anchor="end">AKS member</text>
+  <rect x="730" y="154" width="610" height="620" rx="12" class="cluster"/>
+  <text x="758" y="194" class="eyebrow">CLUSTER 2</text>
+  <text x="1302" y="194" class="small" text-anchor="end">AKS member</text>
+
+  <rect x="440" y="108" width="520" height="92" rx="12" class="service"/>
+  <text x="700" y="145" class="eyebrow" text-anchor="middle">GLOBAL SERVICE NAME</text>
+  <text x="700" y="176" class="subheading" text-anchor="middle">reviews.default.svc.cluster.local</text>
+
+  <rect x="105" y="292" width="260" height="98" rx="10" class="workload"/>
+  <text x="235" y="331" class="subheading" text-anchor="middle">productpage-v1</text>
+  <text x="235" y="359" class="small" text-anchor="middle">Python</text>
+
+  <rect x="105" y="542" width="260" height="98" rx="10" class="workload"/>
+  <text x="235" y="581" class="subheading" text-anchor="middle">details-v1</text>
+  <text x="235" y="609" class="small" text-anchor="middle">Ruby</text>
+
+  <rect x="395" y="542" width="230" height="98" rx="10" class="workload"/>
+  <text x="510" y="581" class="subheading" text-anchor="middle">reviews-v1</text>
+  <text x="510" y="609" class="small" text-anchor="middle">Java</text>
+
+  <rect x="790" y="292" width="240" height="98" rx="10" class="workload"/>
+  <text x="910" y="331" class="subheading" text-anchor="middle">reviews-v2</text>
+  <text x="910" y="359" class="small" text-anchor="middle">Java</text>
+
+  <rect x="790" y="452" width="240" height="98" rx="10" class="workload"/>
+  <text x="910" y="491" class="subheading" text-anchor="middle">reviews-v3</text>
+  <text x="910" y="519" class="small" text-anchor="middle">Java</text>
+
+  <rect x="1080" y="374" width="220" height="98" rx="10" class="workload"/>
+  <text x="1190" y="413" class="subheading" text-anchor="middle">ratings-v1</text>
+  <text x="1190" y="441" class="small" text-anchor="middle">Node.js</text>
+
+  <path d="M235 390V530" class="local-line" marker-end="url(#arrow-teal)"/>
+  <rect x="249" y="438" width="84" height="30" rx="6" fill="#fff"/>
+  <text x="291" y="459" class="small" text-anchor="middle">details</text>
+
+  <path d="M365 314C402 275 470 242 555 202" fill="none" stroke="#0876c9" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <text x="431" y="267" class="small">reviews request</text>
+
+  <path d="M610 200C600 340 560 430 520 530" class="global-line" marker-end="url(#arrow-slate)"/>
+  <path d="M770 200C825 230 875 260 900 280" class="global-line" marker-end="url(#arrow-slate)"/>
+  <path d="M790 200C875 330 920 390 920 440" class="global-line" marker-end="url(#arrow-slate)"/>
+
+  <path d="M1030 340C1050 340 1064 382 1076 405" class="local-line" marker-end="url(#arrow-teal)"/>
+  <path d="M1030 500C1080 500 1105 476 1135 472" class="local-line" marker-end="url(#arrow-teal)"/>
+  <text x="1160" y="535" class="small" text-anchor="middle">ratings service</text>
+
+  <rect x="60" y="802" width="1280" height="52" rx="8" fill="#eef3f7"/>
+  <text x="700" y="825" class="small" text-anchor="middle">Arrows show logical service calls and candidate endpoints, not every proxy hop.</text>
+  <text x="700" y="846" class="small" text-anchor="middle">Cross-cluster traffic uses the configured direct or east-west gateway path.</text>
+</svg>

@@ -5,7 +5,7 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: overview
-ms.date: 10/29/2026
+ms.date: 11/03/2026
 ai-usage: ai-assisted
 ---
 
@@ -43,9 +43,9 @@ Azure Kubernetes Application Network provides certificate management backed by A
 
 Application Network automatically manages the entire certificate lifecycle for root and intermediate certificates including provisioning, renewal, and rotation. This ensures that workload identities remain valid, and communication stays secure over time. You don't need to create, store, or rotate certificates manually.
 
-The following diagram illustrates the certificate hierarchy in Application Network, showing how the root CA, intermediate CAs, and workload certificates are structured to establish trust across connected clusters:
+The following diagram shows how the AppNet root CA signs a separate intermediate CA for each member. Each intermediate CA issues workload certificates with namespace and service account identities:
 
-:::image type="content" source="./media/security/certificate-management.png" alt-text="Screenshot of a diagram that illustrates the certificate hierarchy in Azure Kubernetes Application Network, showing how the root CA, intermediate CAs, and workload certificates are structured to establish trust across connected clusters." lightbox="./media/security/certificate-management.png":::
+:::image type="content" source="./media/security/certificate-management.svg" alt-text="Diagram of the Application Network certificate hierarchy, with one Key Vault-backed root CA, a separate intermediate CA for each member, and workload certificates that carry namespace and service account identities." lightbox="./media/security/certificate-management.svg":::
 
 ### Certificate hierarchy and lifecycle
 

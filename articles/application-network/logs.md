@@ -5,7 +5,8 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: how-to
-ms.date: 11/04/2025
+ms.date: 10/30/2026
+ai-usage: ai-assisted
 ---
 
 # Monitor data plane and control plane logs in Azure Kubernetes Application Network (preview)
@@ -17,13 +18,15 @@ Azure Kubernetes Application Network provides two types of logging that you can 
 - **Data plane logs**: Include logs from application workloads, `applink-system` namespace components, and Envoy proxy access logs.
 - **Control plane logs**: Include Istiod logs from the Azure Kubernetes Application Network control plane components.
 
-Azure Kubernetes Application Network logging is disabled by default. This article describes how to enable both types of logging and view them in Azure Monitor.
+Configure data plane log collection and control plane diagnostic settings separately. If your AKS cluster already has Container Insights enabled, its existing collection settings apply. This article describes how to configure both log paths and view them in Azure Monitor.
 
 ## Set environment variables
 
 - Set environment variables for your selected workflow using the following commands:
 
     ```bash
+    export SUBSCRIPTION=<subscription-id>
+
     # Set if specifying an existing or creating a new Log Analytics workspace
     export LAW_NAME=<log-analytics-workspace-name>
 
@@ -73,37 +76,67 @@ When enabling data plane logs, you have the option to specify an existing Log An
 
     ```kusto
     ContainerLogV2
+    | where TimeGenerated > ago(45m)
     | where PodNamespace == "applink-system"
     ```
 
 ### Envoy access logs
 
-In some cases, you might need to examine Envoy access logs when traffic is generated for your applications/workloads. To enable Envoy access logs, use the Telemetry API.
+Use the [Telemetry API][istio-telemetry] as described in the following steps to enable Envoy access-log generation. Container Insights collects the proxy's standard output and sends it to your Log Analytics workspace, so collection must include the namespace where the proxy runs.
 
-1. In the YAML below, specify the namespace where you want to enable Envoy access logging. For mesh-wide Envoy access logs, remove the namespace from the metadata.
+For HTTP request-level logs, traffic must pass through an Envoy waypoint or gateway. Traffic that only passes through ztunnel doesn't produce Envoy HTTP access logs. For waypoint deployment and enrollment steps, see [Traffic management use cases][appnet-waypoints].
+
+> [!NOTE]
+> A namespace can have only one Telemetry default without a workload selector or `targetRefs`. If a default already exists, merge the access-logging configuration into that resource instead of creating another default. Namespace-specific or targeted access-logging settings override the corresponding mesh-wide settings.
+
+1. To enable Envoy access logging for a namespace, apply the following example. For an application namespace other than `default`, replace `default` in both the command and `metadata.namespace`.
 
     ```bash
     cat <<EOF | kubectl apply -n default -f -
     apiVersion: telemetry.istio.io/v1
     kind: Telemetry
     metadata:
-      name: mesh-logging-default
+      name: namespace-access-logging
       namespace: default
     spec:
       accessLogging:
       - providers:
         - name: envoy
+        disabled: false
     EOF
     ```
 
-    Envoy access logs will be available in the Log Analytics workspace where the Container Insights add-on was enabled.
+1. To set the mesh-wide default for Envoy access logging, apply the configuration to the mesh root namespace, `applink-system`, in each member cluster where you want the default. Set the namespace in both the command and `metadata.namespace`.
 
-1. View the Envoy access logs by navigating to the Log Analytics workspace and running the following query:
+    > [!NOTE]
+    > Removing `metadata.namespace` doesn't create a mesh-wide policy.
+
+    ```bash
+    cat <<EOF | kubectl apply -n applink-system -f -
+    apiVersion: telemetry.istio.io/v1
+    kind: Telemetry
+    metadata:
+      name: mesh-access-logging
+      namespace: applink-system
+    spec:
+      accessLogging:
+      - providers:
+        - name: envoy
+        disabled: false
+    EOF
+    ```
+
+    The namespace and mesh-wide examples configure defaults at different scopes. A namespace-specific setting takes precedence over the mesh-wide default.
+
+1. Generate application traffic through the waypoint or gateway, then query its container output in the Log Analytics workspace used by Container Insights. Replace `default` with the namespace where the proxy runs. This query includes proxy component logs as well as access logs:
 
     ```kusto
     ContainerLogV2
     | where TimeGenerated > ago(45m)
-    | where PodName contains "gateway"
+    | where PodNamespace == "default"
+    | where ContainerName == "istio-proxy"
+    | project TimeGenerated, PodNamespace, PodName, LogMessage
+    | order by TimeGenerated desc
     | take 10
     ```
 
@@ -130,12 +163,13 @@ To enable control plane logs, you create a diagnostic setting and send logs to t
 1. Once enabled, navigate to the Log Analytics workspace and run the following query:
 
     > [!NOTE]
-    > `$appnet_member_resourceId` should be in the format: `/subscriptions/$subscription/resourceGroups/$appnet_rg/providers/microsoft.applink/applinks/$appnet_name/applinkmembers/$appnet_member_name`.
+    > Replace the placeholders in the `appnetMemberResourceId` variable with your member's values. Log Analytics doesn't expand Bash environment variables. Resource ID filters use the case-insensitive `=~` operator.
 
     ```kusto
+    let appnetMemberResourceId = "/subscriptions/<subscription-id>/resourceGroups/<appnet-resource-group>/providers/Microsoft.AppLink/appLinks/<appnet-name>/appLinkMembers/<appnet-member-name>";
     MeshControlPlane
     | where TimeGenerated > ago(1h)
-    | where _ResourceId == $appnet_member_resourceId // appnet member resourceId
+    | where _ResourceId =~ appnetMemberResourceId
     ```
 
 ## Log tables and schema
@@ -170,23 +204,25 @@ To find the `ContainerLogV2` schema, see [ContainerLogV2 columns](/azure/azure-m
 
 ### Filter logs by AKS cluster resource ID
 
-- Filter logs based on your AKS managed cluster resource ID in the ContainerLogV2 table using the following query:
+- Filter logs based on your AKS managed cluster resource ID in the `ContainerLogV2` table by using the following query. Replace the placeholders in the `aksClusterResourceId` variable with your cluster's values:
 
     ```kusto
+    let aksClusterResourceId = "/subscriptions/<subscription-id>/resourceGroups/<aks-resource-group>/providers/Microsoft.ContainerService/managedClusters/<aks-cluster-name>";
     ContainerLogV2
     | where TimeGenerated > ago(45m)
-    | where _ResourceId == $aks_cluster_resource_id // managed cluster resourceId
+    | where _ResourceId =~ aksClusterResourceId
     ```
 
 ### Filter logs by Azure Kubernetes Application Network member resource ID
 
-- Filter logs based on your Azure Kubernetes Application Network member resource ID in the MeshControlPlane table for control plane logs using the following query:
+- Filter logs based on your Azure Kubernetes Application Network member resource ID in the `MeshControlPlane` table for control plane logs by using the following query. Replace the placeholders in the `appnetMemberResourceId` variable with your member's values:
 
     ```kusto
+    let appnetMemberResourceId = "/subscriptions/<subscription-id>/resourceGroups/<appnet-resource-group>/providers/Microsoft.AppLink/appLinks/<appnet-name>/appLinkMembers/<appnet-member-name>";
     MeshControlPlane
     | where TimeGenerated > ago(45m)
-    | where Level == "ERROR"
-    | where _ResourceId == $appnet_member_resourceId // appnet member resourceId
+    | where Level =~ "ERROR"
+    | where _ResourceId =~ appnetMemberResourceId
     ```
 
     The following screenshot shows an example of the Application Network Istiod errors in Azure Monitor Logs:
@@ -199,3 +235,7 @@ For more information about Azure Kubernetes Application Network observability an
 
 - [Overview of Azure Kubernetes Application Network observability](./observability.md)
 - [Configure and view Azure Kubernetes Application Network metrics](./metrics.md)
+
+<!--- LINKS --->
+[istio-telemetry]: https://istio.io/latest/docs/reference/config/telemetry/
+[appnet-waypoints]: ./traffic-management-use-cases.md#install-waypoint-and-mark-services-as-global
