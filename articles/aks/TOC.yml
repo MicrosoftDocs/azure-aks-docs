@@ -657,6 +657,8 @@
             items:
               - name: Application routing add-on overview
                 href: app-routing.md
+              - name: Use the managed default domain
+                href: app-routing-default-domain.md
               - name: Kubernetes Gateway API with application routing
                 href: app-routing-gateway-api.md
               - name: Secure application routing Gateway API ingress traffic
