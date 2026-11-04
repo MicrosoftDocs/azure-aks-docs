@@ -92,12 +92,11 @@ This advisory applies to AKS node images.
 
 - **Azure Linux:** The fix is in kernel `6.6.159.1-1`, which ships in VHD `202610.23.0`. This image is available in all regions listed in the [Azure Linux release tracker](https://releases.aks.azure.com/AzureLinux). [Upgrade your node images](../upgrade-node-image.md) to apply the fix. Consider the [`SecurityPatch` node OS upgrade channel](../auto-upgrade-node-os-image.md#available-node-os-upgrade-channels) to receive security fixes faster.
 
-- **Ubuntu:** AKS is waiting for official kernel fixes from Ubuntu. A VHD containing the official fixes is tentatively expected after November 15, 2026. An interim fix from Ubuntu's `-proposed` repository is planned for this week's VHD release. Monitor the [Ubuntu node image release tracker](https://releases.aks.azure.com/Ubuntu) for availability.
-
-The interim fix doesn't cover:
-
-- **Ubuntu FIPS node images:** FIPS kernels are included only after Canonical releases the official kernels.
-- **Kata Gen2:** The guest (UVM) kernel remains on version `.52` without the fix until the official release.
+- **Ubuntu:** AKS is waiting for a fix from upstream Ubuntu. A VHD release containing the official fix is tentatively expected after November 15, 2026. This bulletin will be updated when it's available.
+  - An interim fix using Ubuntu's `proposed` repository rolls out in this week's VHD release. This bulletin will be updated as soon as the VHD rollout begins.
+  - **Exceptions:** The interim fix doesn't cover the following:
+    - **Ubuntu FIPS node images:** FIPS kernels won't be available early. They'll be included only after Canonical releases the official kernels.
+    - **Kata Gen2:** The guest (UVM) kernel remains on version `.52` and doesn't include the fix until the official release is available.
 
 ---
 
