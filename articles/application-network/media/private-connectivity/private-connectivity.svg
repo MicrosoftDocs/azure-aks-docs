@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="960" viewBox="0 0 1400 960" role="img" aria-labelledby="title desc">
+  <title id="title">Separate connectivity paths for a private AKS member</title>
+  <desc id="desc">The managed control plane reaches the private AKS Kubernetes API server through the private-connect subnet. Separately, the member data plane resolves and opens an outbound TLS connection on TCP port 443 to its managed control plane FQDN. Application traffic between members uses customer-provided direct pod-IP reachability or east-west gateways according to network names. PrivatePath configures only the first connection.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M0 0 11 5.5 0 11Z" fill="#0876c9"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M0 0 11 5.5 0 11Z" fill="#007c91"/>
+    </marker>
+    <marker id="arrow-amber" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M0 0 11 5.5 0 11Z" fill="#9a5700"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #182a3a; }
+      .eyebrow { font-size: 15px; font-weight: 700; letter-spacing: 1.3px; fill: #526273; }
+      .heading { font-size: 25px; font-weight: 700; }
+      .subheading { font-size: 19px; font-weight: 700; }
+      .body { font-size: 17px; }
+      .small { font-size: 15px; fill: #45596b; }
+      .panel { fill: #f7f9fb; stroke: #b9c7d3; stroke-width: 2; }
+      .managed { fill: #edf6fc; stroke: #0876c9; stroke-width: 2; }
+      .data { fill: #eaf5f5; stroke: #007c91; stroke-width: 2; }
+      .customer { fill: #fff7e8; stroke: #9a5700; stroke-width: 2; }
+      .card { fill: #fff; stroke: #b9c7d3; stroke-width: 1.8; }
+    </style>
+  </defs>
+  <rect width="1400" height="960" fill="#fff"/>
+  <text x="60" y="52" class="eyebrow">PRIVATE AKS CONNECTIVITY</text>
+  <text x="60" y="84" class="heading">Three connections with different jobs</text>
+
+  <rect x="60" y="116" width="1280" height="220" rx="12" class="panel"/>
+  <text x="88" y="154" class="eyebrow">1  CONTROL PLANE TO PRIVATE KUBERNETES API</text>
+  <rect x="92" y="190" width="300" height="98" rx="10" class="managed"/>
+  <text x="242" y="228" class="subheading" text-anchor="middle">Managed control plane</text>
+  <text x="242" y="258" class="small" text-anchor="middle">Istiod discovers services and config</text>
+
+  <rect x="480" y="178" width="330" height="122" rx="10" class="customer"/>
+  <text x="645" y="215" class="subheading" text-anchor="middle">Private-connect subnet in the VNet</text>
+  <text x="645" y="245" class="small" text-anchor="middle">configured with --private-connect-subnet</text>
+  <text x="645" y="273" class="small" text-anchor="middle">service enablement + PrivatePath required</text>
+
+  <rect x="900" y="164" width="400" height="150" rx="10" class="panel"/>
+  <text x="1100" y="199" class="eyebrow" text-anchor="middle">PRIVATE AKS MEMBER</text>
+  <rect x="932" y="215" width="336" height="72" rx="8" class="card"/>
+  <text x="1100" y="246" class="body" text-anchor="middle">Private Kubernetes API server</text>
+  <text x="1100" y="270" class="small" text-anchor="middle">reachable through the configured path</text>
+
+  <path d="M394 238H472" fill="none" stroke="#0876c9" stroke-width="3.5" marker-end="url(#arrow-blue)"/>
+  <path d="M812 238H892" fill="none" stroke="#0876c9" stroke-width="3.5" marker-end="url(#arrow-blue)"/>
+
+  <rect x="60" y="364" width="1280" height="208" rx="12" class="panel"/>
+  <text x="88" y="402" class="eyebrow">2  MEMBER DATA PLANE TO MANAGED CONTROL PLANE</text>
+  <rect x="92" y="434" width="410" height="96" rx="10" class="data"/>
+  <text x="297" y="471" class="subheading" text-anchor="middle">AKS member data plane</text>
+  <text x="297" y="501" class="small" text-anchor="middle">must resolve the assigned MCP hostname</text>
+  <rect x="900" y="434" width="400" height="96" rx="10" class="managed"/>
+  <text x="1100" y="471" class="subheading" text-anchor="middle">Managed control plane FQDN</text>
+  <text x="1100" y="501" class="small" text-anchor="middle">TLS over TCP 443</text>
+  <path d="M504 482H892" fill="none" stroke="#007c91" stroke-width="3.5" marker-end="url(#arrow-teal)"/>
+  <text x="700" y="463" class="small" text-anchor="middle">outbound connection</text>
+
+  <rect x="60" y="600" width="1280" height="250" rx="12" class="panel"/>
+  <text x="88" y="638" class="eyebrow">3  APPLICATION TRAFFIC BETWEEN MEMBERS</text>
+  <rect x="92" y="678" width="300" height="94" rx="10" class="data"/>
+  <text x="242" y="716" class="subheading" text-anchor="middle">Member A workloads</text>
+  <text x="242" y="746" class="small" text-anchor="middle">network name selects the mesh path</text>
+
+  <rect x="492" y="666" width="416" height="118" rx="10" class="customer"/>
+  <text x="700" y="704" class="subheading" text-anchor="middle">Customer-provided reachability</text>
+  <text x="700" y="735" class="small" text-anchor="middle">direct pod IPs for same-name networks</text>
+  <text x="700" y="760" class="small" text-anchor="middle">east-west gateways for different names</text>
+
+  <rect x="1008" y="678" width="292" height="94" rx="10" class="data"/>
+  <text x="1154" y="716" class="subheading" text-anchor="middle">Member B workloads</text>
+  <text x="1154" y="746" class="small" text-anchor="middle">services must participate in the mesh</text>
+
+  <path d="M394 725H484" fill="none" stroke="#9a5700" stroke-width="3.5" marker-end="url(#arrow-amber)"/>
+  <path d="M910 725H1000" fill="none" stroke="#9a5700" stroke-width="3.5" marker-end="url(#arrow-amber)"/>
+
+  <rect x="60" y="876" width="1280" height="58" rx="8" fill="#fff7e8" stroke="#e0c596"/>
+  <text x="700" y="901" class="small" text-anchor="middle">PrivatePath configures the control-plane-to-API-server connection only.</text>
+  <text x="700" y="923" class="small" text-anchor="middle">It doesn't provide MCP egress or application connectivity between member clusters.</text>
+</svg>

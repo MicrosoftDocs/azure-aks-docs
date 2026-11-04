@@ -10,7 +10,7 @@ metadata:
   ms.topic: landing-page
   author: kochhars
   ms.author: kochhars
-  ms.date: 10/30/2026
+  ms.date: 11/03/2026
 # linkListType: architecture | concept | deploy | download | get-started | how-to-guide | learn | overview | quickstart | reference | sample | tutorial | video | whats-new
 
 landingContent:
@@ -39,6 +39,20 @@ landingContent:
             url: private-connectivity.md
           - text: Explore traffic management use cases
             url: traffic-management-use-cases.md
+
+  # Card (optional)
+  - title: Watch, then try
+    linkLists:
+      - linkListType: video
+        links:
+          - text: Understand Application Network (AKS Me Anything)
+            url: https://www.youtube.com/watch?v=Rg21m1YTdBA
+          - text: See Application Network in action
+            url: https://aka.ms/aks/appnetdemo
+      - linkListType: quickstart
+        links:
+          - text: Try Application Network
+            url: get-started.md
 
   # Card (optional)
   - title: Versions and upgrades
