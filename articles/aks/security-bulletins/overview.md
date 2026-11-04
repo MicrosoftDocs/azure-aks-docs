@@ -1,7 +1,7 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 10/21/2026
+ms.date: 11/03/2026
 author: bcho
 ms.author: bahe
 ms.topic: concept-article
@@ -23,6 +23,41 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
 - Azure Kubernetes Service add-ons (AKS add-ons)
+
+---
+
+## AKS-2026-0008 AKS advisory for CVE-2026-111497
+
+**Published date**: November 3, 2026
+
+### Description
+
+CVE-2026-111497 affects the Brotli decoder. Applications that decompress malicious Brotli data can expose memory, crash, or allow remote code execution.
+
+### Affected components
+
+- **AKS node OS:** Node components don't decompress untrusted Brotli data, so the installed library isn't exposed through this path.
+- **AKS-managed Istio:** The add-on uses an unaffected Envoy version. No action is needed for this CVE.
+- **Customer-managed workloads:** Applications, runtimes, and proxies might be affected if they use a vulnerable Brotli decoder.
+
+### Resolutions
+
+Rebuild affected container images with patched libraries and runtimes. Update affected customer-managed proxies. Redeploy the updated workloads. Updating the node OS doesn't fix packages inside containers.
+
+Node OS update availability:
+
+| Update | Version | Availability |
+| --- | --- | --- |
+| Azure Linux 3.0 node image (VHD) | `202610.23.0` | Includes the fix. Available in all regions listed in the [Azure Linux release tracker](https://releases.aks.azure.com/AzureLinux). |
+| Ubuntu 22.04/24.04 node image (VHD) | `202610.30.0` (planned) | Not yet available. Monitor the [Ubuntu node image release tracker](https://releases.aks.azure.com/Ubuntu) for regional availability. |
+| Ubuntu [`SecurityPatch` channel](../auto-upgrade-node-os-image.md#available-node-os-upgrade-channels) | `20261028T000000Z` | Rolling out. AKS expects availability in all regions by November 12, 2026. Track the [Ubuntu security patch rollout](https://releases.aks.azure.com/UbuntuSecurityPatch). |
+
+Enable the [`SecurityPatch` node OS upgrade channel](../auto-upgrade-node-os-image.md#set-the-node-os-autoupgrade-channel-on-an-existing-cluster) to receive Ubuntu security patches. Use `NodeImage` or [upgrade node images manually](../upgrade-node-image.md) to apply a VHD when available in your region.
+
+### References
+
+- [Brotli vulnerability and Ubuntu fixes](https://ubuntu.com/security/CVE-2026-111497).
+- [Upstream Istio advisory](https://istio.io/latest/news/security/istio-security-2026-007/).
 
 ---
 
