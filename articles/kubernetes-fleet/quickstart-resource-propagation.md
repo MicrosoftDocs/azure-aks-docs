@@ -396,6 +396,8 @@ On the selected Kubernetes clusters, you find the namespace, Deployment, and Ser
 
 When you delete the resource placement on the Fleet Manager hub cluster, you remove the distributed resources from selected member clusters.
 
+To remove distributed resources without deleting the placement, use `PickFixed` with an empty `clusterNames` array. For more information, see [PickFixed placement type](./concepts-resource-placement.md#pickfixed-placement-type).
+
 :::zone target="docs" pivot="azure-cli"
 
 ```bash
