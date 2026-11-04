@@ -5,7 +5,7 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: how-to
-ms.date: 11/04/2025
+ms.date: 10/30/2026
 ---
 
 # Configure and view Azure Kubernetes Application Network metrics (preview)
@@ -20,7 +20,9 @@ Control plane metrics aren't currently supported. However, data plane metrics ar
 
 ## Data plane metrics
 
-Data plane metrics include metrics from your workloads/applications and the `appnet-system` namespace. Azure Kubernetes Application Network currently only provides support for **data plane metrics**.
+Data plane metrics include metrics from your workloads/applications and the `applink-system` namespace. Azure Kubernetes Application Network currently only provides support for **data plane metrics**.
+
+To collect request and response metrics, route application traffic through a waypoint. Enrolling workloads in ambient mode alone doesn't produce L7 metrics for traffic that only passes through ztunnel.
 
 ## Configure data plane metrics
 

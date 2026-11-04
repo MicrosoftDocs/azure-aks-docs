@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">Azure Kubernetes Application Network architecture</title>
+  <desc id="desc">The Azure management plane provisions a managed control plane outside the member AKS cluster. The control plane connects to the Kubernetes API server. The cluster contains the ambient data plane, including ztunnel, Istio CNI, optional waypoints, and an east-west gateway. The data plane initiates its control connection to the managed control plane.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#0876c9"/>
+    </marker>
+    <marker id="arrow-teal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#007c91"/>
+    </marker>
+    <marker id="arrow-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#9a5700"/>
+    </marker>
+    <marker id="arrow-teal-start" markerWidth="10" markerHeight="10" refX="2" refY="5" orient="auto">
+      <path d="M10 0 0 5 10 10Z" fill="#007c91"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #182a3a; }
+      .eyebrow { font-size: 15px; font-weight: 700; letter-spacing: 1.4px; fill: #526273; }
+      .heading { font-size: 25px; font-weight: 700; }
+      .subheading { font-size: 18px; font-weight: 700; }
+      .body { font-size: 17px; }
+      .small { font-size: 15px; fill: #45596b; }
+      .panel { fill: #f7f9fb; stroke: #b9c7d3; stroke-width: 2; }
+      .managed { fill: #edf6fc; stroke: #0876c9; stroke-width: 2; }
+      .data { fill: #eaf5f5; stroke: #007c91; stroke-width: 2; }
+      .customer { fill: #fff7e8; stroke: #9a5700; stroke-width: 2; }
+      .card { fill: #fff; stroke: #b9c7d3; stroke-width: 1.8; }
+      .control-line { fill: none; stroke: #007c91; stroke-width: 3; stroke-dasharray: 8 7; }
+      .api-line { fill: none; stroke: #0876c9; stroke-width: 3; }
+      .gateway-line { fill: none; stroke: #9a5700; stroke-width: 3; }
+    </style>
+  </defs>
+  <rect width="1400" height="900" fill="#fff"/>
+  <text x="60" y="52" class="eyebrow">APPLICATION NETWORK ARCHITECTURE</text>
+  <text x="60" y="84" class="heading">Management, control, and application traffic</text>
+
+  <rect x="60" y="112" width="390" height="220" rx="12" class="managed"/>
+  <text x="86" y="151" class="eyebrow" fill="#075a96">MANAGEMENT PLANE</text>
+  <text x="86" y="184" class="subheading">Azure resource operations</text>
+  <rect x="88" y="211" width="132" height="74" rx="8" class="card"/>
+  <text x="154" y="242" class="body" text-anchor="middle">Azure CLI</text>
+  <text x="154" y="266" class="small" text-anchor="middle">or ARM API</text>
+  <path d="M222 248H263" class="api-line" marker-end="url(#arrow-blue)"/>
+  <rect x="270" y="211" width="151" height="74" rx="8" class="card"/>
+  <text x="345" y="242" class="body" text-anchor="middle">AppNet</text>
+  <text x="345" y="266" class="small" text-anchor="middle">resource provider</text>
+
+  <rect x="500" y="112" width="840" height="220" rx="12" class="managed"/>
+  <text x="528" y="151" class="eyebrow" fill="#075a96">APPNET-MANAGED CONTROL PLANE</text>
+  <text x="528" y="184" class="subheading">Runs outside the member AKS cluster</text>
+  <rect x="530" y="211" width="222" height="79" rx="8" class="card"/>
+  <text x="641" y="243" class="body" text-anchor="middle">Istiod</text>
+  <text x="641" y="268" class="small" text-anchor="middle">service discovery and config</text>
+  <rect x="772" y="211" width="244" height="79" rx="8" class="card"/>
+  <text x="894" y="243" class="body" text-anchor="middle">Certificate management</text>
+  <text x="894" y="268" class="small" text-anchor="middle">trust and workload identity</text>
+  <rect x="1036" y="211" width="273" height="79" rx="8" class="card"/>
+  <text x="1172" y="243" class="body" text-anchor="middle">Azure Key Vault</text>
+  <text x="1172" y="268" class="small" text-anchor="middle">certificate backing service</text>
+  <path d="M450 247H492" class="api-line" marker-end="url(#arrow-blue)"/>
+  <text x="472" y="229" class="small" text-anchor="middle">provisions</text>
+
+  <rect x="60" y="395" width="1280" height="450" rx="14" class="panel"/>
+  <text x="88" y="434" class="eyebrow">MEMBER AKS CLUSTER</text>
+  <text x="88" y="464" class="small">AppNet manages mesh components. You manage the cluster and provide network reachability.</text>
+
+  <rect x="92" y="506" width="255" height="98" rx="9" class="card"/>
+  <text x="219" y="542" class="subheading" text-anchor="middle">Kubernetes API server</text>
+  <text x="219" y="570" class="small" text-anchor="middle">service and config discovery</text>
+
+  <rect x="92" y="652" width="350" height="145" rx="9" class="card"/>
+  <text x="267" y="685" class="eyebrow" text-anchor="middle">AMBIENT-ENROLLED NAMESPACE</text>
+  <rect x="112" y="706" width="145" height="65" rx="8" class="data"/>
+  <text x="184" y="746" class="body" text-anchor="middle">Workload A</text>
+  <rect x="276" y="706" width="145" height="65" rx="8" class="data"/>
+  <text x="348" y="746" class="body" text-anchor="middle">Workload B</text>
+
+  <rect x="505" y="506" width="376" height="291" rx="10" class="data"/>
+  <text x="531" y="545" class="eyebrow" fill="#006275">AMBIENT DATA PLANE</text>
+  <rect x="532" y="568" width="322" height="82" rx="8" class="card"/>
+  <text x="693" y="602" class="subheading" text-anchor="middle">Ztunnel</text>
+  <text x="693" y="628" class="small" text-anchor="middle">node-level L4 proxy</text>
+  <rect x="532" y="672" width="146" height="86" rx="8" class="card"/>
+  <text x="605" y="708" class="body" text-anchor="middle">Istio CNI</text>
+  <text x="605" y="734" class="small" text-anchor="middle">pod setup</text>
+  <rect x="695" y="672" width="159" height="86" rx="8" class="card"/>
+  <text x="774" y="708" class="body" text-anchor="middle">Waypoint</text>
+  <text x="774" y="734" class="small" text-anchor="middle">optional L7 proxy</text>
+
+  <rect x="945" y="506" width="344" height="123" rx="10" class="customer"/>
+  <text x="1117" y="546" class="eyebrow" fill="#784500" text-anchor="middle">CROSS-CLUSTER PATH</text>
+  <text x="1117" y="579" class="subheading" text-anchor="middle">East-west gateway</text>
+  <text x="1117" y="607" class="small" text-anchor="middle">used for different network names</text>
+  <rect x="945" y="673" width="344" height="86" rx="9" class="card"/>
+  <text x="1117" y="710" class="body" text-anchor="middle">Other member clusters</text>
+  <text x="1117" y="737" class="small" text-anchor="middle">their own data planes and gateways</text>
+
+  <path d="M641 290C580 382 405 415 347 520" class="api-line" marker-end="url(#arrow-blue)"/>
+  <rect x="388" y="402" width="172" height="50" rx="7" fill="#fff" stroke="#b9c7d3"/>
+  <text x="474" y="423" class="small" text-anchor="middle">Kubernetes API</text>
+  <text x="474" y="443" class="small" text-anchor="middle">discovery and config</text>
+
+  <path d="M693 568V290" class="control-line" marker-start="url(#arrow-teal-start)" marker-end="url(#arrow-teal)"/>
+  <rect x="734" y="390" width="236" height="58" rx="7" fill="#fff" stroke="#b9c7d3"/>
+  <text x="852" y="413" class="small" text-anchor="middle">Data plane initiates TLS/TCP 443</text>
+  <text x="852" y="435" class="small" text-anchor="middle">xDS configuration stream</text>
+
+  <path d="M442 724C473 724 480 610 530 610" fill="none" stroke="#007c91" stroke-width="3" marker-end="url(#arrow-teal)"/>
+  <path d="M1117 629V665" class="gateway-line" marker-start="url(#arrow-amber)" marker-end="url(#arrow-amber)"/>
+  <text x="1140" y="654" class="small">gateway traffic</text>
+
+  <line x1="62" y1="873" x2="95" y2="873" class="api-line" marker-end="url(#arrow-blue)"/>
+  <text x="106" y="879" class="small">Management or Kubernetes API</text>
+  <line x1="372" y1="873" x2="405" y2="873" class="control-line" marker-end="url(#arrow-teal)"/>
+  <text x="416" y="879" class="small">Control channel (TLS/443)</text>
+  <line x1="665" y1="873" x2="698" y2="873" fill="none" stroke="#007c91" stroke-width="3" marker-end="url(#arrow-teal)"/>
+  <text x="709" y="879" class="small">In-cluster application traffic</text>
+  <line x1="1005" y1="873" x2="1038" y2="873" class="gateway-line" marker-end="url(#arrow-amber)"/>
+  <text x="1049" y="879" class="small">Cross-cluster gateway path</text>
+</svg>

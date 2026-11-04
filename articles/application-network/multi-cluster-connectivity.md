@@ -5,7 +5,7 @@ author: jack4it
 ms.author: mjac
 ms.service: azure-kubernetes-app-net
 ms.topic: how-to
-ms.date: 10/30/2026
+ms.date: 11/03/2026
 ai-usage: ai-generated
 ---
 
@@ -46,6 +46,10 @@ Application Network uses each member's network identity to distinguish these tra
 | --- | --- | --- | --- |
 | Different networks | Different names, or the distinct defaults assigned when names are omitted | Each member's data plane can reach the other members' east-west gateways | Through east-west gateways |
 | Same network | The same explicitly configured name | Direct, bidirectional reachability between non-overlapping pod IP addresses | Directly between workloads through the ambient data plane, without an east-west gateway on the path |
+
+The following example shows both paths to the same workload. Members A and B share a network name and have non-overlapping pod ranges. Member C uses a different name and has a pod range that overlaps B's:
+
+:::image type="content" source="./media/multi-cluster-connectivity/network-topology.svg" alt-text="Diagram showing member A reaching a workload in member B directly because they share a network name, while member C reaches the same workload through B's east-west gateway because C has a different network name and an overlapping pod range." lightbox="./media/multi-cluster-connectivity/network-topology.svg":::
 
 When you join a member without specifying `--network-name`, Application Network uses a distinct default network identity for that member. Assign the same name only when the clusters actually share direct pod-IP reachability. Being in the same VNet or having peered node subnets isn't sufficient by itself.
 

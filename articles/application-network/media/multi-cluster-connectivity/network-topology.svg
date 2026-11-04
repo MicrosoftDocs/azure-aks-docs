@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1460" height="940" viewBox="0 0 1460 940" role="img" aria-labelledby="title desc">
+  <title id="title">Direct and east-west gateway paths between AppNet members</title>
+  <desc id="desc">Members A and B share the network name corp-routable and have non-overlapping pod ranges, so A can reach the workload in B directly when pod IP reachability works in both directions. Member C has a different network name and a pod range that overlaps B, so its example path to the same B workload uses B's east-west gateway. Network names do not create the required routes or gateway reachability.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M0 0 11 5.5 0 11Z" fill="#0876c9"/>
+    </marker>
+    <marker id="arrow-blue-start" markerWidth="11" markerHeight="11" refX="2" refY="5.5" orient="auto">
+      <path d="M11 0 0 5.5 11 11Z" fill="#0876c9"/>
+    </marker>
+    <marker id="arrow-amber" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto">
+      <path d="M0 0 11 5.5 0 11Z" fill="#9a5700"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #182a3a; }
+      .eyebrow { font-size: 15px; font-weight: 700; letter-spacing: 1.3px; fill: #526273; }
+      .heading { font-size: 25px; font-weight: 700; }
+      .subheading { font-size: 20px; font-weight: 700; }
+      .body { font-size: 17px; }
+      .small { font-size: 15px; fill: #45596b; }
+      .cluster { fill: #f7f9fb; stroke: #aebdca; stroke-width: 2; }
+      .workload { fill: #fff; stroke: #b9c7d3; stroke-width: 1.8; }
+      .direct { fill: none; stroke: #0876c9; stroke-width: 4; }
+      .gateway { fill: none; stroke: #9a5700; stroke-width: 4; }
+      .label { fill: #fff; stroke: #d3dde5; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect width="1460" height="940" fill="#fff"/>
+  <text x="60" y="52" class="eyebrow">MULTI-CLUSTER TOPOLOGY</text>
+  <text x="60" y="84" class="heading">Network names select the cross-cluster path</text>
+  <rect x="60" y="106" width="1340" height="62" rx="9" fill="#eef3f7"/>
+  <text x="84" y="133" class="body">Same name + non-overlapping pod ranges: direct pod-IP path.</text>
+  <text x="84" y="155" class="body">Different names: east-west gateway path. Overlapping pod ranges are supported on this path.</text>
+
+  <rect x="60" y="210" width="410" height="250" rx="12" class="cluster"/>
+  <text x="88" y="249" class="eyebrow">MEMBER A</text>
+  <text x="88" y="283" class="subheading">corp-routable</text>
+  <text x="88" y="310" class="small">Pod range: 10.10.0.0/16</text>
+  <rect x="98" y="342" width="330" height="78" rx="9" class="workload"/>
+  <text x="263" y="375" class="body" text-anchor="middle">Source workload</text>
+  <text x="263" y="400" class="small" text-anchor="middle">example pod: 10.10.1.12</text>
+
+  <rect x="60" y="620" width="410" height="250" rx="12" class="cluster"/>
+  <text x="88" y="659" class="eyebrow">MEMBER C</text>
+  <text x="88" y="693" class="subheading">isolated-c</text>
+  <text x="88" y="720" class="small">Pod range: 10.20.0.0/16</text>
+  <rect x="98" y="752" width="330" height="78" rx="9" class="workload"/>
+  <text x="263" y="785" class="body" text-anchor="middle">Source workload</text>
+  <text x="263" y="810" class="small" text-anchor="middle">example pod: 10.20.1.12</text>
+
+  <rect x="980" y="210" width="420" height="660" rx="12" class="cluster"/>
+  <text x="1010" y="249" class="eyebrow">MEMBER B</text>
+  <text x="1010" y="283" class="subheading">corp-routable</text>
+  <text x="1010" y="310" class="small">Pod range: 10.20.0.0/16</text>
+  <rect x="1030" y="398" width="320" height="92" rx="10" fill="#fff7e8" stroke="#9a5700" stroke-width="2"/>
+  <text x="1190" y="434" class="subheading" text-anchor="middle">East-west gateway</text>
+  <text x="1190" y="463" class="small" text-anchor="middle">reachable from member C</text>
+  <rect x="1030" y="666" width="320" height="102" rx="10" class="workload"/>
+  <text x="1190" y="705" class="subheading" text-anchor="middle">Destination workload</text>
+  <text x="1190" y="734" class="small" text-anchor="middle">example pod: 10.20.0.20</text>
+  <text x="1190" y="756" class="small" text-anchor="middle">same service for both paths</text>
+
+  <path d="M430 381C620 400 800 520 930 600C980 630 1010 680 1025 718" class="direct" marker-start="url(#arrow-blue-start)" marker-end="url(#arrow-blue)"/>
+  <rect x="520" y="220" width="360" height="86" rx="9" class="label"/>
+  <text x="700" y="251" class="subheading" text-anchor="middle" fill="#075a96">Direct pod-IP path</text>
+  <text x="700" y="278" class="small" text-anchor="middle">Same name; pod IPs must be reachable both ways</text>
+
+  <path d="M430 792C620 792 800 792 930 730C1010 690 1010 520 1025 446" class="gateway" marker-end="url(#arrow-amber)"/>
+  <path d="M1190 492V660" class="gateway" marker-end="url(#arrow-amber)"/>
+  <rect x="520" y="620" width="360" height="86" rx="9" class="label"/>
+  <text x="700" y="651" class="subheading" text-anchor="middle" fill="#784500">East-west gateway path</text>
+  <text x="700" y="678" class="small" text-anchor="middle">Different names; C's pod range overlaps B's</text>
+
+  <text x="700" y="908" class="small" text-anchor="middle">Network names don't create VNet routes, pod-IP reachability, or gateway connectivity. Plan the underlay separately.</text>
+</svg>

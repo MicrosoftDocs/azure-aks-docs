@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760" role="img" aria-labelledby="title desc">
+  <title id="title">Application Network certificate hierarchy</title>
+  <desc id="desc">A unique, Key Vault-backed root CA for an Application Network signs a separate intermediate CA for each member. Each member intermediate CA issues short-lived workload certificates that carry namespace and service account identities.</desc>
+  <defs>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#6652a3"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; fill: #182a3a; }
+      .eyebrow { font-size: 15px; font-weight: 700; letter-spacing: 1.3px; fill: #526273; }
+      .heading { font-size: 25px; font-weight: 700; }
+      .subheading { font-size: 20px; font-weight: 700; }
+      .body { font-size: 17px; }
+      .small { font-size: 15px; fill: #45596b; }
+      .trust { fill: #f2effa; stroke: #6652a3; stroke-width: 2.2; }
+      .member { fill: #f7f9fb; stroke: #b9c7d3; stroke-width: 2; }
+      .certificate { fill: #fff; stroke: #a99ccb; stroke-width: 1.8; }
+    </style>
+  </defs>
+  <rect width="1280" height="760" fill="#fff"/>
+  <text x="64" y="52" class="eyebrow">CERTIFICATE TRUST</text>
+  <text x="64" y="84" class="heading">One root CA, a separate intermediate for each member</text>
+
+  <rect x="390" y="112" width="500" height="132" rx="12" class="trust"/>
+  <text x="640" y="153" class="eyebrow" text-anchor="middle">APPLICATION NETWORK</text>
+  <text x="640" y="185" class="subheading" text-anchor="middle">Root CA</text>
+  <text x="640" y="215" class="small" text-anchor="middle">Unique to this AppNet, backed by Azure Key Vault</text>
+
+  <path d="M540 244C475 290 360 295 320 348" fill="none" stroke="#6652a3" stroke-width="3" marker-end="url(#arrow-purple)"/>
+  <path d="M740 244C805 290 920 295 960 348" fill="none" stroke="#6652a3" stroke-width="3" marker-end="url(#arrow-purple)"/>
+  <text x="410" y="298" class="small" text-anchor="middle">signs</text>
+  <text x="870" y="298" class="small" text-anchor="middle">signs</text>
+
+  <rect x="64" y="350" width="544" height="324" rx="12" class="member"/>
+  <text x="92" y="389" class="eyebrow">APPNET MEMBER A</text>
+  <rect x="92" y="411" width="488" height="84" rx="9" class="trust"/>
+  <text x="336" y="446" class="subheading" text-anchor="middle">Member A intermediate CA</text>
+  <text x="336" y="474" class="small" text-anchor="middle">Issues certificates for workloads in this member</text>
+  <path d="M336 495V535" fill="none" stroke="#6652a3" stroke-width="3" marker-end="url(#arrow-purple)"/>
+  <rect x="92" y="544" width="488" height="96" rx="9" class="certificate"/>
+  <text x="116" y="578" class="body">Workload certificate</text>
+  <text x="116" y="605" class="small">SPIFFE identity includes namespace and service account</text>
+
+  <rect x="672" y="350" width="544" height="324" rx="12" class="member"/>
+  <text x="700" y="389" class="eyebrow">APPNET MEMBER B</text>
+  <rect x="700" y="411" width="488" height="84" rx="9" class="trust"/>
+  <text x="944" y="446" class="subheading" text-anchor="middle">Member B intermediate CA</text>
+  <text x="944" y="474" class="small" text-anchor="middle">Issues certificates for workloads in this member</text>
+  <path d="M944 495V535" fill="none" stroke="#6652a3" stroke-width="3" marker-end="url(#arrow-purple)"/>
+  <rect x="700" y="544" width="488" height="96" rx="9" class="certificate"/>
+  <text x="724" y="578" class="body">Workload certificate</text>
+  <text x="724" y="605" class="small">SPIFFE identity includes namespace and service account</text>
+
+  <rect x="64" y="696" width="1152" height="40" rx="8" fill="#f2effa"/>
+  <text x="640" y="722" class="small" text-anchor="middle">Workload certificates are short-lived and rotated automatically. See the table for validity and rotation periods.</text>
+</svg>
