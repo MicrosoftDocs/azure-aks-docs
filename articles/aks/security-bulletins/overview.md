@@ -26,6 +26,45 @@ These updates cover security information related to the following AKS components
 
 ---
 
+## AKS-2026-0007 AKS advisory and mitigation guide for CVE-2026-99999 and CVE-2026-98432
+
+**Published date**: November 2, 2026
+
+### Description
+
+This bulletin covers two vulnerabilities in the Linux kernel's IPv4 networking subsystem that affect AKS Linux nodes.
+
+CVE-2026-98432 is a use-after-free vulnerability in the code that sets up incoming IPv4 TCP connections. This vulnerability can let an unauthenticated remote attacker run commands as root on Linux servers with a multipath TCP (MPTCP) listener.
+
+CVE-2026-99999 lets a local attacker or untrusted guest virtual machine send packets with malformed checksum metadata. This vulnerability can allow arbitrary code execution on the host, a denial-of-service crash, or disclosure of sensitive memory.
+
+### References
+
+- [CVE-2026-99999](https://ubuntu.com/security/CVE-2026-99999).
+- [CVE-2026-98432](https://ubuntu.com/security/CVE-2026-98432).
+
+### Affected components
+
+This advisory applies to AKS node images.
+
+**Affected versions**
+
+- Azure Linux: node images earlier than VHD `202610.23.0`.
+- Ubuntu: all currently supported Ubuntu node images.
+
+**Resolutions**
+
+**Azure Linux:** The fix is in kernel `6.6.159.1-1`, which ships in VHD `202610.23.0`. This image is available in all regions listed in the [Azure Linux release tracker](https://releases.aks.azure.com/AzureLinux). [Upgrade your node images](../upgrade-node-image.md) to apply the fix. Consider the [`SecurityPatch` node OS upgrade channel](../auto-upgrade-node-os-image.md#available-node-os-upgrade-channels) to receive security fixes faster.
+
+**Ubuntu:** AKS is waiting for official kernel fixes from Ubuntu. A VHD containing the official fixes is tentatively expected after November 15, 2026. An interim fix from Ubuntu's `-proposed` repository is planned for this week's VHD release. Monitor the [Ubuntu node image release tracker](https://releases.aks.azure.com/Ubuntu) for availability.
+
+The interim fix doesn't cover:
+
+- **Ubuntu FIPS node images:** FIPS kernels are included only after Canonical releases the official kernels.
+- **Kata Gen2:** The guest (UVM) kernel remains on version `.52` without the fix until the official release.
+
+---
+
 ## AKS-2026-0008 AKS advisory for CVE-2026-111497
 
 **Published date**: November 3, 2026
