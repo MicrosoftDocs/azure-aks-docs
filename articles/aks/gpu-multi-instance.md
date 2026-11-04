@@ -16,7 +16,7 @@ Certain NVIDIA GPUs can be divided in up to seven independent instances. Each in
 This article walks you through how to create a multi-instance GPU node pool using a MIG-compatible VM size in an Azure Kubernetes Service (AKS) cluster.
 
 > [!TIP]
-> For a fully managed MIG experience where AKS installs and maintains the NVIDIA driver, device plugin, and DCGM metrics exporter, see [Create a managed Multi-Instance GPU (MIG) node pool (preview)](./aks-managed-gpu-nodes.md#create-a-managed-multi-instance-gpu-mig-node-pool-preview).
+> For a fully managed MIG experience where AKS installs and maintains the NVIDIA driver, device plugin, and DCGM metrics exporter, see [Create a managed Multi-Instance GPU (MIG) node pool](./aks-managed-gpu-nodes.md#create-a-managed-multi-instance-gpu-mig-node-pool).
 
 ## Prerequisites and limitations
 
@@ -270,7 +270,7 @@ If you don't see multi-instance GPU capability after creating the node pool, con
 
 To learn more about GPUs on Azure Kubernetes Service, see:
 
-* [AKS-managed GPU node pools (preview)](./aks-managed-gpu-nodes.md) for a fully managed MIG experience with driver, device plugin, and DCGM metrics exporter included.
+* [AKS-managed GPU node pools](./aks-managed-gpu-nodes.md) for a fully managed MIG experience with driver, device plugin, and DCGM metrics exporter included.
 * [Compare different NVIDIA GPU partitioning strategies](./concepts-gpu-partitioning.md) available on your AKS nodes.
 * [Learn about use cases for GPU workloads on AKS](/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks).
 

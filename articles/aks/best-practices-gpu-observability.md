@@ -3,7 +3,7 @@ title: GPU observability best practices for Azure Kubernetes Service (AKS)
 description: This article provides insights into monitoring correlated GPU metrics to help improve long term GPU node utilization and performance on AKS.
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
-ms.date: 5/1/2026
+ms.date: 10/14/2026
 author: sachidesai
 ms.author: sachidesai
 ai-usage: ai-assisted
@@ -13,8 +13,6 @@ ai-usage: ai-assisted
 # GPU observability best practices for Azure Kubernetes Service (AKS)
 
 This article provides best practices for monitoring and interpreting GPU signals on Azure Kubernetes Service (AKS). Instead of looking at NVIDIA GPU metrics in isolation, you correlate signals across utilization, memory, and workload context to improve long-term performance and node efficiency.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Understand GPU utilization versus saturation
 
