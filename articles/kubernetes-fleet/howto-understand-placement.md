@@ -1086,7 +1086,7 @@ status:
 Here's a comprehensive example showing the complete status of a ResourcePlacement:
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ResourcePlacement
 metadata:
   name: web-app-placement

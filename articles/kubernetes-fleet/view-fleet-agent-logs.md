@@ -173,7 +173,7 @@ AzureDiagnostics
 AzureDiagnostics
 | where _ResourceId == YOUR-RESOURCE-ID
 | where Category == "fleet-hub-agent"
-| where log_s contains "v1beta1/member_controller.go"
+| where log_s contains "v1/member_controller.go"
 | order by TimeGenerated desc
 | take 1000
 ```
@@ -251,7 +251,7 @@ AzureDiagnostics
 AzureDiagnostics
 | where _ResourceId == YOUR-RESOURCE-ID
 | where Category == "fleet-member-agent"
-| where log_s contains "v1beta1/member_controller.go"
+| where log_s contains "v1/member_controller.go"
 | order by TimeGenerated desc
 | take 1000
 ```
