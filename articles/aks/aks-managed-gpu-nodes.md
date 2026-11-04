@@ -182,9 +182,14 @@ To use Azure Linux, you specify the OS SKU by setting `--os-sku` to `AzureLinux`
 
 ### [Node auto-provisioning node pool](#tab/nap-managed-node)
 
-To use managed GPU nodes with node auto-provisioning (NAP), add the `EnableManagedGPUExperience: "true"` tag to your `AKSNodeClass` custom resource definition (CRD). Then create a `NodePool` that selects NVIDIA GPU-enabled VM sizes. This configuration applies to AKS Automatic clusters, where NAP is enabled by default, and to AKS Standard clusters with NAP enabled.
+To use managed GPU nodes with node auto-provisioning (NAP), configure `spec.gpu` on an `AKSNodeClass` resource, then create a `NodePool` that references it and selects Linux NVIDIA GPU-enabled VM sizes. This configuration applies to AKS Automatic clusters, where NAP is enabled by default, and to AKS Standard clusters with NAP enabled.
 
-To learn more about configurable Azure-specific settings, see [Configure AKSNodeClass resources for NAP](./node-auto-provisioning-aksnodeclass.md).
+> [!IMPORTANT]
+> Managed GPU with NAP requires the AKS Machine API provision mode.
+
+Set `spec.gpu.mode` to `Driver` and `spec.gpu.nvidia.managementMode` to `Managed` to have AKS install and maintain the GPU driver, device plugin, and DCGM metrics exporter. The default NVIDIA management mode is `Unmanaged`. Don't set `mode` to `None` for managed GPU nodes, because it skips driver installation.
+
+For more information, see [GPU settings in AKSNodeClass](./node-auto-provisioning-aksnodeclass.md#gpu-settings).
 
 1. Create an `AKSNodeClass` CRD and set `mode: Driver` and `nvidia.managementMode: Managed` in the `spec.gpu` field.
 
@@ -193,11 +198,11 @@ To learn more about configurable Azure-specific settings, see [Configure AKSNode
    kind: AKSNodeClass
    metadata:
      name: managed-gpu-class
-  spec:
-    gpu:
-      mode: Driver
-      nvidia:
-        managementMode: Managed
+   spec:
+     gpu:
+       mode: Driver
+       nvidia:
+         managementMode: Managed
    ```
 
 1. Create a `NodePool` CRD that allows NAP to deploy NVIDIA GPU SKUs.
