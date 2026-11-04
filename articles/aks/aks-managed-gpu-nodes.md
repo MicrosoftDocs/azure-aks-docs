@@ -4,7 +4,7 @@ description: Learn how to provision a fully managed GPU node pool on your new or
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 07/02/2026
+ms.date: 11/02/2026
 author: sdesai345
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
@@ -12,11 +12,11 @@ ai-usage: ai-assisted
 # Customer intent: As a cluster administrator or developer, I want to provision an Azure Kubernetes Service (AKS) cluster with GPU-enabled node pools, without deploying or managing the fundamental GPU software and observability components myself.
 ---
 
-# Create a fully managed GPU node pool on Azure Kubernetes Service (AKS) (preview)
+# Create a fully managed GPU node pool on Azure Kubernetes Service (AKS)
 
 Running NVIDIA GPU workloads on Azure Kubernetes Service (AKS) traditionally requires you to install and maintain the NVIDIA GPU driver, Kubernetes device plugin, and a GPU metrics exporter on each GPU node. These components enable GPU scheduling, container-level GPU access, and telemetry, but installing them manually or through the [NVIDIA GPU Operator](./nvidia-gpu-operator.md) adds operational overhead.
 
-By using fully managed GPU nodes (preview), AKS installs and maintains the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) for you. GPU node pool creation becomes a single step, and GPU capacity behaves like any other AKS node pool. You can use managed GPU nodes with manually created GPU node pools and with node auto-provisioning (NAP), including AKS Automatic clusters.
+By using fully managed GPU nodes, AKS installs and maintains the NVIDIA GPU driver, device plugin, and Data Center GPU Manager [(DCGM) metrics exporter](https://github.com/NVIDIA/dcgm-exporter/tree/main) for you. GPU node pool creation becomes a single step, and GPU capacity behaves like any other AKS node pool. You can use managed GPU nodes with manually created GPU node pools and with node auto-provisioning (NAP), including AKS Automatic clusters.
 
 You configure a managed GPU node pool through two fields under `gpuProfile.nvidia`:
 
@@ -25,13 +25,10 @@ You configure a managed GPU node pool through two fields under `gpuProfile.nvidi
 
 In this article, you provision a managed GPU node pool, optionally enable MIG, verify the stack, and run a sample GPU workload.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
 ## Before you begin
 
 - This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 - You need the Azure CLI version 2.85.0 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-- You need to [install and upgrade to latest version of the `aks-preview` extension](#install-the-aks-preview-cli-extension). Version 19.0.0b29 or later is required.
 - Get the credentials for your AKS cluster with [`az aks get-credentials`][az-aks-get-credentials] before running the `kubectl` examples in this article.
 
 ## Managed GPU components
@@ -66,18 +63,6 @@ Together, they produce three install profiles:
 - **Override**: `managementMode: Managed` requires the driver, so `--gpu-driver None` is ignored when `--enable-managed-gpu=true` and the driver is still installed. To skip the driver, set both `--enable-managed-gpu=false` and `--gpu-driver None`.
 - **Immutability**: `managementMode`, `migStrategy`, and `driver` are all fixed at creation time. To change profile, create a new node pool.
 
-### Install the `aks-preview` CLI extension
-
-[!INCLUDE [aks-preview-cli-extension](includes/aks-preview-cli-extension.md)]
-
-### Register the `ManagedGPUExperiencePreview` feature flag
-
-Register the `ManagedGPUExperiencePreview` feature flag in your subscription using the [`az feature register`][az-feature-register] command.
-
-```azurecli-interactive
-az feature register --namespace Microsoft.ContainerService --name ManagedGPUExperiencePreview
-```
-
 ## Limitations
 
 - This feature currently supports [NVIDIA GPU-enabled virtual machine (VM) sizes](/azure/virtual-machines/sizes-gpu) only.
@@ -90,7 +75,7 @@ az feature register --namespace Microsoft.ContainerService --name ManagedGPUExpe
 > [!NOTE]
 > GPU-enabled VMs contain specialized hardware subject to higher pricing and region availability. For more information, see the [pricing][azure-pricing] tool and [region availability][azure-availability].
 
-## Create an AKS-managed GPU node pool (preview)
+## Create an AKS-managed GPU node pool
 
 Add a managed GPU node pool to an existing AKS cluster by passing `--enable-managed-gpu=true` to [`az aks nodepool add`][az-aks-nodepool-add]. AKS sets `gpuProfile.nvidia.managementMode` to `Managed` and installs the GPU driver, device plugin, and DCGM metrics exporter automatically.
 
@@ -256,9 +241,7 @@ For more information, see [GPU settings in AKSNodeClass](./node-auto-provisionin
    kubectl get nodes -L kubernetes.azure.com/dcgm-exporter
    ```
 
----
-
-## Create a managed Multi-Instance GPU (MIG) node pool (preview)
+## Create a managed Multi-Instance GPU (MIG) node pool
 
 For GPU SKUs that support Multi-Instance GPU (such as A100 and H100), configure a MIG strategy at node pool creation with the `--gpu-mig-strategy` flag. The strategy controls how MIG partitions are exposed to Kubernetes:
 
@@ -304,9 +287,7 @@ az aks nodepool add \
 
 With this configuration, pods request specific MIG partitions, for example `nvidia.com/mig-1g.10gb: 1`.
 
----
-
-## Verify the managed GPU node pool (preview)
+## Verify the managed GPU node pool
 
 After the node pool is ready, run the following checks to confirm that the full managed stack is installed and healthy.
 
@@ -369,7 +350,7 @@ After the node pool is ready, run the following checks to confirm that the full 
     kubectl logs managed-gpu-test
     ```
 
-## Scale a managed GPU node pool (preview)
+## Scale a managed GPU node pool
 
 Scale a managed GPU node pool manually with [`az aks nodepool scale`][az-aks-nodepool-scale]. New nodes install the full managed GPU stack.
 
@@ -385,7 +366,7 @@ az aks nodepool scale \
 
 If the **Full managed stack** profile isn't the right fit, AKS supports two alternative profiles on GPU node pools.
 
-### [Driver only (preview)](#tab/driver-only)
+### [Driver only](#tab/driver-only)
 
 Use this profile when you want AKS to install and maintain the NVIDIA GPU driver, but you plan to deploy the device plugin and metrics exporter yourself (for example, with the [NVIDIA GPU Operator](./nvidia-gpu-operator.md)). Set `--enable-managed-gpu=false`:
 
@@ -423,8 +404,6 @@ az aks nodepool add \
 ```
 
 In this configuration, AKS installs no GPU software components: no driver, no device plugin, and no metrics exporter. Microsoft **doesn't support or manage** NVIDIA drivers or any other GPU components on these nodes. For more information, see [Skip GPU driver installation](./use-nvidia-gpu.md#skip-gpu-driver-installation).
-
----
 
 ## Next steps
 
