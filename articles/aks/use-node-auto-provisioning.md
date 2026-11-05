@@ -293,7 +293,7 @@ You can retrieve logs and status updates from Karpenter to help diagnose and deb
     ```
 
 ## Node auto-provisioning metrics
-You can enable [control plane metrics (Preview)](./control-plane-metrics-monitor.md) to see specific Karpenter metrics and operations from [node auto-provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview).
+You can enable [control plane metrics](./control-plane-metrics-monitor.md) to see specific Karpenter metrics and operations from [node auto-provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview).
 
 ## Next steps
 
