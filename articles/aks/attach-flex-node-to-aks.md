@@ -4,7 +4,7 @@ description: Learn how to download the flex node release, bootstrap and attach a
 author: leslielin-5
 ms.author: leslielin
 ms.topic: how-to
-ms.date: 09/22/2026
+ms.date: 11/05/2026
 ms.subservice: aks-nodes
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -566,7 +566,7 @@ Continue when the node is `Ready`. If the node isn't created or doesn't become r
 
     ```bash
     kubectl get \
-        sites,sitenodeslices,gatewaypools,sitegatewaypoolassignments,gatewaypoolpeerings \
+        sites,sitepeerings,sitenodeslices,gatewaypools,sitegatewaypoolassignments,gatewaypoolpeerings \
         -o wide
     ```
 
