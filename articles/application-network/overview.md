@@ -76,6 +76,7 @@ Application Network currently has the following limitations:
   - southeastasia
   - swedencentral
   - westcentralus
+  - westus
   - westus2
   - westus3
 - Enabling the [Istio-based service mesh add-on for AKS](/azure/aks/istio-about) isn't supported on clusters connected to Application Network.
