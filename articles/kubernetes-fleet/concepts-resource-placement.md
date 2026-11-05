@@ -207,7 +207,7 @@ Fleet Manager resource placement supports the following placement policy types f
 
 #### PickFixed placement type
 
-Use `PickFixed` to select the clusters by name. Supply names in the `clusterNames` array.
+Use `PickFixed` to select the clusters by name. Supply names in the `clusterNames` array. An empty or omitted array selects no clusters.
 
 :::zone target="docs" pivot="cluster-scope"
 
@@ -259,6 +259,16 @@ spec:
 ```
 
 :::zone-end
+
+To create a placement without target clusters or scale an existing placement down to zero clusters, use the following policy under `spec`:
+
+```yaml
+policy:
+  placementType: PickFixed
+  clusterNames: []
+```
+
+When you clear the array on an existing placement, Fleet Manager removes the resources previously distributed by that placement from the member clusters. The placement object and selected resources on the hub cluster remain. To distribute the resources again, add target cluster names back to `clusterNames`.
 
 #### PickAll placement type
 
