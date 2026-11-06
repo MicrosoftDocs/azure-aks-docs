@@ -198,7 +198,7 @@ Fleet Manager is designed to manage Kubernetes clusters across regions, clouds, 
 
 This approach provides a common orchestration layer regardless of where member clusters are running.
 
-### Progressive roll outs beyond GitOps
+### Progressive rollouts beyond GitOps
 
 One of the most significant advantages of Fleet Manager is deployment orchestration.
 
