@@ -1,7 +1,7 @@
 ---
 title: "Use Azure Kubernetes Fleet Manager to deliver modern GitOps Architectures"
 description: "Learn how Fleet Manager can be combined with GitOps platforms to support modern GitOps architectures and deliver a service akin to a Kubernetes-native CDN for deployments."
-ms.date: 10/27/2026
+ms.date: 11/06/2026
 ms.topic: concept-article
 author: sjwaight
 ms.author: simonwaight
@@ -69,7 +69,7 @@ A useful design principle is to separate deployment responsibilities into four l
 
 | Layer                      | Responsibility                  |
 | -------------------------- | ------------------------------- |
-| Source of truth            | Git, OCI, artifact repositories |
+| Source of truth            | Git, artifact repositories      |
 | Reconciliation             | Flux                            |
 | Placement and distribution | Fleet Manager                   |
 | Rollout and governance     | Fleet Manager                   |
@@ -165,8 +165,6 @@ Benefits include:
 
 Fleet Manager aligns naturally with this approach. Applications can be packaged into OCI artifacts and distributed independently of Git repositories, while Flux continues performing cluster-level reconciliation. This approach allows organizations to evolve from traditional Git-centric GitOps toward Gitless GitOps without replacing their operational model.
 
-This approach allows organizations to evolve from traditional Git-centric GitOps toward Gitless GitOps without replacing their operational model.
-
 ## Overcoming traditional GitOps scale constraints
 
 Large GitOps environments often encounter several limitations.
@@ -192,7 +190,7 @@ Promotion frequently requires:
 
 Fleet Manager enables platform teams to manage deployment progression as a deployment concern rather than a repository topology concern.
 
-### Multi-cloud coordination
+### Multicloud coordination
 
 GitOps tools largely operate cluster by cluster.
 
