@@ -1391,6 +1391,8 @@
           href: gpu-health-monitoring.md
         - name: Use Confidential GPUs
           href: use-confidential-gpus.md
+        - name: Use dynamic resource allocation (DRA) for GPUs
+          href: managed-dra-for-gpus.md
         - name: Optimize GPU workloads using profiling
           items:
             - name: Set up GPU profiling
