@@ -4,7 +4,7 @@ description: Security vulnerability advisories and mitigation guidance for AKS H
 author: leslielin
 ms.author: leslielin
 ms.topic: concept-article
-ms.date: 09/01/2026
+ms.date: 11/04/2026
 ms.custom: overview
 ---
 
@@ -23,7 +23,7 @@ This article provides information on security vulnerabilities that affect AKS Hy
 
 ## AKSARC-2026-0001: Advisory and Mitigation Guide for CVE-2026-31431 (Copy Fail)
 
-**Last updated**: May 18, 2026
+**Last updated**: November 4, 2026
 
 ### Description
 
@@ -45,7 +45,7 @@ This bulletin provides an update on a local privilege escalation (LPE) vulnerabi
 
 **Affected Versions**
 
-- All current AKS on Azure Local Linux nodes are exploitable. Microsoft is working on integrating this fix into a future Azure Local update. In the meantime, follow the remediation steps in this article.
+- Azure Local 2610 and later include the fix. To apply it, upgrade Azure Local to 2610 or later, and then upgrade each AKS cluster. Linux nodes remain exploitable until you upgrade the cluster or complete the remediation steps in this article.
 - Although `algif_aead` isn't loaded by default on AKS nodes, the Linux kernel's module autoloading mechanism (`request_module`) **automatically loads it on demand**. Any process, **including unprivileged containers**, can trigger this mechanism by creating an AF_ALG socket with AEAD type. This condition means:
 - **An attacker with code execution in any pod, even non-root, can escalate to root on the node.**
 - No special pod privileges, capabilities, or host access are required.
@@ -56,13 +56,19 @@ Choose one of the following remediation paths.
 
 #### Option A: Patch your Azure Local instance (recommended)
 
-This option patches VHD images at the Azure Local level. After patching, upgrade each AKS cluster to refresh nodes with the patched VHDs.
+This option applies the fix through Azure Local. After Azure Local has the fix, upgrade each AKS cluster to apply the fix to its nodes.
 
-##### Step 1: Upgrade Azure Local (if needed)
+##### Step 1: Upgrade Azure Local
 
-If your Azure Local deployment is on version 2601 or earlier, upgrade to 2602 or later before you continue. For upgrade guidance, see [Azure Local update documentation](/azure/azure-local/update/about-updates-23h2).
+Upgrade to Azure Local 2610 or later. After you upgrade, skip step 2 and go to step 3 to upgrade each AKS cluster. The fix doesn't apply to existing nodes until you upgrade the cluster.
+
+If you can't upgrade to 2610 yet and your deployment is on version 2601 or earlier, upgrade to 2602 or later, and then continue to step 2.
+
+Before you upgrade Azure Local, ensure each cluster has a supported upgrade path to a Kubernetes version in the target release. For details, see [Supported Kubernetes versions](supported-kubernetes-versions.md#aks-supported-kubernetes-minor-and-patch-versions-per-release). For upgrade guidance, see [Azure Local update documentation](/azure/azure-local/update/about-updates-23h2).
 
 ##### Step 2: Run the remediation command
+
+If you're on Azure Local 2610 or later, skip this step because the patch is already included.
 
 1. Install the [AKS Support Tool](/azure/aks/aksarc/support-module) and run `az login` on your Azure Local node.
 
@@ -75,21 +81,21 @@ If your Azure Local deployment is on version 2601 or earlier, upgrade to 2602 or
    When complete, you see a confirmation message indicating that the update was applied or that no update is needed.
 
    > [!NOTE]
-   > After the command completes, wait 10-15 minutes for the new VHD images to download to your Azure Local deployment before proceeding to step 3.
+   > After the command completes, wait 10-15 minutes for the update to download to your Azure Local deployment before you proceed to step 3.
 
 ##### Step 3: Upgrade AKS clusters
 
-Upgrade each AKS cluster to refresh nodes with patched VHDs. Use the following table to determine your upgrade path.
+Upgrade each AKS cluster to apply the fix to its nodes. Use the following table to find the upgrade path for the Azure Local version you're on.
 
-| Current K8s version | Supported versions for Azure Local 2602 |
-|---|---|
-| 1.30 or earlier | 1.31.12, 1.31.13 |
-| 1.31.12 | 1.31.13, 1.32.8, 1.32.9 |
-| 1.31.13 | 1.32.8, 1.32.9 |
-| 1.32.8 | 1.32.9, 1.33.4, 1.33.5 |
-| 1.32.9 | 1.33.4, 1.33.5 |
-| 1.33.4 | 1.33.5 |
-| 1.33.5 (latest) | No upgrade available - use Option B |
+| Current K8s version | Supported versions for Azure Local 2602 | Supported versions for Azure Local 2610 |
+|---|---|---|
+| 1.30 or earlier | 1.31.12, 1.31.13 | None. Upgrade to 1.32 on Azure Local 2602 before you upgrade to 2610. |
+| 1.31.12 | 1.31.13, 1.32.8, 1.32.9 | None. Upgrade to 1.32 on Azure Local 2602 before you upgrade to 2610. |
+| 1.31.13 | 1.32.8, 1.32.9 | None. Upgrade to 1.32 on Azure Local 2602 before you upgrade to 2610. |
+| 1.32.8 | 1.32.9, 1.33.4, 1.33.5 | 1.32.10, 1.32.11, 1.33.6, 1.33.7 |
+| 1.32.9 | 1.33.4, 1.33.5 | 1.32.10, 1.32.11, 1.33.6, 1.33.7 |
+| 1.33.4 | 1.33.5 | 1.33.6, 1.33.7, 1.34.3, 1.34.4 |
+| 1.33.5 | None | 1.33.6, 1.33.7, 1.34.3, 1.34.4 |
 
 To upgrade your cluster, follow the steps in [Upgrade the Kubernetes version](/azure/aks/aksarc/cluster-upgrade#upgrade-the-kubernetes-version). For the full version list, see [Supported Kubernetes versions](/azure/aks/aksarc/supported-kubernetes-versions#aks-arc-supported-kubernetes-minor-and-patch-versions-per-release).
 
