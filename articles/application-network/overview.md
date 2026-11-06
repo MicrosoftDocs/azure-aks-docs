@@ -5,7 +5,7 @@ author: kochhars
 ms.author: kochhars
 ms.service: azure-kubernetes-app-net
 ms.topic: overview
-ms.date: 11/03/2026
+ms.date: 11/05/2026
 ms.custom: references_regions
 ai-usage: ai-assisted
 ---
@@ -64,6 +64,8 @@ Application Network currently has the following limitations:
 - Linux only. Windows node pools aren't supported.
 - Switching between upgrade modes `SelfManaged` and `FullyManaged` isn't supported.
 - Currently supported only in the following regions:
+  - canadacentral
+  - centralindia
   - centralus
   - eastus
   - eastus2
@@ -72,7 +74,9 @@ Application Network currently has the following limitations:
   - northeurope
   - southindia
   - southeastasia
+  - swedencentral
   - westcentralus
+  - westus
   - westus2
   - westus3
 - Enabling the [Istio-based service mesh add-on for AKS](/azure/aks/istio-about) isn't supported on clusters connected to Application Network.
