@@ -29,7 +29,6 @@ To use DRA, create a `ResourceClaimTemplate` that describes the network interfac
 - This feature is not supported on AKS clusters with [bring-your-own CNI plugin](/azure/aks/use-byo-cni).
 - Don't run [NVIDIA Network Operator](https://github.com/Mellanox/network-operator) or [AMD Network Operator](https://github.com/ROCm/network-operator) components that manage overlapping RDMA resources on the same nodes where managed support for DRANET is enabled.
 - Managed support for DRANET doesn't convert workloads that use RDMA device plugin resources. Update those workloads to use DRA resource claims.
-- This feature is not currently supported with [cluster-level FIPS](./enable-fips-cluster.md).
 
 ## Prerequisites
 
