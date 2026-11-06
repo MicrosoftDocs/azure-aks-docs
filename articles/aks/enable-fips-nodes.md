@@ -1395,13 +1395,11 @@ az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-gr
 
 ## Related content
 
-- To enforce FIPS on every node pool and block components that aren't FIPS-compliant across the whole cluster, see [Enable FIPS for AKS clusters (preview)][enable-fips-cluster].
 - For more information about AKS security, see [Best practices for cluster security and upgrades in Azure Kubernetes Service (AKS)][aks-best-practices-security].
 - For more information about upgrading your OS version for your Linux FIPS node pools, see [Upgrade Linux OS version][upgrade-os-version].
 - For more information about upgrading your OS version for your Windows FIPS node pools, see [Upgrade Windows OS version][upgrade-windows-os-version].
 
 <!-- LINKS - Internal -->
-[enable-fips-cluster]: enable-fips-cluster.md
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 [az-aks-show]: /cli/azure/aks#az-aks-show
