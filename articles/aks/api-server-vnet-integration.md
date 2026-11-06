@@ -306,6 +306,7 @@ All traffic within the VNet is allowed by default. But if you have added NSG rul
 | Destination | Source | Protocol | Port | Use |
 | ----------- | ------ | -------- | ---- | ---- |
 | APIServer Subnet CIDR | Cluster Subnet | TCP | 443 and 4443 | Required to enable communication between Nodes and the API server. |
+| Cluster Subnet CIDR | APIServer Subnet CIDR | TCP | 10250 | Required to enable communication between the API server and the kubelet on each node, for operations such as logs, exec, attach, and port-forward. |
 | APIServer Subnet CIDR | Azure Load Balancer | TCP | 9988 | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communications between the Azure Load Balancer and the API Server Subnet CIDR. |
 
 ## Related content

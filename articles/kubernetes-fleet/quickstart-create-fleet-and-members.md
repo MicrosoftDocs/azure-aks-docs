@@ -147,6 +147,9 @@ Your output should look similar to the following example output:
 
 When you create a Fleet Manager with a private hub cluster the preferred virtual network integration method for the hub cluster is [API server VNet integration](../aks/api-server-vnet-integration.md). 
 
+> [!IMPORTANT]
+> If your network security group (NSG) rules restrict traffic between subnets, allow inbound traffic from the API server subnet to the cluster subnet on TCP port 10250. The API server connects directly to the kubelet on each node for operations such as `kubectl logs`, `exec`, `attach`, and `port-forward`, so allowing traffic only from the nodes to the API server isn't enough. Use the subnet address ranges rather than individual node IP addresses, which change during upgrades. For the full list of required rules, see [NSG security rules for API server VNet integration](../aks/api-server-vnet-integration.md#network-security-group-nsg-security-rules).
+
 1. Set the following environment variables.
 
   ```bash

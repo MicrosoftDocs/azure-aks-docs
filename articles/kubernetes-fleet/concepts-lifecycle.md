@@ -114,6 +114,8 @@ In order for Fleet Manager to create and keep hub clusters up-to-date with the l
 
 - **Hub cluster has internet access.** Outbound connectivity is required to install updates. Private hubs on networks with user-defined routing (UDR) or firewall rules might block outbound connectivity. For more information on outbound connectivity, see [documentation on AKS outbound network][aks-outbound-rules-control-egress].
 
+- **API server can reach the hub nodes.** If NSG rules on a private hub cluster with [API server VNet integration](../aks/api-server-vnet-integration.md) restrict traffic between subnets, allow inbound traffic from the API server subnet to the cluster subnet on TCP port 10250. Without this rule, operations that use the kubelet API, such as retrieving logs or running `exec`, fail. For all required rules, see [NSG security rules for API server VNet integration](../aks/api-server-vnet-integration.md#network-security-group-nsg-security-rules).
+
 - **No need to manage updates to the Fleet Manager hub cluster.** Microsoft automatically updates the hub cluster to the latest version of Kubernetes or node image as they become available from AKS. Update releases can be tracked on the [AKS Release Tracker][aks-release-status].
 
 ## Related content
