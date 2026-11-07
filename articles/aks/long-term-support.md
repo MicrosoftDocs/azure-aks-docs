@@ -141,7 +141,7 @@ The following table summarizes current lifecycle considerations:
 
 | Add-on or feature | Lifecycle consideration |
 |---|---|
-| Calico | Confirm that your Calico version supports the target Kubernetes version and review Tigera support terms for use beyond Kubernetes community support. |
+| Calico | Microsoft-managed Calico isn't supported in LTS. Enabling LTS on a cluster that uses Calico returns `LTSUnsupportedAddon` by design. To use LTS, switch to a supported network policy engine, such as [Azure CNI Overlay powered by Cilium](azure-cni-powered-by-cilium.md). If you must keep Calico, use a Kubernetes version in community support instead. |
 | Key Management Service (KMS) | The existing KMS experience is now designated as legacy. For Kubernetes 1.33 and later, review the new [KMS data encryption](kms-data-encryption.md) experience and the applicable [migration guidance](migrate-key-management-service-platform-managed-key-customer-managed-key.md). Both the new experience and its migration workflow are in preview. |
 | Dapr | The managed [Dapr extension](dapr-overview.md) uses a rolling support window that includes the current and previous Dapr versions. Keep the extension within its supported version window. |
 | Application Gateway Ingress Controller (AGIC) | AGIC remains available. Begin [transitioning to Application Gateway for Containers](/azure/application-gateway/for-containers/migrate-from-agic-to-agc). |
