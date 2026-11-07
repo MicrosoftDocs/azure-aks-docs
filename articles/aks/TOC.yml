@@ -1237,6 +1237,24 @@
               href: azure-netapp-files-smb.md
             - name: Provision Azure NetApp Files dual-protocol volumes for AKS
               href: azure-netapp-files-dual-protocol.md
+    - name: Distributed accelerator for cloud storage (preview)
+      items:
+        - name: Overview
+          href: /azure/storage/container-storage/distributed-accelerator-for-cloud-storage-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Get started on AKS
+          href: /azure/storage/container-storage/distributed-accelerator-for-cloud-storage-quickstart?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Use distributed accelerator for cloud storage with BlobFuse2
+          href: /azure/storage/container-storage/use-distributed-accelerator-for-cloud-storage-blobfuse2?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Use distributed accelerator for cloud storage with the Python client
+          href: /azure/storage/container-storage/use-distributed-accelerator-for-cloud-storage-python?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Use distributed accelerator for cloud storage with Run:ai Model Streamer
+          href: /azure/storage/container-storage/use-distributed-accelerator-for-cloud-storage-model-streamer?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Manage distributed accelerator for cloud storage
+          href: /azure/storage/container-storage/manage-distributed-accelerator-for-cloud-storage?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Monitor distributed accelerator for cloud storage
+          href: /azure/storage/container-storage/monitor-distributed-accelerator-for-cloud-storage?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Troubleshoot distributed accelerator for cloud storage
+          href: /azure/storage/container-storage/troubleshoot-distributed-accelerator-for-cloud-storage?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Other storage options
       items:
         - name: NFS Server - static
