@@ -3,7 +3,7 @@ title: Use dynamic resource allocation for NVIDIA GPU nodes in Azure Kubernetes 
 description: Use Kubernetes dynamic resource allocation in AKS to express GPU requirements, schedule workloads with resource claims, and verify GPU access.
 author: sdesai345
 ms.author: sachidesai
-ms.date: 11/04/2026
+ms.date: 11/07/2026
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
@@ -175,45 +175,6 @@ Output should look like the following example:
 {
   "state": "Succeeded",
   "osSku": "Ubuntu",
-  "driver": "Install",
-  "managementMode": "Managed",
-  "driverMode": "DRA"
-}
-```
-
-### [Azure Linux node pool](#tab/add-azure-linux-gpu-node-pool)
-
-To use Azure Linux, specify the OS SKU by setting `os-sku` to `AzureLinux` during node pool creation. The `os-type` is set to `Linux` by default. Create the uniform pool with `--enable-managed-gpu=true` and driver mode set to `DRA`:
-
-```azurecli
-az aks nodepool add \
-    --resource-group "$RESOURCE_GROUP" \
-    --cluster-name "$CLUSTER_NAME" \
-    --name gpunp \
-    --os-sku AzureLinux
-    --node-vm-size "$GPU_VM_SIZE" \ \
-    --enable-managed-gpu=true \
-    --gpu-driver-mode DRA \
-    --node-count 1
-```
-
-Verify the accepted configuration:
-
-```azurecli
-az aks nodepool show \
-    --resource-group "$RESOURCE_GROUP" \
-    --cluster-name "$CLUSTER_NAME" \
-    --name gpunp \
-    --query '{state:provisioningState,osSku:osSku,driver:gpuProfile.driver,managementMode:gpuProfile.nvidia.managementMode,driverMode:gpuProfile.nvidia.driverMode}' \
-    --output json
-```
-
-Output should look like the following example:
-
-```json
-{
-  "state": "Succeeded",
-  "osSku": "AzureLinux",
   "driver": "Install",
   "managementMode": "Managed",
   "driverMode": "DRA"

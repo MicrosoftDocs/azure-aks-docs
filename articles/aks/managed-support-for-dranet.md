@@ -1,8 +1,8 @@
 ---
-title: Configure Managed Support for DRANET on AKS
+title: Configure Managed Support for DRANET on Azure Kubernetes Service (AKS)
 description: Learn how to enable managed support for DRANET on an AKS node pool for RDMA workloads and migrate from a self-deployed network operator.
 ms.topic: how-to
-ms.date: 10/12/2026
+ms.date: 11/07/2026
 author: sdesai345
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
@@ -126,7 +126,7 @@ If you installed the [AMD Network Operator](https://github.com/ROCm/network-oper
 
 ## Enable managed support for DRANET on a new node pool
 
-Choose the node OS for the new node pool. Each node pool needs an RDMA-capable VM size and `--enable-managed-dranet=true`.
+Choose the node OS for the new node pool. Each node pool needs an RDMA-capable VM size and `--enable-managed-dranet`.
 
 | Node OS | `--os-sku` value | Notes |
 |---|---|---|
@@ -138,7 +138,7 @@ Choose the node OS for the new node pool. Each node pool needs an RDMA-capable V
 
 To use the default Ubuntu operating system (OS) SKU, create the node pool without specifying an OS SKU. The node pool uses the default operating system based on the Kubernetes version of the cluster.
 
-Create an RDMA-capable node pool with the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command and set `--enable-managed-dranet=true`.
+Create an RDMA-capable node pool with the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command and set `--enable-managed-dranet`.
 
 ```azurecli-interactive
 az aks nodepool add \
@@ -147,7 +147,7 @@ az aks nodepool add \
   --name $NODE_POOL_NAME \
   --node-count 1 \
   --node-vm-size Standard_ND40rs_v2 \
-  --enable-managed-dranet=true
+  --enable-managed-dranet
 ```
 
 The command returns the node pool resource. The response includes the following values after AKS accepts the configuration:
@@ -167,7 +167,7 @@ The command returns the node pool resource. The response includes the following 
 
 To use Azure Linux, specify the OS SKU by setting `--os-sku` to `AzureLinux` during node pool creation. The `os-type` is set to `Linux` by default.
 
-Create an RDMA-capable node pool with the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command, `--os-sku` set to `AzureLinux`, and `--enable-managed-dranet=true`.
+Create an RDMA-capable node pool with the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command, `--os-sku` set to `AzureLinux`, and `--enable-managed-dranet`.
 
 ```azurecli-interactive
 az aks nodepool add \
@@ -177,7 +177,7 @@ az aks nodepool add \
   --os-sku AzureLinux \
   --node-count 1 \
   --node-vm-size Standard_ND40rs_v2 \
-  --enable-managed-dranet=true
+  --enable-managed-dranet
 ```
 
 The command returns the node pool resource. The response includes `"provisioningState": "Succeeded"` and `"networkProfile": { "dranet": { "mode": "Managed" } }` after AKS accepts the configuration.
@@ -186,7 +186,7 @@ The command returns the node pool resource. The response includes `"provisioning
 
 To use Azure Container Linux, specify the OS SKU by setting `--os-sku` to `AzureContainerLinux` during node pool creation. The `os-type` is set to `Linux` by default.
 
-Create an RDMA-capable node pool with the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command, `--os-sku` set to `AzureContainerLinux`, and `--enable-managed-dranet=true`.
+Create an RDMA-capable node pool with the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command, `--os-sku` set to `AzureContainerLinux`, and `--enable-managed-dranet`.
 
 ```azurecli-interactive
 az aks nodepool add \
@@ -196,7 +196,7 @@ az aks nodepool add \
   --os-sku AzureContainerLinux \
   --node-count 1 \
   --node-vm-size Standard_ND40rs_v2 \
-  --enable-managed-dranet=true
+  --enable-managed-dranet
 ```
 
 The command returns the node pool resource. The response includes `"provisioningState": "Succeeded"` and `"networkProfile": { "dranet": { "mode": "Managed" } }` after AKS accepts the configuration.
@@ -216,7 +216,7 @@ az aks nodepool update \
   --resource-group $RESOURCE_GROUP \
   --cluster-name $CLUSTER_NAME \
   --name $NODE_POOL_NAME \
-  --enable-managed-dranet=true
+  --enable-managed-dranet
 ```
 
 Omitting `--enable-managed-dranet` from a later node pool update preserves the existing DRANET network profile setting.
@@ -358,14 +358,13 @@ The following example uses a [`Standard_ND96isr_H200_v5`](/azure/virtual-machine
 
 ## Disable managed support for DRANET
 
-1. Disable managed support for DRANET on an existing pool with the [`az aks nodepool update`](/cli/azure/aks/nodepool#az-aks-nodepool-update) command:
+1. Disable managed support for DRANET on an existing node pool with the [`az resource update`](/cli/azure/resource#az-resource-update) command:
 
     ```azurecli-interactive
-    az aks nodepool update \
-      --resource-group $RESOURCE_GROUP \
-      --cluster-name $CLUSTER_NAME \
-      --name $NODE_POOL_NAME \
-      --enable-managed-dranet=false
+    az resource update \
+   --ids "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$CLUSTER_NAME/agentPools/$NODE_POOL_NAME" \
+   --api-version 2026-06-01 \
+   --set properties.networkProfile.dranet.mode=Unmanaged
     ```
 
 1. Confirm that the network profile reflects `Unmanaged` DRANET mode with the [`az aks nodepool show`](/cli/azure/aks/nodepool#az-aks-nodepool-show) command:
