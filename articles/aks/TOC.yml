@@ -431,6 +431,8 @@
       href: upgrade-cluster-components.md
     - name: Upgrade options and recommendations
       href: upgrade-options.md
+    - name: Use Upgrade Insights
+      href: upgrade-insights.md
     - name: Capacity and cost planning
       href: upgrade-capacity-cost-planning.md
     - name: Production upgrade strategies
@@ -481,6 +483,8 @@
         href: use-node-disruption-policy.md
     - name: Stop cluster upgrades on API breaking changes
       href: stop-cluster-upgrade-api-breaking-changes.md
+    - name: Upgrade health gates (preview)
+      href: upgrade-health-gates.md
   - name: Track upgrades and releases
     items:
     - name: Track releases and region availability

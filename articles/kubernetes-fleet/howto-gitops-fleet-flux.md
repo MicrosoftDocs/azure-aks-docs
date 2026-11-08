@@ -1,7 +1,7 @@
 ---
 title: "GitOps-based deployments with Azure Kubernetes Fleet Manager and Flux"
 description: "Learn how Fleet Manager can use the Flux v2 GitOps extension model to deploy applications across multiple clusters and tenant boundaries using Git and OCI sources."
-ms.date: 10/27/2026
+ms.date: 11/08/2026
 ms.topic: concept-article
 author: sjwaight
 ms.author: simonwaight
@@ -61,7 +61,7 @@ By default, the extension installs the following components:
 * [Flux Helm controller](https://fluxcd.io/flux/components/helm/): manages Helm-based deployments.
 * [Flux Notification controller](https://fluxcd.io/flux/components/notification/): sends reconciliation and alert events.
 * Flux custom resources such as `GitRepository`, `OCIRepository`, `Kustomization`, and `HelmRelease`.
-* The Azure `fluxconfig-agent` and `fluxconfig-controller` components that connect the cluster to the managed configuration service.
+* The Azure `fluxconfig-agent` and `fluxconfig-controller` components connect the cluster to the managed configuration service. The ARM and Azure portal configuration for these components is not currently available for Fleet Manager.
 
 By using this extension model, you can enable a cluster with GitOps through an Azure-managed configuration resource, while the Flux controllers running in the cluster drive the actual reconciliation.
 
@@ -113,7 +113,7 @@ Fleet Manager and Flux can work together across cluster groups without requiring
 
 ## OCIRepository sources
 
-Flux supports both Git and OCI sources. For Fleet Manager, OCIRepository support is especially important because it aligns closely with the open source Flux Operator model and with registry-first application delivery workflows.
+Flux supports both Git and OCI sources. For Fleet Manager, OCIRepository support is especially important because it aligns closely with registry-first application delivery workflows.
 
 An `OCIRepository` points to a container registry location that contains an OCI artifact, such as a versioned application bundle or Kustomize package. This pattern is useful when you want immutable, signed, and centrally managed artifacts instead of directly syncing a Git repo.
 
