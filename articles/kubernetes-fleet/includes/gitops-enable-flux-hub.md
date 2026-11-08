@@ -1,7 +1,7 @@
 ---
 ms.topic: include
 ms.service: azure-kubernetes-fleet-manager
-ms.date: 10/28/2026
+ms.date: 11/08/2026
 author: sjwaight
 ms.author: simonwaight
 ---
@@ -42,13 +42,12 @@ ms.author: simonwaight
         --scope cluster
     ```
     
-  If you want to limit Flux to managing resources in a namespace other than the default `flux-system`, provide the namespace by using the `--release-namespace` parameter. To use the Flux extension in a [multi-tenancy configuration][azure-arc-flux-multitenancy] update the `--scope` argument to `namespace`.
+  If you want to change the namespace the Flux extension uses to be other than the default `flux-system`, provide the namespace by using the `--release-namespace` parameter.
 
   > [!NOTE]
   > You can only install one instance of the Flux extension on a Fleet Manager.
 
 <!-- INTERNAL LINKS -->
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[azure-arc-flux-multitenancy]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2#multi-tenancy
 [azure-rbac-fleet-manager-contributor-role]: /azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-fleet-manager-contributor-role
 [azure-rbac-kubernetes-extension-contributor-role]: /azure/role-based-access-control/built-in-roles/containers#kubernetes-extension-contributor

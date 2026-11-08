@@ -1,7 +1,7 @@
 ---
 title: "GitOps-based deployments with Azure Kubernetes Fleet Manager and Flux"
 description: "Learn how Fleet Manager can use the Flux v2 GitOps extension model to deploy applications across multiple clusters and tenant boundaries using Git and OCI sources."
-ms.date: 10/27/2026
+ms.date: 11/08/2026
 ms.topic: concept-article
 author: sjwaight
 ms.author: simonwaight
@@ -61,7 +61,7 @@ By default, the extension installs the following components:
 * [Flux Helm controller](https://fluxcd.io/flux/components/helm/): manages Helm-based deployments.
 * [Flux Notification controller](https://fluxcd.io/flux/components/notification/): sends reconciliation and alert events.
 * Flux custom resources such as `GitRepository`, `OCIRepository`, `Kustomization`, and `HelmRelease`.
-* The Azure `fluxconfig-agent` and `fluxconfig-controller` components that connect the cluster to the managed configuration service.
+* The Azure `fluxconfig-agent` and `fluxconfig-controller` components connect the cluster to the managed configuration service. The ARM and Azure portal configuration for these components is not currently available for Fleet Manager.
 
 By using this extension model, you can enable a cluster with GitOps through an Azure-managed configuration resource, while the Flux controllers running in the cluster drive the actual reconciliation.
 
