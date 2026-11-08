@@ -483,6 +483,8 @@
         href: use-node-disruption-policy.md
     - name: Stop cluster upgrades on API breaking changes
       href: stop-cluster-upgrade-api-breaking-changes.md
+    - name: Upgrade health gates (preview)
+      href: upgrade-health-gates.md
   - name: Track upgrades and releases
     items:
     - name: Track releases and region availability
