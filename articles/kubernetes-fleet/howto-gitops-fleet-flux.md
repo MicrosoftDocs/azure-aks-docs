@@ -113,7 +113,7 @@ Fleet Manager and Flux can work together across cluster groups without requiring
 
 ## OCIRepository sources
 
-Flux supports both Git and OCI sources. For Fleet Manager, OCIRepository support is especially important because it aligns closely with the open source Flux Operator model and with registry-first application delivery workflows.
+Flux supports both Git and OCI sources. For Fleet Manager, OCIRepository support is especially important because it aligns closely with registry-first application delivery workflows.
 
 An `OCIRepository` points to a container registry location that contains an OCI artifact, such as a versioned application bundle or Kustomize package. This pattern is useful when you want immutable, signed, and centrally managed artifacts instead of directly syncing a Git repo.
 
