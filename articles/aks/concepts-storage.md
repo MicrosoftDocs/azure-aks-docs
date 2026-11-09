@@ -1,8 +1,8 @@
 ---
 title: Concepts - Storage in Azure Kubernetes Service (AKS)
-description: Learn about storage in Azure Kubernetes Service (AKS), including volumes, persistent volumes, storage classes, and claims.
+description: Learn about storage options in Azure Kubernetes Service (AKS), including volumes, persistent volumes, storage classes, claims, and distributed caching.
 ms.topic: concept-article
-ms.date: 07/30/2026
+ms.date: 11/08/2026
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-storage
@@ -14,6 +14,8 @@ ms.service: azure-kubernetes-service
 
 Applications running in Azure Kubernetes Service (AKS) might need to store and retrieve data. While some application workloads can use local, fast storage on unneeded, emptied nodes, others require storage that persists on more regular data volumes within the Azure platform.
 
+For applications that repeatedly read data from Azure Blob Storage, you can also use distributed caching to keep frequently read data close to compute.
+
 Multiple pods might need to:
 
 - Share the same data volumes.
@@ -23,6 +25,7 @@ You also might need to collect and store sensitive data or application configura
 
 This article introduces the core concepts that provide storage to your applications in AKS:
 
+- [Distributed accelerator for cloud storage (preview)](#distributed-accelerator-for-cloud-storage-preview)
 - [Volumes](#volumes)
 - [Persistent volumes](#persistent-volumes)
 - [Storage classes](#storage-classes)
@@ -95,6 +98,21 @@ To simplify management and provisioning of ephemeral NVMe data disks in AKS, use
 
 For more information on using Azure Container Storage with ephemeral NVMe data disks, see [Use Azure Container Storage with AKS](/azure/storage/container-storage/use-container-storage-with-local-disk).
 
+## Distributed accelerator for cloud storage (preview)
+
+Distributed accelerator for cloud storage (DACS) is a distributed, read-through cache for Azure Blob Storage data on AKS. It uses local NVMe disks across Linux cache nodes to serve frequently read data. DACS can reduce model-loading time for AI inference and accelerate repeated dataset reads for training. Performance benefits depend on data reuse, cache capacity, and whether the requested data is cached.
+
+You enable and manage DACS through Azure Container Storage. Applications access the cache through BlobFuse2, the native Python client, or Run:ai Model Streamer. Supported clients can retrieve missing data directly from Azure Blob Storage.
+
+Azure Blob Storage remains the durable source of truth. Cached data is ephemeral, so DACS isn't a replacement for persistent storage. DACS doesn't provision persistent volumes or storage classes. The BlobFuse2 integration uses the Azure Blob CSI driver to mount Blob data through a persistent volume and persistent volume claim.
+
+> [!IMPORTANT]
+> DACS is in preview. Preview features are provided without a service-level agreement and aren't recommended for production workloads. For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
+>
+> Use DACS within a trusted cluster; the cache doesn't provide isolation between mutually untrusted tenants.
+
+For more information, see [What is distributed accelerator for cloud storage?][dacs-overview] and [Get started with distributed accelerator for cloud storage on AKS][dacs-quickstart].
+
 ## Volumes
 
 Kubernetes typically treats individual pods as ephemeral, disposable resources. Applications have different approaches available to them for using and persisting data. A _volume_ represents a way to store, retrieve, and persist data across pods and through the application lifecycle.
@@ -140,6 +158,8 @@ Use Azure NetApp Files to provision high-performance NFS or SMB volumes for AKS 
 ### Azure Blob Storage
 
 Use [Azure Blob Storage][azure-blob-csi] to create a blob storage container and mount it using the NFS v3.0 protocol or BlobFuse.
+
+For workloads that repeatedly read model files or datasets from Azure Blob Storage, consider [distributed accelerator for cloud storage (preview)][dacs-overview] to cache frequently read data across AKS nodes.
 
 ### Volume types
 
@@ -320,6 +340,11 @@ For more information on Azure Container Storage, see the following articles:
 - [What is Azure Container Storage?][azure-container-storage]
 - [Use Azure Container Storage with AKS][use-azure-container-storage]
 
+For more information on caching Azure Blob data with DACS, see the following articles:
+
+- [What is distributed accelerator for cloud storage? (preview)][dacs-overview]
+- [Get started with distributed accelerator for cloud storage on AKS][dacs-quickstart]
+
 For more information on using CSI drivers, see the following articles:
 
 - [Container Storage Interface (CSI) drivers for Azure Disk, Azure Files, and Azure Blob storage on Azure Kubernetes Service][csi-storage-drivers]
@@ -361,3 +386,5 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 [azure-aks-storage-considerations]: /azure/cloud-adoption-framework/scenarios/app-platform/aks/storage
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [use-azure-container-storage]: /azure/storage/container-storage/container-storage-aks-quickstart
+[dacs-overview]: /azure/storage/container-storage/distributed-accelerator-for-cloud-storage-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+[dacs-quickstart]: /azure/storage/container-storage/distributed-accelerator-for-cloud-storage-quickstart?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
