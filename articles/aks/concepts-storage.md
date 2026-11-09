@@ -340,7 +340,7 @@ For more information on Azure Container Storage, see the following articles:
 - [What is Azure Container Storage?][azure-container-storage]
 - [Use Azure Container Storage with AKS][use-azure-container-storage]
 
-For more information on caching Azure Blob data with DACS, see the following articles:
+For more information about caching Azure Blob data with DACS, see the following articles:
 
 - [What is distributed accelerator for cloud storage? (preview)][dacs-overview]
 - [Get started with distributed accelerator for cloud storage on AKS][dacs-quickstart]
