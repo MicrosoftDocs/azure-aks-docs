@@ -180,7 +180,7 @@ If you use DACS, protect the authoritative model files and datasets in Azure Blo
 
 This article focused on storage best practices in AKS. For more information about storage basics in Kubernetes, see [Storage concepts for applications in AKS][aks-concepts-storage].
 
-For more information on distributed caching for Azure Blob data, see the following articles:
+For more information about distributed caching for Azure Blob data, see the following articles:
 
 - [What is distributed accelerator for cloud storage? (preview)][dacs-overview]
 - [Manage distributed accelerator for cloud storage][dacs-manage]
