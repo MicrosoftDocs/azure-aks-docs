@@ -1,10 +1,10 @@
 ---
 title: Best practices for storage and backup
 titleSuffix: Azure Kubernetes Service
-description: Learn the cluster operator best practices for storage, data encryption, and backups in Azure Kubernetes Service (AKS)
+description: Learn cluster operator best practices for storage, distributed caching, data encryption, and backups in Azure Kubernetes Service (AKS).
 ms.topic: best-practice
 ms.subservice: aks-storage
-ms.date: 04/28/2023
+ms.date: 11/08/2026
 author: schaffererin
 ms.author: schaffererin
 
@@ -21,6 +21,7 @@ This best practices article focuses on storage considerations for cluster operat
 > [!div class="checklist"]
 > * What types of storage are available.
 > * How to correctly size AKS nodes for storage performance.
+> * How to plan and operate distributed caching for repeated Azure Blob reads.
 > * Differences between dynamic and static provisioning of volumes.
 > * Ways to back up and secure your data volumes.
 
@@ -118,6 +119,29 @@ For further recommendations on ephemeral NVMe data disks, see [Best practices fo
 > [!IMPORTANT]
 > Use NVMe data disks only for workloads that can tolerate data loss and recover quickly. Keep business-critical data on durable storage such as Azure Disk or Azure Files.
 
+## Use distributed accelerator for cloud storage (preview)
+
+> **Best practice guidance**
+>
+> Consider distributed accelerator for cloud storage (DACS) when applications repeatedly read model files or datasets from Azure Blob Storage. Plan cache capacity, warm-up, and recovery around your workload's access patterns.
+
+DACS uses local NVMe disks across Linux cache nodes to cache Azure Blob data. It can reduce model-loading time for AI inference and accelerate repeated dataset reads for training. You enable and manage DACS through Azure Container Storage. DACS doesn't provision persistent volumes or storage classes.
+
+When you plan and operate DACS:
+
+- **Dedicate cache storage.** Use Linux cache nodes with local NVMe disks dedicated to DACS. Cache prerequisites can format those disks. Preserve cache-node labels in the node-pool configuration so they survive node replacement.
+- **Size for the active working set.** Include headroom for overlapping model versions and dataset changes. Account for concurrent readers, node CPU and memory, and network bandwidth, not just NVMe capacity.
+- **Plan for cold reads.** Consider prefetching model data before inference deployments or scale-out. Verify cache hits before increasing concurrency. Prefetch doesn't pin data, and eviction, node replacement, or maintenance can require another warm-up. Plan for additional Blob traffic when cached data is unavailable.
+- **Measure application and cache behavior.** Compare cold and warm reads under expected concurrency. Monitor client cache hits, cache-server requests, latency, capacity, and Blob traffic. Successful or faster reads alone don't prove cache use because clients can fall back to Azure Blob Storage.
+- **Keep authoritative data durable.** Store model files and datasets in Azure Blob Storage, preferably at immutable, versioned paths. Cached data is ephemeral and isn't replicated for durability. Don't use DACS as persistent storage for training outputs or checkpoints.
+
+> [!IMPORTANT]
+> DACS is in preview. Preview features are provided without a service-level agreement and aren't recommended for production workloads. For more information, see [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/).
+>
+> Use DACS within a trusted cluster; the cache doesn't isolate mutually untrusted tenants. Grant workloads only the Blob access permissions they need.
+
+For deployment and operational guidance, see [Manage distributed accelerator for cloud storage][dacs-manage] and [Monitor distributed accelerator for cloud storage][dacs-monitor].
+
 ## Dynamically provision volumes
 
 > **Best practice guidance** 
@@ -150,9 +174,17 @@ When your applications store and consume data persisted on disks or in files, yo
 
 Understand the limitations of the different approaches to data backups and if you need to quiesce your data prior to snapshot. Data backups don't necessarily let you restore your application environment of cluster deployment. For more information about those scenarios, see [Best practices for business continuity and disaster recovery in AKS][best-practices-multi-region].
 
+If you use DACS, protect the authoritative model files and datasets in Azure Blob Storage rather than backing up ephemeral cache contents. Keep cache configuration in version control and test recreating and warming the cache after node replacement or cluster recovery. DACS isn't a backup solution.
+
 ## Next steps
 
 This article focused on storage best practices in AKS. For more information about storage basics in Kubernetes, see [Storage concepts for applications in AKS][aks-concepts-storage].
+
+For more information about distributed caching for Azure Blob data, see the following articles:
+
+- [What is distributed accelerator for cloud storage? (preview)][dacs-overview]
+- [Manage distributed accelerator for cloud storage][dacs-manage]
+- [Monitor distributed accelerator for cloud storage][dacs-monitor]
 
 <!-- LINKS - External -->
 [velero]: https://github.com/heptio/velero
@@ -172,3 +204,6 @@ This article focused on storage best practices in AKS. For more information abou
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [use-azure-container-storage]: /azure/storage/container-storage/container-storage-aks-quickstart
 [best-practices-nvme]: best-practices-storage-nvme.md
+[dacs-overview]: /azure/storage/container-storage/distributed-accelerator-for-cloud-storage-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+[dacs-manage]: /azure/storage/container-storage/manage-distributed-accelerator-for-cloud-storage?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+[dacs-monitor]: /azure/storage/container-storage/monitor-distributed-accelerator-for-cloud-storage?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
