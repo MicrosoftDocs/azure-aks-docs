@@ -32,12 +32,12 @@ AKS Node Problem Detector ***does not*** run GPU health checks on node pools wit
 
 ## Supported GPU health checks
 
-NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies are detected. The following GPU health checks are currently supported. The check names match the Kubernetes node condition types:
+NPD regularly monitors GPU-enabled node pools and sets conditions when it detects anomalies. The following GPU health checks are currently supported. The check names match the Kubernetes node condition types:
 
 * **GPUMissing**: NPD verifies that the number of GPUs detected by the `nvidia-smi` utility matches the expected GPU count for the VM SKU assigned to the node.
   * A mismatch might indicate a hardware fault, driver issue, or misconfiguration. Accurate GPU enumeration is critical for ensuring scheduling accuracy and workload availability on GPU nodes.
 
-* **XIDError**: Checks for XID (eXecution ID) errors emitted by the GPU driver in the kernel logs. XID errors are low-level GPU faults that typically occur when:
+* **XIDError**: Checks for XID (eXecution ID) errors that the GPU driver emits in the kernel logs. XID errors are low-level GPU faults that typically occur when:
   * The driver misprograms the GPU.
   * There's a corruption in the command stream sent to the GPU.
   * A hardware failure or instability affects GPU operation.
@@ -62,7 +62,7 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies
 
   Normal or expected throttling states such as GPU idle, no throttling, or user-configured software power caps aren't flagged.
 
-  For more information, see [NVIDIA clock throttle reasons](https://docs.nvidia.com/deploy/nvml-api/group__nvmlClocksThrottleReasons.html).
+  For more information about clock event reasons, see the [NVIDIA System Management Interface documentation](https://docs.nvidia.com/deploy/nvidia-smi/index.html).
 
 * **GPUECCError**: NPD monitors error-correcting code (ECC) memory health by querying `nvidia-smi` for corrected and uncorrected SRAM and DRAM errors.
   * Error counts that exceed the health-check thresholds might indicate GPU memory issues.
