@@ -32,15 +32,15 @@ Node conditions indicate a permanent problem that makes the node unavailable. AK
 | CustomPluginMonitor | FrequentKubeletRestart | FrequentKubeletRestart | General purpose |
 | CustomPluginMonitor | FrequentContainerdRestart | FrequentContainerdRestart | General purpose |
 | CustomPluginMonitor | FrequentDockerRestart | FrequentDockerRestart | General purpose |
-| CustomPluginMonitor | GPUMissing | GPUMissing | GPU only |
-| CustomPluginMonitor | NVLinkDown | NVLinkStatusBad | GPU only |
-| CustomPluginMonitor | XIDError | XIDErrorIsPresent | GPU only |
-| CustomPluginMonitor | IBLinkFlapping | IBLinkFlapping | GPU only |
-| CustomPluginMonitor | GPUClockThrottling | GPUClockThrottlingIsPresent | GPU only |
-| CustomPluginMonitor | GPUECCError | GPUECCErrorIsPresent | GPU only |
-| CustomPluginMonitor | UnhealthyNvidiaDevicePlugin | UnhealthyNvidiaDevicePlugin | GPU only (managed GPU) |
-| CustomPluginMonitor | UnhealthyNvidiaDCGMServices | UnhealthyNvidiaDCGMServices | GPU only (managed GPU) |
-| CustomPluginMonitor | NVIDIAGRIDStatusInvalid | NVIDIAGRIDStatusInvalid | GPU only |
+| CustomPluginMonitor | GPUMissing | Observed GPU count does not match expected GPU count | GPU only |
+| CustomPluginMonitor | NVLinkDown | NVLink connections are inactive | GPU only |
+| CustomPluginMonitor | XIDError | XID errors present in kernel log | GPU only |
+| CustomPluginMonitor | IBLinkFlapping | Intermittent InfiniBand device connectivity | GPU only |
+| CustomPluginMonitor | GPUClockThrottling | Problematic GPU clock throttling detected | GPU only |
+| CustomPluginMonitor | GPUECCError | GPU ECC errors, row-remapping issues, or page-retirement issues detected | GPU only |
+| CustomPluginMonitor | UnhealthyNvidiaDevicePlugin | NVIDIA device plugin service is not active | GPU only (managed GPU) |
+| CustomPluginMonitor | UnhealthyNvidiaDCGMServices | NVIDIA DCGM or DCGM exporter service is not active | GPU only (managed GPU) |
+| CustomPluginMonitor | NVIDIAGRIDStatusInvalid | NVIDIA GRID driver license is invalid | GPU only |
 | SystemLogMonitor | KernelDeadlock | DockerHung | General purpose |
 | SystemLogMonitor | ReadonlyFilesystem | FilesystemIsReadOnly | General purpose |
 
