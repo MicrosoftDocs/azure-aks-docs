@@ -175,6 +175,8 @@
       items:
         - name: Service meshes overview
           href: servicemesh-about.md
+        - name: Azure Kubernetes Application Network (preview)
+          href: application-network-overview.md
         - name: Istio service mesh AKS add-on
           items:
             - name: Deployment and configuration
@@ -832,8 +834,12 @@
                 href: how-to-enable-ebpf-host-routing.md
           - name: Cross-cluster networking
             items:
-              - name: Use cases (Preview)
+              - name: Choose cross-cluster networking
+                href: cross-cluster-networking-overview.md
+              - name: Cilium Cluster Mesh use cases (preview)
                 href: cross-cluster-networking-fleet-use-cases.md
+              - name: Service connectivity with Application Network (preview)
+                href: application-network-multi-cluster.md
           - name: Multi-nic pods
             items:
               - name: Overview
