@@ -2,10 +2,11 @@
 title: GPU health monitoring in Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes
 description: Learn about how AKS uses Node Problem Detector to expose issues on GPU-enabled nodes.
 ms.topic: how-to
-ms.date: 02/27/2026
+ms.date: 11/09/2026
 author: sachidesai
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
+ai-usage: ai-assisted
 
 # As a Kubernetes operator, I want to monitor GPU-specific health conditions using Node Problem Detector (NPD), so that I can detect and respond to hardware or connectivity issues affecting GPU nodes, ensuring high performance and stability for GPU workloads.
 ---
@@ -31,29 +32,29 @@ AKS Node Problem Detector ***does not*** run GPU health checks on node pools wit
 
 ## Supported GPU health checks
 
-NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies are detected. The following GPU health checks are currently supported:
+NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies are detected. The following GPU health checks are currently supported. The check names match the Kubernetes node condition types:
 
 * **GPUMissing**: NPD verifies that the number of GPUs detected by the `nvidia-smi` utility matches the expected GPU count for the VM SKU assigned to the node.
   * A mismatch might indicate a hardware fault, driver issue, or misconfiguration. Accurate GPU enumeration is critical for ensuring scheduling accuracy and workload availability on GPU nodes.
 
-* **GPUXIDErrors**: Checks for XID (eXecution ID) errors emitted by the GPU driver in the kernel logs. XID errors are low-level GPU faults that typically occur when:
+* **XIDError**: Checks for XID (eXecution ID) errors emitted by the GPU driver in the kernel logs. XID errors are low-level GPU faults that typically occur when:
   * The driver misprograms the GPU.
   * There's a corruption in the command stream sent to the GPU.
   * A hardware failure or instability affects GPU operation.
 
   For more information, see [XID errors on NVIDIA GPUs](https://docs.nvidia.com/deploy/xid-errors/index.html).
 
-* **NVLink Status**: For NVIDIA VM SKUs that support NVLink, this condition confirms that NVLink is active and functioning.
+* **NVLinkDown**: For NVIDIA VM SKUs that support NVLink, NPD checks for inactive NVLink connections.
   * NVLink is a high-speed interconnect used to facilitate data transfer between multiple GPUs.
   * If NVLink is inactive or degraded, multi-GPU workloads might experience reduced performance or communication bottlenecks.
 
   For more information, see [NVIDIA NVLink](https://www.nvidia.com/en-us/data-center/nvlink/).
 
-* **InfiniBand Link Flapping**: NPD monitors for InfiniBand (IB) link flapping, or intermittent connectivity of the IB network device.
+* **IBLinkFlapping**: NPD monitors for InfiniBand (IB) link flapping, or intermittent connectivity of the IB network device.
   * Link flapping shouldn't occur under normal operating conditions and might result in degraded inter-node communication for distributed workloads.
   * It can also signal physical layer issues, misconfigured firmware, or driver instability.
 
-* **GPUClockThrottling**: NPD monitors GPU clock throttling conditions that may indicate performance degradation due to thermal, power, or hardware constraints. The check queries `nvidia-smi` for active clock throttle reasons and flags problematic conditions such as:
+* **GPUClockThrottling**: NPD monitors GPU clock throttling conditions that might indicate performance degradation due to thermal, power, or hardware constraints. The check queries `nvidia-smi` for active clock throttle reasons and flags problematic conditions such as:
   * Hardware slowdown (`HW_SLOWDOWN`)
   * Software thermal slowdown (`SW_THERMAL_SLOWDOWN`)
   * Hardware thermal slowdown (`HW_THERMAL_SLOWDOWN`)
@@ -63,13 +64,23 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies
 
   For more information, see [NVIDIA clock throttle reasons](https://docs.nvidia.com/deploy/nvml-api/group__nvmlClocksThrottleReasons.html).
 
+* **GPUECCError**: NPD monitors error-correcting code (ECC) memory health by querying `nvidia-smi` for corrected and uncorrected SRAM and DRAM errors.
+  * Error counts that exceed the health-check thresholds might indicate GPU memory issues.
+  * On GPUs that use row remapping, the check also detects pending remaps, remapping failures, or an uncorrectable remap count that exceeds the health-check threshold.
+  * On V100 GPUs, the check also monitors retired memory pages and pending page retirement.
+  * This check applies only to NVIDIA GPU VM SKUs that support ECC and have ECC enabled.
+
 * **UnhealthyNvidiaDevicePlugin**: For [AKS-managed GPU node pools](./aks-managed-gpu-nodes.md), NPD monitors the health of the NVIDIA device plugin systemd service (`nvidia-device-plugin.service`).
   * The NVIDIA device plugin is responsible for advertising GPU resources to the Kubernetes scheduler. If the service is not active, GPU resources might not be available for scheduling workloads.
+  * This check applies only to AKS-managed GPU node pools that use the NVIDIA device plugin. It doesn't run on node pools that use Dynamic Resource Allocation (DRA) for GPUs.
+
+* **UnhealthyNvidiaDCGMServices**: For [AKS-managed GPU node pools](./aks-managed-gpu-nodes.md), NPD monitors the health of the NVIDIA Data Center GPU Manager (DCGM) and DCGM exporter systemd services (`nvidia-dcgm.service` and `nvidia-dcgm-exporter.service`).
+  * DCGM provides GPU health and telemetry data, and the exporter exposes GPU metrics for monitoring. If either service is inactive, GPU health data or metrics might be unavailable.
   * This check applies only to AKS-managed GPU node pools.
 
-* **NVIDIA GRID Driver License Check**: For NVIDIA VM SKUs that support GRID driver, this condition verifies license status of the installed GRID driver on [supported NVIDIA VM SKUs](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series).
+* **NVIDIAGRIDStatusInvalid**: For NVIDIA VM SKUs that support the GRID driver, this condition verifies the license status of the installed GRID driver on [supported NVIDIA VM SKUs](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series).
 
-  * Invalid might indicate the installed GRID driver is not licensed.
+  * An invalid status might indicate that the installed GRID driver isn't licensed.
 
 ## Frequently asked questions
 

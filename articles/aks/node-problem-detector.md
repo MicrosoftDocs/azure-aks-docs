@@ -3,7 +3,7 @@ title:  Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes
 description: Learn about how AKS uses Node Problem Detector to expose issues with the node.
 ms.topic: concept-article
 ms.subservice: aks-monitoring
-ms.date: 05/31/2023
+ms.date: 11/09/2026
 author: schaffererin
 ms.author: schaffererin
 ai-usage: ai-assisted
@@ -22,27 +22,30 @@ ai-usage: ai-assisted
 
 Node conditions indicate a permanent problem that makes the node unavailable. AKS uses the following node conditions from NPD to expose permanent problems on the node. NPD also emits corresponding Kubernetes events.
 
-|Problem Daemon type|NodeCondition| Reason|Compute type| 
-|---|---|---|---|
-|CustomPluginMonitor| FilesystemCorruptionProblem | FilesystemCorruptionDetected | General purpose |
-|CustomPluginMonitor| KubeletProblem | KubeletIsDown |  General purpose |
-|CustomPluginMonitor| ContainerRuntimeProblem | ContainerRuntimeIsDown |  General purpose |
-|CustomPluginMonitor| VMEventScheduled | VMEventScheduled |  General purpose |
-|CustomPluginMonitor| FrequentUnregisterNetDevice | UnregisterNetDevice|  General purpose |
-|CustomPluginMonitor|FrequentKubeletRestart|FrequentKubeletRestart|  General purpose |
-|CustomPluginMonitor|FrequentContainerdRestart|FrequentContainerdRestart|  General purpose |
-|CustomPluginMonitor|FrequentDockerRestart|FrequentDockerRestart| General purpose |
-|CustomPluginMonitor|GPUMissing|Observed GPU count does not match expected GPU count| GPU only |
-|CustomPluginMonitor|NVLinkStatusInactive|NVLinkStatusInactive| GPU only |
-|CustomPluginMonitor|XIDErrors|XID errors present in kernel log| GPU only |
-|CustomPluginMonitor|IBLinkFlapping|Intermittent InfiniBand device connectivity| GPU only |
-|CustomPluginMonitor|GPUClockThrottling|Problematic GPU clock throttling detected| GPU only |
-|CustomPluginMonitor|UnhealthyNvidiaDevicePlugin|NVIDIA device plugin service is not active| GPU only (managed GPU) |
-|SystemLogMonitor|KernelDeadlock|DockerHung| General purpose |
-|SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly| General purpose |
+| Problem Daemon type | NodeCondition | Reason | Compute type |
+| --- | --- | --- | --- |
+| CustomPluginMonitor | FilesystemCorruptionProblem | FilesystemCorruptionDetected | General purpose |
+| CustomPluginMonitor | KubeletProblem | KubeletIsDown | General purpose |
+| CustomPluginMonitor | ContainerRuntimeProblem | ContainerRuntimeIsDown | General purpose |
+| CustomPluginMonitor | VMEventScheduled | VMEventScheduled | General purpose |
+| CustomPluginMonitor | FrequentUnregisterNetDevice | UnregisterNetDevice | General purpose |
+| CustomPluginMonitor | FrequentKubeletRestart | FrequentKubeletRestart | General purpose |
+| CustomPluginMonitor | FrequentContainerdRestart | FrequentContainerdRestart | General purpose |
+| CustomPluginMonitor | FrequentDockerRestart | FrequentDockerRestart | General purpose |
+| CustomPluginMonitor | GPUMissing | GPUMissing | GPU only |
+| CustomPluginMonitor | NVLinkDown | NVLinkStatusBad | GPU only |
+| CustomPluginMonitor | XIDError | XIDErrorIsPresent | GPU only |
+| CustomPluginMonitor | IBLinkFlapping | IBLinkFlapping | GPU only |
+| CustomPluginMonitor | GPUClockThrottling | GPUClockThrottlingIsPresent | GPU only |
+| CustomPluginMonitor | GPUECCError | GPUECCErrorIsPresent | GPU only |
+| CustomPluginMonitor | UnhealthyNvidiaDevicePlugin | UnhealthyNvidiaDevicePlugin | GPU only (managed GPU) |
+| CustomPluginMonitor | UnhealthyNvidiaDCGMServices | UnhealthyNvidiaDCGMServices | GPU only (managed GPU) |
+| CustomPluginMonitor | NVIDIAGRIDStatusInvalid | NVIDIAGRIDStatusInvalid | GPU only |
+| SystemLogMonitor | KernelDeadlock | DockerHung | General purpose |
+| SystemLogMonitor | ReadonlyFilesystem | FilesystemIsReadOnly | General purpose |
 
 > [!NOTE]
-> The `GPU only` node conditions apply to all GPU node pools that use AKS-managed GPU drivers (node pools not created with `--gpu-driver none`). The `GPU only (managed GPU)` conditions apply only to node pools with the [fully managed GPU experience](./aks-managed-gpu-nodes.md) enabled. GPU health monitoring is supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md).
+> The `GPU only` node conditions apply to GPU node pools that use AKS-managed GPU drivers (node pools not created with `--gpu-driver none`). Individual checks depend on GPU capabilities and configuration. The `GPU only (managed GPU)` conditions apply only to node pools with the [fully managed GPU experience](./aks-managed-gpu-nodes.md) enabled. The NVIDIA device plugin check doesn't run on node pools that use Dynamic Resource Allocation (DRA) for GPUs. GPU health monitoring is supported on standard GPU and [MIG-enabled GPU node pools](./gpu-multi-instance.md). For check-specific requirements, see [GPU health monitoring](./gpu-health-monitoring.md).
 
 ## Events
 
