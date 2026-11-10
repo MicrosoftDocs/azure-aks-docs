@@ -32,25 +32,25 @@ AKS Node Problem Detector ***does not*** run GPU health checks on node pools wit
 
 ## Supported GPU health checks
 
-NPD regularly monitors GPU-enabled node pools and sets conditions when it detects anomalies. The following GPU health checks are currently supported. The check names match the Kubernetes node condition types:
+NPD regularly monitors GPU-enabled node pools and sets conditions when it detects anomalies. The following GPU health checks are currently supported:
 
 * **GPUMissing**: NPD verifies that the number of GPUs detected by the `nvidia-smi` utility matches the expected GPU count for the VM SKU assigned to the node.
   * A mismatch might indicate a hardware fault, driver issue, or misconfiguration. Accurate GPU enumeration is critical for ensuring scheduling accuracy and workload availability on GPU nodes.
 
-* **XIDError**: Checks for XID (eXecution ID) errors that the GPU driver emits in the kernel logs. XID errors are low-level GPU faults that typically occur when:
+* **GPUXIDErrors**: Checks for XID (eXecution ID) errors that the GPU driver emits in the kernel logs. XID errors are low-level GPU faults that typically occur when:
   * The driver misprograms the GPU.
   * There's a corruption in the command stream sent to the GPU.
   * A hardware failure or instability affects GPU operation.
 
   For more information, see [XID errors on NVIDIA GPUs](https://docs.nvidia.com/deploy/xid-errors/index.html).
 
-* **NVLinkDown**: For NVIDIA VM SKUs that support NVLink, NPD checks for inactive NVLink connections.
+* **NVLink Status**: For NVIDIA VM SKUs that support NVLink, this condition confirms that NVLink is active and functioning.
   * NVLink is a high-speed interconnect used to facilitate data transfer between multiple GPUs.
   * If NVLink is inactive or degraded, multi-GPU workloads might experience reduced performance or communication bottlenecks.
 
   For more information, see [NVIDIA NVLink](https://www.nvidia.com/en-us/data-center/nvlink/).
 
-* **IBLinkFlapping**: NPD monitors for InfiniBand (IB) link flapping, or intermittent connectivity of the IB network device.
+* **InfiniBand Link Flapping**: NPD monitors for InfiniBand (IB) link flapping, or intermittent connectivity of the IB network device.
   * Link flapping shouldn't occur under normal operating conditions and might result in degraded inter-node communication for distributed workloads.
   * It can also signal physical layer issues, misconfigured firmware, or driver instability.
 
@@ -78,7 +78,7 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when it detect
   * DCGM provides GPU health and telemetry data, and the exporter exposes GPU metrics for monitoring. If either service is inactive, GPU health data or metrics might be unavailable.
   * This check applies only to AKS-managed GPU node pools.
 
-* **NVIDIAGRIDStatusInvalid**: For NVIDIA VM SKUs that support the GRID driver, this condition verifies the license status of the installed GRID driver on [supported NVIDIA VM SKUs](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series).
+* **NVIDIA GRID Driver License Check**: For NVIDIA VM SKUs that support the GRID driver, this condition verifies the license status of the installed GRID driver on [supported NVIDIA VM SKUs](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series).
 
   * An invalid status might indicate that the installed GRID driver isn't licensed.
 
