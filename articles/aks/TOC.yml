@@ -1397,6 +1397,8 @@
           href: use-nvidia-gpu.md
         - name: Use managed GPU nodes
           href: aks-managed-gpu-nodes.md
+        - name: Supported VM sizes with managed GPU nodes
+          href: supported-skus-aks-managed-gpu.md
         - name: Use Windows GPUs
           href: use-windows-gpu.md
         - name: Use AMD GPUs
