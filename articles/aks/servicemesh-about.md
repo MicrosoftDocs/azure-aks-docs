@@ -39,6 +39,8 @@ Before you select a service mesh, make sure you understand your requirements and
 
 ## Next steps
 
+For a managed, sidecar-free service network, see [Azure Kubernetes Application Network for AKS (preview)](./application-network-overview.md).
+
 Azure Kubernetes Service (AKS) offers officially supported add-ons for Istio and Open Service Mesh:
 
 > [!div class="nextstepaction"]
@@ -70,4 +72,3 @@ For more details on service mesh standardization efforts, see:
 [osm-about]: ./open-service-mesh-about.md
 [istio-about]: ./istio-about.md
 [aks-support-policy]: support-policies.md
-
