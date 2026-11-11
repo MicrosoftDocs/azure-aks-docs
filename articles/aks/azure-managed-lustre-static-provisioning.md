@@ -3,7 +3,7 @@ title: Statically provision Azure Managed Lustre volumes for AKS
 description: Learn how to connect an existing Azure Managed Lustre file system to workloads in Azure Kubernetes Service.
 ms.topic: how-to
 ms.subservice: aks-storage
-ms.date: 10/30/2026
+ms.date: 11/10/2026
 author: wolfgang-desalvador
 ms.author: wdesalvador
 
@@ -156,7 +156,7 @@ The storage class uses `Retain`, so deleting the claim alone leaves the PV behin
 - **Pod scheduling issues**: Confirm that the workload uses a supported node pool and review the pod events.
 - **Network setup permission issues**: Verify that the AKS control-plane identity has appropriate permissions on the AKS subnet. Static provisioning doesn't require the CSI controller to create an Azure Managed Lustre file system.
 
-For common driver issues, see [CSI driver troubleshooting](azure-managed-lustre-overview.md#troubleshooting). For version-specific diagnostics, see the [upstream v0.6.0 troubleshooting guide](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.6.0/docs/csi-debug.md). For file system deployment issues, see [Azure Managed Lustre troubleshooting](/azure/azure-managed-lustre/troubleshoot-deployment).
+For common driver issues, see [CSI driver troubleshooting](azure-managed-lustre-overview.md#troubleshooting). For version-specific diagnostics, see the [upstream v0.7.0 troubleshooting guide](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.7.0/docs/csi-debug.md). For file system deployment issues, see [Azure Managed Lustre troubleshooting](/azure/azure-managed-lustre/troubleshoot-deployment).
 
 <a id="related-content"></a>
 

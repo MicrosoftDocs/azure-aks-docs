@@ -3,7 +3,7 @@ title: Supported Azure VM sizes for AKS-managed GPU node pools
 description: Review supported Azure VM families and exclusions before choosing a node VM size for an AKS-managed GPU node pool
 author: sdesai345
 ms.author: sachidesai
-ms.date: 11/09/2026
+ms.date: 11/11/2026
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
@@ -22,7 +22,7 @@ AKS-managed GPU node pools currently support GPU-enabled VM sizes in the NC, ND,
 | Azure VM family | Supported GPU series | Exclusions and retired series |
 | --- | --- | --- |
 | [NC family](/azure/virtual-machines/sizes/gpu-accelerated/nc-family) | NVIDIA GPU series, including NCasT4, NC A100, and NC H100. | Non-NVIDIA GPU series aren't supported. |
-| [ND family](/azure/virtual-machines/sizes/gpu-accelerated/nd-family) | Include [ND A100 v4](/azure/virtual-machines/sizes/gpu-accelerated/ndasra100v4-series), [NDm A100 v4](/azure/virtual-machines/sizes/gpu-accelerated/ndma100v4-series), and [ND H100 v5](/azure/virtual-machines/sizes/gpu-accelerated/ndh100v5-series). | [ND GB200 v6](/azure/virtual-machines/sizes/gpu-accelerated/nd-gb200-v6-series) and [ND GB300 v6](/azure/virtual-machines/sizes/gpu-accelerated/nd-gb300-v6-series) aren't yet supported. ND MI300X v5 isn't currently supported because it uses AMD GPUs. |
+| [ND family](/azure/virtual-machines/sizes/gpu-accelerated/nd-family) | Include [ND A100 v4](/azure/virtual-machines/sizes/gpu-accelerated/ndasra100v4-series), [NDm A100 v4](/azure/virtual-machines/sizes/gpu-accelerated/ndma100v4-series), and [ND H100 v5](/azure/virtual-machines/sizes/gpu-accelerated/ndh100v5-series). [ND GB200 v6](/azure/virtual-machines/sizes/gpu-accelerated/nd-gb200-v6-series) and [ND GB300 v6](/azure/virtual-machines/sizes/gpu-accelerated/nd-gb300-v6-series) are supported in public preview (see [NVIDIA Grace-Blackwell GPU concepts on AKS](./grace-blackwell-series-gpu-concepts.md) to learn more). | ND MI300X v5 isn't currently supported because it uses AMD GPUs. |
 | [NV family](/azure/virtual-machines/sizes/gpu-accelerated/nv-family) | [NVads A10 v5](/azure/virtual-machines/sizes/gpu-accelerated/nvadsa10v5-series). | [NVads V710 v5](/azure/virtual-machines/sizes/gpu-accelerated/nvadsv710-v5-series) isn't currently supported because it uses AMD GPUs. NVv3 and NVv4 retired on September 30, 2026. |
 | [NG family](/azure/virtual-machines/sizes/gpu-accelerated/ng-family) | None. | The NG family isn't currently supported. NGads V620 uses AMD GPUs. |
 | [NP family](/azure/virtual-machines/sizes/fpga-accelerated/np-family) | None. | The NP family isn't supported. NP-series uses field-programmable gate arrays (FPGAs), not GPUs. |
