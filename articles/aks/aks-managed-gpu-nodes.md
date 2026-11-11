@@ -4,7 +4,7 @@ description: Learn how to provision a fully managed GPU node pool on your new or
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 11/02/2026
+ms.date: 11/10/2026
 author: sdesai345
 ms.author: sachidesai
 ms.service: azure-kubernetes-service
@@ -251,7 +251,7 @@ For GPU SKUs that support Multi-Instance GPU (such as A100 and H100), configure 
 
 The `migStrategy` field is immutable after the node pool is created.
 
-For background on MIG partitioning, supported VM sizes, and GPU instance profiles, see [Create a multi-instance GPU node pool in AKS](./gpu-multi-instance.md) and [NVIDIA Multi-Instance GPU](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/).
+For background on MIG partitioning, supported VM sizes, and GPU instance profiles, see [Multi-instance GPU (MIG) overview](./multi-instance-gpu-overview.md).
 
 ### [Single strategy](#tab/mig-single)
 
@@ -413,7 +413,7 @@ In this configuration, AKS installs no GPU software components: no driver, no de
 ## Related articles
 
 - [Use NVIDIA GPUs on AKS](./use-nvidia-gpu.md) for the standard (non-managed) GPU experience.
-- [Create a multi-instance GPU (MIG) node pool](./gpu-multi-instance.md) for background on MIG partitioning and supported VM sizes.
+- [Learn more about multi-instance GPU (MIG) node pools](./multi-instance-gpu-overview.md) for background on MIG partitioning and supported VM sizes.
 - [NVIDIA GPU Operator](./nvidia-gpu-operator.md) for managing GPU drivers and the device plugin yourself.
 - [Monitor GPU metrics](./monitor-gpu-metrics.md) from the managed NVIDIA DCGM exporter.
 - [GPU health monitoring](./gpu-health-monitoring.md) with Node Problem Detector (NPD) on AKS.

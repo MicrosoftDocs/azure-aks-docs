@@ -1,9 +1,10 @@
 ---
 title: Assign Capacity Reservation Groups to Node Pools in Azure Kubernetes Service (AKS)
-description: Learn how to use capacity reservation groups with node pools in Azure Kubernetes Service (AKS) to guarantee allocated capacity for your node pools.  
+description: Learn how to associate capacity reservation groups with Azure Kubernetes Service (AKS) node pools to guarantee allocated capacity for your nodes.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 09/29/2026
+ms.date: 11/05/2026
+ai-usage: ai-generated
 author: schaffererin
 ms.author: stgriffi
 ms.subservice: aks-nodes
@@ -14,19 +15,22 @@ ms.subservice: aks-nodes
 
 As your workload demands change, you can associate existing [capacity reservation groups (CRGs)][capacity-reservation-groups] to your Azure Kubernetes Service (AKS) node pools to guarantee allocated capacity for them. Capacity reservation groups allow you to reserve compute capacity in an Azure region or availability zone for any duration of time. This feature is useful for workloads that require guaranteed capacity, such as those with predictable traffic patterns or those that need to meet specific performance requirements.
 
-In this article, you learn how to use capacity reservation groups with node pools in AKS.
+In this article, you learn how to use capacity reservation groups with standard node pools in AKS. For nodes managed by node auto-provisioning (NAP), see [Use capacity reservation groups with node auto-provisioning](#use-capacity-reservation-groups-with-node-auto-provisioning).
+
+> [!IMPORTANT]
+> A CRG association doesn't guarantee that every associated node occupies reserved capacity. Azure can allocate VMs beyond a reservation's quantity. Those excess VMs use ordinary on-demand capacity, incur additional compute charges, and aren't covered by the capacity reservation SLA. Reserved capacity is billed whether or not a VM uses it.
 
 > [!NOTE]
 > Deleting a node pool implicitly dissociates that node pool from any associated capacity reservation group before the node pool is deleted. Deleting a cluster implicitly dissociates all node pools in that cluster from their associated capacity reservation groups.
 
-## Prerequisites for using capacity reservation groups with AKS node pools
+## Prerequisites for using capacity reservation groups with standard AKS node pools
 
 - You need the Azure CLI version 2.56 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-- You need an existing [capacity reservation group](/azure/virtual-machines/capacity-reservation-associate-virtual-machine-scale-set) with at least one capacity reservation. If not, the node pool is added to the cluster with a warning and no capacity reservation group gets associated.
+- You need an existing [capacity reservation group](/azure/virtual-machines/capacity-reservation-associate-virtual-machine-scale-set) with at least one capacity reservation. For node pools managed through `az aks nodepool`, an empty group results in a warning and no association. For NAP, an empty group prevents the `AKSNodeClass` from becoming ready.
 - You need to [create a user-assigned managed identity with the `Contributor` role](#create-a-user-assigned-managed-identity-and-assign-it-to-an-aks-cluster) for the resource group that contains the capacity reservation group and assign the identity to your AKS cluster. System-assigned managed identities don't work for this feature.
 
 > [!IMPORTANT]
-> For shared or cross-subscription capacity reservation groups, the user or service principal running the AKS command must have `Microsoft.Compute/capacityReservationGroups/write` permission on the linked capacity reservation group. The granular shared capacity reservation group consumer permissions used for virtual machines, such as `Microsoft.Compute/capacityReservationGroups/deploy/action`, aren't currently sufficient for associating an AKS node pool with a capacity reservation group.
+> For node pools managed through the AKS API or Azure CLI, shared or cross-subscription capacity reservation groups require the user or service principal running the AKS command to have `Microsoft.Compute/capacityReservationGroups/write` permission on the linked capacity reservation group. The granular shared capacity reservation group consumer permissions used for virtual machines, such as `Microsoft.Compute/capacityReservationGroups/deploy/action`, aren't currently sufficient for associating an AKS node pool with a capacity reservation group. NAP doesn't support shared or cross-subscription groups.
 >
 > Permissions assigned to the AKS cluster's managed identity don't replace this caller authorization check. The cluster managed identity still needs the required permissions on the resource group that contains the capacity reservation group, as described in this article.
 
@@ -39,16 +43,22 @@ In this article, you learn how to use capacity reservation groups with node pool
     az identity create --name <identity-name> --resource-group <resource-group-name> --location <location>
     ```
 
-1. Get the ID of the user-assigned managed identity using the [`az identity show`][az-identity-show] command and set it to an environment variable.
+1. Get the resource ID and principal ID of the user-assigned managed identity by running the [`az identity show`][az-identity-show] command and set them to environment variables.
 
     ```azurecli-interactive
-    IDENTITY_ID=$(az identity show --name <identity-name> --resource-group <resource-group-name> --query identity.id -o tsv)
+    IDENTITY_ID=$(az identity show --name <identity-name> --resource-group <resource-group-name> --query id --output tsv)
+    IDENTITY_PRINCIPAL_ID=$(az identity show --name <identity-name> --resource-group <resource-group-name> --query principalId --output tsv)
     ```
 
 1. Assign the `Contributor` role to the user-assigned identity using the [`az role assignment create`][az-role-assignment-create] command.
 
     ```azurecli-interactive
-    az role assignment create --assignee $IDENTITY_ID --role "Contributor" --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name>
+    az role assignment create \
+        --assignee-object-id "$IDENTITY_PRINCIPAL_ID" \
+        --assignee-principal-type ServicePrincipal \
+        --role Contributor \
+        --scope /subscriptions/<subscription-id>/resourceGroups/<resource-group-name> \
+        --output json
     ```
 
     It can take up to _60 minutes_ for the role assignment to propagate.
@@ -139,6 +149,21 @@ Associate an existing capacity reservation group with an existing node pool by u
     ```
 
     If the command fails with `LinkedAuthorizationFailed` and references `Microsoft.Compute/capacityReservationGroups/write`, grant that permission to the signed-in user or service principal running the command on the target capacity reservation group.
+
+## Use capacity reservation groups with node auto-provisioning
+
+For [NAP](./node-auto-provisioning.md), set `spec.capacityReservation.groupID` on an `AKSNodeClass` and reference that class from a Kubernetes `NodePool`. The Azure CLI `--crg-id` option applies to standard node pools in AKS, not NAP-managed nodes.
+
+NAP requires a `Targeted` group in the same subscription and region as the cluster, with at least one successfully provisioned, compatible member reservation. Unlike AKS-managed node pools, NAP doesn't support shared or cross-subscription groups. An empty or unusable group prevents the class from becoming ready; NAP doesn't fall back to launching unassociated nodes.
+
+Use the [user-assigned cluster managed identity and `Contributor` assignment](#create-a-user-assigned-managed-identity-and-assign-it-to-an-aks-cluster) described earlier so AKS can associate VMs with the group. The identity NAP uses to discover the group also needs these read permissions:
+
+- `Microsoft.Compute/capacityReservationGroups/read`.
+- `Microsoft.Compute/capacityReservationGroups/capacityReservations/read`.
+
+`Reader` on the group provides both read permissions. If NAP uses the cluster identity that already has `Contributor` on the containing resource group, no additional read assignment is needed. Read access alone doesn't authorize VM association.
+
+For configuration examples, verification, and troubleshooting, see [Capacity reservation group configuration for AKSNodeClass](./node-auto-provisioning-aksnodeclass.md#capacity-reservation-group-configuration).
 
 ## Next steps: Manage node pools in AKS
 
