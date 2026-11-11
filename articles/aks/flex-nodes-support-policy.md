@@ -4,7 +4,7 @@ description: Understand Microsoft and customer responsibilities, the documented 
 author: leslielin-5
 ms.author: leslielin
 ms.topic: concept-article
-ms.date: 09/22/2026
+ms.date: 11/05/2026
 ms.subservice: aks-nodes
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -50,7 +50,7 @@ The following limitations apply to flex nodes in AKS:
 | Flex node integration | The AKS resource-provider integration, flex node agent, bootstrap workflow, Azure Machine operations, and documented management interfaces. | The documented setup and lifecycle commands on your hosts. |
 | Host infrastructure | Azure platform operation when the host is an Azure resource. | Host provisioning, capacity, availability, hardware, firmware, storage, and recovery. |
 | Host operating system | Published host prerequisites and flex node software requirements. | Operating-system installation, security, patching, monitoring, packages, and privileged host access. |
-| Identity and access | Microsoft Entra ID, managed identity, Azure role-based access control, and supported flex node authentication integration. | Identity creation or enablement, credential protection, cluster-scoped role assignment, rotation, and removal. |
+| Identity and access | Microsoft Entra ID, managed identity, Azure role-based access control, and supported flex node authentication integration. | Identity creation or enablement, credential protection, flex node pool-scoped role assignment, rotation, and removal. |
 | Network connectivity | The AKS API endpoint and documented flex node integration points. | External routing, virtual network peering, firewalls, network security groups, DNS, proxies, address planning, and any VPN or ExpressRoute connection used by your network design. |
 | Unbounded-Net | The documented integration used by this deployment series. | Installation, configuration, upgrades, and external network dependencies for the customer-managed networking layer. |
 | Workloads | AKS platform behavior within the documented configuration. | Application deployment, configuration, security, monitoring, backup, data protection, and troubleshooting. |

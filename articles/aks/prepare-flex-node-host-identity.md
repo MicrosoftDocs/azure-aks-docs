@@ -2,7 +2,7 @@
 title: Prepare a flex node host and identity (preview)
 description: Learn how to prepare a Linux host, configure its Azure identity, and grant access to an AKS cluster before attachment.
 ms.topic: how-to
-ms.date: 09/22/2026
+ms.date: 11/05/2026
 author: leslielin-5
 ms.author: leslielin
 ms.subservice: aks-nodes
@@ -21,7 +21,7 @@ In this article, you:
 
 - Review the host requirements, and then provision or select the Linux host and its Azure identity.
 - Prepare and inspect the host, and record the values used by the attachment workflow.
-- Assign the identity access at the AKS cluster scope, and verify that identity.
+- Assign the identity access at the flex node pool scope, and verify that identity.
 
 Run the management commands in this article in a Linux-compatible Bash environment that has the required tools and network access. This article calls that environment your **Bash environment**. The separate machine that joins the cluster is the **flex node host**; run commands there only when a step explicitly directs you to.
 
@@ -29,7 +29,7 @@ Run the management commands in this article in a Linux-compatible Bash environme
 
 - Complete [Configure networking and create a flex node pool in AKS](./configure-flex-nodes-networking.md).
 - Review [Identity and access concepts for flex nodes](./flex-nodes-identity-access-concepts.md) and select one identity option.
-- Use an Azure account that can inspect the host resource and create a role assignment at the AKS cluster scope. `Role Based Access Control Administrator` and `User Access Administrator` are examples of roles that can create the assignment.
+- Use an Azure account that can inspect the host resource and create a role assignment at the flex node pool scope. `Role Based Access Control Administrator` and `User Access Administrator` are examples of roles that can create the assignment.
 - Install Azure CLI and an OpenSSH client in your Bash environment.
 - Prepare an SSH key pair accepted by the host.
 
@@ -223,7 +223,7 @@ Run these commands in your Bash environment while signed in with your operator a
     export SP_CLIENT_ID
     ```
 
-    Continue only when the command succeeds and returns an application client ID. The command can report that it adjusted the credential end date to match the certificate's expiration. Don't add `--role` or `--scopes`; the later role assignment is limited to the AKS cluster. Don't rerun creation against an existing application to rotate its credentials.
+    Continue only when the command succeeds and returns an application client ID. The command can report that it adjusted the credential end date to match the certificate's expiration. Don't add `--role` or `--scopes`; the later role assignment is limited to the flex node pool. Don't rerun creation against an existing application to rotate its credentials.
 
 1. Retrieve the service principal object ID and inspect the registered credentials.
 
@@ -276,7 +276,7 @@ set_flexnode_env HOST_PRINCIPAL_OBJECT_ID "${HOST_PRINCIPAL_OBJECT_ID}"
 
 Bootstrap maps `SP_TENANT_ID` and `SP_CLIENT_ID` to `azure.servicePrincipal.tenantId` and `azure.servicePrincipal.clientId` in the generated agent configuration. `SP_OBJECT_ID` is used for the Azure role assignment, not as the agent's client ID. For the certificate-file field, full redacted configuration shape, and safe verification commands, see [Inspect the rendered service principal configuration](./attach-flex-node-to-aks.md?tabs=service-principal#inspect-the-rendered-service-principal-configuration).
 
-Keep the protected PEM file for identity verification and host bootstrap. Make it available on the host through your approved credential-management process before attachment. Record its location through your approved credential-management process, not in the shared environment file. Continue with **Prepare and inspect the host**, and then assign the AKS role.
+Keep the protected PEM file for identity verification and host bootstrap. Make it available on the host through your approved credential-management process before attachment. Record its location through your approved credential-management process, not in the shared environment file. Continue with **Prepare and inspect the host**, and then assign the flex node agent role.
 
 ### Use an Azure virtual machine managed identity
 
@@ -514,9 +514,15 @@ set_flexnode_env SSH_PUBLIC_KEY_PATH "${SSH_PUBLIC_KEY_PATH}"
 set_flexnode_env FLEX_HOST_NAME "${FLEX_HOST_NAME}"
 ```
 
-## 4. Assign the AKS role
+## 4. Assign the flex node agent role
 
-The current preview workflow uses **Azure Kubernetes Service Contributor Role** at the exact AKS cluster scope. All three identity options use a service principal object ID for Azure role-based access control. Use a dedicated host identity, and remove this assignment when you remove the host as described in [Manage and remove flex nodes in AKS](./manage-and-remove-flex-nodes.md).
+The current preview workflow uses **Azure Kubernetes Service Flex Node Agent Role** (`8f139b0f-7eaf-460b-a9da-5b1246d9ed0d`) at the exact flex node pool scope. The role grants only the following permissions on the target pool:
+
+- `Microsoft.ContainerService/managedClusters/agentPools/listBootstrapData/action`
+- `Microsoft.ContainerService/managedClusters/agentPools/machines/read`
+- `Microsoft.ContainerService/managedClusters/agentPools/machines/write`
+
+All three identity options use a service principal object ID for Azure role-based access control. Use a dedicated host identity, and remove this assignment when you remove the host as described in [Manage and remove flex nodes in AKS](./manage-and-remove-flex-nodes.md).
 
 Display the selected principal object ID:
 
@@ -526,14 +532,24 @@ printf 'Principal object ID: %s\n' "${HOST_PRINCIPAL_OBJECT_ID}"
 
 Continue only when the value is populated and belongs to the selected VM identity, Arc machine, or service principal.
 
+Set the role definition ID:
+
+```bash
+: "${FLEX_POOL_RESOURCE_ID:?Complete flex node pool creation before assigning access.}"
+export FLEX_NODE_AGENT_ROLE_ID="8f139b0f-7eaf-460b-a9da-5b1246d9ed0d"
+```
+
 Check whether the assignment already exists:
 
 ```azurecli
 az role assignment list \
+    --subscription "${SUBSCRIPTION_ID}" \
     --assignee-object-id "${HOST_PRINCIPAL_OBJECT_ID}" \
-    --scope "${AKS_RESOURCE_ID}" \
+    --role "${FLEX_NODE_AGENT_ROLE_ID}" \
+    --scope "${FLEX_POOL_RESOURCE_ID}" \
     --fill-principal-name false \
-    --query "[?roleDefinitionName=='Azure Kubernetes Service Contributor Role'].{PrincipalId:principalId,Role:roleDefinitionName,Scope:scope}" \
+    --fill-role-definition-name false \
+    --query "[].{PrincipalId:principalId,RoleDefinitionId:roleDefinitionId,Scope:scope}" \
     --output table
 ```
 
@@ -541,69 +557,74 @@ If the command returns no row, create the assignment:
 
 ```azurecli
 az role assignment create \
+    --subscription "${SUBSCRIPTION_ID}" \
     --assignee-object-id "${HOST_PRINCIPAL_OBJECT_ID}" \
     --assignee-principal-type ServicePrincipal \
-    --role "Azure Kubernetes Service Contributor Role" \
-    --scope "${AKS_RESOURCE_ID}" \
+    --role "${FLEX_NODE_AGENT_ROLE_ID}" \
+    --scope "${FLEX_POOL_RESOURCE_ID}" \
     --output none
 ```
 
-Run the list command again. Continue when the principal ID and scope match the selected identity and `AKS_RESOURCE_ID`. Role assignment propagation can take several minutes.
+Run the list command again. Continue when the principal ID and scope match `HOST_PRINCIPAL_OBJECT_ID` and `FLEX_POOL_RESOURCE_ID`, and the role definition ID ends with `FLEX_NODE_AGENT_ROLE_ID`. Role assignment propagation can take several minutes.
 
 ## 5. Verify the selected identity
 
-Before you bootstrap the host, confirm that the selected identity can authenticate and read the exact target AKS cluster. Complete only the section for your identity option.
+Before you bootstrap the host, confirm that the selected identity can authenticate to Azure. Step 4 verifies the exact pool-scoped role assignment. Complete only the section for your identity option.
 
 ### Verify an Azure Arc managed identity
 
-In your Bash environment, pass the nonsecret AKS resource ID to the Azure Arc-enabled server:
+Connect to the Azure Arc-enabled server:
 
 ```bash
-[[ "${AKS_RESOURCE_ID}" == /subscriptions/*/providers/Microsoft.ContainerService/managedClusters/* ]]
-printf -v AKS_RESOURCE_ID_QUOTED '%q' "${AKS_RESOURCE_ID}"
-
 ssh -t \
     -i "${SSH_PRIVATE_KEY_PATH}" \
     "${FLEX_HOST_SSH_TARGET}" \
-    "export AKS_RESOURCE_ID=${AKS_RESOURCE_ID_QUOTED}; \
-    exec bash -l"
+    'exec bash -l'
 ```
 
-On the Azure Arc-enabled server, request an Azure Resource Manager token from the Hybrid Instance Metadata Service (HIMDS) and use it to read the AKS resource. Reading the challenge token requires root or membership in the `himds` group:
+On the Azure Arc-enabled server, request an Azure Resource Manager token from the Hybrid Instance Metadata Service (HIMDS). Reading the challenge token requires root or membership in the `himds` group:
 
 ```bash
-TOKEN_URL="${IDENTITY_ENDPOINT:-http://127.0.0.1:40342/metadata/identity/oauth2/token}?api-version=2019-11-01&resource=https%3A%2F%2Fmanagement.azure.com"
+(
+    set -euo pipefail
 
-CHALLENGE_TOKEN_PATH="$(curl --silent --show-error \
-    --dump-header - \
-    --output /dev/null \
-    --header Metadata:true \
-    "${TOKEN_URL}" |
-    sed -n 's/^[Ww][Ww][Ww]-[Aa]uthenticate: Basic realm=//p' |
-    tr -d '\r')"
+    TOKEN_URL="${IDENTITY_ENDPOINT:-http://127.0.0.1:40342/metadata/identity/oauth2/token}?api-version=2019-11-01&resource=https%3A%2F%2Fmanagement.azure.com"
 
-test -n "${CHALLENGE_TOKEN_PATH}"
-CHALLENGE_TOKEN="$(sudo cat "${CHALLENGE_TOKEN_PATH}")"
+    CHALLENGE_TOKEN_PATH="$(curl --silent --show-error \
+        --dump-header - \
+        --output /dev/null \
+        --header Metadata:true \
+        "${TOKEN_URL}" |
+        sed -n 's/^[Ww][Ww][Ww]-[Aa]uthenticate: Basic realm=//p' |
+        tr -d '\r')"
 
-TOKEN="$(curl --fail --silent --show-error \
-    --header Metadata:true \
-    --header "Authorization: Basic ${CHALLENGE_TOKEN}" \
-    "${TOKEN_URL}" |
-    jq -r '.access_token // empty')"
+    test -n "${CHALLENGE_TOKEN_PATH}" || {
+        printf 'HIMDS did not return a challenge path. Stop and verify the Arc connection.\n' >&2
+        exit 1
+    }
+    CHALLENGE_TOKEN="$(sudo cat "${CHALLENGE_TOKEN_PATH}")"
+    test -n "${CHALLENGE_TOKEN}" || {
+        printf 'The HIMDS challenge token is empty. Stop and verify HIMDS access.\n' >&2
+        exit 1
+    }
 
-test -n "${TOKEN}"
+    TOKEN="$(curl --fail --silent --show-error \
+        --header Metadata:true \
+        --header "Authorization: Basic ${CHALLENGE_TOKEN}" \
+        "${TOKEN_URL}" |
+        jq -r '.access_token // empty')"
 
-AKS_ARM_HTTP="$(curl --silent --show-error \
-    --output /dev/null \
-    --write-out '%{http_code}' \
-    --header "Authorization: Bearer ${TOKEN}" \
-    "https://management.azure.com${AKS_RESOURCE_ID}?api-version=2025-07-01")"
+    test -n "${TOKEN}" || {
+        printf 'No Azure Resource Manager token was returned. Stop and verify the Arc identity.\n' >&2
+        exit 1
+    }
 
-unset CHALLENGE_TOKEN TOKEN
-printf 'AKS_ARM_HTTP=%s\n' "${AKS_ARM_HTTP}"
+    unset CHALLENGE_TOKEN TOKEN
+    printf 'Azure Resource Manager token acquired for the Arc managed identity.\n'
+)
 ```
 
-Expected output: `AKS_ARM_HTTP=200`. Run `exit` to leave the Azure Arc-enabled server session.
+Expected output: `Azure Resource Manager token acquired for the Arc managed identity.` Run `exit` to leave the Azure Arc-enabled server session.
 
 ### Verify a service principal
 
@@ -641,86 +662,55 @@ First verify certificate authentication with an isolated Azure CLI profile. The 
 )
 ```
 
-Confirm that **Tenant** matches `SP_TENANT_ID` and that the token hasn't expired. This command prints only the tenant and expiration, not the access token. `--allow-no-subscriptions` lets you test authentication before granting Azure access. Successful authentication doesn't prove permission to read or register with the AKS cluster.
-
-After the AKS role assignment in step 4 has propagated, verify access to the exact target cluster:
-
-```bash
-(
-    set -e
-    SP_AZURE_CONFIG_DIR="$(mktemp -d)"
-    chmod 0700 "${SP_AZURE_CONFIG_DIR}"
-    trap 'rm -rf -- "${SP_AZURE_CONFIG_DIR}"' EXIT
-    export AZURE_CONFIG_DIR="${SP_AZURE_CONFIG_DIR}"
-
-    az login \
-        --service-principal \
-        --username "${SP_CLIENT_ID}" \
-        --certificate "${SP_CLIENT_CERTIFICATE_FILE}" \
-        --tenant "${SP_TENANT_ID}" \
-        --output none
-
-    az account set --subscription "${SUBSCRIPTION_ID}"
-
-    az aks show \
-        --resource-group "${RESOURCE_GROUP}" \
-        --name "${CLUSTER_NAME}" \
-        --query "{Name:name,ResourceId:id,ProvisioningState:provisioningState}" \
-        --output table
-)
-```
-
-Continue only when the returned resource ID matches `AKS_RESOURCE_ID` and the provisioning state is `Succeeded`. If authentication succeeds but the cluster request is denied, verify the service principal object ID, exact role assignment scope, and propagation before retrying. This check proves that the service principal and its certificate can read the target cluster. The host uses the prepared credential in [Attach a flex node to an AKS cluster](./attach-flex-node-to-aks.md).
+Confirm that **Tenant** matches `SP_TENANT_ID` and that the token hasn't expired. This command prints only the tenant and expiration, not the access token. `--allow-no-subscriptions` lets you test authentication before the pool-scoped role assignment propagates. Successful authentication doesn't prove permission to retrieve bootstrap data or register with the flex node pool.
 
 ### Verify an Azure VM managed identity
 
-In your Bash environment, pass the nonsecret AKS resource ID and identity client ID to the Azure VM:
+In your Bash environment, pass the identity client ID to the Azure VM:
 
 ```bash
-[[ "${AKS_RESOURCE_ID}" == /subscriptions/*/providers/Microsoft.ContainerService/managedClusters/* ]]
-printf -v AKS_RESOURCE_ID_QUOTED '%q' "${AKS_RESOURCE_ID}"
 printf -v HOST_IDENTITY_CLIENT_ID_QUOTED '%q' "${HOST_IDENTITY_CLIENT_ID}"
 
 ssh -t \
     -i "${SSH_PRIVATE_KEY_PATH}" \
     "${FLEX_HOST_SSH_TARGET}" \
-    "export AKS_RESOURCE_ID=${AKS_RESOURCE_ID_QUOTED}; \
-    export HOST_IDENTITY_CLIENT_ID=${HOST_IDENTITY_CLIENT_ID_QUOTED}; \
+    "export HOST_IDENTITY_CLIENT_ID=${HOST_IDENTITY_CLIENT_ID_QUOTED}; \
     exec bash -l"
 ```
 
-On the Azure VM, request an Azure Resource Manager token from the selected managed identity and use it to read the AKS resource:
+On the Azure VM, request an Azure Resource Manager token from the selected managed identity:
 
 ```bash
-TOKEN_URL="http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fmanagement.azure.com%2F"
+(
+    set -euo pipefail
 
-if [ -n "${HOST_IDENTITY_CLIENT_ID}" ]; then
-    ENCODED_CLIENT_ID="$(jq -rn \
-        --arg value "${HOST_IDENTITY_CLIENT_ID}" \
-        '$value|@uri')"
-    TOKEN_URL="${TOKEN_URL}&client_id=${ENCODED_CLIENT_ID}"
-fi
+    TOKEN_URL="http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fmanagement.azure.com%2F"
 
-TOKEN="$(curl --fail --silent --show-error \
-    --header Metadata:true \
-    "${TOKEN_URL}" |
-    jq -r '.access_token // empty')"
+    if [ -n "${HOST_IDENTITY_CLIENT_ID}" ]; then
+        ENCODED_CLIENT_ID="$(jq -rn \
+            --arg value "${HOST_IDENTITY_CLIENT_ID}" \
+            '$value|@uri')"
+        TOKEN_URL="${TOKEN_URL}&client_id=${ENCODED_CLIENT_ID}"
+    fi
 
-test -n "${TOKEN}"
+    TOKEN="$(curl --fail --silent --show-error \
+        --header Metadata:true \
+        "${TOKEN_URL}" |
+        jq -r '.access_token // empty')"
 
-AKS_ARM_HTTP="$(curl --silent --show-error \
-    --output /dev/null \
-    --write-out '%{http_code}' \
-    --header "Authorization: Bearer ${TOKEN}" \
-    "https://management.azure.com${AKS_RESOURCE_ID}?api-version=2025-07-01")"
+    test -n "${TOKEN}" || {
+        printf 'No Azure Resource Manager token was returned. Stop and verify the VM identity.\n' >&2
+        exit 1
+    }
 
-unset TOKEN
-printf 'AKS_ARM_HTTP=%s\n' "${AKS_ARM_HTTP}"
+    unset TOKEN
+    printf 'Azure Resource Manager token acquired for the VM managed identity.\n'
+)
 ```
 
-Expected output: `AKS_ARM_HTTP=200`. For a user-assigned identity, the request uses the same `HOST_IDENTITY_CLIENT_ID` that the attachment workflow passes to `--msi-client-id`. Run `exit` to leave the Azure VM session.
+Expected output: `Azure Resource Manager token acquired for the VM managed identity.` For a user-assigned identity, the request uses the same `HOST_IDENTITY_CLIENT_ID` that the attachment workflow passes to `--msi-client-id`. Run `exit` to leave the Azure VM session.
 
-The [attachment workflow](./attach-flex-node-to-aks.md) performs the final end-to-end check when the host uses the selected identity to register its Azure Machine resource.
+The [attachment workflow](./attach-flex-node-to-aks.md) checks whether the selected host identity can register its Azure Machine resource in the target flex node pool.
 
 ## Next step
 
