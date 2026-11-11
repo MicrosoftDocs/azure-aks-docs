@@ -18,7 +18,7 @@ Pod sandboxing on AKS uses Kata Containers to run each sandboxed pod in a lightw
 
 In this article, you deploy Pod sandboxing on a new or existing Azure Linux AKS cluster, deploy an application with the Kata runtime, and optionally verify kernel isolation.
 
-For clusters that use node auto-provisioning (NAP), follow [Use Pod sandboxing with node auto-provisioning](#use-pod-sandboxing-with-node-auto-provisioning) instead of the Azure CLI node pool creation steps.
+For clusters that use node auto-provisioning (NAP), follow [Use Pod sandboxing with node auto-provisioning](#node-auto-provisioning-node-pool) instead of the Azure CLI node pool creation steps.
 
 ## Prerequisites
 
@@ -93,6 +93,8 @@ Perform the following steps to deploy an Azure Linux AKS cluster using the Azure
 
 ## Enable Pod sandboxing on an existing cluster
 
+### [standard node pool](#tab/standard-node-pool)
+
 To use this feature with an existing AKS cluster, the following requirements must be met:
 
 - The cluster runs Kubernetes version 1.27.0 or higher.
@@ -142,18 +144,18 @@ To use this feature with an existing AKS cluster, the following requirements mus
 
     The cluster provisioning state should be `Succeeded`. The node pool output should show `KataVmIsolation`, `AzureLinux`, and the VM size you selected.
 
-## Use Pod sandboxing with node auto-provisioning
+### [Node auto-provisioning node pool](#tab/nap-mode)
 
 NAP supports Pod sandboxing through the `spec.workloadRuntime` field on an `AKSNodeClass`. Use a Karpenter `NodePool` that references this class to provision nodes for Kata workloads, rather than creating an Azure CLI-managed node pool with `az aks nodepool add`.
 
-### Prerequisites for NAP
+#### Prerequisites for NAP
 
 - Enable NAP on your cluster. For setup instructions, see [Enable node auto-provisioning](./use-node-auto-provisioning.md).
 - Use Kubernetes version 1.32 or later. NAP requires Azure Linux 3 for the Kata-enabled image.
 - Set `imageFamily: AzureLinux` and `workloadRuntime: KataVmIsolation` on the `AKSNodeClass`. Don't enable FIPS or Trusted Launch.
 - Allow compatible AMD64, generation 2 VM sizes in your `NodePool` requirements. Karpenter automatically filters for virtualization-capable sizes and selects the Kata-enabled image. You don't need to specify a VM size or add architecture and generation requirements to enable this filtering.
 
-### Configure a Kata node class and node pool
+#### Configure a Kata node class and node pool
 
 Create the NAP resources and verify the runtime class before you deploy a workload.
 
@@ -213,7 +215,7 @@ Create the NAP resources and verify the runtime class before you deploy a worklo
 
     The runtime class specifies the `kubernetes.azure.com/kata-vm-isolation: "true"` scheduling selector. When you create a pod that references this runtime class, Kubernetes adds the selector and runtime overhead to the pod. Karpenter recognizes the selector when it provisions compatible nodes and accounts for runtime overhead during bin-packing. You don't need to add the Kata selector manually.
 
-### Deploy and verify a NAP-managed Kata workload
+#### Deploy and verify a NAP-managed Kata workload
 
 Deploy a pod that requests the Kata runtime to trigger provisioning.
 
