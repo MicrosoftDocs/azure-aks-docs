@@ -4,7 +4,7 @@ description: Learn how to inventory, update, upgrade, drain, detach, and remove 
 author: leslielin-5
 ms.author: leslielin
 ms.topic: how-to
-ms.date: 09/08/2026
+ms.date: 11/05/2026
 ms.subservice: aks-nodes
 ms.service: azure-kubernetes-service
 ai-usage: ai-assisted
@@ -23,7 +23,7 @@ In this article, you:
 - Update settings for hosts that join later or for an existing Machine.
 - Upgrade one Machine or the complete flex node pool.
 - Drain, reset, and remove a flex node.
-- Delete an empty pool and remove supporting access.
+- Remove the pool role assignment, delete the empty pool, and remove supporting access.
 
 Run the management commands in this article in a Linux-compatible Bash environment that has the required tools and network access. This article calls that environment your **Bash environment**. The separate machine that joins the cluster is the **flex node host**; run commands there only when a step explicitly directs you to.
 
@@ -422,6 +422,52 @@ az aks nodepool delete-machines \
 
 Run the list command again. Continue when it returns no Machine name.
 
+## Remove the pool role assignment
+
+Before you delete the pool, remove the pool-scoped flex node agent role assignment for `HOST_PRINCIPAL_OBJECT_ID`. Deleting the pool doesn't remove the assignment, and the assignment can apply again if you create a pool with the same name in the same cluster.
+
+```bash
+: "${HOST_PRINCIPAL_OBJECT_ID:?Record the host identity in the host-and-identity article.}"
+: "${FLEX_POOL_RESOURCE_ID:?Load the flex node pool resource ID from the deployment environment.}"
+export FLEX_NODE_AGENT_ROLE_ID="8f139b0f-7eaf-460b-a9da-5b1246d9ed0d"
+```
+
+```azurecli
+az role assignment list \
+    --subscription "${SUBSCRIPTION_ID}" \
+    --assignee-object-id "${HOST_PRINCIPAL_OBJECT_ID}" \
+    --role "${FLEX_NODE_AGENT_ROLE_ID}" \
+    --scope "${FLEX_POOL_RESOURCE_ID}" \
+    --fill-principal-name false \
+    --fill-role-definition-name false \
+    --query "[].{Id:id,PrincipalId:principalId,RoleDefinitionId:roleDefinitionId,Scope:scope}" \
+    --output table
+```
+
+Continue only when the output identifies the exact principal, role definition ID, and flex node pool scope that you intend to remove.
+
+```azurecli
+az role assignment delete \
+    --subscription "${SUBSCRIPTION_ID}" \
+    --assignee-object-id "${HOST_PRINCIPAL_OBJECT_ID}" \
+    --role "${FLEX_NODE_AGENT_ROLE_ID}" \
+    --scope "${FLEX_POOL_RESOURCE_ID}"
+```
+
+Verify that the assignment is gone:
+
+```azurecli
+az role assignment list \
+    --subscription "${SUBSCRIPTION_ID}" \
+    --assignee-object-id "${HOST_PRINCIPAL_OBJECT_ID}" \
+    --role "${FLEX_NODE_AGENT_ROLE_ID}" \
+    --scope "${FLEX_POOL_RESOURCE_ID}" \
+    --fill-principal-name false \
+    --fill-role-definition-name false \
+    --query "[].id" \
+    --output tsv
+```
+
 ## Delete an empty flex node pool
 
 List the remaining machines:
@@ -456,41 +502,6 @@ az aks nodepool list \
 ```
 
 ## Remove supporting access
-
-Use your identity inventory to confirm that no other host, flex node pool, or automation uses `HOST_PRINCIPAL_OBJECT_ID`. If you can't confirm that the identity is unused, keep the assignment. Otherwise, remove its AKS-scoped role assignment:
-
-```bash
-: "${HOST_PRINCIPAL_OBJECT_ID:?Record the host identity in the host-and-identity article.}"
-```
-
-```azurecli
-az role assignment list \
-    --assignee-object-id "${HOST_PRINCIPAL_OBJECT_ID}" \
-    --scope "${AKS_RESOURCE_ID}" \
-    --fill-principal-name false \
-    --query "[?roleDefinitionName=='Azure Kubernetes Service Contributor Role'].{Id:id,PrincipalId:principalId,Role:roleDefinitionName,Scope:scope}" \
-    --output table
-```
-
-Continue only when the output identifies the exact principal, role, and AKS cluster scope that you intend to remove.
-
-```azurecli
-az role assignment delete \
-    --assignee-object-id "${HOST_PRINCIPAL_OBJECT_ID}" \
-    --role "Azure Kubernetes Service Contributor Role" \
-    --scope "${AKS_RESOURCE_ID}"
-```
-
-Verify that the assignment is gone:
-
-```azurecli
-az role assignment list \
-    --assignee-object-id "${HOST_PRINCIPAL_OBJECT_ID}" \
-    --scope "${AKS_RESOURCE_ID}" \
-    --fill-principal-name false \
-    --query "[?roleDefinitionName=='Azure Kubernetes Service Contributor Role'].id" \
-    --output tsv
-```
 
 If no flex node pools remain and you manually applied the exact temporary preview RBAC objects in the networking article, remove them:
 
