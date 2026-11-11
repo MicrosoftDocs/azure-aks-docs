@@ -31,6 +31,7 @@ The following scenarios are **not** supported:
 * Node pools using Virtual Machine Availability Sets (VMAS)
 * Using * as wildcard attached to a domain suffix for noProxy
 * noProxy hosts must be RFC 1123 compliant
+* Not inject automatically the http-proxy environment variables into initContainer (you should inject manually)
 
 `httpProxy`, `httpsProxy`, and `trustedCa` have no value by default. Pods are injected with the following environment variables:
 
