@@ -1399,6 +1399,12 @@
           href: aks-managed-gpu-nodes.md
         - name: Supported VM sizes with managed GPU nodes
           href: supported-skus-aks-managed-gpu.md
+        - name: Use NVIDIA Grace-Blackwell series GPUs
+          items:
+            - name: Grace-Blackwell GPU concepts
+              href: grace-blackwell-series-gpu-concepts.md
+            - name: Use Grace-Blackwell GPUs with managed GPU nodes
+              href: use-grace-blackwell-series-gpus.md
         - name: Use Windows GPUs
           href: use-windows-gpu.md
         - name: Use AMD GPUs
