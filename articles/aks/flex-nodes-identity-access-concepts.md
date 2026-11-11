@@ -2,7 +2,7 @@
 title: Identity and access concepts for flex nodes on AKS (preview)
 description: Learn why flex nodes use different identity options depending on where your host runs, and how AKS authorizes a host to join a cluster.
 ms.topic: concept-article
-ms.date: 08/28/2026
+ms.date: 11/05/2026
 author: sdesai345
 ms.author: sachidesai
 ms.subservice: aks-nodes
@@ -20,7 +20,7 @@ Before a customer-managed host can join an Azure Kubernetes Service (AKS) cluste
 
 A flex node runs on hardware that you manage or an Azure virtual machine that AKS didn't directly create. Because AKS didn't provision the host, the cluster doesn't automatically recognize that a connection request comes from your host machine and not from somewhere else.
 
-An identity gives the host machine a verifiable mechanism to authenticate to Azure, so that AKS can confirm the request is legitimate before letting the host register itself and join the cluster. The host keeps using that identity after it joins: the agent communicates with Azure to read the node's desired configuration and to report its status. The identity also carries the permissions that authorize the host to read and write for your specific AKS cluster.
+An identity gives the host machine a verifiable mechanism to authenticate to Azure, so that AKS can confirm the request is legitimate before letting the host register itself and join the cluster. The host keeps using that identity after it joins: the agent communicates with Azure to read the node's desired configuration and to report its status. The identity also carries the permissions that authorize the host to read and write Azure Machine resources in the target flex node pool.
 
 Every flex node identity option serves this same purpose. The options differ in *how* the host proves its identity, and that difference depends on the host location.
 
@@ -60,11 +60,11 @@ A service principal shifts credential management to you. Where a managed identit
 
 Choose this option only when your host doesn't qualify for either managed identity path.
 
-## Authorize the identity at your AKS cluster
+## Authorize the identity at your flex node pool
 
-Every identity option ends at the same checkpoint: before a host can join a cluster, its identity needs permission on that specific AKS cluster. You grant this permission by assigning the identity the role that lets it register as a node, scoped to that one cluster instead of your whole subscription. Scoping the permission to a single cluster limits what a compromised or misconfigured host identity could otherwise reach.
+Every identity option ends at the same checkpoint: before a host can join a cluster, its identity needs permission on the target flex node pool. Assign **Azure Kubernetes Service Flex Node Agent Role** to the identity at the exact flex node pool scope. This role lets the agent retrieve bootstrap data and read or write Azure Machine resources for that pool without granting access across the complete AKS cluster or subscription.
 
-This authorization step doesn't depend on which identity option you choose. A managed identity and a service principal both need this same cluster-scoped permission before a host can successfully register.
+This authorization step doesn't depend on which identity option you choose. A managed identity and a service principal both need this same pool-scoped permission before a host can successfully register.
 
 ## Choose the identity option for your host machine
 
@@ -78,4 +78,4 @@ Use the following questions to determine your flex node's identity configuration
 
 - [Learn how flex nodes work](flex-nodes-for-aks-overview.md).
 - [Learn about networking concepts for flex nodes](flex-nodes-networking-concepts.md).
-- [Plan a flex nodes deployment](plan-flex-nodes-deployment.md).
+- [Plan a flex nodes deployment](plan-flex-nodes-deployment.md).
