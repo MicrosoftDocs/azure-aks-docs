@@ -6,7 +6,7 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.custom: aks-cost
 ms.topic: how-to
-ms.date: 06/24/2026
+ms.date: 10/16/2026
 # Customer intent: "As a cloud architect, I want to optimize Azure Kubernetes Service usage and costs, so that I can enhance resource efficiency and reduce operating expenses for my organization."
 ---
 
@@ -147,7 +147,7 @@ For more information, see [Multi-Process Service (MPS)](https://docs.nvidia.com/
 
 :::image type="content" source="./media/optimize-aks-costs/gpu-migs.png" alt-text="Screenshot of a visual chart example showing multi-instance GPUs (MIGs).":::
 
-For more information, see [GPU Operator with MIG](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html) and [Create a multi-instance GPU node pool in Azure Kubernetes Service (AKS)](./gpu-multi-instance.md).
+For more information, see [Multi-instance GPU overview in Azure Kubernetes Service (AKS)](./multi-instance-gpu-overview.md) and [GPU Operator with MIG](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html).
 
 ## Multitenancy
 

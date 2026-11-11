@@ -3,7 +3,8 @@ title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azur
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
 ms.topic: how-to
 ms.custom: devx-track-azurecli, aks-scaling
-ms.date: 09/18/2026
+ms.date: 11/05/2026
+ai-usage: ai-generated
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
@@ -210,6 +211,49 @@ The subnet ID must be in the full Azure Resource Manager (ARM) format, as shown 
 spec:
   vnetSubnetID: "/subscriptions/{subscription-id}/resourceGroups/{resource-group}/providers/Microsoft.Network/virtualNetworks/{vnet-name}/subnets/{subnet-name}"
 ```
+
+## Capacity reservation group configuration
+
+Use `spec.capacityReservation.groupID` to associate nodes provisioned from an `AKSNodeClass` with an existing Azure [capacity reservation group (CRG)](./use-capacity-reservation-groups.md). Specify the full resource ID of the group, not a member reservation. Every node provisioned from the relevant AKSNodeClass targets that group.
+
+Before you begin, configure the [CRG identity permissions](./use-capacity-reservation-groups.md#use-capacity-reservation-groups-with-node-auto-provisioning). Use a `Targeted` group in the same subscription and region as the cluster, with at least one member reservation in provisioning state `Succeeded` for a compatible VM size and placement. Review the [AKS capacity reservation group limitations](./use-capacity-reservation-groups.md) before enabling in NAP.
+
+### Associate a capacity reservation group with NAP-managed nodes
+
+The following example creates a class and pool for a member reservation of `Standard_D8s_v5` VMs in `eastus-1`. Replace the resource ID, VM size, and zone with values for your reservation.
+
+```yaml
+    apiVersion: karpenter.azure.com/v1beta1
+    kind: AKSNodeClass
+    metadata:
+      name: reserved
+    spec:
+      capacityReservation:
+        groupID: /subscriptions/<subscription-id>/resourceGroups/<crg-resource-group>/providers/Microsoft.Compute/capacityReservationGroups/<crg-name>
+```
+
+For a regional, zone-less member, replace the `topology.kubernetes.io/zone` requirement with:
+
+```yaml
+- key: karpenter.azure.com/placement-scope
+  operator: In
+  values: ["regional"]
+```
+
+> [!IMPORTANT]
+> The association is a launch constraint, not a preference: every node you launch from this class targets the group. It doesn't cap launches at the reserved quantity or guarantee that each node occupies an SLA-backed reserved unit. Nodes remain labeled `karpenter.sh/capacity-type: on-demand`; don't use `reserved` as a capacity type. For unassociated capacity, use a separate class without `capacityReservation` and a pool that references it.
+
+Adding, changing, or removing `groupID` on an existing class causes [drift and node replacement](./node-auto-provisioning-disruption.md#drift), subject to the referencing pools' disruption controls. It doesn't update running nodes in place. Use a new class and pool if you need to avoid replacing nodes that reference an existing class.
+
+`status.capacityReservationGroup` reports the group's ID, location, zones, and member reservations, including their VM sizes, quantities, and provisioning states. It describes the reservation configuration, not current utilization or which nodes occupy reserved units.
+
+When you set `capacityReservation`, `status.conditions` must include `CapacityReservationGroupReady` with status `"True"` before the class becomes ready. This condition validates group discovery and compatibility, not successful VM association.
+
+If the class doesn't become ready or nodes don't launch:
+
+- Check the condition's reason and message. For access errors, verify the read permissions and allow time for role assignments to propagate. If the class is ready but VM association fails, verify the cluster's user-assigned managed identity has `Contributor` on the CRG resource group.
+- Check that the group exists and contains at least one member reservation in provisioning state `Succeeded`. An empty group doesn't cause NAP to launch unassociated nodes.
+- Check that the class supports the reserved VM size and that the pool's VM size and placement requirements match a member reservation. A ready class doesn't guarantee that a pool's requirements match the group's reservations.
 
 ## OS disk size configuration
 

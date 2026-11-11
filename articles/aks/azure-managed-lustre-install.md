@@ -3,7 +3,7 @@ title: Install the Azure Managed Lustre CSI driver
 description: Prepare your AKS cluster and install the Azure Managed Lustre CSI driver with Helm or a script. Find the separate preview AKS CLI installation guide.
 ms.topic: how-to
 ms.subservice: aks-storage
-ms.date: 11/02/2026
+ms.date: 11/10/2026
 author: pauljewellmsft
 ms.author: akashdubey
 ms.reviewer: brianl
@@ -20,11 +20,11 @@ ms.custom: sfi-image-nochange
 
 Install the Azure Managed Lustre CSI driver once for either [static provisioning](azure-managed-lustre-static-provisioning.md) or [dynamic provisioning](azure-managed-lustre-dynamic-provisioning.md). Use Helm to install the driver. A version-pinned script is also available.
 
-An alternative [AKS CLI installation option (preview)](azure-managed-lustre-install-cli-preview.md#install-with-aks-cli-options-preview) installs the managed extension when you create or update an AKS cluster. Use one installation method and its matching upgrade or uninstall procedure. Don't install a second copy of the driver.
+An alternative [AKS CLI installation option (preview)](azure-managed-lustre-install-cli-preview.md#install-with-aks-cli-options-preview) installs the managed extension when you create or update an AKS cluster. Use one installation method and its matching update guidance or uninstall procedure. Don't install a second copy of the driver.
 
 For use cases, performance scale, and benchmark results, see [What is Azure Managed Lustre on AKS?](azure-managed-lustre-introduction.md)
 
-If the driver is already installed, follow [Upgrade or uninstall the CSI driver](azure-managed-lustre-uninstall.md) instead of installing another copy. You can optionally [verify image signatures](azure-managed-lustre-image-security.md#pre-deployment-image-verification) before installation.
+If the driver is already installed, read the [update guidance](azure-managed-lustre-uninstall.md#upgrade-the-csi-driver) instead of installing another copy. You can optionally [verify image signatures](azure-managed-lustre-image-security.md#pre-deployment-image-verification) before installation.
 
 <a id="before-you-begin"></a>
 
@@ -93,7 +93,7 @@ To peer the AKS virtual network with your Azure Managed Lustre virtual network, 
 
 ## Install the driver
 
-Choose Helm or the following script to install version 0.6.0. To install through AKS instead, use the separate [AKS CLI installation guide (preview)](azure-managed-lustre-install-cli-preview.md). Don't run Helm or the script against an extension-managed driver.
+Choose Helm or the following script to install version 0.7.0. To install through AKS instead, use the separate [AKS CLI installation guide (preview)](azure-managed-lustre-install-cli-preview.md). Don't run Helm or the script against an extension-managed driver.
 
 The Helm commands use `kube-system`; substitute your driver namespace throughout if it differs. The script uses `kube-system`. Don't assume this namespace for the preview AKS CLI option.
 
@@ -107,12 +107,12 @@ Helm is the recommended installation method. Install the released OCI chart from
 helm install azurelustre \
    oci://mcr.microsoft.com/microsoft.azuremanagedlustre/azurelustre-csi-driver \
    --namespace kube-system --create-namespace \
-   --version 0.6.0 --wait --timeout 30m
+   --version 0.7.0 --wait --timeout 30m
 ```
 
-The chart version is `0.6.0`, without a `v` prefix. This chart selects the `v0.6.0` driver image family. Chart versions and driver versions are independent.
+The chart version is `0.7.0`, without a `v` prefix. This chart selects the `v0.7.0` driver image family. Chart versions and driver versions are independent.
 
-The controller uses the kubelet identity by default. To use Microsoft Entra Workload Identity with Helm instead, complete steps 1 through 4 of the [v0.6.0 workload identity setup](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.6.0/docs/workload-identity.md#setup), including identity permissions and federation. Then add `--set IsWorkloadIdentityEnabled=Enabled` and `--set IdentityClientId=<managed-identity-client-id>` to this command. These Helm settings don't configure the preview AKS CLI option.
+The controller uses the kubelet identity by default. To use Microsoft Entra Workload Identity with Helm instead, complete steps 1 through 4 of the [v0.7.0 workload identity setup](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.7.0/docs/workload-identity.md#setup), including identity permissions and federation. Then add `--set IsWorkloadIdentityEnabled=Enabled` and `--set IdentityClientId=<managed-identity-client-id>` to this command. These Helm settings don't configure the preview AKS CLI option.
 
 ### Install with the script
 
@@ -120,17 +120,17 @@ Alternatively, install the version-pinned manifests:
 
 ```bash
 set -o pipefail
-curl -sSL --fail https://raw.githubusercontent.com/kubernetes-sigs/azurelustre-csi-driver/v0.6.0/deploy/install-driver.sh | bash -s v0.6.0
+curl -sSL --fail https://raw.githubusercontent.com/kubernetes-sigs/azurelustre-csi-driver/v0.7.0/deploy/install-driver.sh | bash -s v0.7.0
 ```
 
 > [!IMPORTANT]
-> Specify `v0.6.0` in both the script URL and the script argument so the command installs the release described in this article. Without the argument, the installer can install a different release from the `main` branch.
+> Specify `v0.7.0` in both the script URL and the script argument so the command installs the release described in this article. Without the argument, the installer can install a different release from the `main` branch.
 
-For the corresponding source and deployment manifests, see the [v0.6.0 release](https://github.com/kubernetes-sigs/azurelustre-csi-driver/releases/tag/v0.6.0).
+For the corresponding source and deployment manifests, see the [v0.7.0 release](https://github.com/kubernetes-sigs/azurelustre-csi-driver/releases/tag/v0.7.0). Before changing an existing installation, read the [update guidance](azure-managed-lustre-uninstall.md#upgrade-the-csi-driver).
 
 ## Verify the installation
 
-The following checks apply to v0.6.0 installed with Helm or the script. For the preview AKS CLI option, use the verification commands in [Install with AKS CLI options (preview)](azure-managed-lustre-install-cli-preview.md#install-with-aks-cli-options-preview).
+The following checks apply to v0.7.0 installed with Helm or the script. For the preview AKS CLI option, use the verification commands in [Install with AKS CLI options (preview)](azure-managed-lustre-install-cli-preview.md#install-with-aks-cli-options-preview).
 
 Helm resource names depend on the release name, so the checks use labels shared by both installation methods. They assume the `kube-system` namespace; use your installation namespace if it differs.
 
@@ -161,7 +161,7 @@ Helm resource names depend on the release name, so the checks use labels shared 
 
    Every node where you intend to run Azure Managed Lustre workloads must appear in the `NODE` column of the pod list. A node without a CSI node pod can't mount Azure Managed Lustre, even when all three DaemonSets report ready.
 
-1. Confirm that every CSI node pod is ready and uses the expected v0.6.0 images:
+1. Confirm that every CSI node pod is ready and uses the expected v0.7.0 images:
 
    ```bash
    kubectl get pods -n kube-system -l app=csi-azurelustre-node -o wide
@@ -169,9 +169,9 @@ Helm resource names depend on the release name, so the checks use labels shared 
    kubectl get pods -n kube-system -l app=csi-azurelustre-controller -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.containers[?(@.name=="azurelustre")].image}{"\n"}{end}'
    ```
 
-   Every node pod must show `4/4` in the `READY` column and `Running` in the `STATUS` column. The fourth container is the `lustre-loader` native sidecar, which loads kernel modules and checks LNet readiness. A running pod with fewer than four ready containers isn't ready to serve mounts. Both the `azurelustre` and `lustre-loader` images must use the MCR repository and appropriate `v0.6.0-jammy`, `v0.6.0-noble`, or `v0.6.0-azurelinux3` tag listed in the [compatibility table](azure-managed-lustre-overview.md#azure-lustre-csi-driver-versions). The controller uses the `v0.6.0-noble` image.
+   Every node pod must show `4/4` in the `READY` column and `Running` in the `STATUS` column. The fourth container is the `lustre-loader` native sidecar, which loads kernel modules and checks LNet readiness. A running pod with fewer than four ready containers isn't ready to serve mounts. Both the `azurelustre` and `lustre-loader` images must use the MCR repository and appropriate `v0.7.0-jammy`, `v0.7.0-noble`, or `v0.7.0-azurelinux3` tag listed in the [compatibility table](azure-managed-lustre-overview.md#azure-lustre-csi-driver-versions). The controller uses the `v0.7.0-noble` image.
 
-After a new installation, continue with [dynamic provisioning](azure-managed-lustre-dynamic-provisioning-reference.md#create-a-storage-class-for-dynamic-provisioning) or [static provisioning](azure-managed-lustre-static-provisioning.md#create-and-configure-a-persistent-volume-for-static-provisioning). For an upgrade, continue with [Verify the upgrade](azure-managed-lustre-uninstall.md#verify-the-upgrade) before restarting workloads.
+After a new installation, continue with [dynamic provisioning](azure-managed-lustre-dynamic-provisioning-reference.md#create-a-storage-class-for-dynamic-provisioning) or [static provisioning](azure-managed-lustre-static-provisioning.md#create-and-configure-a-persistent-volume-for-static-provisioning). After a legacy script replacement, complete [Verify the upgrade](azure-managed-lustre-uninstall.md#verify-the-upgrade) before restarting workloads.
 
 <a id="enable-azure-managed-lustre-on-aks"></a>
 
