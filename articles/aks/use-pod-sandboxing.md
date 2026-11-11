@@ -4,7 +4,7 @@ description: Learn how to deploy Pod sandboxing on an Azure Kubernetes Service (
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, build-2023
-ms.date: 10/02/2026
+ms.date: 11/11/2026
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -18,10 +18,12 @@ Pod sandboxing on AKS uses Kata Containers to run each sandboxed pod in a lightw
 
 In this article, you deploy Pod sandboxing on a new or existing Azure Linux AKS cluster, deploy an application with the Kata runtime, and optionally verify kernel isolation.
 
+For clusters that use node auto-provisioning (NAP), follow [Use Pod sandboxing with node auto-provisioning](#use-pod-sandboxing-with-node-auto-provisioning) instead of the Azure CLI node pool creation steps.
+
 ## Prerequisites
 
 - The Azure CLI version 2.80.0 or later. Run `az --version` to find the version of your Azure CLI, and run `az upgrade` to upgrade. For more details, see the steps at [Install Azure CLI][install-azure-cli].
-- AKS supports Pod sandboxing on Kubernetes version 1.27.0 and higher.
+- AKS supports Pod sandboxing on Kubernetes version 1.27.0 and higher. NAP-provisioned Pod sandboxing nodes require Kubernetes version 1.32 or later and Azure Linux 3.
 - To manage a Kubernetes cluster, use the Kubernetes command-line client [`kubectl`][kubectl]. Azure Cloud Shell comes with `kubectl`. You can install `kubectl` locally using the [`az aks install-cli`][az-aks-install-cmd] command.
 
 ## Limitations
@@ -140,11 +142,138 @@ To use this feature with an existing AKS cluster, the following requirements mus
 
     The cluster provisioning state should be `Succeeded`. The node pool output should show `KataVmIsolation`, `AzureLinux`, and the VM size you selected.
 
+## Use Pod sandboxing with node auto-provisioning
+
+NAP supports Pod sandboxing through the `spec.workloadRuntime` field on an `AKSNodeClass`. Use a Karpenter `NodePool` that references this class to provision nodes for Kata workloads, rather than creating an Azure CLI-managed node pool with `az aks nodepool add`.
+
+### Prerequisites for NAP
+
+- Enable NAP on your cluster. For setup instructions, see [Enable node auto-provisioning](./use-node-auto-provisioning.md).
+- Use Kubernetes version 1.32 or later. NAP requires Azure Linux 3 for the Kata-enabled image.
+- Set `imageFamily: AzureLinux` and `workloadRuntime: KataVmIsolation` on the `AKSNodeClass`. Don't enable FIPS or Trusted Launch.
+- Allow compatible AMD64, generation 2 VM sizes in your `NodePool` requirements. Karpenter automatically filters for virtualization-capable sizes and selects the Kata-enabled image. You don't need to specify a VM size or add architecture and generation requirements to enable this filtering.
+
+### Configure a Kata node class and node pool
+
+Create the NAP resources and verify the runtime class before you deploy a workload.
+
+1. Save the following manifest as `kata-nap.yaml`. The `NodePool` references the Kata-enabled `AKSNodeClass`. The Cilium label and startup taint follow the [NAP node pool configuration](./node-auto-provisioning-node-pools.md) for clusters that use Cilium.
+
+    ```yaml
+    apiVersion: karpenter.azure.com/v1beta1
+    kind: AKSNodeClass
+    metadata:
+      name: kata
+    spec:
+      imageFamily: AzureLinux
+      workloadRuntime: KataVmIsolation
+    ---
+    apiVersion: karpenter.sh/v1
+    kind: NodePool
+    metadata:
+      name: kata
+    spec:
+      template:
+        metadata:
+          labels:
+            kubernetes.azure.com/ebpf-dataplane: cilium
+        spec:
+          nodeClassRef:
+            group: karpenter.azure.com
+            kind: AKSNodeClass
+            name: kata
+          startupTaints:
+            - key: node.cilium.io/agent-not-ready
+              effect: NoExecute
+              value: "true"
+          requirements:
+            - key: kubernetes.io/os
+              operator: In
+              values: ["linux"]
+            - key: karpenter.sh/capacity-type
+              operator: In
+              values: ["on-demand"]
+    ```
+
+    If your cluster doesn't use Cilium, omit the `kubernetes.azure.com/ebpf-dataplane: cilium` label and the `node.cilium.io/agent-not-ready` startup taint.
+
+1. Apply the resources:
+
+    ```bash
+    kubectl apply -f kata-nap.yaml
+    kubectl get aksnodeclass kata
+    kubectl get nodepool kata
+    ```
+
+1. Verify that the AKS-managed `kata-vm-isolation` runtime class is available:
+
+    ```bash
+    kubectl get runtimeclass kata-vm-isolation -o yaml
+    ```
+
+    The runtime class specifies the `kubernetes.azure.com/kata-vm-isolation: "true"` scheduling selector. When you create a pod that references this runtime class, Kubernetes adds the selector and runtime overhead to the pod. Karpenter recognizes the selector when it provisions compatible nodes and accounts for runtime overhead during bin-packing. You don't need to add the Kata selector manually.
+
+### Deploy and verify a NAP-managed Kata workload
+
+Deploy a pod that requests the Kata runtime to trigger provisioning.
+
+1. Save the following manifest as `kata-nap-app.yaml`. Set resource requests and limits to account for your workload and the pod VM's guest components. For sizing guidance, see [Pod sandboxing considerations][kata-considerations].
+
+    ```yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: nap-isolated-pod
+    spec:
+      runtimeClassName: kata-vm-isolation
+      containers:
+        - name: kata
+          image: mcr.microsoft.com/aks/fundamental/base-ubuntu:v0.0.11
+          command: ["/bin/sh", "-ec", "while :; do echo '.'; sleep 5; done"]
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+    ```
+
+    `runtimeClassName` is sufficient to select Kata-capable nodes. To target this specific Karpenter `NodePool`, optionally add the following to the pod specification:
+
+    ```yaml
+    nodeSelector:
+      karpenter.sh/nodepool: kata
+    ```
+
+1. Apply the pod manifest and wait for the pod to become ready:
+
+    ```bash
+    kubectl apply -f kata-nap-app.yaml
+    kubectl wait --for=condition=Ready pod/nap-isolated-pod --timeout=10m
+    ```
+
+    Karpenter provisions a compatible node if existing capacity can't accommodate the pod. Setting `workloadRuntime: KataVmIsolation` enables an additional runtime; standard pods can still run on the same node without VM isolation.
+
+1. Verify that the pod runs on a Kata-enabled, NAP-managed node:
+
+    ```bash
+    kubectl get nodes -l 'karpenter.sh/nodepool=kata,kubernetes.azure.com/kata-vm-isolation=true'
+    kubectl get pod nap-isolated-pod -o wide
+    kubectl exec nap-isolated-pod -- uname -r
+    kubectl get node "$(kubectl get pod nap-isolated-pod -o jsonpath='{.spec.nodeName}')" \
+      -o jsonpath='{.status.nodeInfo.kernelVersion}{"\n"}'
+    ```
+
+    The pod's guest kernel differs from the node's host kernel. For another comparison using a standard pod, see [Verify kernel isolation](#verify-kernel-isolation-optional).
+
+For field defaults, compatibility constraints, and the effect of changing the runtime on existing nodes, see [Workload runtime and Pod sandboxing](./node-auto-provisioning-aksnodeclass.md#workload-runtime-and-pod-sandboxing).
+
 ## Deploy applications using Pod sandboxing
 
 By using Pod sandboxing, you can deploy a mix of standard pods that don't use the Kata runtime alongside Kata pods that use the runtime. A Kata pod specifies `runtimeClassName: kata-vm-isolation` in its pod specification.
 
-The runtime class selects the Kata runtime, but you should also define scheduling constraints when you need workloads to run on a specific Pod sandboxing node pool. For example, use the built-in AKS node pool label in a `nodeSelector`. Replace `nodepool2` with the name of your Pod sandboxing node pool.
+The runtime class selects the Kata runtime, but you should also define scheduling constraints when you need workloads to run on a specific Pod sandboxing node pool. For an Azure CLI-managed node pool, use the built-in AKS node pool label in a `nodeSelector`. Replace `nodepool2` with the name of your Pod sandboxing node pool. For a NAP-managed node pool, use `karpenter.sh/nodepool` instead, as shown in the [NAP walkthrough](#deploy-and-verify-a-nap-managed-kata-workload).
 
 ```yaml
 spec:
@@ -266,7 +395,15 @@ To deploy a pod with the Kata runtime on your AKS cluster, perform the following
     kubectl delete pod <kata-pod-name>
     ```
 
-1. To remove the Pod sandboxing compute resources, you can also delete the Kata node pool by using the [`az aks nodepool delete`][az-aks-nodepool-delete] command. Before deleting the node pool, ensure no workloads that you want to retain are running on it.
+1. If you followed the NAP walkthrough, remove its workload and NAP resources. Deleting the Karpenter `NodePool` also terminates its nodes, so first ensure that no workloads you want to retain are running on them.
+
+    ```bash
+    kubectl delete -f kata-nap-app.yaml
+    kubectl delete nodepool kata
+    kubectl delete aksnodeclass kata
+    ```
+
+1. To remove an Azure CLI-managed Pod sandboxing node pool, use the [`az aks nodepool delete`][az-aks-nodepool-delete] command. Before deleting the node pool, ensure no workloads that you want to retain are running on it.
 
     ```azurecli-interactive
     az aks nodepool delete \
