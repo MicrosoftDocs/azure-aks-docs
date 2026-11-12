@@ -2,7 +2,7 @@
 title: Use Arm64 Virtual Machines in Azure Kubernetes Service (AKS) for cost effectiveness
 description: Learn how to create node pools using Arm64 Virtual Machines with Azure Kubernetes Service (AKS) for cost effectiveness.
 ms.topic: how-to
-ms.date: 02/25/2025
+ms.date: 11/12/2026
 author: allyford
 ms.author: allyford
 
@@ -38,6 +38,9 @@ Before you begin, make sure you have:
 ## Create node pools with Arm64 VMs
 
 The Arm64 processor provides low power compute for your Kubernetes workloads. Arm64 virtual machines can be added to existing clusters even mixing Intel and Arm architecture node pools within a cluster. To create an Arm64 node pool, you need to choose a [Dpsv5][arm-sku-vm1], [Dplsv5][arm-sku-vm2], or [Epsv5][arm-sku-vm3] series virtual machine.
+
+> [!NOTE]
+> Arm64 node pools support Artifact Streaming for Linux Arm64 container images. For more information, see [Reduce time to deployment with Artifact Streaming](./artifact-streaming.md).
 
 ### Add a node pool with an Arm64 VM
 
