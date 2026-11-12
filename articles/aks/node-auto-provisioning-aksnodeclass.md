@@ -125,24 +125,24 @@ spec:
   fipsMode: FIPS
 ```
 
-## Workload runtime and Pod sandboxing
+## Workload runtime and pod sandboxing
 
-NAP supports [Pod sandboxing](./concepts-pod-sandboxing.md) on provisioned nodes. The `spec.workloadRuntime` field determines the workload runtimes available on nodes that use an `AKSNodeClass`.
+NAP supports [pod sandboxing](./concepts-pod-sandboxing.md) on provisioned nodes. The `spec.workloadRuntime` field determines the workload runtimes available on nodes that use an `AKSNodeClass`.
 
 | Value | Behavior |
 | --- | --- |
 | `OCIContainer` | Default when omitted. Runs standard OCI containers. |
-| `KataVmIsolation` | Enables Pod sandboxing with Kata Containers alongside standard OCI containers. Pods that specify `runtimeClassName: kata-vm-isolation` run in lightweight VMs with their own guest kernel. |
+| `KataVmIsolation` | Enables pod sandboxing with Kata Containers alongside standard OCI containers. Pods that specify `runtimeClassName: kata-vm-isolation` run in lightweight VMs with their own guest kernel. |
 
 Setting `workloadRuntime: KataVmIsolation` doesn't sandbox every pod on the node. Pods that don't request the Kata runtime continue to run as standard containers and can share the same node.
 
 ### Pod sandboxing requirements
 
-- Set `imageFamily: AzureLinux`. NAP requires Azure Linux 3 for Pod sandboxing, which requires Kubernetes version 1.32 or later.
+- Set `imageFamily: AzureLinux`. NAP requires Azure Linux 3 for pod sandboxing, which requires Kubernetes version 1.32 or later.
 - Use AMD64, generation 2 VM sizes with compatible virtualization capabilities. Karpenter automatically filters for compatible sizes and selects the Kata-enabled Azure Linux image. If you constrain VM sizes in a `NodePool`, leave compatible sizes available.
 - Don't set `fipsMode: FIPS` or enable Trusted Launch. Pod sandboxing doesn't support either configuration.
 
-The following example enables Pod sandboxing for nodes provisioned from the `AKSNodeClass`:
+The following example enables pod sandboxing for nodes provisioned from the `AKSNodeClass`:
 
 ```yaml
 apiVersion: karpenter.azure.com/v1beta1

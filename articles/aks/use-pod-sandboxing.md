@@ -146,7 +146,7 @@ To use this feature with an existing AKS cluster, the following requirements mus
 
 ### [Node auto-provisioning node pool](#tab/nap-mode)
 
-NAP supports Pod sandboxing through the `spec.workloadRuntime` field on an `AKSNodeClass`. Use a Karpenter `NodePool` that references this class to provision nodes for Kata workloads, rather than creating an Azure CLI-managed node pool with `az aks nodepool add`.
+NAP supports pod sandboxing through the `spec.workloadRuntime` field on an `AKSNodeClass`. Use a Karpenter `NodePool` that references this class to provision nodes for Kata workloads, rather than creating an Azure CLI-managed node pool with `az aks nodepool add`.
 
 #### Prerequisites for NAP
 
