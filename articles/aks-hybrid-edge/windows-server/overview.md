@@ -1,5 +1,5 @@
 ---
-title: Overview of AKS on Windows Server
+title: Overview of AKS On-Premises on Windows Server
 description: Learn about AKS on Windows Server.
 ms.topic: overview
 ms.custom: linux-related-content, windows-server
@@ -11,7 +11,7 @@ ms.date: 09/01/2026
 # Keyword: on-premises Kubernetes
 ---
 
-# Overview of AKS on Windows Server
+# Overview of AKS On-Premises on Windows Server
 
 [!INCLUDE [aks-hybrid-applies-to-azure-stack-hci-windows-server-sku](../includes/aks-hci-applies-to-skus/aks-hybrid-applies-to-azure-stack-hci-windows-server-sku.md)]
 
@@ -23,7 +23,7 @@ Or, you can use AKS to orchestrate your cloud-based containers. See [Azure Kuber
 
 The following sections discuss some of the reasons to use AKS on Windows Server, then answer some common questions about the service and how to get started. For a background on containers, see [Windows and containers](/virtualization/windowscontainers/about/). For information about how Kubernetes works in AKS on Windows Server, see [Kubernetes core concepts](kubernetes-concepts.md). For more information about Kubernetes, see [the Kubernetes.io documentation](https://kubernetes.io).
 
-## Why use AKS on Windows Server for containerized applications?
+## Why use AKS On-Premises on Windows Server for containerized applications?
 
 While you can manage a few containers manually by using Docker and Windows, apps often use five, 10, or even hundreds of containers. That's where the Kubernetes orchestrator comes in.
 
@@ -94,7 +94,7 @@ The Windows Server cluster or Windows Server 2019/2022 Datacenter failover clust
 - At least 30 GB of available memory for running AKS VMs.
 - All servers in the cluster must use the EN-US region and language selection.
 
-## AKS on Windows Server functionality
+## AKS On-Premises Windows Server functionality
 
 The following sections describe some of the functionality that AKS provides:
 
