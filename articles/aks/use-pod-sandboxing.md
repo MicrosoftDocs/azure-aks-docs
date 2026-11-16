@@ -4,7 +4,7 @@ description: Learn how to deploy Pod sandboxing on an Azure Kubernetes Service (
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, build-2023
-ms.date: 10/02/2026
+ms.date: 11/16/2026
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -35,6 +35,8 @@ The following constraints apply to Pod sandboxing:
 - Pod sandboxing is supported only on Azure Linux. Ubuntu and Windows aren't supported. For more information, see [Azure Linux container host for AKS][azurelinux-cluster-config].
 - You can't enable [Federal Information Processing Standard (FIPS)](./enable-fips-nodes.md) or [Trusted Launch](./use-trusted-launch.md) on a node pool that uses Pod sandboxing. For more information, see [Pod sandboxing considerations][kata-considerations].
 - Arm64 architecture isn't supported on a node pool that uses Pod sandboxing.
+- [Node auto-provisioning (NAP)][node-auto-provisioning] isn't supported with Pod sandboxing.
+- [Virtual Machines node pools][virtual-machines-node-pools] aren't supported with Pod sandboxing.
 
 ## How it works
 
@@ -319,3 +321,5 @@ To deploy a pod with the Kata runtime on your AKS cluster, perform the following
 [register-the-katavmisolationpreview-feature-flag]: #register-the-katavmisolationpreview-feature-flag
 [kata-considerations]: considerations-pod-sandboxing.md
 [use-node-taints]: use-node-taints.md
+[node-auto-provisioning]: node-auto-provisioning.md
+[virtual-machines-node-pools]: virtual-machines-node-pools.md
