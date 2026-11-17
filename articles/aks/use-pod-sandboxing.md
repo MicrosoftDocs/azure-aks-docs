@@ -18,7 +18,7 @@ Pod sandboxing on AKS uses Kata Containers to run each sandboxed pod in a lightw
 
 In this article, you deploy Pod sandboxing on a new or existing Azure Linux AKS cluster, deploy an application with the Kata runtime, and optionally verify kernel isolation.
 
-For clusters that use node auto-provisioning (NAP), follow [Use Pod sandboxing with node auto-provisioning](#node-auto-provisioning-node-pool) instead of the Azure CLI node pool creation steps.
+For clusters that use node auto-provisioning (NAP), follow [Use Pod sandboxing with node auto-provisioning](##node-auto-provisioning-node-pool) instead of the Azure CLI node pool creation steps.
 
 ## Prerequisites
 
