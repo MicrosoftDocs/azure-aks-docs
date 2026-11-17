@@ -1016,3 +1016,6 @@ In this article, you learned how to enable Trusted Launch. Learn more about [Tru
 [quick-ARM-deploy]: /azure/aks/learn/quick-kubernetes-deploy-rm-template
 [quick-bicep-deploy]: /azure/aks/learn/quick-kubernetes-deploy-bicep
 [flatcar]: ./flatcar-container-linux-for-aks.md
+[quick-terraform-deploy]: /azure/aks/learn/quick-kubernetes-deploy-terraform
+[terraform-azurerm-kubernetes-cluster]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
+[terraform-azurerm-kubernetes-cluster-node-pool]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool
