@@ -72,6 +72,8 @@ The **Overview** page provides cluster health and workload performance details, 
 
 For more information about monitoring and managing your AKS clusters, see the following articles:
 
+- [Monitor AKS clusters in Kubernetes Center using the Azure portal](./kubernetes-center-monitoring.md)
 - [Monitor Azure Kubernetes Service (AKS)](./monitor-aks.md)
 - [Monitor Azure Kubernetes Service (AKS) control plane metrics](./control-plane-metrics-monitor.md)
 - [Add-ons, extensions, and other integrations with Azure Kubernetes Service (AKS)](./integrations.md)
+- [Review AKS upgrade readiness in Kubernetes Center using the Azure portal](./kubernetes-center-upgrade-readiness.md)

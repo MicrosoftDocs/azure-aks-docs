@@ -4,7 +4,7 @@ description: Learn how Trusted Launch protects the Azure Kubernetes Cluster (AKS
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-security
-ms.date: 10/13/2026
+ms.date: 10/28/2026
 ai-usage: ai-assisted
 author: allyford
 ms.author: allyford
@@ -37,6 +37,11 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 - The Azure CLI version 2.66.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - To use Trusted Launch with Azure Container Linux (ACL), install Azure CLI version 2.86.0 or later.
 :::zone-end
+
+:::zone target="docs" pivot="bicep"
+- Bicep CLI version 0.42.1 or later for the Windows node pool example. Run `az bicep version` to check your version. For installation instructions, see [Install Bicep tools](/azure/azure-resource-manager/bicep/install).
+:::zone-end
+
 - Secure Boot requires signed boot loaders, OS kernels, and drivers.
 
 ## Limitations
@@ -44,15 +49,26 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 - AKS supports Trusted Launch on Kubernetes version 1.25.2 and higher.
 - ACL node pools with Trusted Launch require AKS version 1.34 or later.
 - Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
-- Node pools with Windows Server operating system aren't supported.
+- Windows Trusted Launch is in preview and requires the `WindowsTrustedLaunchPreview` feature flag, Kubernetes version 1.32 or later, `osType: Windows`, `osSKU: Windows2025`, Virtual Machine Scale Sets, an x64 VM size that supports generation 2 and Trusted Launch, and FIPS enablement when creating the node pool.
 - For Ubuntu and Azure Linux node pools, you can't enable Trusted Launch in the same node pool as [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. Azure Container Linux (ACL) supports Trusted Launch on supported AMD64 VM sizes and supported Arm64 VM sizes. For more information, see [node images documentation][node-images].
-- You can enable Trusted Launch in the same node pool as [FIPS][FIPS] with Ubuntu 22.04 or ACL.
+- You can enable Trusted Launch in the same node pool as [FIPS][FIPS] with Ubuntu 22.04, ACL, or Windows Server 2025. Windows Server 2025 enables FIPS by default.
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
 - To enable Secure Boot on GPU node pools using the Ubuntu operating system, you need to skip installing the GPU driver (`--gpu-driver None`). For more information, see [Skip GPU driver installation][skip-gpu-driver-install] and [Use NVIDIA GPUs on Azure Kubernetes Service (AKS)][use-nvidia-gpu]. This limitation doesn't apply for running GPU workloads with Azure Linux or Azure Container Linux operating systems.
 - Ephemeral OS disks can be created with Trusted Launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted Launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
 - [Flatcar Container Linux for AKS][flatcar] doesn't support Trusted Launch on AKS.
 - Trusted Launch isn't supported through the AzureRM (`azurerm`) Terraform provider. To deploy Trusted Launch node pools, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+## Supported OS versions
+
+The following table includes the supported OS versions for Trusted Launch-enabled node pools:
+
+| OS type | OS SKU | Trusted Launch support | Default | Constraints |
+| ------- | ------ | ---------------------- | ------- | ----------- |
+| Linux | Ubuntu | Supported | Disabled by default | Requires [Azure Generation 2 VMs][azure-generation-two-virtual-machines]. You can't combine Trusted Launch with [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM] in the same node pool. Trusted Launch and [FIPS][FIPS] together are supported only with Ubuntu 22.04. |
+| Linux | Azure Linux | Supported | Disabled by default | Requires [Azure Generation 2 VMs][azure-generation-two-virtual-machines]. You can't combine Trusted Launch with [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM] in the same node pool. |
+| Linux | Azure Container Linux | Supported | Required | ACL requires Trusted Launch with Secure Boot and vTPM and always uses [Azure Generation 2 VMs][azure-generation-two-virtual-machines]. |
+| Windows | Windows Server 2025 | Supported (preview) | Opt-in preview | Requires [Azure Generation 2 VMs][azure-generation-two-virtual-machines], Kubernetes version 1.32 or later, and registration of the `WindowsTrustedLaunchPreview` feature flag. |
 
 ## Create an AKS cluster with Trusted Launch enabled
 
@@ -138,12 +154,12 @@ The Azure portal **doesn't support** creating an AKS cluster with Trusted Launch
 
 :::zone-end
 
-## Add a node pool with Trusted Launch enabled
+## Add a Linux node pool with Trusted Launch enabled
 
 When you create a node pool, enabling vTPM or Secure Boot automatically sets up your node pools to use the customized Trusted Launch image. This image is specifically configured to support the security features enabled by Trusted Launch.
 
 :::zone target="docs" pivot="azure-cli"
-1. Add a node pool with Trusted Launch enabled using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
+1. Add a Linux node pool with Trusted Launch enabled by using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
 
    * `--cluster-name`: Enter the name of the AKS cluster.
    * `--resource-group`: Enter the name of an existing resource group to host the AKS cluster resource.
@@ -160,12 +176,13 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
     ```azurecli-interactive
     az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm --enable-secure-boot
     ```
+
 1. Check that your node pool is using a Trusted Launch image.
 
     Trusted Launch nodes have the following output:
 
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` should be `"Trusted Launch"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
 
     ```bash
     kubectl get nodes
@@ -215,23 +232,206 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
 :::zone-end
 :::zone target="docs" pivot="terraform"
 
-The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch because it doesn't expose Trusted Launch node pool settings. To add a node pool with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch because it doesn't expose Trusted Launch node pool settings. To add a Linux node pool with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
 
 :::zone-end
 :::zone target="docs" pivot="azure-portal"
 
-The Azure portal **doesn't support** adding a node pool with Trusted Launch enabled. To add a node pool with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+The Azure portal **doesn't support** adding a Linux node pool with Trusted Launch enabled. To add a Linux node pool with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+:::zone-end
+
+## Add a Windows Server node pool with Trusted Launch and FIPS enabled
+
+Windows Server node pools with Trusted Launch enabled are currently in preview.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+Use an existing cluster configured for Windows node pools, including a Windows profile and Azure CNI networking. For the Windows profile requirement, see [Node pool limitations](./create-node-pools.md#limitations).
+
+Before you add a Windows node pool with Trusted Launch enabled, register the `WindowsTrustedLaunchPreview` feature flag on your subscription.
+
+1. Register the `WindowsTrustedLaunchPreview` feature flag by using the [`az feature register`][az-feature-register] command. Registration can take several minutes.
+
+    ```azurecli-interactive
+    az feature register \
+        --namespace "Microsoft.ContainerService" \
+        --name "WindowsTrustedLaunchPreview"
+    ```
+
+1. Verify the registration status by using the [`az feature show`][az-feature-show] command.
+
+    ```azurecli-interactive
+    az feature show \
+        --namespace "Microsoft.ContainerService" \
+        --name "WindowsTrustedLaunchPreview" \
+        --query "properties.state"
+    ```
+
+1. When the status is `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace "Microsoft.ContainerService"
+    ```
+
+:::zone target="docs" pivot="azure-cli"
+
+Use Azure CLI version 2.87.0 or later for this Windows Server 2025 procedure. Run `az --version` to check your version and `az upgrade` to upgrade.
+
+1. Add a Windows Server 2025 node pool with Trusted Launch enabled using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
+
+   * `--cluster-name`: Enter the name of the AKS cluster.
+   * `--resource-group`: Enter the name of an existing resource group to host the AKS cluster resource.
+   * `--name`: Enter a unique name for the node pool. For Windows node pools, the length must be between 1 and 6 characters.
+   * `--node-count`: The number of nodes in the Kubernetes agent pool. Default is 3.
+   * `--os-type`: Set to `Windows`.
+   * `--os-sku`: Set to `Windows2025`.
+   * `--enable-secure-boot`: Enables Secure Boot to authenticate image signed by a trusted publisher.
+   * `--enable-vtpm`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+   * `--enable-fips-image`: Required for Windows Server 2025 node pools.
+
+    The following example deploys a Windows Server 2025 node pool named *npwin* with vTPM, Secure Boot, and FIPS enabled on a cluster named *myAKSCluster*:
+
+    ```azurecli-interactive
+    az aks nodepool add \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name npwin \
+        --node-count 3 \
+        --os-type Windows \
+        --os-sku Windows2025 \
+        --enable-fips-image \
+        --enable-vtpm \
+        --enable-secure-boot
+    ```
+
+1. Check that your node pool is using a Trusted Launch image.
+
+    Trusted Launch Windows nodes have the following output:
+
+    * Node image version containing `"tl"`, such as `"AKSWindows-2025-gen2-tl-26100.<build>.<YYMMDD>"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
+
+    ```bash
+    kubectl get nodes
+    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```
 
 :::zone-end
 
-## Add a node pool with Trusted Launch and FIPS enabled
+:::zone target="docs" pivot="arm"
+1. Create a template with Trusted Launch and FIPS parameters. Before creating the template, review the following parameters:
 
-You can enable Trusted Launch and FIPS together for Ubuntu 22.04 and Azure Container Linux (ACL) node pools on Generation 2 VM sizes.
+   * `osType`: Set to `Windows`.
+   * `osSKU`: Set to `Windows2025`.
+   * `enableFIPS`: Enables the FIPS-compliant node image. Required for Windows Server 2025.
+   * `enableSecureBoot`: Enables secure boot to authenticate an image signed by a trusted publisher.
+   * `enableVTPM`: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+
+    In your template, configure the `properties` of the `Microsoft.ContainerService/managedClusters/agentPools` resource as shown in the following example. Use a generation 2 VM size that supports Trusted Launch:
+
+    ```json
+    {
+        "properties": {
+            "count": 3,
+            "mode": "User",
+            "osType": "Windows",
+            "osSKU": "Windows2025",
+            "vmSize": "Standard_D4s_v5",
+            "type": "VirtualMachineScaleSets",
+            "enableFIPS": true,
+            "securityProfile": {
+                "enableVTPM": true,
+                "enableSecureBoot": true
+            }
+        }
+    }
+    ```
+
+1. Deploy your template to add the Windows node pool to your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed deployment instructions.
+:::zone-end
+
+:::zone target="docs" pivot="bicep"
+
+Use an existing cluster configured for Windows node pools, including a Windows profile and Azure CNI networking. For the Windows profile requirement, see [Node pool limitations](./create-node-pools.md#limitations).
+
+1. Create a file named `windows-trusted-launch.bicep` with the following content. The example uses API version `2026-08-01` and adds a Windows Server 2025 user node pool to an existing cluster:
+
+    ```bicep
+    param clusterName string
+    param nodePoolName string = 'npwin'
+    param vmSize string = 'Standard_D4s_v5'
+
+    resource aksCluster 'Microsoft.ContainerService/managedClusters@2026-08-01' existing = {
+      name: clusterName
+    }
+
+    resource windowsNodePool 'Microsoft.ContainerService/managedClusters/agentPools@2026-08-01' = {
+      parent: aksCluster
+      name: nodePoolName
+      properties: {
+        count: 3
+        mode: 'User'
+        osType: 'Windows'
+        osSKU: 'Windows2025'
+        vmSize: vmSize
+        type: 'VirtualMachineScaleSets'
+        enableFIPS: true
+        securityProfile: {
+          enableVTPM: true
+          enableSecureBoot: true
+        }
+      }
+    }
+    ```
+
+    During preview, Bicep might report warning `BCP081` if its type catalog doesn't include API version `2026-08-01`. This warning means Bicep can't validate the resource properties against its type catalog; it doesn't prevent compiling or deploying the template.
+
+    Use a generation 2 VM size that supports Trusted Launch and is available in your subscription and region. To use a different size, pass `vmSize=<vm-size>` to the deployment command.
+
+1. Deploy the Bicep file to the resource group that contains your cluster. Replace `myResourceGroup` and `myAKSCluster` with your resource group and cluster names.
+
+    ```azurecli-interactive
+    az deployment group create \
+        --resource-group myResourceGroup \
+        --template-file windows-trusted-launch.bicep \
+        --parameters clusterName=myAKSCluster
+    ```
+
+1. Verify that FIPS, Secure Boot, and vTPM are enabled on the node pool. Confirm that all three values are `true`. If you changed the `nodePoolName` parameter, replace `npwin` with that name.
+
+    ```azurecli-interactive
+    az aks nodepool show \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name npwin \
+        --query "{fips:enableFips,secureBoot:securityProfile.enableSecureBoot,vtpm:securityProfile.enableVtpm}" \
+        --output table
+    ```
+
+:::zone-end
+
+:::zone target="docs" pivot="terraform"
+
+The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch because it doesn't expose Trusted Launch node pool settings. To add a Windows node pool with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+:::zone-end
+
+:::zone target="docs" pivot="azure-portal"
+
+The Azure portal **doesn't support** adding a Windows node pool with Trusted Launch enabled. To add a Windows node pool with Trusted Launch enabled, use the Azure CLI, ARM template, or Bicep instructions in this article.
+
+:::zone-end
+
+## Add a Linux node pool with Trusted Launch and FIPS enabled
+
+For Linux node pools, you can enable Trusted Launch and FIPS together for Ubuntu 22.04 and Azure Container Linux (ACL) node pools on Generation 2 VM sizes.
+
+For Windows Server 2025 node pools, FIPS is enabled by default. To add a Windows Server 2025 node pool with Trusted Launch enabled, see [Add a Windows Server node pool with Trusted Launch and FIPS enabled](#add-a-windows-server-node-pool-with-trusted-launch-and-fips-enabled).
 
 For FIPS-specific operations, such as disabling FIPS on an existing node pool, see [Enable Federal Information Processing Standard (FIPS) for Azure Kubernetes Service (AKS) node pools][FIPS].
 
 :::zone target="docs" pivot="azure-cli"
-1. Add a node pool with Trusted Launch and FIPS enabled by using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
+1. Add a Linux node pool with Trusted Launch and FIPS enabled by using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
 
    * `--cluster-name`: Enter the name of the AKS cluster.
    * `--resource-group`: Enter the name of an existing resource group to host the AKS cluster resource.
@@ -257,7 +457,7 @@ For FIPS-specific operations, such as disabling FIPS on an existing node pool, s
     Trusted Launch nodes have the following output:
 
     * Node image version containing both `"TL"` and `"FIPS"`.
-    * `"Security-type"` is `"Trusted Launch"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
 
     ```bash
     kubectl get nodes
@@ -370,7 +570,7 @@ AKS reimages the node pool to a Trusted Launch image, which recreates the nodes 
     Trusted Launch nodes have the following output:
 
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` is `"Trusted Launch"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
 
     ```bash
     kubectl get nodes
@@ -403,7 +603,7 @@ AKS reimages the node pool to a Trusted Launch image, which recreates the nodes 
     Trusted Launch nodes have the following output:
 
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` is `"Trusted Launch"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
 
     ```bash
     kubectl get nodes
@@ -436,7 +636,7 @@ AKS reimages the node pool to a Trusted Launch image, which recreates the nodes 
     Trusted Launch nodes have the following output:
 
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` is `"Trusted Launch"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
 
     ```bash
     kubectl get nodes
@@ -461,8 +661,8 @@ You can constrain a pod and restrict it to run on a specific node or nodes, or p
 
 ```yml
 spec:
-  nodeSelector:
-        kubernetes.azure.com/security-type = "TrustedLaunch"
+  nodeSelector:
+    kubernetes.azure.com/security-type: TrustedLaunch
 ```
 
 ## Disable vTPM or secure boot on an existing Linux node pool
@@ -506,9 +706,9 @@ You can disable vTPM, secure boot, or both on an existing Linux node pool. If ei
     If either vTPM or secure boot remains enabled, Trusted Launch nodes have the following output:
 
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` is `"Trusted Launch"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
 
-    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and `"Security-type"` shouldn't be `"Trusted Launch"`.
+    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and the `kubernetes.azure.com/security-type` label shouldn't be `TrustedLaunch`.
 
     ```bash
     kubectl get nodes
@@ -540,9 +740,9 @@ You can disable vTPM, secure boot, or both on an existing Linux node pool. If ei
     If either vTPM or secure boot remains enabled, Trusted Launch nodes have the following output:
 
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` is `"Trusted Launch"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
 
-    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and `"Security-type"` shouldn't be `"Trusted Launch"`.
+    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and the `kubernetes.azure.com/security-type` label shouldn't be `TrustedLaunch`.
 
     ```bash
     kubectl get nodes
@@ -574,9 +774,9 @@ You can disable vTPM, secure boot, or both on an existing Linux node pool. If ei
     If either vTPM or secure boot remains enabled, Trusted Launch nodes have the following output:
 
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `"Security-type"` is `"Trusted Launch"`.
+    * The `kubernetes.azure.com/security-type` label is `TrustedLaunch`.
 
-    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and `"Security-type"` shouldn't be `"Trusted Launch"`.
+    If you disable both vTPM and secure boot, the node image version shouldn't contain `"TL"`, and the `kubernetes.azure.com/security-type` label shouldn't be `TrustedLaunch`.
 
     ```bash
     kubectl get nodes
@@ -593,6 +793,23 @@ The AzureRM (`azurerm`) Terraform provider doesn't support Trusted Launch becaus
 The Azure portal **doesn't support** disabling vTPM or secure boot on an existing node pool. To disable vTPM or secure boot on an existing node pool, use the Azure CLI, ARM template, or Bicep instructions in this article.
 
 :::zone-end
+
+## Clean up resources
+
+Remove test workloads before deleting their node pool. If you added a test node pool to an existing cluster, delete only that test node pool by using the [`az aks nodepool delete`][az-aks-nodepool-delete] command. Replace `<node-pool-name>` with the name of the test node pool you created, such as `npwin` or `mynodepool`. Don't delete node pools that host workloads you need to keep.
+
+```azurecli-interactive
+az aks nodepool delete \
+    --resource-group myResourceGroup \
+    --cluster-name myAKSCluster \
+    --name <node-pool-name>
+```
+
+If you created a cluster and resource group solely for this article, delete the test resource group by using the [`az group delete`][az-group-delete] command. **This command deletes every resource in the resource group. Don't run it against a shared or pre-existing resource group.**
+
+```azurecli-interactive
+az group delete --name myResourceGroup --yes --no-wait
+```
 
 ## Next steps
 
@@ -614,6 +831,8 @@ In this article, you learned how to enable Trusted Launch. Learn more about [Tru
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
+[az-group-delete]: /cli/azure/group#az-group-delete
 [azure-generation-two-virtual-machines]: /azure/virtual-machines/generation-2
 [verify-secure-boot-failures]: /azure/virtual-machines/trusted-launch-faq#verify-secure-boot-failures
 [tusted-launch-ephemeral-os-sizes]: /azure/virtual-machines/ephemeral-os-disks#trusted-launch-for-ephemeral-os-disks
