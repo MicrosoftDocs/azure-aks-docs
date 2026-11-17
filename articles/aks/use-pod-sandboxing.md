@@ -36,7 +36,6 @@ The following constraints apply to Pod sandboxing:
 - You can't enable [Federal Information Processing Standard (FIPS)](./enable-fips-nodes.md) or [Trusted Launch](./use-trusted-launch.md) on a node pool that uses Pod sandboxing. For more information, see [Pod sandboxing considerations][kata-considerations].
 - Arm64 architecture isn't supported on a node pool that uses Pod sandboxing.
 - [Node auto-provisioning (NAP)][node-auto-provisioning] isn't supported with Pod sandboxing.
-- [Virtual Machines node pools][virtual-machines-node-pools] aren't supported with Pod sandboxing.
 
 ## How it works
 
@@ -322,4 +321,3 @@ To deploy a pod with the Kata runtime on your AKS cluster, perform the following
 [kata-considerations]: considerations-pod-sandboxing.md
 [use-node-taints]: use-node-taints.md
 [node-auto-provisioning]: node-auto-provisioning.md
-[virtual-machines-node-pools]: virtual-machines-node-pools.md
