@@ -43,7 +43,10 @@ A [Microsoft Entra Workload ID][workload-identity] is an identity that an applic
 
 In this security model, the AKS cluster acts as the token issuer. When the Secrets Store CSI Driver mounts the volume, it requests a Kubernetes service account token, and the Azure Key Vault provider exchanges that token for a Microsoft Entra token. The application reads the mounted files and doesn't need the Azure Identity client library or the Microsoft Authentication Library (MSAL) for this volume-mount flow. If the application independently requests Microsoft Entra tokens to call protected APIs, use Azure Identity or MSAL in the application.
 
-Because the kubelet requests the service account token for the Secrets Store CSI Driver, this volume-mount flow only requires the cluster OIDC issuer and a federated identity credential on the user-assigned managed identity. It doesn't use the workload identity mutating webhook. You don't need to enable the workload identity add-on, add the `azure.workload.identity/client-id` annotation to the service account, or add the `azure.workload.identity/use` label to the pod. Configure those settings only if the application in the pod also uses workload identity to request Microsoft Entra tokens.
+Because the kubelet requests the service account token for the Secrets Store CSI Driver, this volume-mount flow only requires the cluster OIDC issuer and a federated identity credential on the user-assigned managed identity. You don't need the workload identity add-on, which means you don't need the following settings:
+
+- The `azure.workload.identity/client-id` annotation on the service account.
+- The `azure.workload.identity/use` label on the pod.
 
 The Azure Key Vault provider for Secrets Store CSI Driver add-on also supports [identity bindings][identity-bindings]. Identity bindings let multiple AKS clusters use the same user-assigned managed identity (UAMI) with a single federated identity credential. This support helps you scale Key Vault access across clusters without reaching the federated identity credential limit. To configure this access method, [set up an identity binding][identity-bindings-setup] between the UAMI and each AKS cluster.
 
