@@ -333,6 +333,8 @@
       href: local/disconnected-operations/overview.md
     - name: Create and manage a cluster
       href: local/disconnected-operations/create-manage-cluster.md
+    - name: Install and use the Investigator extension for AKS
+      href: local/disconnected-operations/aks-investigator.md
 - name: AKS Edge Essentials
   items:
   - name: Overview

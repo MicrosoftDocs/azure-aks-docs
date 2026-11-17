@@ -2,7 +2,7 @@
 title: "Automate Upgrades of Kubernetes and Node Images Across Multiple Clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to configure automated upgrades of Kubernetes and node images across multiple clusters by using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 08/25/2026
+ms.date: 10/19/2026
 author: sjwaight
 ms.author: simonwaight
 ms.reviewer: schaffererin
@@ -520,11 +520,9 @@ Update to a defined target Kubernetes minor version. Fleet Manager Auto-upgrade 
 
     :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-kubernetes-minor.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile using the Target Kubernetes minor version channel." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-kubernetes-minor.png":::
 
-### [Security patch (preview)](#tab/node-security-patch)
+### [Security patch](#tab/node-security-patch)
 
 Update Linux nodes with just security fixes, by using either live patching or a prepatched node image.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multicluster update** > **Auto-upgrade profiles** > **+ Create**.
@@ -535,7 +533,7 @@ Update Linux nodes with just security fixes, by using either live patching or a 
       - **Status**: Select **Enabled** or **Disabled**. Disabled auto-upgrade profiles don't trigger when new versions are released.
       - **Update sequence**: Select **Stages** or **One by one**.
     - Under **Auto-upgrade triggers**:
-      - **Channel**: Select **Security patch (preview)**.
+      - **Channel**: Select **Security patch**.
 
 1. Select **Create** to create the auto-upgrade profile.
 

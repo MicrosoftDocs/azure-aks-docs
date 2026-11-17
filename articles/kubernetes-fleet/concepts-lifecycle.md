@@ -1,7 +1,7 @@
 ---
 title: Azure Kubernetes Fleet Manager hub cluster overview
 description: This article provides an overview on the Azure Kubernetes Fleet Manager hub cluster.
-ms.date: 10/07/2026
+ms.date: 10/19/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -11,6 +11,8 @@ ai-usage: ai-assisted
 ---
 
 # Fleet Manager hub cluster overview
+
+**Applies to:** :heavy_check_mark: Fleet Manager with hub cluster
 
 When enabled, the Fleet Manager hub cluster serves as the central management point for Kubernetes resource propagation across member clusters using [resource placement](./concepts-resource-placement.md).
 

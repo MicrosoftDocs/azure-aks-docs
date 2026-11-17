@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 08/21/2026
+ms.date: 10/28/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -247,7 +247,7 @@ Scheduled start gates and AKS cluster [planned maintenance windows](/azure/aks/p
 
 ### How can I control the order of cluster updates in an update run?
 
-Member labels and update groups are two different ways to select which clusters are included in each stage and group of your update strategy. Each member cluster can be assigned to one update group but can have multiple labels. Member labels (using `memberSelector`) offer more flexibility and support complex selection scenarios, so they're the recommended way to select fleet members for update strategies. For more information, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
+Member labels and update groups are two different ways to select which clusters are included in each stage and group of your update strategy. Each member cluster can be assigned to one update group but can have multiple labels. Member labels (using `memberSelector`) offer more flexibility and support complex selection scenarios, so they're the recommended way to select fleet members for update strategies. For more information, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-by-using-member-labels).
 
 ### Do I need to specify groups if I set a member selector at the stage level?
 
@@ -265,6 +265,19 @@ Yes. Fleet Manager supports both cluster-scoped and namespace-scoped resource pl
 
 * **ClusterResourcePlacement**: Propagates cluster-scoped resources and entire namespaces (including all their contents) to member clusters. For more information, see [Using ClusterResourcePlacement to deploy cluster-scoped resources](./concepts-resource-placement.md).
 * **ResourcePlacement**: Provides fine-grained control to select and propagate specific namespace-scoped resources (such as ConfigMaps, Secrets, Deployments) within a namespace. For more information, see [Using ResourcePlacement to deploy namespace-scoped resources](./concepts-namespace-scoped-resource-propagation.md).
+
+## Identity binding profile FAQs
+
+### What happens if I delete and recreate a managed identity that an identity binding profile uses?
+
+A recreated managed identity gets a new client ID and principal ID. The identity bindings on your member clusters stay tied to the deleted identity, and applying the profile fails with a `ManagedIdentityRecreated` error for each member cluster. Fleet Manager owns these bindings, so you can't delete them directly. To use the new identity:
+
+1. [Remove the profile from all member clusters](./howto-identity-binding-profiles.md#delete-an-identity-binding-profile) by changing its selector to a value no member cluster has, and then apply it.
+1. Restore the original selector and `allowedSubjects`, and then apply the profile again. Fleet Manager creates new identity bindings for the new identity.
+1. Update your RBAC objects and service account annotations to the new client ID, and then restart your pods.
+1. Assign Azure roles to the new principal ID.
+
+Repeat these steps for each profile that uses the managed identity.
 
 ## Roadmap
 

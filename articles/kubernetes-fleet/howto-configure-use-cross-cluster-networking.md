@@ -2,7 +2,7 @@
 title: "How to Configure and use cross-cluster networking for Azure Kubernetes Fleet Manager"
 description: Learn how to use Azure Kubernetes Fleet Manager to set up multi-cluster networking for highly available global services and service discovery. 
 ms.topic: how-to
-ms.date: 07/20/2026
+ms.date: 11/03/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,7 +10,7 @@ zone_pivot_groups: azure-portal-azure-cli
 # Customer intent: "As a platform engineer, I want to configure cross-cluster networking in Azure Kubernetes Fleet Manager, so that I can deploy global services to achieve high availability using multiple member clusters."
 ---
 
-# Configure and use cross-cluster networking for Azure Kubernetes Fleet Manager (preview)
+# Configure and use cross-cluster networking for Azure Kubernetes Fleet Manager
 
 **Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
@@ -22,17 +22,20 @@ Platform engineers label member clusters that should participate in a single cro
 
 This article provides instructions on how to configure a cross-cluster networking profile, add member clusters and how to expose global services.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
-
 ## Prerequisites and limitations
 
 * A cross-cluster network can have up to 255 member clusters.
 * Fleet Manager member clusters can only participate in a single cross-cluster network at any time.
-* Clusters must run Kubernetes v1.32 or later and have Advanced Container Networking Services (ACNS) with Cilium enabled.
-* Clusters must be connected to a [single flat network][flat-network] (virtual network or multiple peered networks).
-* Overlay networking with tunnels isn't currently supported.
-* Self-managed Cilium multi-cluster can't be deployed at the same time.
-* ACNS sets the Cilium version and enabled features which are read-only and can't be modified by users.
+* Clusters must have [Advanced Container Networking Services (ACNS)][aks-acns-enabled] with Cilium enabled.
+* Clusters must be connected to the same virtual network or peered virtual networks.
+* To use cross-cluster networking with pod subnets, clusters must run Kubernetes v1.32 or above.
+* To use cross-cluster networking with overlay networking, clusters must run Kubernetes v1.36 or above.
+* Azure CNI overlay cross-cluster networks can't expose global services via external load balancers due to overlay network routing limitations.
+* A single cross-cluster network can host only clusters using either pod subnet or overlay networking. You can't currently mix network types.
+* Pod-to-pod communication on clusters using overlay networking requires the `clustermesh.cilium.io/global` annotation to be set on the Namespaces of those pods and that pod CIDRs in each member cluster don't overlap.
+* When using overlay networking, a NodePort service won't work when its backend is in another cluster.
+* You can't deploy self-managed Cilium multicluster at the same time.
+* ACNS sets the Cilium version and enabled features. You can't currently directly modify these settings.
 
 ## Before you begin
 
@@ -665,20 +668,14 @@ az aks update --resource-group ${CLUSTER_RESOURCE_GROUP} --name ${MEMBER_CLUSTER
 
 Once the cluster is updated with the role assignment, run `az fleet clustermeshprofile apply` again.
 
-> [!NOTE]
-> During preview, the status of a cross-cluster network profile might continue to show as `Failed` even when member clusters show as `Connected`.
-
 ## Next steps
 
 * [Overview of Fleet Manager multi-cluster networking](./concepts-multi-cluster-networking-overview.md).
 * [Fleet Manager Frequently Asked Questions (FAQs)](./faq.md).
 
 <!-- INTERNAL LINKS -->
-[aks-acns-enabled]: ../aks/use-advanced-container-networking-services.md?pivots=cilium
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
-[flat-network]: ../aks/concepts-network-cni-overview.md#flat-networks
-[azure-cni-dynamic-ip-allocation]: ../aks/configure-azure-cni-dynamic-ip-allocation.md#configure-pod-subnet---dynamic-ip-allocation-and-enhanced-subnet-support---azure-cli
-[fleet-quickstart]: ./quickstart-create-fleet-and-members.md
+[aks-acns-enabled]: ../aks/use-advanced-container-networking-services.md?pivots=cilium
 
 <!-- EXTERNAL LINKS -->
 [cilium-example]: https://docs.cilium.io/en/stable/network/clustermesh/services/#deploying-a-simple-example-service
