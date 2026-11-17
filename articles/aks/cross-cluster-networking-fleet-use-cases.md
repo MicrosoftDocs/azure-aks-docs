@@ -6,13 +6,12 @@ ms.author: kparekh
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
-ms.date: 04/26/2026
+ms.date: 10/19/2026
 ---
 
-# Cross-cluster networking use cases for Azure Kubernetes Fleet Manager (preview)
+# Cross-cluster networking use cases for Azure Kubernetes Fleet Manager
 
-Cross-cluster networking for Azure Kubernetes Fleet Manager (Fleet) is a managed offering built on [Cilium Cluster Mesh](https://cilium.io/use-cases/cluster-mesh/) that allows you to establish direct pod-to-pod communication across multiple Azure Kubernetes Service (AKS) clusters. By creating a cross-cluster network, you can enable seamless east-west connectivity without the need for gateways, while also gaining multi-cluster observability and consistent security enforcement.
-
+Azure Kubernetes Fleet Manager cross-cluster networking is a managed offering built on [Cilium Cluster Mesh](https://cilium.io/use-cases/cluster-mesh/) that you use to establish direct pod-to-pod communication across multiple Azure Kubernetes Service (AKS) clusters. By creating a cross-cluster network, you can enable seamless east-west connectivity without the need for gateways, while also gaining multi-cluster observability and consistent security enforcement.
 
 ## Architecture and capabilities
 
@@ -91,9 +90,10 @@ Cilium manages this discovery by watching for services with the `io.cilium/globa
 - A single cross-cluster network supports up to 255 member clusters.
 - Self-managed Cilium multi-cluster configurations aren't supported alongside Fleet-managed cross-cluster networking.
 - Cilium CLI commands that modify the mesh, such as `cilium clustermesh connect` or `cilium upgrade`, are unsupported because Fleet manages these operations.
-- Cross-cluster networking is restricted to clusters within the same reachable flat routing domain. It doesn't support mesh connectivity across nonpeered virtual networks.
+- Cross-cluster networking is restricted to clusters within the same reachable flat routing domain. It doesn't support mesh connectivity across non-peered virtual networks.
 
 ## Next steps
 
 - Explore [Azure Kubernetes Fleet Manager concepts](../kubernetes-fleet/concepts-fleet.md).
+- Learn how to [configure and use Fleet Manager Cross Cluster Networking](../kubernetes-fleet/howto-configure-use-cross-cluster-networking.md).
 - Learn more about [Advanced Container Networking Services](./advanced-container-networking-services-overview.md).

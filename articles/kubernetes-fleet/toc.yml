@@ -43,7 +43,9 @@
     - name: Fleet-scale GitOps
       href: concepts-gitops-fleet-scale.md  
     - name: Multi-tenancy with Managed Fleet Namespaces
-      href: concepts-fleet-managed-namespace.md    
+      href: concepts-fleet-managed-namespace.md
+    - name: Multi-cluster identity binding management
+      href: concepts-fleet-identity-binding.md
     - name: Multi-cluster Kubernetes resource management
       items:
         - name: Introduction to resource placement
@@ -146,6 +148,8 @@
           href: howto-managed-namespaces.md
         - name: View and access Managed Fleet Namespaces
           href: howto-managed-namespaces-access.md
+    - name: Create and manage identity bindings on multiple clusters
+      href: howto-identity-binding-profiles.md
     - name: Configure and operate multi-cluster networking
       items:
         - name: Cross-cluster networking for global services

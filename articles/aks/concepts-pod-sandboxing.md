@@ -2,11 +2,11 @@
 title: Pod sandboxing in Azure Kubernetes Service (AKS) overview
 description: Learn how to use Pod sandboxing in Azure Kubernetes Service (AKS) to isolate workloads in lightweight pod virtual machines (VMs) for stronger compute isolation.
 ms.topic: how-to
-ms.date: 09/17/2026
+ms.date: 10/23/2026
 ms.service: azure-kubernetes-service
 ms.subservice: aks-security
-ms.author: schaffererin
-author: schaffererin
+ms.author: allyford
+author: allyford
 ai-usage: ai-assisted
 ---
 
@@ -25,13 +25,15 @@ Pod sandboxing is built on the open-source [Kata Containers][kata-containers] pr
 
 ## Architecture and components
 
-Pod sandboxing uses the Kata Containers runtime to create a lightweight pod VM for each sandboxed pod. The following diagram shows how the host-side components create and manage the isolated pod VM and how the guest-side components run the workload.
+Pod sandboxing uses the Kata Containers runtime to create a lightweight pod VM for each sandboxed pod. The following steps describe how the host-side components, which run on the AKS node, create and manage the isolated pod VM. They also show how the guest-side components, which run inside the pod VM, run the workload.
 
-- In the pod manifest, set `runtimeClassName: kata-vm-isolation` to select the Kata Containers runtime.
+- In the pod manifest, set `runtimeClassName` to a Kata runtime class:
+  - `kata-vm-isolation` for the v1 runtime class.
+  - [`kata-vm-isolation-v2`][kata-v2-migration] (preview) for the v2 runtime class (requires preview feature registration and compatible node prerequisites).
 - Containerd invokes the Kata shim (`containerd-shim-kata-v2`) instead of the standard runtime shim.
 - The Kata shim starts the Cloud Hypervisor virtual machine monitor (VMM), which creates a pod VM with a separate guest kernel and the Kata agent.
 - The Kata agent creates and manages the containers and workload processes inside the pod VM.
-- When the pod VM is deleted, the Kata shim shuts down the pod VM and releases its resources back to the container host.
+- When the pod VM is deleted, the Kata shim shuts down the pod VM and releases its resources back to the AKS node.
 
 ## Benefits and use cases
 
@@ -65,7 +67,7 @@ Pod sandboxing uses open-source components, including the [Cloud Hypervisor][clo
 
 ## Migrate existing workloads
 
-For a basic deployment, add the Kata runtime class to an existing pod specification to run the workload in a pod VM. This manifest change doesn't guarantee behavior identical to a pod that uses the standard `runc` runtime. Before migration, validate the workload's operational behavior and Kubernetes feature compatibility, and account for the pod VM's resource sizing and overhead. For more information, see [Considerations for Pod sandboxing][considerations-pod-sandboxing].
+For a basic deployment, add a Kata runtime class to an existing pod specification to run the workload in a pod VM. This manifest change doesn't guarantee behavior identical to a pod that uses the standard `runc` runtime. The same guidance applies when migrating between Kata runtime classes (`kata-vm-isolation` and [`kata-vm-isolation-v2` (preview)][kata-v2-migration]): validate workload behavior, feature compatibility, and resource sizing before rollout. For more information, see [Considerations for Pod sandboxing][considerations-pod-sandboxing].
 
 ## Next steps
 
@@ -82,3 +84,4 @@ For a basic deployment, add the Kata runtime class to an existing pod specificat
 [deploy-pod-sandboxing]: use-pod-sandboxing.md
 [multi-tenant-guidance]: /azure/architecture/guide/multitenant/service/aks
 [considerations-pod-sandboxing]: considerations-pod-sandboxing.md
+[kata-v2-migration]: /azure/aks/use-pod-sandboxing?pivots=kata-vm-isolation-v2-preview#use-kata-vm-isolation-v2-preview

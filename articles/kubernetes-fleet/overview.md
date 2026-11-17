@@ -2,7 +2,7 @@
 title: "Overview of Azure Kubernetes Fleet Manager"
 services: kubernetes-fleet
 ms.service: azure-kubernetes-fleet-manager
-ms.date: 06/15/2026
+ms.date: 10/19/2026
 ms.topic: overview
 author: sjwaight
 ms.author: simonwaight
@@ -33,15 +33,17 @@ Fleet Manager supports the following scenarios:
 
 * Stage Kubernetes resources from Git repositories to Fleet Manager's hub cluster using [Automated Deployments](./concepts-automated-deployments.md) (preview).
 
+* Simplify creating globally available services by configuring [cross-cluster networking](./concepts-cross-cluster-networking.md) for your member clusters.
+
 * Load balance incoming public traffic across service endpoints on multiple AKS clusters using [DNS-based load balancing](./concepts-dns-load-balancing.md) (preview).
 
-* Simplify creating globally available services by configuring [cross-cluster networking](./concepts-cross-cluster-networking.md) for your member clusters (preview).
+* Configure workload identity once for multiple member clusters using [identity binding profiles](./concepts-fleet-identity-binding.md) (preview).
 
 ## Next steps
 
-* [Conceptual overview of Fleets and member clusters](./concepts-fleet.md).
+* [Conceptual overview of Fleet Manager and member clusters](./concepts-fleet.md).
 * [Conceptual overview of update orchestration across multiple member clusters](./concepts-update-orchestration.md).
 * [Conceptual overview of cluster-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-placement.md).
 * [Conceptual overview of namespace-scoped Kubernetes resource placement from hub cluster to member clusters](./concepts-namespace-scoped-resource-propagation.md).
-* [Conceptual overview of DNS load balancing (preview)](./concepts-l4-load-balancing.md).
+* [Conceptual overview of Fleet Manager multicluster networking](./concepts-multi-cluster-networking-overview.md).
 * [Create a fleet and join member clusters](./quickstart-create-fleet-and-members.md).
