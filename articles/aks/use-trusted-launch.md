@@ -170,6 +170,10 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
         }
       }
 
+      node_provisioning_profile {
+        mode = "Manual"
+      }
+
       identity {
         type = "SystemAssigned"
       }
