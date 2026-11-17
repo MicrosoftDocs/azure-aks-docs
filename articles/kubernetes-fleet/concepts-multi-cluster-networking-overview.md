@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager multi-cluster networking concepts"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager multi-cluster networking. 
-ms.date: 05/14/2026
+ms.date: 11/03/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -39,5 +39,6 @@ For more information, see [overview of layer 4 load balancing](./concepts-l4-loa
 
 ## Next steps
 
+* [How to: Configure and use Azure Kubernetes Fleet Manager cross-cluster networking](./howto-configure-use-cross-cluster-networking.md).
 * [How to: Set up DNS load balancing across Azure Kubernetes Fleet Manager member clusters (preview)](./howto-dns-load-balancing.md).
 * [How to: Set up multi-cluster layer 4 load balancing across Azure Kubernetes Fleet Manager member clusters (preview)](./l4-load-balancing.md).

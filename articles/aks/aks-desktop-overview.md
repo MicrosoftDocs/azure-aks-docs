@@ -6,8 +6,9 @@ ms.service: azure-kubernetes-service
 ms.reviewer: schaffererin
 author: danielsollondon
 ms.topic: overview
-ms.date: 04/16/2026
+ms.date: 11/05/2026
 ms.author: danis
+ai-usage: ai-assisted
 # Customer intent: As a cluster operator or developer, I want to provide an environment for developers or allow them to self serve deploying and managing applications on an AKS cluster. As a dev lead, developer, kubernetes operator, devops engineer, I want to share application to Azure Kubernetes Service using AKS desktop, so that I can quickly deploy and manage my containerized applications without writing detailed Kubernetes manifests. I want development teams to use AKS desktop to deploy and/or manage, troubleshoot applications on Azure Kubernetes Service (AKS) without needing deep Kubernetes expertise, so that I can accelerate time to business value.
 ---
 
@@ -30,6 +31,13 @@ You can also download and install it from the [AKS desktop GitHub repository](ht
 
 > [!NOTE]
 > AKS desktop supports the following operating systems (OS): Windows (x64), Linux (x64 and arm64), and macOS (x64 and arm64).
+
+## Check your installed version
+
+1. From the menu bar at the top of the AKS desktop window, select **Help**.
+1. Scroll through the menu, and then select **About**.
+1. Note the installed AKS desktop version.
+1. To install a newer version, see [AKS desktop releases](https://github.com/Azure/aks-desktop/releases).
 
 ## What is AKS desktop?
 
@@ -91,6 +99,10 @@ Yes. Once you deploy your application, you can view it using other Kubernetes to
 ### Does AKS desktop support Standard AKS clusters?
 
 AKS desktop supports Standard AKS clusters that meet specific requirements. For more information, see [AKS Standard clusters for AKS desktop](aks-desktop-install-cluster-setup.md#aks-standard-clusters).
+
+### Does AKS desktop support AKS on bare metal clusters?
+
+Yes. AKS desktop supports connecting to AKS on bare metal clusters in preview. For version requirements and registration steps, see [Connect to and manage AKS on bare metal clusters with AKS desktop (preview)](aks-desktop-bare-metal.md).
 
 ## Related content
 

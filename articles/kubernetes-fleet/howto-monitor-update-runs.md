@@ -2,7 +2,7 @@
 title: "Configure alerting of Update Runs for Azure Kubernetes Fleet Manager"
 description: See how to set up alerts for Azure Kubernetes Fleet Manager Update Runs using Azure Resource Graph and Azure Monitor.
 ms.topic: how-to
-ms.date: 03/05/2025
+ms.date: 10/19/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,6 +10,8 @@ ms.service: azure-kubernetes-fleet-manager
 ---
 
 # Configure monitoring and alerting of Update Runs for Azure Kubernetes Fleet Manager
+
+**Applies to:** :heavy_check_mark: Fleet Manager :heavy_check_mark: Fleet Manager with hub cluster
 
 Fleet administrators can monitor the status of long-running update runs by configuring alerts in Azure Monitor. Fleet update run resource changes are ingested into [Azure Resource Graph][resource-graph], allowing administrators to configure alerts and automations via Azure Monitor and Log Analytics.
 
