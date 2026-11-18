@@ -3,12 +3,20 @@ title: Deploy and use Container Network Insights Agent on AKS
 description: Learn how to deploy Container Network Insights Agent as an AKS extension to troubleshoot networking issues in Azure Kubernetes Service (AKS) clusters.
 author: shaifaligargmsft
 ms.author: shaifaligarg
-ms.date: 02/23/2026
+ms.date: 11/13/2026
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ---
 
 # Deploy and use Container Network Insights Agent on AKS
+
+> [!IMPORTANT]
+> Container Network Insights Agent is deprecated and won't be available after November 2026. Plan to stop using the agent before then.
+>
+> The agent is a public preview feature. It doesn't have a service-level agreement (SLA) and isn't recommended for production workloads. Preview features receive best-effort support. For more information, see:
+>
+> - [AKS support policies](./support-policies.md#preview-features-or-feature-flags)
+> - [AKS FAQ](./faq.yml)
 
 This article shows how to deploy Container Network Insights Agent on your Azure Kubernetes Service (AKS) cluster, configure authentication and identity, and use the agent to troubleshoot networking issues.
 

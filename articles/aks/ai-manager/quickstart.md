@@ -8,6 +8,7 @@ ms.topic: quickstart
 ms.date: 10/13/2026
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
+zone_pivot_groups: azure-portal-azure-cli
 ---
 
 # Quickstart: Deploy a model with AI Manager (preview)
@@ -31,6 +32,8 @@ In this quickstart, you create an AI Manager with a managed AKS cluster, add a n
     | Create an AI Manager and its child resources | A role that can create these resources | For role choices and scopes, see [Grant access to AI Manager](./grant-access.md). |
     | Read model catalog entries and calculate deployment costs | **Azure AIManager Model User** | Assign the role at the subscription scope or another applicable parent scope. |
     | Create and delete the dedicated resource group | Permission to create and delete resource groups | The resource group is used only for this quickstart. |
+
+:::zone pivot="azure-cli"
 
 ## Install the AI Manager CLI extension
 
@@ -209,6 +212,64 @@ When you no longer need the resources, delete the resource group by using the [`
 ```azurecli-interactive
 az group delete --name "$RESOURCE_GROUP" --yes --no-wait
 ```
+
+:::zone-end
+
+:::zone pivot="azure-portal"
+
+## Browse model catalog
+
+Browse available models in your location by navigating to the **Kubernetes center** > **AI workloads** > **AI/ML**. You can filter models by collection, inference task, and provider.
+
+:::image type="content" source="../media/ai-manager/model-catalog.png" alt-text="A screenshot of the model catalog in Kubernetes center." lightbox="../media/ai-manager/model-catalog.png":::
+
+You can preview model details such as provider, capability, and context length by selecting any model card in the catalog. Select **Deploy** to proceed.
+
+## Select GPU VM size and deploy model
+
+Under **Project details**, choose a subscription, resource group, and region to deploy your model in. Under **Deployment profile**, select whether to create a new AI Manager or use an existing one. You can also bring your own cluster for your AI Manager deployment.
+
+> [!NOTE]
+> To be eligible for AI Manager deployments, existing clusters must run in the same region as your AI Manager deployment and use Kubernetes role-based access control (RBAC), system-assigned managed identity, and Cilium network dataplane.
+
+A default recommended GPU VM size is based on the model you select. Choose **Select SKU** to compare different GPU VM sizes based on cost, available quota, and estimated performance.
+
+:::image type="content" source="../media/ai-manager/select-size.png" alt-text="A screenshot showing GPU sizes for model deployment." lightbox="../media/ai-manager/select-size.png":::
+
+For more information about GPU plans, quota, and what the estimate includes, see [Choose a model and estimate deployment cost](./estimate-cost.md).
+
+After you deploy, monitor the provisioning status of your deployment by going to **AI/ML** > **Deployments**. When your provisioning status is `Succeeded`, you can verify current endpoint and inference status by selecting **Check status**, as shown in the following image.
+
+:::image type="content" source="../media/ai-manager/deployment-grid.png" alt-text="A screenshot of the deployment tab in AI/ML in Kubernetes center." lightbox="../media/ai-manager/deployment-grid.png":::
+
+## Test model
+
+After your model is successfully provisioned, test its output by selecting the model and choosing **Test model** in the toolbar.
+
+:::image type="content" source="../media/ai-manager/test-model-toolbar.png" alt-text="A screenshot of the test model function in the toolbar." lightbox="../media/ai-manager/test-model-toolbar.png":::
+
+This action opens the **Developer playground**, where you can experiment with your model output by adjusting vLLM parameters such as temperature and completion tokens.
+
+:::image type="content" source="../media/ai-manager/test-model.png" alt-text="A screenshot of the test model interface with a sample question and response." lightbox="../media/ai-manager/test-model.png":::
+
+> [!NOTE]
+> Any parameter adjustments you make in the **Developer playground** are temporary and aren't saved.
+
+## Send an inference request
+
+1. Select your model deployment and go to **Overview** > **Authentication** to view your namespace API keys.
+
+    :::image type="content" source="../media/ai-manager/api-key.png" alt-text="A screenshot of the api key location in Model Overview." lightbox="../media/ai-manager/api-key.png":::
+
+1. Go to **Get started** to view code samples for a chat-completion request. Select **Open in VS Code Web** to directly edit or apply files in VS Code. Remember to replace the placeholder `api-key` with your primary namespace API key from the previous step.
+
+    :::image type="content" source="../media/ai-manager/get-started.png" alt-text="A screenshot of the Get Started tab with code samples." lightbox="../media/ai-manager/get-started.png":::
+
+## Clean up resources
+
+When you no longer need the resources, go to **AI/ML** > **Deployments** and select the **AI Manager** that you want to delete. Select **Delete AI Manager** in the toolbar to proceed. You receive a summary of the resources to delete before confirming.
+
+:::zone-end
 
 ## Next steps
 
