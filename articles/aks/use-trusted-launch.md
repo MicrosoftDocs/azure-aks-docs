@@ -70,6 +70,17 @@ The following table includes the supported OS versions for Trusted Launch-enable
 | Linux | Azure Container Linux | Supported | Required | ACL requires Trusted Launch with Secure Boot and vTPM and always uses [Azure Generation 2 VMs][azure-generation-two-virtual-machines]. |
 | Windows | Windows Server 2025 | Supported (preview) | Opt-in preview | Requires [Azure Generation 2 VMs][azure-generation-two-virtual-machines], Kubernetes version 1.32 or later, and registration of the `WindowsTrustedLaunchPreview` feature flag. |
 
+## Supported OS versions
+
+The following table includes the supported OS versions for Trusted Launch-enabled node pools:
+
+| OS type | OS SKU | Trusted Launch support | Default | Constraints |
+| ------- | ------ | ---------------------- | ------- | ----------- |
+| Linux | Ubuntu | Supported | Disabled by default | Requires [Azure Generation 2 VMs][azure-generation-two-virtual-machines]. You can't combine Trusted Launch with [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM] in the same node pool. Trusted Launch and [FIPS][FIPS] together are supported only with Ubuntu 22.04. |
+| Linux | Azure Linux | Supported | Disabled by default | Requires [Azure Generation 2 VMs][azure-generation-two-virtual-machines]. You can't combine Trusted Launch with [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM] in the same node pool. |
+| Linux | Azure Container Linux | Supported | Required | ACL requires Trusted Launch with Secure Boot and vTPM and always uses [Azure Generation 2 VMs][azure-generation-two-virtual-machines]. |
+| Windows | Windows Server 2025 | Supported (preview) | Opt-in preview | Requires [Azure Generation 2 VMs][azure-generation-two-virtual-machines], Kubernetes version 1.32 or later, and registration of the `WindowsTrustedLaunchPreview` feature flag. |
+
 ## Create an AKS cluster with Trusted Launch enabled
 
 When creating a cluster, enabling vTPM or Secure Boot automatically sets up your node pools to use the customized Trusted Launch image. This image is specifically configured to support the security features enabled by Trusted Launch.
