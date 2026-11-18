@@ -258,4 +258,4 @@ To learn more about AKS Automatic's preconfigured settings and production-ready 
 <!-- EXTERNAL LINKS -->
 [pdb-best-practices]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
 [release-tracker]: release-tracker.md
-[unattended-upgrades]: https://help.ubuntu.com/community/AutomaticSecurityUpdates
+[unattended-upgrades]: https://ubuntu.com/server/docs/how-to/software/automatic-updates/
