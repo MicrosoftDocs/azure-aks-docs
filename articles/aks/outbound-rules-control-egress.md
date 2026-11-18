@@ -287,6 +287,7 @@ For information about retired Microsoft Defender for Cloud features, see [Micros
 |------------------------------------------------------------|-----------|----------|
 | **`management.azure.com`** <br/> **`management.usgovcloudapi.net`** (Azure Government) <br/> **`management.chinacloudapi.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Kubernetes operations against the Azure API. |
 | **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
+| **`prices.azure.com`** | **`HTTPS:443`** | Required for pricing data. |
 
 ## Cluster extensions
 
