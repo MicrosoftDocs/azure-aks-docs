@@ -8,13 +8,16 @@ ms.topic: how-to
 ms.date: 10/13/2026
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
+zone_pivot_groups: azure-portal-azure-cli
 ---
 
 # Manage model deployments with AI Manager (preview)
 
-Use the Azure CLI to inspect a model deployment, update its replica settings, or delete that deployment without deleting its namespace or AI Manager.
+Use the Azure CLI or the Azure portal to inspect a model deployment, update its replica settings, or delete that deployment without deleting its namespace or AI Manager.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+:::zone pivot="azure-cli"
 
 ## Before you begin
 
@@ -113,6 +116,40 @@ Use the variables that you set in [Before you begin](#before-you-begin).
     ```
 
 This command targets the model deployment. It doesn't delete the namespace or AI Manager. To confirm the deletion, run the list command from [Check a model deployment](#check-a-model-deployment), which requires access to list deployments at the namespace or a parent scope. If your access is limited to the model deployment, ask an operator with namespace-level list access to perform this check. While the deletion is in progress, the state can show `Deleting`. When it finishes, the deployment no longer appears in the output.
+
+:::zone-end
+
+:::zone pivot="azure-portal"
+
+## Before you begin
+
+- An AI Manager with a namespace and model deployment.
+- The **Azure AIManager Contributor** role at the model deployment, namespace, or AI Manager scope. To learn more about roles and access, visit [Grant access to AI Manager](./grant-access.md).
+
+## View model deployments
+
+Go to **AI/ML** > **Deployments** to view your model deployments. When a model's provisioning status is `Succeeded`, you can verify its current endpoint or inference status by selecting **Check status**, as shown in the following image. For the full list of states, see [Provisioning states](./reference.md#provisioning-states).
+
+:::image type="content" source="../media/ai-manager/deployment-grid.png" alt-text="A screenshot of the deployment tab in AI/ML in Kubernetes center." lightbox="../media/ai-manager/deployment-grid.png":::
+
+Each deployment's **Overview** contains more information such as its endpoint, GPU size, associated nodes, and related events.
+
+:::image type="content" source="../media/ai-manager/model-overview.png" alt-text="A screenshot of a sample model overview." lightbox="../media/ai-manager/model-overview.png":::
+
+## Change settings
+
+To change scaling settings on a model deployment, go to its **Overview** and select **Change** next to **Scaling method**. Select **Manual** or **Autoscale** and set the replica counts.
+
+:::image type="content" source="../media/ai-manager/scaling.png" alt-text="A screenshot of scaling options for a model deployment." lightbox="../media/ai-manager/scaling.png":::
+
+## Delete a model deployment
+
+Go to **Overview** and select **Delete** in the toolbar. You need to confirm before the model deployment is deleted.
+
+> [!NOTE]
+> Deleting a model deployment doesn't delete the underlying namespace or AI Manager. To delete the AI Manager or namespace, go to the resource and delete it there.
+
+:::zone-end
 
 ## Next steps
 

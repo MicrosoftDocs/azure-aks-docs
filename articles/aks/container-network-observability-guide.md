@@ -6,7 +6,7 @@ ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
-ms.date: 04/30/2026
+ms.date: 11/13/2026
 ai-usage: ai-assisted
 ---
 
@@ -36,7 +36,7 @@ ACNS gives you three signals. Each answers a different question.
 | **Container network logs (on-demand)** *(Cilium only)* | *What is happening right now?* | Live debugging during an active incident | Hubble CLI, Hubble UI |
 | **Metrics filtering** *(Cilium only)* | *Which signals do I actually need?* | Scoping collection to critical workloads, cost control | `ContainerNetworkMetric` CRD |
 | **Log filters and aggregation** *(Cilium only)* | *Which flows do I actually need?* | Scoping log capture to critical traffic, cost control | `ContainerNetworkLog` CRD |
-| **[Container Network Insights Agent](./container-network-insights-agent-overview.md)** *(Preview)* | *Where do I even start?* | AI-driven RCA across metrics, Hubble flows, Cilium policies, CoreDNS, and host-level NIC/kernel counters | In-cluster web app, accessed through the browser |
+| **[Container Network Insights Agent](./container-network-insights-agent-overview.md)** *(Preview, being deprecated by end of November 2026)* | *Where do I even start?* | AI-driven RCA across metrics, Hubble flows, Cilium policies, CoreDNS, and host-level NIC/kernel counters | In-cluster web app, accessed through the browser |
 
 > [!NOTE]
 > Container Network Logs (stored and on-demand), the `ContainerNetworkLog` CRD, log filtering, and flow log aggregation all require the **Cilium data plane**. On non-Cilium clusters, use container network metrics for triage and rely on cluster-level networking telemetry for deeper investigation.
@@ -53,8 +53,8 @@ Use this loop for any network incident:
 1. **Validate the fix.** Re-check the same metric panel and rerun the same KQL query. The anomaly should be gone.
 1. **Tune collection.** If you over-collected during the incident, narrow your `ContainerNetworkLog` CRD or apply a `ContainerNetworkMetric` filter so you only capture what you need going forward.
 
-> [!TIP]
-> Prefer to describe the problem instead of clicking through dashboards? [Container Network Insights Agent](./container-network-insights-agent-overview.md) (Preview) automates steps 1–3 by classifying your issue, collecting evidence through `kubectl`, Cilium, Hubble, CoreDNS, and host-level network statistics, and returning a structured RCA with remediation commands. It complements this guide rather than replacing it — the agent gives you a fast first pass; the playbooks here let you validate or go deeper. The agent is read-only; you still apply the fix yourself.
+> [!IMPORTANT]
+> [Container Network Insights Agent](./container-network-insights-agent-overview.md) is a public preview feature that's being deprecated and won't be available after the end of November 2026. It doesn't have a service-level agreement (SLA) and isn't recommended for production workloads. For more information, see [AKS support policies](./support-policies.md#preview-features-or-feature-flags) and the [AKS FAQ](./faq.yml). Use the metrics, logs, and playbooks in this guide as your long-term troubleshooting path.
 
 > [!NOTE]
 > ACNS metrics don't measure latency. Use Azure Monitor application performance metrics or your service mesh telemetry for latency analysis. ACNS surfaces traffic volume, drop counts, drop reasons, TCP states, TCP resets, DNS query/response counts and codes, and L4/L7 flow verdicts.
@@ -555,7 +555,7 @@ While Advanced Container Networking Services (ACNS) is a paid offering that prov
 
 ### AI-driven diagnostics
 
-* **Container Network Insights Agent (Preview):** [Overview](./container-network-insights-agent-overview.md) and [Set up the agent](./how-to-configure-container-network-insights-agent.md)
+* **Container Network Insights Agent (Preview, being deprecated by end of November 2026):** [Overview](./container-network-insights-agent-overview.md) and [Set up the agent](./how-to-configure-container-network-insights-agent.md)
 * **AKS MCP server:** [AKS Model Context Protocol server](./aks-model-context-protocol-server.md)
 
 ### Container Network Security (Cilium)
