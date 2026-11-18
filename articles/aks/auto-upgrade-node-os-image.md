@@ -7,7 +7,8 @@ ms.author: kaarthis
 author: kaarthis
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 06/26/2026
+ms.date: 11/18/2026
+ai-usage: ai-assisted
 # Customer intent: As a cloud administrator, I want to select the appropriate node OS auto-upgrade channel for my Kubernetes cluster, so that I can ensure timely security updates and manage maintenance effectively while minimizing disruptions.
 ---
 
@@ -16,7 +17,10 @@ ms.date: 06/26/2026
 > [!div class="nextstepaction"]
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321852)
 
-AKS provides multiple autoupgrade channels dedicated to timely node-level OS security updates. This channel is different from cluster-level Kubernetes version upgrades and supersedes it.
+> [!NOTE]
+> To configure automatic Kubernetes version upgrades, see [Automatically upgrade an AKS cluster][Autoupgrade]. Continue with this article to configure node image and OS security updates, which don't change your cluster's Kubernetes version.
+
+The cluster and node OS auto-upgrade settings complement each other. The legacy `node-image` cluster channel couples their configuration: selecting it also sets the node OS channel to `NodeImage`, which you can't change while the cluster channel remains `node-image`.
 
 > [!TIP]
 > If you're using **AKS Automatic**, node OS upgrades are preconfigured to use the **NodeImage** channel with security fixes and bug fixes applied on a weekly cadence. No configuration is needed. For AKS Automatic clusters with custom virtual networks, you can adjust maintenance windows if needed. To learn more, see [What is Azure Kubernetes Service (AKS) Automatic?][intro-aks-automatic] For AKS Standard clusters, continue reading to select the channel that best fits your requirements.
