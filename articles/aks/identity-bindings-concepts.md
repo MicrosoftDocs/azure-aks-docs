@@ -56,6 +56,10 @@ The following table outlines the minimum package versions and how to enable iden
 
 ## Frequently asked questions (FAQs)
 
+### How does my application locate the projected token and CA certificate files?
+
+The workload identity webhook injects `AZURE_FEDERATED_TOKEN_FILE` for the token file path and `AZURE_KUBERNETES_CA_FILE` for the CA certificate file path. Read these environment variables instead of hard-coding paths or the injected volume name. `WorkloadIdentityCredential` configured for identity binding mode reads them for you. For more information, see [Locate the projected service account token](identity-bindings.md#locate-the-projected-service-account-token).
+
 ### Is identity sameness (namespace and service account sameness) required across clusters using the same UAMI?
 
 No. Identity bindings don't require namespace/service account sameness. It's up to the cluster operator to explicitly authorize the namespaces and service accounts inside each cluster that are allowed to use the managed identity through role-based access control (RBAC).
