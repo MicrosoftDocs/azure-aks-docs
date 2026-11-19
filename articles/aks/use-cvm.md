@@ -160,7 +160,7 @@ In this article, you learned how to add a node pool with CVMs to an AKS cluster.
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az-aks-nodepool-show
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
-[resize-your-nodepool]: ./resize-node-pool.md
+[resize-your-nodepool]: ./resize-node-pool.md#option-2-resize-by-creating-a-new-node-pool
 [trusted-launch]: ./use-trusted-launch.md
 [flatcar]: ./flatcar-container-linux-for-aks.md
 [os-guard]: ./use-azure-linux-os-guard.md

@@ -57,7 +57,6 @@ The following limitations apply when you create AKS clusters that support multip
   - For Windows node pools, the length must be between 1-6 characters.
 
 - All node pools must reside in the same virtual network.
-- You can't change the virtual machine (VM) size of a node pool after you create it.
 - You can't change the max pods setting of a node pool after you create it. To use a different max pods value, create a new node pool with the desired max pods setting, migrate workloads, and then delete the old node pool.
 - When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane. You can make updates after provisioning the cluster using per node pool operations.
 
@@ -974,6 +973,7 @@ In this article, you learned how to create an AKS cluster with a single node poo
 - [Scale node pools in Azure Kubernetes Service (AKS)](./scale-node-pools.md)
 - [Assign capacity reservation groups to Azure Kubernetes Service (AKS) node pools](./use-capacity-reservation-groups.md)
 - [Delete an Azure Kubernetes Service (AKS) node pool](./delete-node-pool.md)
+- [Resize node pools in Azure Kubernetes Service (AKS)][resize-node-pools]
 
 <!-- LINKS -->
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
@@ -982,7 +982,6 @@ In this article, you learned how to create an AKS cluster with a single node poo
 [az-aks-nodepool]: /cli/azure/aks/nodepool
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list
-[az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az-aks-nodepool-delete
 [az-group-create]: /cli/azure/group#az-group-create
 [install-azure-cli]: /cli/azure/install-azure-cli
 [azure-linux]: ./use-azure-linux.md
@@ -998,3 +997,4 @@ In this article, you learned how to create an AKS cluster with a single node poo
 [use-labels]: ./use-labels.md
 [use-tags]: ./use-tags.md
 [use-taints-tolerations]: ./operator-best-practices-advanced-scheduler.md#what-are-taints-and-tolerations
+[resize-node-pools]: ./resize-node-pool.md
