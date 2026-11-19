@@ -535,6 +535,9 @@
               href: aks-desktop-bare-metal.md
         - name: Use cluster extensions
           items:
+            - name: Enable private links for cluster extensions
+              href: private-links-for-extensions.md
+              displayName: private-links-for-extensions
             - name: About cluster extensions
               href: cluster-extensions.md
             - name: Use the Azure CLI
