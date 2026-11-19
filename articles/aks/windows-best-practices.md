@@ -3,10 +3,11 @@ title: Best Practices for Windows Containers on Azure Kubernetes Service (AKS)
 description: Learn about best practices for running Windows containers in Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
 ms.custom: linux-related-content, aks-windows
-ms.author: schaffererin
-author: schaffererin
+ms.author: allyford
+author: allyford
 ms.topic: best-practice
-ms.date: 07/13/2026
+ms.date: 11/19/2026
+ai-usage: ai-assisted
 # Customer intent: As a Kubernetes administrator managing Windows containers, I want to implement best practices for Windows workloads in AKS, so that I can ensure optimal performance, security, and compliance in my containerized applications.
 ---
 
@@ -90,9 +91,11 @@ To help you decide which networking mode to use, see [Choosing a network model][
 
 > **Best practice guidance**
 >
-> Use network policies to secure traffic between pods. Windows supports Azure Network Policy Manager and Calico Network Policy. For more information, see [Differences between Network Policy engines: Cilium, Azure NPM, and Calico][azurenpm-vs-calico].
+> Use network policies to secure traffic between pods. Azure Network Policy Manager (NPM) is no longer supported on Windows nodes as of September 30, 2026. For Windows node pools that use Azure CNI, use Calico Network Policy. For supported platforms and limitations, see [Differences between network policy engines: Cilium, Azure NPM, and Calico][azurenpm-vs-calico].
 
 When managing traffic between pods, you should apply the principle of least privilege. The Network Policy feature in Kubernetes allows you to define and enforce ingress and egress traffic rules between the pods in your cluster. For more information, see [Secure traffic between pods using network policies in AKS][network-policies-aks].
+
+Calico provides network policy enforcement with Azure CNI; it doesn't replace the CNI plugin in this configuration. AKS-managed Calico supports standard Kubernetes `networking.k8s.io` policies. Calico network policies aren't supported with [Azure CNI Overlay dual-stack networking](./azure-cni-overlay.md#dual-stack-networking-limitations).
 
 Windows pods on AKS clusters that use the Calico Network Policy enable Floating IP by default.
 
