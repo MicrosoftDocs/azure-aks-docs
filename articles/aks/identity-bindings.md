@@ -272,6 +272,17 @@ The following example shows how to use the Azure RBAC permission model to grant 
     EOF
     ```
 
+## Locate the projected service account token
+
+For pods that use identity bindings, the workload identity mutating admission webhook sets `AZURE_FEDERATED_TOKEN_FILE` to the path of the projected service account token file. It also sets `AZURE_KUBERNETES_CA_FILE` to the path of the CA certificate file used to connect to the identity binding proxy.
+
+> [!IMPORTANT]
+> Read the token path from `AZURE_FEDERATED_TOKEN_FILE` and the CA certificate path from `AZURE_KUBERNETES_CA_FILE`. Don't hard-code these paths or the injected volume name in your application, container image, or deployment manifests. The paths and volume name are implementation details of the webhook and can change.
+
+When you configure `WorkloadIdentityCredential` for [identity binding mode](identity-bindings-concepts.md#use-identity-bindings-with-azure-identity-client-libraries), the Azure Identity client library reads these environment variables for you. If your application reads the token itself, resolve the path from the environment variable at runtime. Kubernetes refreshes the projected token in place before it expires, so read the file again each time you exchange the token rather than caching its contents for the lifetime of the process.
+
+For more information, see [Locate the projected service account token](workload-identity-overview.md#locate-the-projected-service-account-token).
+
 ## Verify access to key vault from sample application
 
 1. Describe the pod and confirm environment variables and projected token volume mounts are present using the `kubectl describe pod` command.
