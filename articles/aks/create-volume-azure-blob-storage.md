@@ -470,7 +470,7 @@ The following table lists parameters you can use in the CSI volume source for a 
 | `volumeAttributes.AzureStorageAADEndpoint` | Specify the Microsoft Entra endpoint. | | No | |
 | --- | **The following parameters are only for blobfuse workload identity authentication** | --- | --- | --- |
 | `volumeAttributes.ClientID` | Specify the client ID of the managed identity used for workload identity authentication. | Managed identity client ID | No | |
-| `volumeAttributes.mountWithWorkloadIdentityToken` | Mount BlobFuse with a workload identity token. This capability is in preview. Specify the value as a string. | `"true"`, `"false"` | No | `"false"` |
+| `volumeAttributes.mountWithWorkloadIdentityToken` | Mount BlobFuse with a workload identity token. Specify the value as a string. | `"true"`, `"false"` | No | `"false"` |
 | --- | **The following parameters are only for feature: blobfuse read account key or SAS token from key vault** | --- | --- | --- |
 | `volumeAttributes.keyVaultURL` | Specify Azure Key Vault DNS name. | {vault-name}.vault.azure.net | No | |
 | `volumeAttributes.keyVaultSecretName` | Specify Azure Key Vault secret name. | Existing Azure Key Vault secret name. | No | |
@@ -570,7 +570,7 @@ The following example demonstrates how to mount a Blob storage container as a pe
 
 #### [Blobfuse](#tab/blobfuse)
 
-The following example uses an Azure access key or shared access signature (SAS) token stored in a Kubernetes secret to access the Blob storage container. The Azure Blob storage CSI driver also supports [managed identity and service principal authentication][blob-csi-driver-auth] and [workload identity authentication][blob-csi-driver-parameters]. Workload identity authentication is currently in preview. Use identity-based authentication instead of shared credentials where supported.
+The following example uses an Azure access key or shared access signature (SAS) token stored in a Kubernetes secret to access the Blob storage container. The Azure Blob storage CSI driver also supports [managed identity and service principal authentication][blob-csi-driver-auth] and [workload identity authentication][blob-csi-driver-parameters]. Use identity-based authentication instead of shared credentials where supported.
 
 1. Use the `kubectl create secret` command to create a secret that contains an account key or SAS token.
 
