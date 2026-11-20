@@ -19,7 +19,7 @@ Pod sandboxing on AKS uses Kata Containers to run each sandboxed pod in a lightw
 
 In this article, you deploy Pod sandboxing on a new or existing Azure Linux AKS cluster, deploy an application with the Kata runtime, and optionally verify kernel isolation.
 
-For clusters that use node auto-provisioning (NAP), follow [Use Pod sandboxing with node auto-provisioning](##node-auto-provisioning-node-pool) instead of the Azure CLI node pool creation steps.
+For clusters that use node auto-provisioning (NAP), follow [Use Pod sandboxing with node auto-provisioning](#enable-pod-sandboxing-on-an-existing-cluster) instead of the Azure CLI node pool creation steps.
 
 Deploying Pod sandboxing by using Kata Containers is similar to the standard `runc` workflow to deploy containers. Clusters with Pod sandboxing enabled come with a specific runtime class that you can reference in a pod manifest, [`runtimeClassName: kata-vm-isolation` (GA)][kata-v1-runtime] or [`runtimeClassName: kata-vm-isolation-v2` (preview)][kata-v2-migration]. For more information about runtime class defaults and customization, see [Considerations for Pod sandboxing][kata-considerations].
 
