@@ -179,7 +179,7 @@ spec:
   workloadRuntime: KataVmIsolation
 ```
 
-Reference this `AKSNodeClass` from a Karpenter `NodePool` through `spec.template.spec.nodeClassRef`. For a complete walkthrough, including node pool configuration and workload deployment, see [Use Pod sandboxing with node auto-provisioning](./use-pod-sandboxing.md#use-pod-sandboxing-with-node-auto-provisioning).
+Reference this `AKSNodeClass` from a Karpenter `NodePool` through `spec.template.spec.nodeClassRef`. For a complete walkthrough, including node pool configuration and workload deployment, see [Use Pod sandboxing with node auto-provisioning](./use-pod-sandboxing.md#enable-pod-sandboxing-on-an-existing-cluster).
 
 > [!IMPORTANT]
 > Changing `workloadRuntime` on an existing `AKSNodeClass` doesn't install the runtime on running nodes in place. NAP replaces drifted nodes subject to the referencing `NodePool` disruption controls. Review [Drift](./node-auto-provisioning-disruption.md#drift) before changing an existing configuration.
