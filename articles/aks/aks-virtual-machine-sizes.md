@@ -93,11 +93,11 @@ When a VM size or series reaches its retirement date, the VM is deallocated. VM 
 az aks nodepool list --resource-group <your-resource-group> --cluster-name <your-cluster-name> --query "[].{Name:name, VMSize:vmSize}" --output table
 ```
 
-If you're using a VM size that's retiring/retired, we recommend [migrating your node pools to a supported VM size](#migrate-node-pools-to-a-supported-vm-size) to prevent any potential disruption to your service. Currently, AKS *doesn't support* transitioning to a new VM size within the same node pool.
+If you're using a VM size that's retiring or retired, [migrate your node pools to a supported VM size](#migrate-node-pools-to-a-supported-vm-size) to prevent any potential disruption to your service.
 
 ## Migrate node pools to a supported VM size
 
-Once you determine the appropriate node pools to take action on, you can [resize your node pools](./resize-node-pool.md). During the resizing process, a new node pool is created and workloads are migrated to the new node pool.
+After you determine which node pools need attention, you can [resize your node pools](./resize-node-pool.md). You can resize in place by using `az aks nodepool update --node-vm-size`, or create a new node pool when in-place resize doesn't support your scenario.
 
 For more information on migrating to a new VM size, see the following resources:
 
@@ -122,3 +122,4 @@ To use Gen 2 VMs on AKS, see [Use generation 2 VMs on AKS](./generation-2-vms.md
 
 <!-- LINKS -->
 [az-vm-list-skus]: /cli/azure/vm#az-vm-list-skus
+[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az-aks-nodepool-list

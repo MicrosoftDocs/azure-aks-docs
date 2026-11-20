@@ -4,7 +4,7 @@ description: Learn about identity bindings on AKS and how they extend Microsoft 
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.service: azure-kubernetes-service
-ms.date: 09/02/2026
+ms.date: 10/27/2026
 ai-usage: ai-assisted
 author: shashankbarsin
 ms.author: shasb
@@ -56,6 +56,10 @@ The following table outlines the minimum package versions and how to enable iden
 
 ## Frequently asked questions (FAQs)
 
+### How does my application locate the projected token and CA certificate files?
+
+The workload identity webhook injects `AZURE_FEDERATED_TOKEN_FILE` for the token file path and `AZURE_KUBERNETES_CA_FILE` for the CA certificate file path. Read these environment variables instead of hard-coding paths or the injected volume name. `WorkloadIdentityCredential` configured for identity binding mode reads them for you. For more information, see [Locate the projected service account token](identity-bindings.md#locate-the-projected-service-account-token).
+
 ### Is identity sameness (namespace and service account sameness) required across clusters using the same UAMI?
 
 No. Identity bindings don't require namespace/service account sameness. It's up to the cluster operator to explicitly authorize the namespaces and service accounts inside each cluster that are allowed to use the managed identity through role-based access control (RBAC).
@@ -86,6 +90,28 @@ There's no automatic garbage collection of the FIC today when the last identity 
 
 Previously, workload identity required egress to `login.microsoftonline.com` so workloads could exchange service account tokens for Microsoft Entra access tokens. With identity bindings, token exchange requests route through a cluster-specific identity binding proxy operated by AKS. Direct egress to `login.microsoftonline.com` for token exchange isn't required.
 
+### Why do my pods fail with `AADSTS700211` after I create the first identity binding on a cluster?
+
+When you create the first identity binding on a cluster, AKS updates the workload identity webhook (`azure-wi-webhook-controller-manager` in the `kube-system` namespace) to support identity bindings. Until the updated webhook pods are running, the previous webhook mutates new pods. Those pods don't get the identity binding configuration and fall back to standard workload identity token exchange, which fails with `AADSTS700211` and names your cluster's OIDC issuer.
+
+If your system node pool doesn't have enough spare CPU for an additional webhook pod, the new webhook pod stays in the `Pending` state and the update doesn't complete. The identity binding still shows a `Succeeded` provisioning state, because it doesn't track the webhook update.
+
+To check the webhook pods and their events, run the following command:
+
+```bash
+kubectl describe pods --namespace kube-system --selector azure-workload-identity.io/system=true
+```
+
+If a pod is `Pending` and its events show `Insufficient cpu`, [scale your node pool][scale-cluster] or free up CPU on your system nodes. After the new webhook pods are running, delete and recreate your workload pods so the updated webhook mutates them.
+
+### What happens if I delete and recreate a UAMI that identity bindings use?
+
+A recreated UAMI gets a new client ID and principal ID. Existing identity bindings stay tied to the deleted identity, and updating them fails with a `ManagedIdentityRecreated` error. To use the new identity:
+
+1. Delete and recreate each identity binding that references the UAMI. If another resource, such as a fleet, manages the binding, remove and reapply it through that resource.
+1. Update your RBAC objects and service account annotations to the new client ID, and then restart your pods.
+1. Assign Azure roles to the new principal ID.
+
 ### What limitations exist for identity bindings?
 
 Identity bindings aren't yet supported on clusters configured with [API server virtual network integration][api-server-vnet-integration].
@@ -103,6 +129,7 @@ Identity bindings aren't yet supported on clusters configured with [API server v
 [javascript-azure-identity]: /javascript/api/overview/azure/identity-readme
 [python-azure-identity]: /python/api/overview/azure/identity-readme
 [api-server-vnet-integration]: /azure/aks/api-server-vnet-integration
+[scale-cluster]: scale-cluster.md
 
 <!-- EXTERNAL LINKS -->
 [go-azidentity]: https://pkg.go.dev/github.com/Azure/azure-sdk-for-go/sdk/azidentity

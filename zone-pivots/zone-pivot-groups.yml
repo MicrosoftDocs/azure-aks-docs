@@ -122,6 +122,23 @@ groups:
     title: Azure CLI
   - id: arm
     title: ARM templates
+# Owner: wangamanda
+- id: aks-agent-sandbox-runtime
+  title: Runtime and provisioning method
+  prompt: Choose a runtime and provisioning method
+  pivots:
+  - id: sandbox-kata
+    title: Pod sandboxing with Kata runtime
+  - id: sandbox-aci
+    title: Serverless sandboxes in Azure Container Instances
+- id: pod-sandboxing-runtime-class
+  title: Pod sandboxing runtime class
+  prompt: Choose a runtime class
+  pivots:
+  - id: kata-vm-isolation
+    title: kata-vm-isolation (GA)
+  - id: kata-vm-isolation-v2-preview
+    title: kata-vm-isolation-v2 (preview)
 # Owner: ruslany
 - id: aks-azure-developer-cli
   title: Azure command line interfaces

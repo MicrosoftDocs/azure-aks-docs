@@ -120,7 +120,7 @@ Extension support for security, identity, networking, and deployment readiness c
 | [Managed KubeRay (preview)][kuberay-overview] | Install and manage the KubeRay operator for Ray workloads on AKS. | ✅ | ❌ | ✅ | N/R | ❌ |
 | [Dapr][dapr-overview] | Event-driven application runtime for cloud and edge workloads. | ✅ | ❌ | ❌ | ✅ | ✅ |
 | [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview) | Backup and restore protection for persistent volumes. **(Core Extension)**| ✅ | ❌ | ✅ | ✅ | ✅ |
-| [Flux (GitOps)][gitops-overview] | GitOps-based configuration and application deployment management. | ✅ | ❌ | ✅ | ❌ | ✅ |
+| [Flux (GitOps)][gitops-overview] | GitOps-based configuration and application deployment management. | ✅ | ❌ | ✅ | ✅ | ✅ |
 | [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) | Persistent storage for AKS workloads. | ✅ | ❌ | ✅ | N/R | ❌ |
 | Service Connector | Simplifies secure connectivity between AKS workloads and Azure services. | ✅ | ❌ | ✅ | ✅ | N/R |
 | [Virtual Nodes v2 on Azure Container Instances (preview)][virtual-nodes-v2-overview] | Use Virtual Nodes v2 to burst AKS workloads to serverless compute on Azure Container Instances (ACI). | N/R | ❌ | ❌ | ✅ | ✅ |

@@ -1,6 +1,7 @@
 ---
 title: Configure AKSNodeClass Resources for Node Auto-Provisioning (NAP) in Azure Kubernetes Service (AKS)
 description: Learn how to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources.
+ai-usage: ai-assisted
 ms.topic: how-to
 ms.custom: devx-track-azurecli, aks-scaling
 ms.date: 11/11/2026
@@ -20,6 +21,30 @@ This article explains how to configure `AKSNodeClass` resources to define Azure-
 ## Overview of AKSNodeClass resources
 
 `AKSNodeClass` resources enable you to configure Azure-specific settings for NAP. Each [`NodePool` resource](./node-auto-provisioning-node-pools.md) must reference an `AKSNodeClass` using `spec.template.spec.nodeClassRef`. You can have multiple `NodePools` that point to the same `AKSNodeClass`, allowing you to share common Azure configurations across different node pools.
+
+## Kubernetes and node image versions
+
+NAP allows you to control the Kubernetes and node image versions by using the `spec.versions` field in the `AKSNodeClass`.
+If you omit `spec.versions`, the node Kubernetes version follows the observed AKS control-plane version, and NAP automatically resolves compatible node images. When the control-plane version increases, NAP considers the nodes as `Drifted`, marks images as not ready, and resolves images for the new Kubernetes version. NAP doesn't currently automatically downgrade node Kubernetes versions.
+
+For an up-to-date list of supported Kubernetes versions and node image versions, see the [AKS Release Tracker](https://releases.aks.azure.com/).
+
+### Pin Kubernetes version
+
+Set `spec.versions.kubernetesVersion` to pin the node Kubernetes version. Specify the full `major.minor.patch` version. AKS supports the version, and it's compatible with the control plane: it has the same major version, can't have a higher minor version, and can't be more than three minor versions behind. If the node and control plane use the same minor version, the node patch version can't be higher than the control-plane patch version. An invalid format, incompatible version, or unsupported target keeps the Kubernetes version condition false, so the `AKSNodeClass` isn't ready for provisioning.
+
+### Pin node image version
+
+Set `spec.versions.nodeImageVersion` to pin a node image version suffix. This value is the suffix after `/versions/` in an image ID, not a full image ID or an arbitrary value. The requested suffix must be present in the `AKSNodeClass` status as a currently resolved image, the latest image version, or a recently used image version. A recently used image version must be paired with its recorded Kubernetes version. The Kubernetes version and image version must be specified together: `nodeImageVersion` requires `kubernetesVersion`. If you change the Kubernetes version while pinning a current or latest image version, that combination must also be a recently used Kubernetes and image version pair.
+
+Pinning an image version prevents automatic image roll-forward. To resume automatic image selection, remove `nodeImageVersion`; you can keep `kubernetesVersion` pinned if needed. The following example shows both fields. Replace the values with a supported Kubernetes version and an eligible image version suffix for your `AKSNodeClass`:
+
+```yaml
+spec:
+  versions:
+    kubernetesVersion: "1.34.0"
+    nodeImageVersion: "2026.09.23"
+```
 
 > [!IMPORTANT]
 > Changing a setting on an existing `AKSNodeClass` doesn't reconfigure running nodes in place. NAP marks the nodes provisioned from the previous configuration as _drifted_ and replaces them, subject to the disruption controls on the referencing `NodePool` resources. The `tags` field is the only exception, because tag changes apply to existing Azure resources without replacing the node. To learn more, see [Drift](./node-auto-provisioning-disruption.md#drift) and [Disruption budgets](./node-auto-provisioning-disruption.md#disruption-budgets). Before you modify an `AKSNodeClass` that production workloads use, review this guidance.

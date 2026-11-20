@@ -38,6 +38,8 @@
           href: tutorial-kubernetes-upgrade-cluster.md
     - name: Create and manage AKS resources in the Azure portal with Kubernetes center
       href: kubernetes-center-azure-portal.md
+    - name: Monitor AKS clusters in Kubernetes Center
+      href: kubernetes-center-monitoring.md
 - name: Pricing and quotas
   items:
     - name: Pricing tiers for AKS
@@ -445,6 +447,8 @@
       href: upgrade-scenarios-hub.md
   - name: Perform upgrades and rollbacks
     items:
+    - name: Review upgrade readiness in Kubernetes Center
+      href: kubernetes-center-upgrade-readiness.md
     - name: Upgrade cluster control plane
       href: upgrade-aks-control-plane.md
     - name: Upgrade OS version
@@ -527,8 +531,13 @@
               href: aks-desktop-deploy-ai-assistant.md
             - name: Use Headlamp plugins
               href: aks-desktop-headlamp-plugins.md
+            - name: Connect to and manage AKS on bare metal clusters with AKS desktop (preview)
+              href: aks-desktop-bare-metal.md
         - name: Use cluster extensions
           items:
+            - name: Enable private links for cluster extensions
+              href: private-links-for-extensions.md
+              displayName: private-links-for-extensions
             - name: About cluster extensions
               href: cluster-extensions.md
             - name: Use the Azure CLI
@@ -1293,6 +1302,8 @@
         href: passive-cold-solution.md
 - name: AI and machine learning
   items:
+    - name: AI Manager concepts
+      href: ai-manager/concepts.md
     - name: Machine learning operations (MLOps)
       items:
         - name: Best practices
@@ -1315,6 +1326,10 @@
               href: open-ai-quickstart.md
             - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
               href: open-ai-secure-access-quickstart.md
+        - name: Run isolated AI agent workloads with the Agent Sandbox cluster extension (preview)
+          href: agent-sandbox-cluster-extension.md
+        - name: Capture pod state for faster startup with the Pod snapshot cluster extension (preview)
+          href: pod-snapshot-cluster-extension.md
         - name: AI toolchain operator (KAITO)
           items:
             - name: Deploy an AI model using the Azure CLI
@@ -1333,6 +1348,20 @@
               href: ai-toolchain-operator-mcp.md
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
+        - name: Use AI Manager
+          items:
+            - name: Quickstart
+              href: ai-manager/quickstart.md
+            - name: Choose a model and estimate deployment cost
+              href: ai-manager/estimate-cost.md
+            - name: Manage model deployments
+              href: ai-manager/manage-deployments.md
+            - name: Grant access to AI Manager
+              href: ai-manager/grant-access.md
+            - name: Connect to a model endpoint with an API key
+              href: ai-manager/connect-to-endpoint.md
+            - name: Connect to a model endpoint with Microsoft Entra ID
+              href: ai-manager/connect-to-endpoint-entra-id.md
     - name: Ray and KubeRay
       items:
         - name: Overview
@@ -1808,6 +1837,8 @@
       href: ./policy-reference.md
     - name: AKS monitoring data reference
       href: monitor-aks-reference.md
+    - name: AI Manager resource reference
+      href: ai-manager/reference.md
 - name: Resources
   items:
     - name: Build your skills with Microsoft Learn training

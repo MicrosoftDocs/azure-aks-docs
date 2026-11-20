@@ -272,6 +272,17 @@ The following example shows how to use the Azure RBAC permission model to grant 
     EOF
     ```
 
+## Locate the projected service account token
+
+For pods that use identity bindings, the workload identity mutating admission webhook sets `AZURE_FEDERATED_TOKEN_FILE` to the path of the projected service account token file. It also sets `AZURE_KUBERNETES_CA_FILE` to the path of the CA certificate file used to connect to the identity binding proxy.
+
+> [!IMPORTANT]
+> Read the token path from `AZURE_FEDERATED_TOKEN_FILE` and the CA certificate path from `AZURE_KUBERNETES_CA_FILE`. Don't hard-code these paths or the injected volume name in your application, container image, or deployment manifests. The paths and volume name are implementation details of the webhook and can change.
+
+When you configure `WorkloadIdentityCredential` for [identity binding mode](identity-bindings-concepts.md#use-identity-bindings-with-azure-identity-client-libraries), the Azure Identity client library reads these environment variables for you. If your application reads the token itself, resolve the path from the environment variable at runtime. Kubernetes refreshes the projected token in place before it expires, so read the file again each time you exchange the token rather than caching its contents for the lifetime of the process.
+
+For more information, see [Locate the projected service account token](workload-identity-overview.md#locate-the-projected-service-account-token).
+
 ## Verify access to key vault from sample application
 
 1. Describe the pod and confirm environment variables and projected token volume mounts are present using the `kubectl describe pod` command.
@@ -298,6 +309,8 @@ The following example shows how to use the Azure RBAC permission model to grant 
 
 Identity bindings allow mapping multiple AKS clusters to the same UAMI while still using a single FIC. To scale identity bindings across multiple clusters, you can repeat the steps from [Create an identity binding](#create-an-identity-binding) through [verify access to key vault from sample application](#verify-access-to-key-vault-from-sample-application) for each extra cluster you want to map to the same UAMI (creating a new identity binding per cluster).
 
+If your clusters are joined to an [Azure Kubernetes Fleet Manager][fleet-overview] fleet, you can define the identity binding once and apply it to multiple member clusters. For more information, see [multi-cluster identity binding profiles][fleet-identity-binding-profiles].
+
 ## Clean up resources
 
 If you no longer need the resources you created in this article, you can clean them up to avoid incurring future costs.
@@ -323,10 +336,13 @@ If you no longer need the resources you created in this article, you can clean t
 ## Related content
 
 - [Identity bindings concepts](./identity-bindings-concepts.md)
+- [Manage multi-cluster identity bindings with Azure Kubernetes Fleet Manager][fleet-identity-binding-profiles]
 
 <!-- INTERNAL LINKS -->
 [identity-bindings-concepts]: identity-bindings-concepts.md
 [api-server-vnet-integration]: /azure/aks/api-server-vnet-integration
+[fleet-overview]: ../kubernetes-fleet/overview.md
+[fleet-identity-binding-profiles]: ../kubernetes-fleet/concepts-fleet-identity-binding.md
 
 <!-- EXTERNAL LINKS -->
 [k8s-rbac-subjects]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#referring-to-subjects

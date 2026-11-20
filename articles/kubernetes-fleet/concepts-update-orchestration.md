@@ -1,7 +1,7 @@
 ---
 title: "Safely update Kubernetes and node images across multiple clusters"
 description: This article describes the foundational concepts for Azure Kubernetes Fleet Manager Update Runs for safe and reliable multi-cluster updates.
-ms.date: 08/21/2026
+ms.date: 10/19/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -27,22 +27,22 @@ To achieve the best results when using update runs, it's important to understand
 
     * **Update Stage**: an Update Strategy is divided into Update Stages, which are applied sequentially. For example, test environment clusters are in the first Update Stage, while production environment clusters go in a second Update Stage. An Update Stage contains one or more Update Groups. You can use additional controls such as maximum concurrency, wait times, and approval gates for more control over Update Stage execution.
     
-    * **Update Group**: Each Update Stage contains one or more Update Groups, which select clusters to update. Assign member clusters to Update Groups by using either the Update Group property of the cluster or the in-preview label-based matching by using [member labels](#group-clusters-using-member-labels-preview). Update Groups in an Update Stage update in parallel. 
+    * **Update Group**: Each Update Stage contains one or more Update Groups, which select clusters to update. Assign member clusters to Update Groups by using either the Update Group property of the cluster or label-based matching by using [member labels](#group-clusters-by-using-member-labels). Update Groups in an Update Stage update in parallel.
 
     > [!NOTE]
     > The maximum number of Update Groups in each Update Stage is **50**.
 
     * **Further flow controls**: more controls are available to provide flexibility over how fast a fleet of clusters can be updated: 
         
-        * **Maximum Concurrency (preview)**: use the [Maximum Concurrency](#maximum-concurrency-preview) configuration to change how many clusters are upgraded in parallel. You can configure this behavior at both the Stage and Group level.
+        * **Maximum Concurrency**: use the [Maximum Concurrency](#maximum-concurrency) configuration to change how many clusters are upgraded in parallel. You can configure this behavior at both the Stage and Group level.
 
         * **Maximum allowed failures (preview)**: use the [Maximum allowed failures](#maximum-allowed-failures-preview) configuration to control how many member cluster upgrade failures are tolerated before the update run is stopped. You can configure this behavior at both the Stage and Group level.
 
         * **Gates**: Pause the update run until their condition is met.
 
-          * **Approval gates (preview)**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
+          * **Approval gates**: Can be configured before or after each stage or group. Approvals pause the update run, allowing either you or automations that you've set up to check that it's OK to proceed. After you or your automation grants approval, the update run will continue.
 
-          * **Scheduled start gates (preview)**: Can be configured before each stage or group. Scheduled start gates pause the update run until a specified day and time. The gate completes automatically when the scheduled time is reached, or you can manually complete it to proceed at any time.
+          * **Scheduled start gates**: Can be configured before each stage or group. Scheduled start gates pause the update run until a specified day and time. The gate completes automatically when the scheduled time is reached, or you can manually complete it to proceed at any time.
 
 * **Auto-upgrade Profile**: automatically create and start an update run when new Kubernetes or node image versions are made available by AKS. For further information, see [understanding auto-upgrade profiles](#understanding-update-strategies).
 
@@ -154,7 +154,7 @@ Use Auto-upgrade Profiles to automatically trigger Update Runs when new Kubernet
 
 In an Auto-upgrade Profile, you configure:
 
-- a **Channel** ([Rapid](#rapid-channel), [Stable](#stable-channel), [TargetKubernetesVersion](#targetkubernetesversion-channel), [NodeImage](#nodeimage-channel), [SecurityPatch](#securitypatch-channel-preview) (preview)) which determines the type of update applied to the clusters.
+- a **Channel** ([Rapid](#rapid-channel), [Stable](#stable-channel), [TargetKubernetesVersion](#targetkubernetesversion-channel), [NodeImage](#nodeimage-channel), [SecurityPatch](#securitypatch-channel)) which determines the type of update applied to the clusters.
 - an **UpdateStrategy** that configures the sequence in which the clusters are upgraded. If you don't supply a strategy, clusters update one by one sequentially.
 - the **NodeImageSelectionType** (Latest, Consistent) to specify how the node image is selected when upgrading the Kubernetes version.
 
@@ -234,11 +234,9 @@ When a cluster has agent pools that were [created from a node pool snapshot](/az
 | **Latest**           | Follows standard AKS upgrade behavior. The agent pool keeps its reference to the snapshot (`creationData`), and the node image isn't modified. |
 | **Consistent**       | The node image is upgraded to the version determined by Fleet Manager. The reference to the snapshot (`creationData`) is removed from the agent pool. |
 
-### SecurityPatch channel (preview)
+### SecurityPatch channel
 
 Update member cluster **Linux** nodes with **only security fixes** on a weekly cadence. [Canonical Ubuntu](https://ubuntu.com/server) and [Azure Linux](/azure/azure-linux/intro-azure-linux) make OS security patches available once a day. Microsoft tests these patches and bundles them into weekly updates to node images.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 The SecurityPatch Auto-upgrade channel is less disruptive as it uses OS live patching when possible, minimizing node disruption while keeping nodes protected against known vulnerabilities. When live patching isn't possible a pre-patched node image is deployed instead.
 
@@ -252,14 +250,12 @@ Administrators can control the order in which clusters are updated by building r
 
 :::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="A diagram showing an example update strategy containing two update stages. Each update stage contains two update groups. Each update group contains two clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
 
-### Group clusters using member labels (preview)
+### Group clusters by using member labels
 
 Member labels can be used to group clusters and configure your update sequence with Kubernetes-style label selectors. This way, you can assign multiple labels to member clusters and use them for different strategies instead of being restricted to a single update group per cluster. You can group clusters in your strategy with their member labels by configuring `memberSelector` on your strategy at two levels:
 
 - **Stage level**: Selects clusters for the entire stage. When no groups are defined, all matching clusters form a single implicit group. When groups are also defined, the stage-level selector acts as a pre-filter before group-level matching is applied.
 - **Group level**: Selects clusters for a specific group within a stage, enabling parallel subsets with different concurrency limits.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 `memberSelector` uses a string-based label selector that's parsed by using standard Kubernetes label selector syntax. Supported operators are: `=`, `==`, `!=`, `in`, `notin`, `exists`, and `!exists`.
 
@@ -268,16 +264,14 @@ Member labels can be used to group clusters and configure your update sequence w
 >
 > Existing group name based strategies continue to work without changes. 
 
-For instructions on assigning member labels and using `memberSelector` in a strategy, see [Create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors-preview).
+For instructions on assigning member labels and using `memberSelector` in a strategy, see [Create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors).
 
-### Maximum concurrency (preview)
+### Maximum concurrency
 
 `Maximum concurrency` is an optional setting on your update strategy that controls how many clusters can upgrade concurrently. You can set `Maximum concurrency` at two levels:
 
 - **Stage level**: Defines the maximum number of clusters that can upgrade at the same time across all groups in a stage. Acts as a global ceiling for the stage.
 - **Group level**: Defines the maximum number of clusters that can upgrade concurrently within a specific group.
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 > [!NOTE]
 > The upper limits of Maximum Concurrency values are:

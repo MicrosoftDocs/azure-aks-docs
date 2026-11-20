@@ -1,13 +1,14 @@
 ---
 title: Upgrade or uninstall the Azure Managed Lustre CSI driver
-description: Upgrade or uninstall the Azure Managed Lustre CSI driver installed with Helm or a script. Find the separate lifecycle guide for the preview AKS CLI option.
+description: Review update guidance and uninstall the Azure Managed Lustre CSI driver installed with Helm or a script. Find the separate guide for the preview AKS CLI option.
 ms.topic: how-to
 ms.subservice: aks-storage
-ms.date: 11/02/2026
+ms.date: 11/10/2026
 author: pauljewellmsft
 ms.author: akashdubey
 ms.reviewer: brianl
 ms.custom: sfi-image-nochange
+ai-usage: ai-assisted
 
 # Intent: As an IT pro, I want to upgrade or uninstall the Azure Lustre CSI Driver without disrupting active Lustre mounts or deleting storage resources.
 # Keyword:
@@ -18,16 +19,18 @@ ms.custom: sfi-image-nochange
 
 <a id="uninstall-azure-managed-lustre-from-azure-kubernetes-service"></a>
 
-This article describes how to upgrade the Azure Managed Lustre CSI driver to v0.6.0 or uninstall it when installed with Helm or a script. For an installation made with the alternative AKS CLI option, use the separate [CLI preview upgrade and uninstall guide](azure-managed-lustre-upgrade-uninstall-cli-preview.md).
+This article provides update guidance and uninstall instructions for a Helm or script installation of the Azure Managed Lustre CSI driver. For an installation made with the alternative AKS CLI option, use the separate [CLI preview upgrade and uninstall guide](azure-managed-lustre-upgrade-uninstall-cli-preview.md).
 
 For a new installation, see [Install the Azure Managed Lustre CSI driver](azure-managed-lustre-install.md).
 
 > [!IMPORTANT]
 > Use the lifecycle procedure that matches your installation method. Don't run Helm or the cleanup script against an extension-managed driver, or use the AKS disable option to remove a Helm or script installation.
 
+For a version update, start with [Upgrade the CSI driver](#upgrade-the-csi-driver). Don't follow the permanent-removal steps just to install v0.7.0.
+
 ## Choose the matching uninstall method
 
-Use the removal method that matches how you installed the driver:
+For permanent removal, use the method that matches how you installed the driver:
 
 | Installation method | Matching uninstall method |
 | --- | --- |
@@ -35,14 +38,24 @@ Use the removal method that matches how you installed the driver:
 | Script | Follow [Uninstall a script-managed driver](#uninstall-a-script-managed-driver). |
 | AKS CLI options (preview): `az aks create` or `az aks update` with `--enable-azure-managed-lustre` or `--enable-amlfs` | Follow [Uninstall with AKS CLI options (preview)](azure-managed-lustre-upgrade-uninstall-cli-preview.md#uninstall-with-aks-cli-options-preview) and use `az aks update --disable-azure-managed-lustre` or `--disable-amlfs`. |
 
-For upgrades, follow [Upgrade the CSI driver](#upgrade-the-csi-driver) for Helm or script installations. For the alternative installation option, see [Upgrade an AKS CLI installation (preview)](azure-managed-lustre-upgrade-uninstall-cli-preview.md#upgrade-an-aks-cli-installation-preview).
+<a id="upgrade-a-helm-release"></a>
 
 ## Upgrade the CSI driver
 
-For a Helm or script installation, upgrade an earlier release (v0.2.0 or later) to v0.6.0 by uninstalling the existing driver and installing v0.6.0 during a maintenance window. This procedure also supports changing from the script to Helm. If your cluster runs a release earlier than v0.2.0, contact Microsoft Support before you upgrade.
+For an existing Helm installation or managed extension, contact Microsoft Support for an update plan for your installed version and installation method. Don't uninstall the driver or delete volumes just to install v0.7.0.
+
+For an older script installation, see [Replace a legacy script installation](#replace-a-legacy-script-installation). Don't use that procedure for a Helm installation or managed extension.
+
+## Replace a legacy script installation
+
+This procedure applies only to unmodified v0.2.0 through v0.6.0 script installations with the default CSI identity in `kube-system`. It uses the v0.6.0 cleanup script to remove the old driver resources without deleting volumes. For v0.4.0, this removal also resolves the [legacy DaemonSet selector incompatibility](#upgrade-a-v040-script-installation).
+
+Don't use an older cleanup script to remove an installation already running v0.7.0. Its [uninstall guard](#uninstall-the-driver) blocks removal while matching PVs remain. If you need to replace a guarded installation while preserving its volume objects, stop and contact Microsoft Support; don't bypass the guard or delete claims to force replacement.
+
+For a script installation that uses a custom identity or namespace, a change of installation method, or an installation whose existing identity you can't confirm, contact Microsoft Support for a migration procedure before changing the driver.
 
 > [!IMPORTANT]
-> Before upgrading, stop every workload that uses Lustre and confirm that no Lustre mounts remain on the nodes. You can't replace the Lustre client kernel modules while a Lustre mount is active. Only then, uninstall the existing driver. Uninstalling the driver doesn't remove existing mounts. Keep workloads stopped until the replacement driver is installed and verified.
+> Before replacing the script-installed driver, stop every workload that uses Lustre and confirm that no Lustre mounts remain on the nodes. You can't replace the Lustre client kernel modules while a Lustre mount is active. Removing the driver doesn't unmount application volumes. Keep workloads stopped until the driver is verified.
 >
 > Stopping workloads preserves storage only if their controllers retain the PersistentVolumeClaims. Before scaling down a StatefulSet, complete [Protect StatefulSet claims](#protect-statefulset-claims). A StatefulSet with `whenScaled: Delete` can delete its template-created claims during scale-down; with a dynamically provisioned PV using `reclaimPolicy: Delete`, that deletion can also remove the remote Azure Managed Lustre file system and its data. Don't delete PVs, PVCs, or file systems as part of the driver upgrade.
 
@@ -60,19 +73,23 @@ Use your existing driver namespace in every `kube-system` command in this articl
 
 1. Confirm the [installation prerequisites](azure-managed-lustre-install.md#prerequisites), including `cluster-admin` permissions, network access, and node scheduling.
 
-1. For a Helm installation with custom values, export them before uninstalling and keep the file for the reinstall:
+1. For a script installation, confirm that it uses the standard manifests without a custom entrypoint or other manifest changes. If it's customized, stop before removing the driver. Preserve the custom scripts, ConfigMaps, and manifest changes, and contact Microsoft Support for a compatible replacement plan. The cleanup script deletes the custom-entrypoint ConfigMap, and stock reinstallation doesn't restore it. Don't assume an older custom entrypoint is compatible with v0.7.0.
+
+1. Inspect the CSI identities on existing PersistentVolumes before filtering the inventory:
 
    ```bash
-   helm get values azurelustre --namespace kube-system --output yaml > azurelustre-values.yaml
+   kubectl get pv -o custom-columns='NAME:.metadata.name,DRIVER:.spec.csi.driver,CLAIM-NAMESPACE:.spec.claimRef.namespace,CLAIM:.spec.claimRef.name'
    ```
 
-   Review the exported values for compatibility with the v0.6.0 chart before reusing them. Don't override the released driver image or Lustre client versions unless Microsoft Support directs you to.
+   Use the Azure Lustre PVs' `spec.csi.driver` as the source of truth, not chart values alone. If `csidriver.name`, any existing `--drivername` argument, and those PV identities disagree, stop and contact Microsoft Support.
 
-1. List the PersistentVolumes that use the Azure Lustre CSI driver:
+1. List the PersistentVolumes that use the Azure Lustre CSI driver. Set `DRIVER` to the verified installed identity; the default is shown below. Confirm that its `CSIDriver` object exists before continuing:
 
    ```bash
+   DRIVER=azurelustre.csi.azure.com
+   kubectl get csidriver "${DRIVER}"
    printf 'PV\tCLAIM\tSTATUS\tDELETING\n'
-   kubectl get pv -o jsonpath='{range .items[?(@.spec.csi.driver=="azurelustre.csi.azure.com")]}{.metadata.name}{"\t"}{.spec.claimRef.namespace}{"/"}{.spec.claimRef.name}{"\t"}{.status.phase}{"\t"}{.metadata.deletionTimestamp}{"\n"}{end}'
+   kubectl get pv -o "jsonpath={range .items[?(@.spec.csi.driver==\"${DRIVER}\")]}{.metadata.name}{\"\t\"}{.spec.claimRef.namespace}{\"/\"}{.spec.claimRef.name}{\"\t\"}{.status.phase}{\"\t\"}{.metadata.deletionTimestamp}{\"\n\"}{end}"
    ```
 
    Use the claim references to account for every bound Azure Lustre claim, even if its StorageClass no longer exists.
@@ -80,7 +97,7 @@ Use your existing driver namespace in every `kube-system` command in this articl
 1. List the storage classes that use the Azure Lustre CSI driver:
 
    ```bash
-   kubectl get storageclass -o jsonpath='{range .items[?(@.provisioner=="azurelustre.csi.azure.com")]}{.metadata.name}{"\n"}{end}'
+   kubectl get storageclass -o "jsonpath={range .items[?(@.provisioner==\"${DRIVER}\")]}{.metadata.name}{\"\n\"}{end}"
    ```
 
 1. List all PersistentVolumeClaims and use the preceding storage class list to identify unbound Azure Lustre claims:
@@ -172,22 +189,48 @@ Complete these checks before scaling down or deleting any application workloads.
 
    The command displays each CSI node pod, then prints `No Lustre mounts remain on the inspected nodes.` on success. It exits with an error if it finds a Lustre mount or can't inspect a pod. Don't continue if the command fails.
 
-### Install v0.6.0
+<a id="install-v060"></a>
+<a id="upgrade-to-v070"></a>
 
-Complete the preparation and unmount checks first. Keep Azure Managed Lustre workloads stopped until verification is complete.
+### Install v0.7.0
 
-1. Remove the existing driver by using the [Helm uninstall procedure](#uninstall-a-helm-managed-driver) for a Helm release, or the [script uninstall procedure](#uninstall-a-script-managed-driver) for a script-managed installation. Leave PVs, PVCs, and file systems in place.
+This section covers an unmodified v0.2.0 through v0.6.0 **script installation**, not an existing Helm release or managed extension. Complete the preparation and unmount checks first. Keep Azure Managed Lustre workloads stopped until verification is complete.
 
-1. Confirm that both lists are empty before installing the replacement:
+1. Remove the existing driver, leaving PVs, PVCs, and file systems in place.
+
+   For a script installation by using the default identity in `kube-system`, use the v0.6.0 cleanup script, which also removes legacy DaemonSets and RBAC:
 
    ```bash
-   kubectl get pods -n kube-system -l app=csi-azurelustre-node
-   kubectl get pods -n kube-system -l app=csi-azurelustre-controller
+   (
+     set -e
+     git clone --branch v0.6.0 --depth 1 https://github.com/kubernetes-sigs/azurelustre-csi-driver.git azurelustre-csi-driver-v0.6.0-cleanup
+     cd azurelustre-csi-driver-v0.6.0-cleanup
+     ./deploy/uninstall-driver.sh
+     kubectl delete daemonset csi-azurelustre-node -n kube-system --ignore-not-found --wait=true
+   )
    ```
 
-1. Follow the [Helm](azure-managed-lustre-install.md#install-with-helm) or [script](azure-managed-lustre-install.md#install-with-the-script) procedure to install v0.6.0. For a Helm reinstall, use the same release name and namespace, and add `--values azurelustre-values.yaml` if you exported custom values.
+   If removal fails or a guard blocks it, stop and contact Microsoft Support. Don't delete volumes, remove finalizers, or bypass hooks to proceed.
 
-1. Complete [Verify the upgrade](#verify-the-upgrade) before restarting workloads. If installation reports a timeout, use those checks to determine its state before retrying.
+1. Confirm that the old controller, node DaemonSets, and pods are gone and that the old driver is no longer registered:
+
+   ```bash
+   kubectl get deployments,daemonsets,pods -n kube-system \
+     -l 'app in (csi-azurelustre-controller,csi-azurelustre-node)'
+   kubectl get csidriver "${DRIVER}" --ignore-not-found
+   ```
+
+   Both lists must be empty. An API error isn't proof of removal. Confirm that the original PVs and PVCs remain before installing the replacement.
+
+1. Follow the [script installation procedure](azure-managed-lustre-install.md#install-with-the-script) to install v0.7.0. Use the same installation method, namespace, and CSI identity. Pass `v0.7.0` explicitly; omitting the version argument selects `main`.
+
+1. Complete [Verify the upgrade](#verify-the-upgrade) before restarting workloads. If installation reports a timeout, inspect its state and diagnostics before retrying or attempting recovery.
+
+### Upgrade a v0.4.0 script installation
+
+The Jammy and Noble node DaemonSets that v0.4.0 installs use immutable selectors that differ from v0.6.0 and v0.7.0. Applying the new manifests over them fails with `spec.selector: field is immutable`.
+
+Follow the complete [remove-and-replace procedure](#install-v070), not an in-place script upgrade. The v0.6.0 cleanup script removes both `csi-azurelustre-node-jammy` and `csi-azurelustre-node-noble`. Confirm that these DaemonSets and their pods are gone before installing v0.7.0, which recreates them with the new selectors. Preserve PVs, PVCs, and file systems throughout the replacement.
 
 ### Verify the upgrade
 
@@ -213,6 +256,8 @@ Complete the preparation and unmount checks first. Keep Azure Managed Lustre wor
 
    Compare the loaded version with the expected Lustre client version for the node's OS in the [compatibility table](azure-managed-lustre-overview.md#azure-lustre-csi-driver-versions).
 
+   Ready pods alone don't confirm that the expected Lustre client version is loaded. Check the version on every affected node before restarting workloads.
+
 ### Restart workloads
 
 Keep Azure Managed Lustre workloads stopped until verification is complete. Then restart them and confirm that a representative workload's normal file operations succeed. You can inspect its mount with:
@@ -228,11 +273,33 @@ Restore StatefulSets to their intended replica counts and verify that they reuse
 > [!IMPORTANT]
 > Keep Azure Managed Lustre workloads stopped while recovering from an unsuccessful upgrade. Don't install an arbitrary older driver release, because it might not support the node operating system, kernel, or Lustre client version in the cluster.
 
-Use the [v0.6.0 troubleshooting guide](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.6.0/docs/csi-debug.md) and [v0.6.0 error reference](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.6.0/docs/errors.md) to correct the failure, then repeat [Verify the upgrade](#verify-the-upgrade). If you can't complete the installation or confirm that existing Lustre mounts are gone, contact Microsoft Support before removing more resources.
+Use the [v0.7.0 troubleshooting guide](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.7.0/docs/csi-debug.md) and [v0.7.0 error reference](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.7.0/docs/errors.md) for diagnostics. Don't follow their generic upgrade or installer-repair examples in place of the script procedure in this article.
+
+If you can't complete maintenance or confirm that existing Lustre mounts are gone, contact Microsoft Support before removing more resources. Don't delete claims, remove finalizers, or bypass hooks to recover. Complete [Verify the upgrade](#verify-the-upgrade) before restarting workloads.
 
 ## Uninstall the driver
 
 Before scaling down StatefulSets, complete [Protect StatefulSet claims](#protect-statefulset-claims). Stop every workload that uses Lustre and confirm that no Lustre mounts remain before uninstalling the driver. Use the workload and mount checks in [Prepare for the upgrade](#prepare-for-the-upgrade). Uninstalling the driver doesn't remove existing mounts.
+
+The following volume-cleanup steps are for permanent removal, not a [Helm upgrade](#upgrade-a-helm-release) or volume-preserving [script replacement](#install-v070).
+
+An installed Helm release using chart 0.7.0 enables a pre-delete guard by default. Older releases don't gain this protection until they use chart 0.7.0. It checks all PVs whose `spec.csi.driver` matches the installed driver name, in every namespace and PV phase. It blocks removal for static and retained PVs as well as dynamically provisioned volumes. It also fails closed if the inventory query can't run. Unmounting volumes alone isn't enough.
+
+Complete these steps while the driver is still running:
+
+1. Stop provisioning and pause automation that recreates claims or workloads. Wait for in-flight volume creation and deletion to finish.
+1. Inventory matching PVs and their reclaim policies. Use the installed CSI driver name verified against existing PVs in [Prepare for the upgrade](#prepare-for-the-upgrade); substitute it if your installation uses a custom identity:
+
+   ```bash
+   DRIVER=azurelustre.csi.azure.com
+   kubectl get pv -o "jsonpath={range .items[?(@.spec.csi.driver==\"${DRIVER}\")]}{.metadata.name}{\"\t\"}{.spec.claimRef.namespace}{\"/\"}{.spec.claimRef.name}{\"\t\"}{.spec.persistentVolumeReclaimPolicy}{\"\t\"}{.status.phase}{\"\n\"}{end}"
+   ```
+
+1. Decide which file systems to retain. Before deleting a claim whose data you need, set and verify `Retain` on its **existing PV**, and save the PV configuration and file system mapping. Changing the StorageClass doesn't change existing PVs. See [Change the reclaim policy of a PersistentVolume](https://kubernetes.io/docs/tasks/administer-cluster/change-pv-reclaim-policy/).
+1. Complete the selected [static](azure-managed-lustre-static-provisioning.md#clean-up-the-example) or [dynamic](azure-managed-lustre-dynamic-provisioning.md#clean-up-the-example) cleanup. With `Delete`, deleting a dynamically provisioned claim can delete its backing file system and data. With `Retain`, remove the remaining PV object only after its consumers and claim are gone and you've saved the mapping. The retained file system remains billable and can be reattached through static provisioning.
+1. Repeat the inventory query until it succeeds with no matching PVs. An API error or incorrect driver name isn't proof that the inventory is empty. Investigate stuck finalizers with the driver still installed; don't strip finalizers to force removal.
+
+The guard doesn't replace these checks and can't block deletion of an AKS cluster or Azure resource group. Verify backing file system resources separately.
 
 ### Uninstall a Helm-managed driver
 
@@ -242,20 +309,25 @@ Use the release name and namespace from your installation:
 helm uninstall azurelustre --namespace kube-system --wait --timeout 30m
 ```
 
-Helm removes the resources in the release. It doesn't delete PVs, PVCs, or Azure Managed Lustre file systems.
+After the volume checks pass, Helm removes the resources in the release. A timeout can occur after deletion starts, so inspect the release and driver resources before retrying.
+
+If the guard blocks removal, preserve its Job events and logs before retrying because failed Jobs expire and retries replace them. Resolve remaining PVs or restore the guard's cluster-wide permission to list PVs, then retry ordinary uninstall. Don't delete Helm release secrets or bypass hooks to clear the status. See the [blocked-uninstall reference](https://github.com/kubernetes-sigs/azurelustre-csi-driver/blob/v0.7.0/charts/README.md#troubleshoot-a-blocked-uninstall).
 
 ### Uninstall a script-managed driver
 
-Use the v0.6.0 cleanup script to remove a script-managed v0.2.0 or later installation. Also delete the legacy `csi-azurelustre-node` DaemonSet explicitly because it lacks the label selected by the script:
+After completing the volume checks, use the v0.7.0 cleanup script for a script-managed installation using the default CSI identity and `kube-system` namespace. The script refuses removal while matching PVs remain or the check fails. For an older installation, also remove the legacy `csi-azurelustre-node` DaemonSet if it remains:
 
 ```bash
-git clone --branch v0.6.0 --depth 1 https://github.com/kubernetes-sigs/azurelustre-csi-driver.git
-cd azurelustre-csi-driver
-./deploy/uninstall-driver.sh
-kubectl delete daemonset csi-azurelustre-node -n kube-system --ignore-not-found
+(
+  set -e
+  git clone --branch v0.7.0 --depth 1 https://github.com/kubernetes-sigs/azurelustre-csi-driver.git azurelustre-csi-driver-v0.7.0
+  cd azurelustre-csi-driver-v0.7.0
+  ./deploy/uninstall-driver.sh
+  kubectl delete daemonset csi-azurelustre-node -n kube-system --ignore-not-found
+)
 ```
 
-These commands remove the CSI controller, node DaemonSets, `CSIDriver` object, and RBAC resources. They don't delete PersistentVolumes, PersistentVolumeClaims, or Azure Managed Lustre file systems.
+These commands remove the CSI controller, node DaemonSets, `CSIDriver` object, and RBAC resources, not the retained Azure Managed Lustre file systems. Don't use `--force` to bypass the volume check. For a custom identity or namespace, contact Microsoft Support before using the script.
 
 ## Upgrade an AKS CLI installation (preview)
 

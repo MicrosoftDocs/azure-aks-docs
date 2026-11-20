@@ -3,12 +3,20 @@ title: Troubleshoot Container Network Insights Agent on AKS
 description: Troubleshoot common issues you might encounter when deploying, configuring, or using Container Network Insights Agent on Azure Kubernetes Service (AKS).
 author: shaifaligargmsft
 ms.author: shaifaligarg
-ms.date: 03/05/2026
+ms.date: 11/13/2026
 ms.topic: troubleshooting
 ms.service: azure-kubernetes-service
 ---
 
 # Troubleshoot Container Network Insights Agent on AKS
+
+> [!IMPORTANT]
+> Container Network Insights Agent is deprecated and won't be available after November 2026. Plan to stop using the agent before then.
+>
+> The agent is a public preview feature. It doesn't have a service-level agreement (SLA) and isn't recommended for production workloads. Preview features receive best-effort support. For more information, see:
+>
+> - [AKS support policies](./support-policies.md#preview-features-or-feature-flags)
+> - [AKS FAQ](./faq.yml)
 
 This article covers common issues you might encounter when deploying, setting up, or using Container Network Insights Agent on AKS. Each section follows a **Symptom → Cause → Resolution** format.
 

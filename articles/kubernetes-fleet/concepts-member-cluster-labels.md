@@ -1,7 +1,7 @@
 ---
 title: "Azure Kubernetes Fleet Manager member cluster labels"
 description: This article provides a conceptual overview of member cluster labels and how they are used in Azure Kubernetes Fleet Manager.
-ms.date: 10/06/2026
+ms.date: 10/19/2026
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -55,7 +55,7 @@ A label selector matches clusters by their label keys and values. For example, a
 
 Use labels for the following management tasks:
 
-- **Update orchestration:** Select clusters for stages and groups in an update strategy. Label-based grouping for updates is in preview. For more information, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-using-member-labels-preview).
+- **Update orchestration:** Select clusters for stages and groups in an update strategy. For more information, see [Group clusters using member labels](./concepts-update-orchestration.md#group-clusters-by-using-member-labels).
 - **Cross-cluster network membership:** Set member labels to control whether a cluster is a member of a cross-cluster network. For more information, see [Configure and use cross-cluster networking](./howto-configure-use-cross-cluster-networking.md).
 - **Resource placement:** Select the member clusters that receive Kubernetes resources. For more information, see [Resource placement](./concepts-resource-placement.md).
 - **Staged resource rollouts:** Select clusters for each rollout stage for a resource placement. For more information, see [Resource placement rollout strategies](./concepts-rollout-strategy.md).
@@ -109,5 +109,5 @@ resource member 'Microsoft.ContainerService/fleets/members@2026-06-01' = {
 
 ## Next steps
 
-- [Assign member labels and create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors-preview).
+- [Assign member labels and create an update strategy using member selectors](./update-create-update-strategy.md#create-an-update-strategy-using-member-selectors).
 - [Learn how placement policies can use labels to select member clusters](./concepts-resource-placement.md#member-cluster-labels).
