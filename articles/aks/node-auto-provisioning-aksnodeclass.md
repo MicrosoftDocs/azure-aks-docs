@@ -8,7 +8,6 @@ ms.date: 11/11/2026
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
-ai-usage: ai-assisted
 # Customer intent: As a cluster operator or developer, I want to configure Azure-specific settings for AKS node auto-provisioning using AKSNodeClass resources, so that I can optimize node provisioning for my workloads while leveraging Azure's capabilities.
 ---
 
